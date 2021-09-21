@@ -19,6 +19,9 @@
     <Filter Include="Common\Net">
       <UniqueIdentifier>{49300026-c9a2-4c70-ae66-d4442d694398}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Common\Base">
+      <UniqueIdentifier>{daf088ef-4f90-49ab-b875-1ed664fd5134}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
@@ -33,6 +36,18 @@
     </ClCompile>
     <ClCompile Include="..\..\Common\Net\DTCPClient.cpp">
       <Filter>Common\Net</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\Base\DBuffer.cpp">
+      <Filter>Common\Base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\Base\DList.cpp">
+      <Filter>Common\Base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\Base\DThread.cpp">
+      <Filter>Common\Base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\Base\DTimer.cpp">
+      <Filter>Common\Base</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -65,6 +80,21 @@
     </ClInclude>
     <ClInclude Include="..\..\Common\Net\DTCPClient.h">
       <Filter>Common\Net</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\Base\DAtomic.h">
+      <Filter>Common\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\Base\DBuffer.h">
+      <Filter>Common\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\Base\DList.h">
+      <Filter>Common\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\Base\DThread.h">
+      <Filter>Common\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\Base\DTimer.h">
+      <Filter>Common\Base</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

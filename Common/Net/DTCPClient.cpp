@@ -136,7 +136,7 @@ DBool DTCPClient::SyncConnect(DCStr strIP, DUInt16 wPort)
     memset(&addr, 0, sizeof(SOCKADDR_IN));
     addr.sin_family = AF_INET;
     addr.sin_addr.s_addr = DIP::IPStrToUint32(strIP);
-    addr.sin_port = DNet::H2N(wPort);
+    addr.sin_port = DNet::Swap16(wPort);
     if (connect(m_sock, (SOCKADDR*)&addr, sizeof(SOCKADDR_IN)) == SOCKET_ERROR)
     {
         DUInt32 errCode = DError::GetLastNetError();

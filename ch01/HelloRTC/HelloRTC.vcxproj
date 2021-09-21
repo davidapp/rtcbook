@@ -19,20 +19,43 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\Common\Base\DBuffer.cpp" />
+    <ClCompile Include="..\..\Common\Base\DList.cpp" />
+    <ClCompile Include="..\..\Common\Base\DThread.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\Base\DTimer.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="..\..\Common\Net\DIOCPServer.cpp" />
     <ClCompile Include="..\..\Common\Net\DNet.cpp" />
-    <ClCompile Include="..\..\Common\Net\DTCPClient.cpp" />
+    <ClCompile Include="..\..\Common\Net\DTCPClient.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="main.cpp" />
     <ClCompile Include="stdatl.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\Common\Base\DAtomic.h" />
+    <ClInclude Include="..\..\Common\Base\DBuffer.h" />
+    <ClInclude Include="..\..\Common\Base\DList.h" />
+    <ClInclude Include="..\..\Common\Base\DThread.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\Base\DTimer.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </ClInclude>
     <ClInclude Include="..\..\Common\DConfig.h" />
     <ClInclude Include="..\..\Common\DConfig_iOS.h" />
     <ClInclude Include="..\..\Common\DConfig_Win.h" />
     <ClInclude Include="..\..\Common\DTypes.h" />
     <ClInclude Include="..\..\Common\Net\DIOCPServer.h" />
     <ClInclude Include="..\..\Common\Net\DNet.h" />
-    <ClInclude Include="..\..\Common\Net\DTCPClient.h" />
+    <ClInclude Include="..\..\Common\Net\DTCPClient.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </ClInclude>
     <ClInclude Include="maindlg.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="stdatl.h" />
