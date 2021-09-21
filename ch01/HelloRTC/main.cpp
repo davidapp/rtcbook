@@ -6,9 +6,9 @@
 #include <atldlgs.h>
 #include "resource.h"
 #include "maindlg.h"
+#include "Net/DNet.h"
 
 CAppModule _Module;
-
 
 int Run(LPTSTR /*lpCmdLine*/ = NULL, int nCmdShow = SW_SHOWDEFAULT)
 {
@@ -34,11 +34,14 @@ int Run(LPTSTR /*lpCmdLine*/ = NULL, int nCmdShow = SW_SHOWDEFAULT)
 int WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPTSTR lpCmdLine, int nCmdShow)
 {
     ::InitCommonControls();
+    DNet::Init();
 
     _Module.Init(NULL, hInstance);
 
     int nRet = Run(lpCmdLine, nCmdShow);
 
     _Module.Term();
+
+    DNet::UnInit();
     return nRet;
 }
