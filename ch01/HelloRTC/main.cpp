@@ -1,9 +1,5 @@
 #include "stdatl.h"
-
-#include <atlframe.h>
-#include <atlgdi.h>
-#include <atlctrls.h>
-#include <atldlgs.h>
+#include "atldlgs.h"
 #include "resource.h"
 #include "maindlg.h"
 #include "Net/DNet.h"

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "stdatl.h"
+#include "atlctrls.h"
 #include "atlmisc.h"
 #include "atlcrack.h"
 #include "Net/DNet.h"

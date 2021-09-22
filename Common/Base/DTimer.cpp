@@ -1,6 +1,7 @@
 ﻿#include "DTimer.h"
 #include <stdlib.h>
-
+#include <iostream>
+#include <sstream>
 
 #define PERF_COUNTS 30
 static DCStr	perf_desc[PERF_COUNTS] = { 0 };
@@ -62,15 +63,15 @@ DUInt64 DTimer::ClockToMSecond(DUInt64 t)
 
 DVoid DTimer::Output(DInt32 index, DTimeUnit unit)
 {
-    DStringA str = GetOutputString(index, unit);
-    str.Print();
+    std::string str = GetOutputString(index, unit);
+    std::cout << str << std::endl;
 }
 
-DStringA DTimer::GetOutputString(DInt32 index, DTimeUnit unit)
+std::string DTimer::GetOutputString(DInt32 index, DTimeUnit unit)
 {
-    DStringA strRet;
+    std::string strRet;
     DInt64 c = 0;
-    if (unit == DTIME_IN_CLOCK)
+    if (unit == DTimeUnit::IN_CLOCK)
     {
         if (perf_desc[index])
         {
@@ -81,7 +82,7 @@ DStringA DTimer::GetOutputString(DInt32 index, DTimeUnit unit)
             strRet.Format("Slot %d\tUsing %llu clocks\n", index, perf_time[index]);
         }
     }
-    else if (unit == DTIME_IN_NS)
+    else if (unit == DTimeUnit::IN_NS)
     {
         if (perf_desc[index])
         {
@@ -92,7 +93,7 @@ DStringA DTimer::GetOutputString(DInt32 index, DTimeUnit unit)
             strRet.Format("Slot %d\tUsing %llu ns\n", index, ClockToNSecond(perf_time[index]));
         }
     }
-    else if (unit == DTIME_IN_US)
+    else if (unit == DTimeUnit::IN_US)
     {
         if (perf_desc[index])
         {
@@ -103,7 +104,7 @@ DStringA DTimer::GetOutputString(DInt32 index, DTimeUnit unit)
             strRet.Format("Slot %d\tUsing %llu us\n", index, ClockToUSecond(perf_time[index]));
         }
     }
-    else if (unit == DTIME_IN_MS)
+    else if (unit == DTimeUnit::IN_MS)
     {
         c = ClockToUSecond(perf_time[index]);
         if (perf_desc[index])
@@ -115,7 +116,7 @@ DStringA DTimer::GetOutputString(DInt32 index, DTimeUnit unit)
             strRet.Format("Slot %d\tUsing %lld.%03lld ms\n", index, c / 1000, c % 1000);
         }
     }
-    else if (unit == DTIME_IN_SEC)
+    else if (unit == DTimeUnit::IN_SEC)
     {
         c = ClockToUSecond(perf_time[index]);
         if (perf_desc[index])
@@ -130,14 +131,14 @@ DStringA DTimer::GetOutputString(DInt32 index, DTimeUnit unit)
     return strRet;
 }
 
-DStringA DTimer::GetOutputAllString(DTimeUnit unit)
+std::string DTimer::GetOutputAllString(DTimeUnit unit)
 {
-    DStringA strRet;
+    std::string strRet;
     for (int i = 1; i < PERF_COUNTS; i++)
     {
         if (perf_time[i] != 0)
         {
-            DStringA strTemp = GetOutputString(i, unit);
+            std::string strTemp = GetOutputString(i, unit);
             strRet += strTemp;
         }
     }
@@ -157,11 +158,11 @@ DVoid DTimer::OutputAll(DTimeUnit unit)
 
 DUInt64 DTimer::GetCycleCount()
 {
-#if defined(BUILD_FOR_WINDOWS) && (BUILD_FOR_WINDOWS==1)
+#if defined(BUILD_FOR_WINDOWS)
     LARGE_INTEGER counter;
     QueryPerformanceCounter(&counter);
     return counter.QuadPart;
-#elif defined(BUILD_FOR_IOS) && (BUILD_FOR_IOS==1)
+#elif defined(BUILD_FOR_IOS)
     static mach_timebase_info_data_t sTimebaseInfo;
     uint64_t machTime = mach_absolute_time();
     if (sTimebaseInfo.denom == 0)
