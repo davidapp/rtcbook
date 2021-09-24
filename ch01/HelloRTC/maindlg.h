@@ -6,6 +6,8 @@
 #include "atlcrack.h"
 #include "Net/DNet.h"
 #include "Net/DIOCPServer.h"
+#include <locale>
+#include <string>
 
 class CMainDlg : public CDialogImpl<CMainDlg>, public CMessageFilter
 {
@@ -14,6 +16,35 @@ public:
 
     CMainDlg()
     {
+    }
+
+    std::string ws2s(const std::wstring& ws)
+    {
+        std::string curLocale = setlocale(LC_ALL, NULL);        // curLocale = "C";
+        setlocale(LC_ALL, "chs");
+        const wchar_t* _Source = ws.c_str();
+        size_t _Dsize = 2 * ws.size() + 1;
+        char* _Dest = new char[_Dsize];
+        memset(_Dest, 0, _Dsize);
+        wcstombs(_Dest, _Source, _Dsize);
+        std::string result = _Dest;
+        delete[]_Dest;
+        setlocale(LC_ALL, curLocale.c_str());
+        return result;
+    }
+
+    std::wstring s2ws(const std::string& s)
+    {
+        setlocale(LC_ALL, "chs");
+        const char* _Source = s.c_str();
+        size_t _Dsize = s.size() + 1;
+        wchar_t* _Dest = new wchar_t[_Dsize];
+        wmemset(_Dest, 0, _Dsize);
+        mbstowcs(_Dest, _Source, _Dsize);
+        std::wstring result = _Dest;
+        delete[]_Dest;
+        setlocale(LC_ALL, "C");
+        return result;
     }
 
     virtual BOOL PreTranslateMessage(MSG* pMsg)
@@ -26,6 +57,7 @@ public:
         COMMAND_ID_HANDLER(IDCANCEL, OnCancel)
         COMMAND_ID_HANDLER(IDC_START, OnStartServer)
         COMMAND_ID_HANDLER(IDC_STOP, OnStopServer)
+        COMMAND_ID_HANDLER(IDC_INFO, OnInfo)
         COMMAND_ID_HANDLER(IDC_CONNECT, OnConnect)
         COMMAND_ID_HANDLER(IDC_DISCONNECT, OnDisconnect)
         MESSAGE_HANDLER(WM_LOG, OnLog)
@@ -60,11 +92,7 @@ public:
         {
             strLog.Format(L"Server is listened at %hd\r\n", (DUInt16)lParam);
         }
-        CString strOld;
-        m_log.GetWindowText(strOld);
-        strLog += "\r\n";
-        strOld += strLog;
-        m_log.SetWindowText(strOld);
+        AppendLog((wchar_t*)strLog.GetString());
         return 0;
     }
 
@@ -94,7 +122,15 @@ public:
 
     LRESULT OnStopServer(WORD /*wNotifyCode*/, WORD wID, HWND /*hWndCtl*/, BOOL& /*bHandled*/)
     {
+        
+        return 0;
+    }
 
+    LRESULT OnInfo(WORD /*wNotifyCode*/, WORD wID, HWND /*hWndCtl*/, BOOL& /*bHandled*/)
+    {
+        std::string info = DIOCPServer::Info();
+        std::wstring winfo = s2ws(info);
+        AppendLog((wchar_t*)winfo.c_str());
         return 0;
     }
 
@@ -114,6 +150,16 @@ public:
     {
         DestroyWindow();
         ::PostQuitMessage(nVal);
+    }
+
+    void AppendLog(wchar_t* str)
+    {
+        CString strOld;
+        m_log.GetWindowText(strOld);
+        CString strLog(str);
+        strLog += "\r\n";
+        strOld += strLog;
+        m_log.SetWindowText(strOld);
     }
 
     CEdit m_port;

@@ -3,6 +3,7 @@
 #include <thread>
 #include <mutex>
 #include <vector>
+#include <sstream>
 
 typedef struct _PER_HANDLE_DATA
 {
@@ -23,9 +24,11 @@ typedef struct
 
 HWND g_NotifyWnd;
 
-
 std::vector<PER_HANDLE_DATA*> g_clients;
 std::mutex g_clients_guard;
+
+std::vector<std::thread::id> g_threads;
+std::mutex g_threads_guard;
 
 
 DBool DIOCPServer::Start(HWND hNotifyWnd, DUInt16 port)
@@ -43,7 +46,12 @@ DBool DIOCPServer::Stop()
 
 std::string DIOCPServer::Info()
 {
-    return "";
+    std::stringstream ss;
+    ss << "Server State: " << D_LINES;
+    ss << "Current threads: " << g_threads.size() << D_LINES;
+    ss << "Current connections: " << g_clients.size() << D_LINES;
+    std::string ret(ss.str());
+    return ret;
 }
 
 DUInt32 DIOCPServer::ListenThread(DUInt16 nPort)
@@ -104,6 +112,12 @@ DUInt32 DIOCPServer::ListenThread(DUInt16 nPort)
             SendMessage(g_NotifyWnd, WM_LOG, (WPARAM)DEVENT_SERVER_NEWCONN, (LPARAM)nPort);
 
             PER_HANDLE_DATA* PerHandleData = (PER_HANDLE_DATA*)malloc(sizeof(PER_HANDLE_DATA));
+            if (PerHandleData == nullptr) {
+                SendMessage(g_NotifyWnd, WM_LOG, (WPARAM)DEVENT_ASSOCIATE_ERROR, 0);
+                closesocket(Accept);
+                continue;
+            }
+
             PerHandleData->Socket = Accept;
             memcpy(&PerHandleData->ClientAddr, &saRemote, RemoteLen);
             if (CreateIoCompletionPort((HANDLE)Accept, CompletionPort, (DWORD)PerHandleData, 0) == NULL)
@@ -130,6 +144,9 @@ DUInt32 DIOCPServer::ListenThread(DUInt16 nPort)
 DUInt32 DIOCPServer::ServerWorkerThread(DVoid* CompletionPortID)
 {
     HANDLE CompletionPort = (HANDLE)CompletionPortID;
+    g_threads_guard.lock();
+    g_threads.push_back(std::this_thread::get_id());
+    g_threads_guard.unlock();
 
     while (TRUE)
     {
@@ -155,5 +172,9 @@ DUInt32 DIOCPServer::ServerWorkerThread(DVoid* CompletionPortID)
 
         }
     }
+
+    g_threads_guard.lock();
+    g_threads.erase(std::find(g_threads.begin(), g_threads.end(), std::this_thread::get_id()));
+    g_threads_guard.unlock();
     return 0;
 }
