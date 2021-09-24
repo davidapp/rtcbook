@@ -1,6 +1,8 @@
 #include "DIOCPServer.h"
 #include <stdlib.h>
-#include <process.h> // for _beginthreadex
+#include <thread>
+#include <mutex>
+#include <vector>
 
 typedef struct _PER_HANDLE_DATA
 {
@@ -9,7 +11,8 @@ typedef struct _PER_HANDLE_DATA
 } PER_HANDLE_DATA;
 
 #define DATA_BUFSIZE 4096
-
+#define RECV_POSTED 1
+#define SEND_POSTED 2
 typedef struct
 {
     OVERLAPPED Overlapped;
@@ -20,149 +23,137 @@ typedef struct
 
 HWND g_NotifyWnd;
 
+
+std::vector<PER_HANDLE_DATA*> g_clients;
+std::mutex g_clients_guard;
+
+
 DBool DIOCPServer::Start(HWND hNotifyWnd, DUInt16 port)
 {
     g_NotifyWnd = hNotifyWnd;
-
-    DUInt32 dwThreadID = 0;
-    HANDLE hThread = INVALID_HANDLE_VALUE;
-    // Windows上用 _beginthreadex 保证对应的C运行时得到处理
-    hThread = (HANDLE)_beginthreadex(NULL, 0, DIOCPServer::ListenThread, (void*)port, 0, &dwThreadID);
+    std::thread listen(DIOCPServer::ListenThread, port);
+    listen.detach();
     return true;
 }
 
-DUInt32 DIOCPServer::ListenThread(DVoid* nPort)
+DBool DIOCPServer::Stop()
+{
+    return true;
+}
+
+std::string DIOCPServer::Info()
+{
+    return "";
+}
+
+DUInt32 DIOCPServer::ListenThread(DUInt16 nPort)
 {
     // 创建 IO 完成端口，保留一个线程给客户端
     SYSTEM_INFO SystemInfo;
     GetSystemInfo(&SystemInfo);
-    HANDLE CompletionPort = CreateIoCompletionPort(INVALID_HANDLE_VALUE, NULL, 0,
-        SystemInfo.dwNumberOfProcessors - 1);
+    HANDLE CompletionPort = CreateIoCompletionPort(INVALID_HANDLE_VALUE, NULL, 0, SystemInfo.dwNumberOfProcessors - 1);
+    if (CompletionPort == NULL) {
+        SendMessage(g_NotifyWnd, WM_LOG, (WPARAM)DEVENT_IOCP_ERROR, 0);
+        return DEVENT_IOCP_ERROR;
+    }
 
     // 需要的线程数为 并发执行线程数的2倍
-    for (int i = 0; i < 2 * (SystemInfo.dwNumberOfProcessors - 1); i++)
+    for (DUInt32 i = 0; i < 2 * (SystemInfo.dwNumberOfProcessors - 1); i++)
     {
-        HANDLE ThreadHandle = 0;
-        // 将完成端口的句柄传过去
-        ThreadHandle = (HANDLE)_beginthreadex(NULL, 0, DIOCPServer::ServerWorkerThread, (void*)CompletionPort, 0, NULL);
-        if (ThreadHandle != nullptr) {
-            CloseHandle(ThreadHandle);
-        }
+        std::thread worker(DIOCPServer::ServerWorkerThread, (DVoid*)CompletionPort);
+        worker.detach();
     }
 
     // 创建一个非阻塞的 listen socket
     DSocket Listen = WSASocket(AF_INET, SOCK_STREAM, 0, NULL, 0, WSA_FLAG_OVERLAPPED);
+    if (Listen == INVALID_SOCKET) {
+        SendMessage(g_NotifyWnd, WM_LOG, (WPARAM)DEVENT_SOCKET_ERROR, 0);
+        return DEVENT_SOCKET_ERROR;
+    }
 
     // 在所选的端口开始监听
     SOCKADDR_IN InternetAddr = {};
     InternetAddr.sin_family = AF_INET;
     InternetAddr.sin_addr.s_addr = htonl(INADDR_ANY);
-    InternetAddr.sin_port = htons((DUInt16)nPort);
-    bind(Listen, (PSOCKADDR)&InternetAddr, sizeof(InternetAddr));
-    int ret = listen(Listen, 5);
-    if (ret == 0)
-    {
+    InternetAddr.sin_port = htons(nPort);
+    int ret = bind(Listen, (PSOCKADDR)&InternetAddr, sizeof(InternetAddr));
+    if (ret != 0) {
+        SendMessage(g_NotifyWnd, WM_LOG, (WPARAM)DEVENT_BIND_ERROR, 0);
+        return DEVENT_BIND_ERROR;
+    }
+
+    ret = listen(Listen, 5);
+    if (ret == 0) {
         SendMessage(g_NotifyWnd, WM_LOG, (WPARAM)DEVENT_SERVER_READY, (LPARAM)nPort);
+    }
+    else {
+        SendMessage(g_NotifyWnd, WM_LOG, (WPARAM)DEVENT_LISTEN_ERROR, (LPARAM)nPort);
+        return DEVENT_LISTEN_ERROR;
     }
 
     while (TRUE)
     {
+        // 阻塞等待新链接到来
         SOCKADDR_IN saRemote = {};
         int RemoteLen = sizeof(saRemote);
-        // 阻塞等待链接到来
         DSocket Accept = WSAAccept(Listen, (SOCKADDR*)&saRemote, &RemoteLen, NULL, 0);
 
         // 链接一旦到来，就将分配的 Socket 与 IOCP 关联起来
-        if (Accept != NULL)
+        if (Accept != INVALID_SOCKET)
         {
+            SendMessage(g_NotifyWnd, WM_LOG, (WPARAM)DEVENT_SERVER_NEWCONN, (LPARAM)nPort);
+
             PER_HANDLE_DATA* PerHandleData = (PER_HANDLE_DATA*)malloc(sizeof(PER_HANDLE_DATA));
             PerHandleData->Socket = Accept;
             memcpy(&PerHandleData->ClientAddr, &saRemote, RemoteLen);
-            CreateIoCompletionPort((HANDLE)Accept, CompletionPort, (DWORD)PerHandleData, 0);
-
-            // 之后可以通过 WSASend WSARecv 去给发送异步IO请求
+            if (CreateIoCompletionPort((HANDLE)Accept, CompletionPort, (DWORD)PerHandleData, 0) == NULL)
+            {
+                SendMessage(g_NotifyWnd, WM_LOG, (WPARAM)DEVENT_ASSOCIATE_ERROR, (LPARAM)PerHandleData);
+                closesocket(Accept);
+                free(PerHandleData);
+            }
+            else {
+                g_clients_guard.lock();
+                g_clients.push_back(PerHandleData);
+                g_clients_guard.unlock();
+            }
+        }
+        else
+        {
+            SendMessage(g_NotifyWnd, WM_LOG, (WPARAM)DEVENT_ACCEPT_ERROR, 0);
         }
         // 继续下一次监听，直到通知它结束
     }
     return 0;
 }
 
-DUInt32 WINAPI DIOCPServer::ServerWorkerThread(LPVOID CompletionPortID)
+DUInt32 DIOCPServer::ServerWorkerThread(DVoid* CompletionPortID)
 {
     HANDLE CompletionPort = (HANDLE)CompletionPortID;
-    DWORD BytesTransferred;
-    LPOVERLAPPED Overlapped;
-    PER_HANDLE_DATA* PerHandleData;
-    PER_IO_DATA* PerIoData;
-    DWORD SendBytes, RecvBytes;
-    DWORD Flags;
 
     while (TRUE)
     {
-        // Wait for I/O to complete on any socket
-        // associated with the completion port
-
-        BOOL ret = GetQueuedCompletionStatus(CompletionPort,
-            &BytesTransferred, (LPDWORD)&PerHandleData,
+        // 等待 Socket I/O 完成的通知
+        DWORD BytesTransferred;
+        PER_HANDLE_DATA* PerHandleData;
+        PER_IO_DATA* PerIoData;
+        BOOL ret = GetQueuedCompletionStatus(CompletionPort, &BytesTransferred, (LPDWORD)&PerHandleData,
             (LPOVERLAPPED*)&PerIoData, INFINITE);
 
-        // First check to see if an error has occurred
-        // on the socket; if so, close the 
-        // socket and clean up the per-handle data
-        // and per-I/O operation data associated with
-        // the socket
-        /*
-        if (BytesTransferred == 0 &&
-            (PerIoData->OperationType == RECV_POSTED ││
-                PerIoData->OperationType == SEND_POSTED))
+        // 如果发生了读写错误，就关闭此 Socket 链接
+        if (BytesTransferred == 0 && (PerIoData->OperationType == RECV_POSTED || PerIoData->OperationType == SEND_POSTED))
         {
-            // A zero BytesTransferred indicates that the
-            // socket has been closed by the peer, so
-            // you should close the socket. Note:
-            // Per-handle data was used to reference the
-            // socket associated with the I/O operation.
-
             closesocket(PerHandleData->Socket);
-
-            GlobalFree(PerHandleData);
-            GlobalFree(PerIoData);
+            free(PerHandleData);
+            free(PerIoData);
             continue;
         }
 
-        // Service the completed I/O request. You can
-        // determine which I/O request has just
-        // completed by looking at the OperationType
-        // field contained in the per-I/O operation data.
+        // 收到一个请求
         if (PerIoData->OperationType == RECV_POSTED)
         {
-            // Do something with the received data
-            // in PerIoData->Buffer
+
         }
-
-        // Post another WSASend or WSARecv operation.
-        // As an example, we will post another WSARecv()
-        // I/O operation.
-
-        Flags = 0;
-
-        // Set up the per-I/O operation data for the next
-        // overlapped call
-        ZeroMemory(&(PerIoData->Overlapped),
-            sizeof(OVERLAPPED));
-
-        PerIoData->DataBuf.len = DATA_BUFSIZE;
-        PerIoData->DataBuf.buf = PerIoData->Buffer;
-        PerIoData->OperationType = RECV_POSTED;
-
-        WSARecv(PerHandleData->Socket,
-            &(PerIoData->DataBuf), 1, &RecvBytes,
-            &Flags, &(PerIoData->Overlapped), NULL);*/
     }
     return 0;
-}
-
-
-DBool DIOCPServer::Stop()
-{
-    return true;
 }

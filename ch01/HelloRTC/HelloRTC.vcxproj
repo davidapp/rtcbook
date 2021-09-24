@@ -21,10 +21,6 @@
   <ItemGroup>
     <ClCompile Include="..\..\Common\Base\DBuffer.cpp" />
     <ClCompile Include="..\..\Common\Base\DList.cpp" />
-    <ClCompile Include="..\..\Common\Base\DThread.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-    </ClCompile>
     <ClCompile Include="..\..\Common\Base\DTimer.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
     </ClCompile>
@@ -40,10 +36,6 @@
     <ClInclude Include="..\..\Common\Base\DAtomic.h" />
     <ClInclude Include="..\..\Common\Base\DBuffer.h" />
     <ClInclude Include="..\..\Common\Base\DList.h" />
-    <ClInclude Include="..\..\Common\Base\DThread.h">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-    </ClInclude>
     <ClInclude Include="..\..\Common\Base\DTimer.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
     </ClInclude>

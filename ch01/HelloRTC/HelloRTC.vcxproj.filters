@@ -43,9 +43,6 @@
     <ClCompile Include="..\..\Common\Base\DList.cpp">
       <Filter>Common\Base</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Common\Base\DThread.cpp">
-      <Filter>Common\Base</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\Common\Base\DTimer.cpp">
       <Filter>Common\Base</Filter>
     </ClCompile>
@@ -88,9 +85,6 @@
       <Filter>Common\Base</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Common\Base\DList.h">
-      <Filter>Common\Base</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Common\Base\DThread.h">
       <Filter>Common\Base</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Common\Base\DTimer.h">
