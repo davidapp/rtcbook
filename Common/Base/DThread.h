@@ -49,7 +49,7 @@ public:
 
 
 // 互斥量
-class DAPI DMutex
+class DMutex
 {
 public:
     DMutex();
@@ -76,7 +76,7 @@ typedef struct tagDEventData
 #endif
 
 // 事件同步
-class DAPI DEvent
+class DEvent
 {
 public:
     DEvent();
@@ -93,7 +93,7 @@ public:
 
 
 // 信号量
-class DAPI DSem
+class DSem
 {
 public:
 
@@ -101,7 +101,7 @@ public:
 };
 
 // 条件变量
-class DAPI DCond
+class DCond
 {
 public:
 
@@ -109,7 +109,7 @@ public:
 };
 
 // 读写锁
-class DAPI DRWLock
+class DRWLock
 {
 public:
 
