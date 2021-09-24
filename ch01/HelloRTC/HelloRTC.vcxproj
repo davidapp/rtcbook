@@ -26,9 +26,7 @@
     </ClCompile>
     <ClCompile Include="..\..\Common\Net\DIOCPServer.cpp" />
     <ClCompile Include="..\..\Common\Net\DNet.cpp" />
-    <ClCompile Include="..\..\Common\Net\DTCPClient.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-    </ClCompile>
+    <ClCompile Include="..\..\Common\Net\DWinSocket.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="stdatl.cpp" />
   </ItemGroup>
@@ -45,9 +43,7 @@
     <ClInclude Include="..\..\Common\DTypes.h" />
     <ClInclude Include="..\..\Common\Net\DIOCPServer.h" />
     <ClInclude Include="..\..\Common\Net\DNet.h" />
-    <ClInclude Include="..\..\Common\Net\DTCPClient.h">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-    </ClInclude>
+    <ClInclude Include="..\..\Common\Net\DWinSocket.h" />
     <ClInclude Include="maindlg.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="stdatl.h" />

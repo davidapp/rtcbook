@@ -34,9 +34,6 @@
     <ClCompile Include="..\..\Common\Net\DNet.cpp">
       <Filter>Common\Net</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Common\Net\DTCPClient.cpp">
-      <Filter>Common\Net</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\Common\Base\DBuffer.cpp">
       <Filter>Common\Base</Filter>
     </ClCompile>
@@ -45,6 +42,9 @@
     </ClCompile>
     <ClCompile Include="..\..\Common\Base\DTimer.cpp">
       <Filter>Common\Base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\Net\DWinSocket.cpp">
+      <Filter>Common\Net</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -75,9 +75,6 @@
     <ClInclude Include="..\..\Common\Net\DNet.h">
       <Filter>Common\Net</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Common\Net\DTCPClient.h">
-      <Filter>Common\Net</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\Common\Base\DAtomic.h">
       <Filter>Common\Base</Filter>
     </ClInclude>
@@ -89,6 +86,9 @@
     </ClInclude>
     <ClInclude Include="..\..\Common\Base\DTimer.h">
       <Filter>Common\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\Net\DWinSocket.h">
+      <Filter>Common\Net</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
