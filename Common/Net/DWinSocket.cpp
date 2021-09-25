@@ -1,4 +1,4 @@
-﻿#include "DTCPClient.h"
+﻿#include "DWinSocket.h"
 
 #if defined(BUILD_FOR_WINDOWS)
 #include <winsock2.h>
