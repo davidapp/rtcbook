@@ -16,22 +16,22 @@
 #endif
 
 
-DTCPSocket::DTCPSocket()
+DWinSocket::DWinSocket()
 {
     m_sock = DBadSocket;
 }
 
-DTCPSocket::DTCPSocket(DSocket sock)
+DWinSocket::DWinSocket(DSocket sock)
 {
     m_sock = sock;
 }
 
-DTCPSocket::~DTCPSocket()
+DWinSocket::~DWinSocket()
 {
     m_sock = DBadSocket;
 }
 
-DBool DTCPSocket::Create(DBool bIPv6)
+DBool DTCPSoDWinSocketcket::Create(DBool bIPv6)
 {
 #if defined(BUILD_FOR_WINDOWS) && (BUILD_FOR_WINDOWS==1)
     if (m_sock == DBadSocket)
@@ -55,7 +55,7 @@ DBool DTCPSocket::Create(DBool bIPv6)
     return true;
 }
 
-DVoid DTCPSocket::Close()
+DVoid DWinSocket::Close()
 {
 #if defined(BUILD_FOR_WINDOWS) && (BUILD_FOR_WINDOWS==1)
     if (m_sock != DBadSocket)
@@ -72,17 +72,17 @@ DVoid DTCPSocket::Close()
 #endif
 }
 
-DVoid DTCPSocket::Attach(DSocket sock)
+DVoid DWinSocket::Attach(DSocket sock)
 {
     m_sock = sock;
 }
 
-DVoid DTCPSocket::Detach()
+DVoid DWinSocket::Detach()
 {
     m_sock = DBadSocket;
 }
 
-DVoid DTCPSocket::Renew()
+DVoid DWinSocket::Renew()
 {
     Close();
     Create();
