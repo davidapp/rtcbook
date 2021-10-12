@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <VCProjectVersion>16.0</VCProjectVersion>
+    <ProjectGuid>{B87B0B4F-7DA1-434F-BC38-1E6584B71394}</ProjectGuid>
+    <RootNamespace>TextViewer</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v142</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v142</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v142</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v142</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup />
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <SDLCheck>true</SDLCheck>
+      <ConformanceMode>false</ConformanceMode>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;D_SOURCE_MODE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\..\DClasses;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PrecompiledHeaderFile />
+      <PrecompiledHeaderOutputFile />
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <SDLCheck>true</SDLCheck>
+      <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>..\..\DClasses;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>D_SOURCE_MODE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <ConformanceMode>false</ConformanceMode>
+      <AdditionalIncludeDirectories>..\..\DClasses;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>D_SOURCE_MODE;_WIN32;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>..\..\DClasses;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>D_SOURCE_MODE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\DClasses\Base\DAllocator.cpp" />
+    <ClCompile Include="..\..\DClasses\Base\DAPI.cpp" />
+    <ClCompile Include="..\..\DClasses\Base\DBitStream.cpp" />
+    <ClCompile Include="..\..\DClasses\Base\DBuffer.cpp" />
+    <ClCompile Include="..\..\DClasses\Base\DError.cpp" />
+    <ClCompile Include="..\..\DClasses\Base\DFile.cpp" />
+    <ClCompile Include="..\..\DClasses\Base\DFloatKit.cpp" />
+    <ClCompile Include="..\..\DClasses\Base\DList.cpp" />
+    <ClCompile Include="..\..\DClasses\Base\DLog.cpp" />
+    <ClCompile Include="..\..\DClasses\Base\DMath.cpp" />
+    <ClCompile Include="..\..\DClasses\Base\DMemAlloc.cpp" />
+    <ClCompile Include="..\..\DClasses\Base\DMisc.cpp" />
+    <ClCompile Include="..\..\DClasses\Base\DPath.cpp" />
+    <ClCompile Include="..\..\DClasses\Base\DRect.cpp" />
+    <ClCompile Include="..\..\DClasses\Base\DStdLib.cpp" />
+    <ClCompile Include="..\..\DClasses\Base\DString.cpp" />
+    <ClCompile Include="..\..\DClasses\Base\DStrMgr.cpp" />
+    <ClCompile Include="..\..\DClasses\Base\DThread.cpp" />
+    <ClCompile Include="..\..\DClasses\Base\DTime.cpp" />
+    <ClCompile Include="..\..\DClasses\Base\DTimer.cpp" />
+    <ClCompile Include="..\..\DClasses\Base\DUnicode.cpp" />
+    <ClCompile Include="..\..\DClasses\Base\DUTF8.cpp" />
+    <ClCompile Include="..\..\DClasses\Base\DVector.cpp" />
+    <ClCompile Include="..\..\DClasses\WinExtra\DWinApp.cpp" />
+    <ClCompile Include="main.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\DClasses\Base\DAllocator.h" />
+    <ClInclude Include="..\..\DClasses\Base\DAPI.h" />
+    <ClInclude Include="..\..\DClasses\Base\DBitStream.h" />
+    <ClInclude Include="..\..\DClasses\Base\DBuffer.h" />
+    <ClInclude Include="..\..\DClasses\Base\DError.h" />
+    <ClInclude Include="..\..\DClasses\Base\DFile.h" />
+    <ClInclude Include="..\..\DClasses\Base\DFloatKit.h" />
+    <ClInclude Include="..\..\DClasses\Base\DList.h" />
+    <ClInclude Include="..\..\DClasses\Base\DLog.h" />
+    <ClInclude Include="..\..\DClasses\Base\DMath.h" />
+    <ClInclude Include="..\..\DClasses\Base\DMemAlloc.h" />
+    <ClInclude Include="..\..\DClasses\Base\DMisc.h" />
+    <ClInclude Include="..\..\DClasses\Base\DPath.h" />
+    <ClInclude Include="..\..\DClasses\Base\DRect.h" />
+    <ClInclude Include="..\..\DClasses\Base\DSPrintf.h" />
+    <ClInclude Include="..\..\DClasses\Base\DSScanf.h" />
+    <ClInclude Include="..\..\DClasses\Base\DStdLib.h" />
+    <ClInclude Include="..\..\DClasses\Base\DStdLibDef.h" />
+    <ClInclude Include="..\..\DClasses\Base\DString.h" />
+    <ClInclude Include="..\..\DClasses\Base\DStrMgr.h" />
+    <ClInclude Include="..\..\DClasses\Base\DTest.h" />
+    <ClInclude Include="..\..\DClasses\Base\DThread.h" />
+    <ClInclude Include="..\..\DClasses\Base\DTime.h" />
+    <ClInclude Include="..\..\DClasses\Base\DTimer.h" />
+    <ClInclude Include="..\..\DClasses\Base\DUnicode.h" />
+    <ClInclude Include="..\..\DClasses\Base\DUTF8.h" />
+    <ClInclude Include="..\..\DClasses\Base\DVector.h" />
+    <ClInclude Include="..\..\DClasses\DConfig.h" />
+    <ClInclude Include="..\..\DClasses\DConfig_Win.h" />
+    <ClInclude Include="..\..\DClasses\Dream.h" />
+    <ClInclude Include="..\..\DClasses\DTypes.h" />
+    <ClInclude Include="..\..\DClasses\WinExtra\DWinApp.h" />
+    <ClInclude Include="..\..\DClasses\WinExtra\DWinUI\DBase.h" />
+    <ClInclude Include="..\..\DClasses\WinExtra\DWinUI\DCommDlg.h" />
+    <ClInclude Include="..\..\DClasses\WinExtra\DWinUI\DCrack.h" />
+    <ClInclude Include="..\..\DClasses\WinExtra\DWinUI\DCtrl.h" />
+    <ClInclude Include="..\..\DClasses\WinExtra\DWinUI\DCtrlX.h" />
+    <ClInclude Include="..\..\DClasses\WinExtra\DWinUI\DDlg.h" />
+    <ClInclude Include="..\..\DClasses\WinExtra\DWinUI\DFrame.h" />
+    <ClInclude Include="..\..\DClasses\WinExtra\DWinUI\DGDI.h" />
+    <ClInclude Include="..\..\DClasses\WinExtra\DWinUI\DMsg.h" />
+    <ClInclude Include="..\..\DClasses\WinExtra\DWinUI\DPool.h" />
+    <ClInclude Include="..\..\DClasses\WinExtra\DWinUI\DRes.h" />
+    <ClInclude Include="..\..\DClasses\WinExtra\DWinUI\DScroll.h" />
+    <ClInclude Include="..\..\DClasses\WinExtra\DWinUI\DSplit.h" />
+    <ClInclude Include="..\..\DClasses\WinExtra\DWinUI\DTheme.h" />
+    <ClInclude Include="..\..\DClasses\WinExtra\DWinUI\DThunk.h" />
+    <ClInclude Include="..\..\DClasses\WinExtra\DWinUI\DUser.h" />
+    <ClInclude Include="..\..\DClasses\WinExtra\DWinUI\DWnd.h" />
+    <ClInclude Include="DMainDlg.h" />
+    <ClInclude Include="resource.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="TextViewer.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="icon1.ico" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
