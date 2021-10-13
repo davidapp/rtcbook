@@ -67,6 +67,7 @@ BEGIN
     LTEXT           "Hex:",IDC_STATIC,10,9,29,8
     LTEXT           "Base64:",IDC_STATIC,312,9,29,8
     PUSHBUTTON      "OpenFile",IDC_OPENFILE,34,7,50,14
+    PUSHBUTTON      "Random100",IDC_RANDOM100,92,7,50,14
 END
 
 

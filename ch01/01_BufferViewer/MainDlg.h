@@ -6,8 +6,9 @@
 #include "atlcrack.h"
 #include "resource.h"
 #include "Base/DBuffer.h"
+#include "Base/DFile.h"
 #include "Base/DUtil.h"
-
+#include "atldlgs.h"
 
 wchar_t err_reason[5][15] = {
     L"OK",
@@ -40,6 +41,8 @@ public:
         COMMAND_ID_HANDLER(IDC_TOLIST, OnClickToList)
         COMMAND_ID_HANDLER(IDC_TOBASE64, OnClickToBase64)
         COMMAND_ID_HANDLER(IDC_FROMBASE64, OnClickFromBase64)
+        COMMAND_ID_HANDLER(IDC_OPENFILE, OnClickOpenFile)
+        COMMAND_ID_HANDLER(IDC_RANDOM100, OnClickRandom100)
     END_MSG_MAP()
 
     LRESULT OnInitDialog(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/)
@@ -51,7 +54,6 @@ public:
         buf.FillWithRandom();
         std::string hexList = buf.ToHexList();
         m_hex.SetWindowText(DUtil::s2ws(hexList).c_str());
-
         return TRUE;
     }
 
@@ -181,6 +183,33 @@ public:
         m_hex.SetWindowText(DUtil::s2ws(strAList).c_str());
         return 0;
     }
+
+    LRESULT OnClickOpenFile(WORD /*wNotifyCode*/, WORD wID, HWND /*hWndCtl*/, BOOL& /*bHandled*/)
+    {
+        CFileDialog dlg(TRUE, NULL, NULL, OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT, L"All Files\0*.*\0", m_hWnd);
+        if (dlg.DoModal() == IDOK)
+        {
+            DFile file;
+            file.OpenFileRead(DUtil::ws2s(dlg.m_szFileName).c_str());
+            // Max 100KB 
+            DUInt32 readsize = 100 * 1024;
+            if (file.GetSize() < readsize) readsize = (DUInt32)file.GetSize();
+            DBuffer buf = file.Read(readsize);
+            std::string hexList = buf.ToHexList();
+            m_hex.SetWindowText(DUtil::s2ws(hexList).c_str());
+        }
+        return 0;
+    }
+
+    LRESULT OnClickRandom100(WORD /*wNotifyCode*/, WORD wID, HWND /*hWndCtl*/, BOOL& /*bHandled*/)
+    {
+        DBuffer buf(100);
+        buf.FillWithRandom();
+        std::string hexList = buf.ToHexList();
+        m_hex.SetWindowText(DUtil::s2ws(hexList).c_str());
+        return 0;
+    }
+
 
     CEdit	m_hex;
     CEdit	m_base;
