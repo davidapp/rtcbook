@@ -28,7 +28,6 @@
     <ClCompile Include="..\..\Common\Net\DNet.cpp" />
     <ClCompile Include="..\..\Common\Net\DWinSocket.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="stdatl.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Common\Base\DAtomic.h" />
@@ -44,9 +43,8 @@
     <ClInclude Include="..\..\Common\Net\DIOCPServer.h" />
     <ClInclude Include="..\..\Common\Net\DNet.h" />
     <ClInclude Include="..\..\Common\Net\DWinSocket.h" />
-    <ClInclude Include="maindlg.h" />
+    <ClInclude Include="MainDlg.h" />
     <ClInclude Include="resource.h" />
-    <ClInclude Include="stdatl.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="res\HelloRTC.ico" />

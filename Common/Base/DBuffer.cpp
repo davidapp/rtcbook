@@ -3,7 +3,7 @@
 #include <ctype.h>
 #include <stdlib.h>
 #include <string.h>
-#include "Net/DNet.h"
+#include "DUtil.h"
 
 ////////////////////////////////////////////////////////////////////////////////////
 // DBuffer
@@ -112,6 +112,334 @@ DVoid DBuffer::SetSub(DInt32 start, DByte* pBuf, DUInt32 len)
 
     memcpy(m_pBuf + start, pBuf, len);
 }
+
+
+DBool DBuffer::InitWithHexString(DCStr str)
+{
+    std::string strA(str);
+    return InitWithHexString(strA);
+}
+
+DBool DBuffer::InitWithHexString(std::string& str)
+{
+    if (!DBuffer::IsValidHexStr(str.c_str())) return false;
+    str = DUtil::replace_str(str, " ", "");
+    str = DUtil::replace_str(str, "\r\n", "");
+    str = DUtil::replace_str(str, "\r", "");
+    str = DUtil::replace_str(str, "\n", "");
+    str = DUtil::replace_str(str, "\t", "");
+    return HexToBuffer(str.c_str());
+}
+
+std::string DBuffer::ToHexString(DUInt32 maxlen)
+{
+    DChar buf[30] = { 0 };
+    std::string str;
+    if (IsNull())
+    {
+        return std::string("nullptr");
+    }
+    if (maxlen == 0) maxlen = GetSize();
+    if (maxlen > GetSize()) maxlen = GetSize();
+    str.reserve(maxlen * 2);
+    for (unsigned int i = 0; i < maxlen; i++)
+    {
+        snprintf(buf, 30, "%02X", m_pBuf[i]);
+        str += buf;
+    }
+    return str;
+}
+
+std::string DBuffer::ToHexList(DUInt32 width)
+{
+    std::string strRet;
+    char buf[30] = {};
+    if (GetData() == _nullBufferData)
+    {
+
+    }
+    else
+    {
+        DUInt32 count = 1;
+        for (DUInt32 i = 0; i < GetSize(); i++, count++)
+        {
+            snprintf(buf, 30, "%02X ", m_pBuf[i]);
+            strRet += buf;
+            if (count % width == 0) strRet += D_LINES;
+        }
+        strRet += D_LINES;
+    }
+    return strRet;
+}
+
+DBool DBuffer::HexToBuffer(DCStr hexStr)
+{
+    CopyBeforeWrite();
+
+    DUInt32 len = strlen(hexStr);
+    AllocBuffer(len / 2);
+    DInt32 index = 0;
+    for (DUInt32 i = 0; i < len; i = i + 2)
+    {
+        DChar c = hexStr[i];
+        if (isdigit(c))
+        {
+            c = c - '0';
+        }
+        else if (DUtil::isAtoF(c))
+        {
+            c = c - 'A' + 10;
+        }
+        else if (DUtil::isatof(c))
+        {
+            c = c - 'a' + 10;
+        }
+        else
+        {
+            return false;
+        }
+        DChar d = hexStr[i + 1];
+        if (isdigit(d))
+        {
+            d = d - '0';
+        }
+        else if (DUtil::isAtoF(d))
+        {
+            d = d - 'A' + 10;
+        }
+        else if (DUtil::isatof(d))
+        {
+            d = d - 'a' + 10;
+        }
+        else
+        {
+            return false;
+        }
+        m_pBuf[index] = c * 16 + d;
+        index++;
+    }
+    return true;
+}
+
+DBool DBuffer::IsValidHexStr(DCStr hexStr, DUInt32* reason)
+{
+    DUInt32 len = strlen(hexStr);
+    if (len == 0)
+    {
+        if (reason) *reason = 1;
+        return false;
+    }
+    DUInt32 xcount = 0;
+    for (int i = 0; i < (int)len; i++)
+    {
+        if (isxdigit(hexStr[i]))
+        {
+            xcount++;
+        }
+        else if (hexStr[i] == ' ' || hexStr[i] == '\r' || hexStr[i] == '\n' || hexStr[i] == '\t')
+        {
+
+        }
+        else
+        {
+            if (reason) *reason = 2;
+            return false;
+        }
+    }
+    if (xcount % 2 != 0)
+    {
+        if (reason) *reason = 3;
+        return false;
+    }
+    return true;
+}
+
+
+static DChar base64[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
+static DInt32 unbase64[] =
+{
+    -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+    -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+    -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 62, -1, -1, -1, 63, 52,
+    53, 54, 55, 56, 57, 58, 59, 60, 61, -1, -1, -1, 0, -1, -1, -1,
+    0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15,
+    16, 17, 18, 19, 20, 21, 22, 23, 24, 25, -1, -1, -1, -1, -1, -1,
+    26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41,
+    42, 43, 44, 45, 46, 47, 48, 49, 50, 51, -1, -1, -1, -1, -1, -1
+};
+
+DBool DBuffer::InitWithBase64String(DCStr str)
+{
+    std::string strA(str);
+    return InitWithBase64String(strA);
+}
+
+DBool DBuffer::InitWithBase64String(std::string& str)
+{
+    if (!IsValidBase64Str(str.c_str()))
+    {
+        return false;
+    }
+    DByte* input = (DByte*)str.c_str();
+    DUInt32 len = str.length();
+    DByte* output = (DByte*)malloc(len);
+    DByte* start = output;
+    DInt32 out_len = 0;
+    do
+    {
+        for (DInt32 i = 0; i <= 3; i++)
+        {
+            if (((DByte)str[i]) > 128 || unbase64[input[i]] == -1)
+            {
+                free(start);
+                return false;
+            }
+        }
+        *output++ = unbase64[input[0]] << 2 | (unbase64[input[1]] & 0x30) >> 4;
+        out_len++;
+
+        if (input[2] != '=')
+        {
+            *output++ = (unbase64[input[1]] & 0x0F) << 4 |
+                (unbase64[input[2]] & 0x3C) >> 2;
+            out_len++;
+        }
+
+        if (input[3] != '=')
+        {
+            *output++ = (unbase64[input[2]] & 0x03) << 6 |
+                unbase64[input[3]];
+            out_len++;
+        }
+        input += 4;
+    } while (len -= 4);
+
+    AllocBuffer(out_len);
+    memcpy_s(m_pBuf, out_len, start, out_len);
+    free(start);
+
+    return true;
+}
+
+std::string DBuffer::ToBase64String()
+{
+    const DByte* input = m_pBuf;
+    DInt32 len = GetSize();
+    DChar* output = (DChar*)malloc((len * 4) / 3 + 4);
+    if (output == nullptr) return std::string();
+    DChar* begin = output;
+    do
+    {
+        *output++ = base64[(input[0] & 0xFC) >> 2];
+
+        if (len == 1)
+        {
+            *output++ = base64[((input[0] & 0x03) << 4)];
+            *output++ = '=';
+            *output++ = '=';
+            break;
+        }
+
+        *output++ = base64[
+            ((input[0] & 0x03) << 4) | ((input[1] & 0xF0) >> 4)];
+
+        if (len == 2)
+        {
+            *output++ = base64[((input[1] & 0x0F) << 2)];
+            *output++ = '=';
+            break;
+        }
+
+        *output++ = base64[
+            ((input[1] & 0x0F) << 2) | ((input[2] & 0xC0) >> 6)];
+        *output++ = base64[(input[2] & 0x3F)];
+        input += 3;
+    } while (len -= 3);
+
+    *output = '\0';
+
+    std::string str(begin);
+    free(begin);
+
+    return str;
+}
+
+DBool DBuffer::IsValidBase64Str(DCStr base64Str, DUInt32* reason)
+{
+    DUInt32 len = strlen(base64Str);
+    if (len == 0)
+    {
+        if (reason) *reason = 1;
+        return false;
+    }
+    DUInt32 xcount = 0;
+    DUInt32 ecount = 0;
+    for (int i = 0; i < (int)len; i++)
+    {
+        if (isdigit(base64Str[i]) || isalpha(base64Str[i]) || (base64Str[i] == '+') || (base64Str[i] == '/'))
+        {
+            xcount++;
+        }
+        else if (base64Str[i] == ' ' || base64Str[i] == '\r' || base64Str[i] == '\n' || base64Str[i] == '\t')
+        {
+
+        }
+        else if (base64Str[i] == '=')
+        {
+            ecount++;
+        }
+        else
+        {
+            if (reason) *reason = 2;
+            return false;
+        }
+    }
+    DUInt32 totalbit = (xcount + ecount) * 6;
+    if (totalbit % 8 == 0)
+    {
+        return true;
+    }
+
+    if (reason) *reason = 3;
+    return false;
+}
+
+DUInt32 DBuffer::GetBase64BufSize(DCStr base64Str)
+{
+    DUInt32 len = strlen(base64Str);
+    if (len == 0)
+    {
+        return 0;
+    }
+    DUInt32 xcount = 0;
+    DUInt32 ecount = 0;
+    for (int i = 0; i < (int)len; i++)
+    {
+        if (isdigit(base64Str[i]) || isalpha(base64Str[i]) || (base64Str[i] == '+') || (base64Str[i] == '/'))
+        {
+            xcount++;
+        }
+        else if (base64Str[i] == ' ' || base64Str[i] == '\r' || base64Str[i] == '\n' || base64Str[i] == '\t')
+        {
+
+        }
+        else if (base64Str[i] == '=')
+        {
+            ecount++;
+        }
+        else
+        {
+            return 0;
+        }
+    }
+    DUInt32 totalbit = (xcount + ecount) * 6;
+    if (totalbit % 8 == 0)
+    {
+        return totalbit / 8 - ecount;
+    }
+    return 0;
+}
+
 
 DUInt32 DBuffer::GetRefCount() const
 {
@@ -329,13 +657,13 @@ DGrowBuffer::DGrowBuffer()
     m_cache.Zero();
     m_cachepos = 0;
     m_totalsize = 0;
-    m_bufList.Clear();
+    m_bufList.clear();
 }
 
 DGrowBuffer::~DGrowBuffer()
 {
     m_cache.Release();
-    m_bufList.Clear();
+    m_bufList.clear();
 }
 
 DVoid DGrowBuffer::AddUInt8(DUInt8 c)
@@ -356,7 +684,7 @@ DVoid DGrowBuffer::AddUInt16(DUInt16 s, DBool bNetOrder)
     }
     if (bNetOrder)
     {
-        s = DNet::Swap16(s);
+        s = DUtil::Swap16(s);
     }
     m_cache.SetSub(m_cachepos, (DByte*)&s, 2);
     m_cachepos += 2;
@@ -370,7 +698,7 @@ DVoid DGrowBuffer::AddUInt32(DUInt32 i, DBool bNetOrder)
     }
     if (bNetOrder)
     {
-        i = DNet::Swap32(i);
+        i = DUtil::Swap32(i);
     }
     m_cache.SetSub(m_cachepos, (DByte*)&i, 4);
     m_cachepos += 4;
@@ -384,7 +712,7 @@ DVoid DGrowBuffer::AddUInt64(DUInt64 l, DBool bNetOrder)
     }
     if (bNetOrder)
     {
-        l = DNet::Swap64(l);
+        l = DUtil::Swap64(l);
     }
     m_cache.SetSub(m_cachepos, (DByte*)&l, 8);
     m_cachepos += 8;
@@ -479,7 +807,7 @@ DVoid DGrowBuffer::AddBuffer(DBuffer b)
         buf.SetSub(0, (DByte*)&(strLen), 4);
         buf.SetSub(4, (DByte*)b.GetBuf(), strLen);
         FlushCacheToList();
-        m_bufList.Add(buf.GetBuf());
+        m_bufList.push_back(buf.GetBuf());
         buf.AddRef();
         m_totalsize += buf.GetSize();
         return;
@@ -507,7 +835,7 @@ DVoid DGrowBuffer::AddFixBuffer(DBuffer b)
         DBuffer buf(strLen);
         buf.SetSub(0, (DByte*)b.GetBuf(), strLen);
         FlushCacheToList();
-        m_bufList.Add(buf.GetBuf());
+        m_bufList.push_back(buf.GetBuf());
         buf.AddRef();
         m_totalsize += buf.GetSize();
         return;
@@ -530,15 +858,15 @@ DBuffer DGrowBuffer::Finish()
     FlushCacheToList();
     DBuffer bufRet(m_totalsize);
     DInt32 curpos = 0;
-    DSLinkNode* pNode = m_bufList.GetHead();
-    for (; pNode != nullptr; pNode = pNode->pNext)
+    auto pNode = m_bufList.begin();
+    for (; pNode != m_bufList.end(); pNode++)
     {
         DBuffer buf;
-        buf.Attach((DByte*)pNode->pData);
+        buf.Attach((DByte*)*pNode);
         bufRet.SetSub(curpos, buf.GetBuf(), buf.GetSize());
         curpos += buf.GetSize();
     }
-    m_bufList.Clear();
+    m_bufList.clear();
     m_totalsize = 0;
     return bufRet;
 }
@@ -547,7 +875,7 @@ DVoid DGrowBuffer::FlushCacheToList()
 {
     if (m_cachepos == 0) return;
     DBuffer buf = m_cache.GetSub(0, m_cachepos);
-    m_bufList.Add(buf.GetBuf());
+    m_bufList.push_back(buf.GetBuf());
     buf.AddRef();
     m_totalsize += buf.GetSize();
     m_cachepos = 0;
@@ -584,7 +912,7 @@ DUInt16 DReadBuffer::ReadUInt16(DBool bNetOrder)
 
     if (bNetOrder)
     {
-        s = DNet::Swap16(s);
+        s = DUtil::Swap16(s);
     }
 
     return s;
@@ -599,7 +927,7 @@ DUInt32 DReadBuffer::ReadUInt32(DBool bNetOrder)
 
     if (bNetOrder)
     {
-        i = DNet::Swap32(i);
+        i = DUtil::Swap32(i);
     }
 
     return i;
@@ -614,7 +942,7 @@ DUInt64 DReadBuffer::ReadUInt64(DBool bNetOrder)
 
     if (bNetOrder)
     {
-        i = DNet::Swap64(i);
+        i = DUtil::Swap64(i);
     }
 
     return i;
@@ -649,7 +977,7 @@ DUInt16 DReadBuffer::NextUInt16(DBool bNetOrder)
 
     if (bNetOrder)
     {
-        s = DNet::Swap16(s);
+        s = DUtil::Swap16(s);
     }
 
     return s;
@@ -663,7 +991,7 @@ DUInt32 DReadBuffer::NextUInt32(DBool bNetOrder)
 
     if (bNetOrder)
     {
-        i = DNet::Swap32(i);
+        i = DUtil::Swap32(i);
     }
 
     return i;
@@ -677,7 +1005,7 @@ DUInt64 DReadBuffer::NextUInt64(DBool bNetOrder)
 
     if (bNetOrder)
     {
-        i = DNet::Swap64(i);
+        i = DUtil::Swap64(i);
     }
 
     return i;

@@ -39,14 +39,8 @@
     <ClCompile Include="..\..\Common\Net\DWinSocket.cpp">
       <Filter>Common\Net</Filter>
     </ClCompile>
-    <ClCompile Include="stdatl.cpp">
-      <Filter>Resource</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="maindlg.h">
-      <Filter>Window</Filter>
-    </ClInclude>
     <ClInclude Include="resource.h">
       <Filter>Resource</Filter>
     </ClInclude>
@@ -83,8 +77,8 @@
     <ClInclude Include="..\..\Common\Net\DWinSocket.h">
       <Filter>Common\Net</Filter>
     </ClInclude>
-    <ClInclude Include="stdatl.h">
-      <Filter>Resource</Filter>
+    <ClInclude Include="MainDlg.h">
+      <Filter>Window</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

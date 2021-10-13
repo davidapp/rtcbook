@@ -1,26 +1,21 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Window">
-      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
-      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
-    </Filter>
     <Filter Include="Common">
-      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
-      <Extensions>h;hh;hpp;hxx;hm;inl;inc;ipp;xsd</Extensions>
+      <UniqueIdentifier>{703c4f75-c5b9-404e-af06-f1ebeb21c32d}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Common\Base">
-      <UniqueIdentifier>{a41d3b0f-dc5c-41dd-aca8-1ba7999fd2ca}</UniqueIdentifier>
+    <Filter Include="Window">
+      <UniqueIdentifier>{8e2e06b6-782e-494b-993a-7b31ee462e1c}</UniqueIdentifier>
     </Filter>
     <Filter Include="Resource">
-      <UniqueIdentifier>{adb48f85-7541-489b-aaf1-bc90d011827a}</UniqueIdentifier>
+      <UniqueIdentifier>{12280c4b-467b-493f-98a2-62a8f51ebc65}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="MainDlg.h">
+    <ClInclude Include="MainWindow.h">
       <Filter>Window</Filter>
     </ClInclude>
     <ClInclude Include="resource.h">
@@ -28,7 +23,7 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="TextViewer.rc">
+    <ResourceCompile Include="BitmapViewer.rc">
       <Filter>Resource</Filter>
     </ResourceCompile>
   </ItemGroup>

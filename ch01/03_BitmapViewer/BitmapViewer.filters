@@ -1,0 +1,635 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Window">
+      <UniqueIdentifier>{f6d76d54-af8d-4703-a038-fb7d1225fc90}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="resource">
+      <UniqueIdentifier>{33b6dc0e-1fa7-44f8-bd0d-52af862f229c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Dream">
+      <UniqueIdentifier>{43dee101-cde9-459a-abb0-2868da83f43b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Dream\Base">
+      <UniqueIdentifier>{12b844d1-e079-4817-98c0-d29aff3e646c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Dream\Data">
+      <UniqueIdentifier>{7cd7a3e6-9315-468c-9edb-28e2eca8d5ba}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Dream\Component">
+      <UniqueIdentifier>{76fcd1b9-d88c-4e82-9ef9-a75159d0c3b8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Dream\Net">
+      <UniqueIdentifier>{bb2221cf-6f22-44a3-bb26-9b5ac4d76af6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Dream\Net\Base">
+      <UniqueIdentifier>{09a62bf2-3c10-496d-a147-94a7a6c8af89}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Dream\Net\Socket">
+      <UniqueIdentifier>{4a51ec25-46be-4a61-afb9-f278e537454a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Dream\Misc">
+      <UniqueIdentifier>{fd68aba6-fd18-4fcf-9927-042c40289f3b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Dream\WinExtra">
+      <UniqueIdentifier>{f274b8dd-6479-436c-931e-71b7e58d8f30}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Dream\WinExtra\DWinUI">
+      <UniqueIdentifier>{9f2aeaf3-3263-4455-9a04-717420e5c0c7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Dream\WinExtra\Tools">
+      <UniqueIdentifier>{dee067b2-fa4b-4ab2-92be-32dd69aeab0f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Dream\WinExtra\Security">
+      <UniqueIdentifier>{14f71442-93e2-4645-9c84-c6a869f3b596}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Dream\Crypt">
+      <UniqueIdentifier>{ec4fe874-1d61-46de-801c-508832d22018}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Dream\PB">
+      <UniqueIdentifier>{bace768c-f937-4800-9912-24ff47469177}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Dream\WinExtra\Kernel">
+      <UniqueIdentifier>{4e240faa-6b3d-40de-bd6c-754207258cea}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Dream\Net\Protocol">
+      <UniqueIdentifier>{307d5df1-dea0-4bf2-bd2b-2d2358e7d0b6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Dream\File">
+      <UniqueIdentifier>{4beb16ed-8e0a-4902-aff1-ded71a7d6c2a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Dream\Video">
+      <UniqueIdentifier>{816f563e-d173-4b20-9337-9ca16d3f44a5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Dream\Codec">
+      <UniqueIdentifier>{84ad85a0-8190-4109-926d-71774f24cb75}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Dream\File\Image">
+      <UniqueIdentifier>{afc14abe-e947-493f-b733-3f99fe5f6765}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Dream\Math">
+      <UniqueIdentifier>{9b3abbd0-6fbe-480b-8462-94adcb045ffb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Dream\Net\NewFilter1">
+      <UniqueIdentifier>{a3cc688a-6eec-4755-bcfd-c14c48608d0e}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\DClasses\Base\DMemAlloc.cpp">
+      <Filter>Dream\Base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\DClasses\Base\DStdLib.cpp">
+      <Filter>Dream\Base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\DClasses\Base\DUTF8.cpp">
+      <Filter>Dream\Base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\DClasses\Data\DArray.cpp">
+      <Filter>Dream\Data</Filter>
+    </ClCompile>
+    <ClCompile Include="..\DClasses\Data\DData.cpp">
+      <Filter>Dream\Data</Filter>
+    </ClCompile>
+    <ClCompile Include="..\DClasses\Data\DJson.cpp">
+      <Filter>Dream\Data</Filter>
+    </ClCompile>
+    <ClCompile Include="..\DClasses\Data\DMap.cpp">
+      <Filter>Dream\Data</Filter>
+    </ClCompile>
+    <ClCompile Include="..\DClasses\Data\DXml.cpp">
+      <Filter>Dream\Data</Filter>
+    </ClCompile>
+    <ClCompile Include="..\DClasses\Component\DMsgQueue.cpp">
+      <Filter>Dream\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="..\DClasses\Misc\DBitDump.cpp">
+      <Filter>Dream\Misc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\DClasses\Crypt\DASymCrypt.cpp">
+      <Filter>Dream\Crypt</Filter>
+    </ClCompile>
+    <ClCompile Include="..\DClasses\Crypt\DDigest.cpp">
+      <Filter>Dream\Crypt</Filter>
+    </ClCompile>
+    <ClCompile Include="..\DClasses\Crypt\DSymCrypt.cpp">
+      <Filter>Dream\Crypt</Filter>
+    </ClCompile>
+    <ClCompile Include="..\DClasses\Crypt\DX509.cpp">
+      <Filter>Dream\Crypt</Filter>
+    </ClCompile>
+    <ClCompile Include="..\DClasses\Component\DRegEx.cpp">
+      <Filter>Dream\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="..\DClasses\Data\DRBTree.cpp">
+      <Filter>Dream\Data</Filter>
+    </ClCompile>
+    <ClCompile Include="..\DClasses\Misc\DLength.cpp">
+      <Filter>Dream\Misc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\DClasses\Misc\DInfoDump.cpp">
+      <Filter>Dream\Misc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\DClasses\Misc\DUtil.cpp">
+      <Filter>Dream\Misc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\DClasses\Crypt\DASN1.cpp">
+      <Filter>Dream\Crypt</Filter>
+    </ClCompile>
+    <ClCompile Include="..\DClasses\Crypt\DOID.cpp">
+      <Filter>Dream\Crypt</Filter>
+    </ClCompile>
+    <ClCompile Include="..\DClasses\Base\DUnicode.cpp">
+      <Filter>Dream\Base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\DClasses\Base\DMath.cpp">
+      <Filter>Dream\Base</Filter>
+    </ClCompile>
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="..\DClasses\WinExtra\DWinApp.cpp">
+      <Filter>Dream\WinExtra</Filter>
+    </ClCompile>
+    <ClCompile Include="..\DClasses\WinExtra\Tools\DAPIHook.cpp">
+      <Filter>Dream\WinExtra\Tools</Filter>
+    </ClCompile>
+    <ClCompile Include="..\DClasses\WinExtra\Tools\DCOM.cpp">
+      <Filter>Dream\WinExtra\Tools</Filter>
+    </ClCompile>
+    <ClCompile Include="..\DClasses\WinExtra\Tools\DConsole.cpp">
+      <Filter>Dream\WinExtra\Tools</Filter>
+    </ClCompile>
+    <ClCompile Include="..\DClasses\WinExtra\Tools\DRegKey.cpp">
+      <Filter>Dream\WinExtra\Tools</Filter>
+    </ClCompile>
+    <ClCompile Include="..\DClasses\WinExtra\Tools\DPlanTask.cpp">
+      <Filter>Dream\WinExtra\Tools</Filter>
+    </ClCompile>
+    <ClCompile Include="..\DClasses\WinExtra\Security\DWinSAL.cpp">
+      <Filter>Dream\WinExtra\Security</Filter>
+    </ClCompile>
+    <ClCompile Include="..\DClasses\WinExtra\Security\DWinUAC.cpp">
+      <Filter>Dream\WinExtra\Security</Filter>
+    </ClCompile>
+    <ClCompile Include="..\DClasses\Base\DBitStream.cpp">
+      <Filter>Dream\Base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\DClasses\Base\DBuffer.cpp">
+      <Filter>Dream\Base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\DClasses\Base\DList.cpp">
+      <Filter>Dream\Base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\DClasses\Base\DMisc.cpp">
+      <Filter>Dream\Base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\DClasses\Base\DString.cpp">
+      <Filter>Dream\Base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\DClasses\Base\DTime.cpp">
+      <Filter>Dream\Base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\DClasses\Base\DStrMgr.cpp">
+      <Filter>Dream\Base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\DClasses\Base\DTimer.cpp">
+      <Filter>Dream\Base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\DClasses\PB\DPBCodec.cpp">
+      <Filter>Dream\PB</Filter>
+    </ClCompile>
+    <ClCompile Include="..\DClasses\PB\DPBHelper.cpp">
+      <Filter>Dream\PB</Filter>
+    </ClCompile>
+    <ClCompile Include="..\DClasses\Base\DError.cpp">
+      <Filter>Dream\Base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\DClasses\Base\DFile.cpp">
+      <Filter>Dream\Base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\DClasses\Base\DLog.cpp">
+      <Filter>Dream\Base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\DClasses\Base\DPath.cpp">
+      <Filter>Dream\Base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\DClasses\WinExtra\Tools\DWinIniFile.cpp">
+      <Filter>Dream\WinExtra\Tools</Filter>
+    </ClCompile>
+    <ClCompile Include="..\DClasses\WinExtra\Tools\DWinDbg.cpp">
+      <Filter>Dream\WinExtra\Tools</Filter>
+    </ClCompile>
+    <ClCompile Include="..\DClasses\Base\DAPI.cpp">
+      <Filter>Dream\Base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\DClasses\Net\Socket\DTCP.cpp">
+      <Filter>Dream\Net\Socket</Filter>
+    </ClCompile>
+    <ClCompile Include="..\DClasses\Net\Socket\DUDP.cpp">
+      <Filter>Dream\Net\Socket</Filter>
+    </ClCompile>
+    <ClCompile Include="..\DClasses\Net\Protocol\DDNS.cpp">
+      <Filter>Dream\Net\Protocol</Filter>
+    </ClCompile>
+    <ClCompile Include="..\DClasses\Net\Base\DIP.cpp">
+      <Filter>Dream\Net\Base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\DClasses\Net\Base\DMac.cpp">
+      <Filter>Dream\Net\Base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\DClasses\Net\Base\DNet.cpp">
+      <Filter>Dream\Net\Base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\DClasses\WinExtra\Kernel\DWinMem.cpp">
+      <Filter>Dream\WinExtra\Kernel</Filter>
+    </ClCompile>
+    <ClCompile Include="..\DClasses\WinExtra\Kernel\DWinFileMapping.cpp">
+      <Filter>Dream\WinExtra\Kernel</Filter>
+    </ClCompile>
+    <ClCompile Include="..\DClasses\Base\DAllocator.cpp">
+      <Filter>Dream\Base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\DClasses\Codec\DColorSpace.cpp">
+      <Filter>Dream\Codec</Filter>
+    </ClCompile>
+    <ClCompile Include="..\DClasses\Codec\DDCT.cpp">
+      <Filter>Dream\Codec</Filter>
+    </ClCompile>
+    <ClCompile Include="..\DClasses\Codec\DHuffman.cpp">
+      <Filter>Dream\Codec</Filter>
+    </ClCompile>
+    <ClCompile Include="..\DClasses\Codec\DQuickTable.cpp">
+      <Filter>Dream\Codec</Filter>
+    </ClCompile>
+    <ClCompile Include="..\DClasses\Codec\DSampler.cpp">
+      <Filter>Dream\Codec</Filter>
+    </ClCompile>
+    <ClCompile Include="..\DClasses\Video\DVideoCapture.cpp">
+      <Filter>Dream\Video</Filter>
+    </ClCompile>
+    <ClCompile Include="..\DClasses\Video\DVideoDevice.cpp">
+      <Filter>Dream\Video</Filter>
+    </ClCompile>
+    <ClCompile Include="..\DClasses\File\Image\DBmpFile.cpp">
+      <Filter>Dream\File\Image</Filter>
+    </ClCompile>
+    <ClCompile Include="..\DClasses\File\Image\DJpegFile.cpp">
+      <Filter>Dream\File\Image</Filter>
+    </ClCompile>
+    <ClCompile Include="..\DClasses\Math\DBigNumHD.cpp">
+      <Filter>Dream\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="..\DClasses\Math\DMatrix.cpp">
+      <Filter>Dream\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="..\DClasses\Net\Socket\DNetIO.cpp">
+      <Filter>Dream\Net\Socket</Filter>
+    </ClCompile>
+    <ClCompile Include="..\DClasses\Net\Socket\DRaw.cpp">
+      <Filter>Dream\Net\Socket</Filter>
+    </ClCompile>
+    <ClCompile Include="..\DClasses\File\Image\DPngFile.cpp">
+      <Filter>Dream\File\Image</Filter>
+    </ClCompile>
+    <ClCompile Include="..\DClasses\File\Image\DGifFile.cpp">
+      <Filter>Dream\File\Image</Filter>
+    </ClCompile>
+    <ClCompile Include="..\DClasses\Base\DThread.cpp">
+      <Filter>Dream\Base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\DClasses\Base\DRect.cpp">
+      <Filter>Dream\Base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\DClasses\Base\DVector.cpp">
+      <Filter>Dream\Base</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="DMainWindow.h">
+      <Filter>Window</Filter>
+    </ClInclude>
+    <ClInclude Include="..\DClasses\DConfig.h">
+      <Filter>Dream</Filter>
+    </ClInclude>
+    <ClInclude Include="..\DClasses\DConfig_Win.h">
+      <Filter>Dream</Filter>
+    </ClInclude>
+    <ClInclude Include="..\DClasses\Dream.h">
+      <Filter>Dream</Filter>
+    </ClInclude>
+    <ClInclude Include="..\DClasses\DTypes.h">
+      <Filter>Dream</Filter>
+    </ClInclude>
+    <ClInclude Include="..\DClasses\Base\DMemAlloc.h">
+      <Filter>Dream\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\DClasses\Base\DStdLib.h">
+      <Filter>Dream\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\DClasses\Base\DUTF8.h">
+      <Filter>Dream\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\DClasses\Data\DArray.h">
+      <Filter>Dream\Data</Filter>
+    </ClInclude>
+    <ClInclude Include="..\DClasses\Data\DData.h">
+      <Filter>Dream\Data</Filter>
+    </ClInclude>
+    <ClInclude Include="..\DClasses\Data\DJson.h">
+      <Filter>Dream\Data</Filter>
+    </ClInclude>
+    <ClInclude Include="..\DClasses\Data\DMap.h">
+      <Filter>Dream\Data</Filter>
+    </ClInclude>
+    <ClInclude Include="..\DClasses\Data\DXml.h">
+      <Filter>Dream\Data</Filter>
+    </ClInclude>
+    <ClInclude Include="..\DClasses\Component\DMsgQueue.h">
+      <Filter>Dream\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="..\DClasses\Misc\DBitDump.h">
+      <Filter>Dream\Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="resource.h">
+      <Filter>resource</Filter>
+    </ClInclude>
+    <ClInclude Include="..\DClasses\WinExtra\DWinUI\DBase.h">
+      <Filter>Dream\WinExtra\DWinUI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\DClasses\WinExtra\DWinUI\DCrack.h">
+      <Filter>Dream\WinExtra\DWinUI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\DClasses\WinExtra\DWinUI\DCtrl.h">
+      <Filter>Dream\WinExtra\DWinUI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\DClasses\WinExtra\DWinUI\DDlg.h">
+      <Filter>Dream\WinExtra\DWinUI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\DClasses\WinExtra\DWinUI\DGDI.h">
+      <Filter>Dream\WinExtra\DWinUI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\DClasses\WinExtra\DWinUI\DMsg.h">
+      <Filter>Dream\WinExtra\DWinUI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\DClasses\WinExtra\DWinUI\DPool.h">
+      <Filter>Dream\WinExtra\DWinUI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\DClasses\WinExtra\DWinUI\DThunk.h">
+      <Filter>Dream\WinExtra\DWinUI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\DClasses\WinExtra\DWinUI\DWnd.h">
+      <Filter>Dream\WinExtra\DWinUI</Filter>
+    </ClInclude>
+    <ClInclude Include="DKeybdWindow.h">
+      <Filter>Window</Filter>
+    </ClInclude>
+    <ClInclude Include="..\DClasses\Crypt\DASymCrypt.h">
+      <Filter>Dream\Crypt</Filter>
+    </ClInclude>
+    <ClInclude Include="..\DClasses\Crypt\DDigest.h">
+      <Filter>Dream\Crypt</Filter>
+    </ClInclude>
+    <ClInclude Include="..\DClasses\Crypt\DSymCrypt.h">
+      <Filter>Dream\Crypt</Filter>
+    </ClInclude>
+    <ClInclude Include="..\DClasses\Crypt\DX509.h">
+      <Filter>Dream\Crypt</Filter>
+    </ClInclude>
+    <ClInclude Include="..\DClasses\Base\DStdLibDef.h">
+      <Filter>Dream\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\DClasses\Component\DRegEx.h">
+      <Filter>Dream\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="..\DClasses\Data\DRBTree.h">
+      <Filter>Dream\Data</Filter>
+    </ClInclude>
+    <ClInclude Include="..\DClasses\Misc\DLength.h">
+      <Filter>Dream\Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\DClasses\Misc\DInfoDump.h">
+      <Filter>Dream\Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\DClasses\Misc\DUtil.h">
+      <Filter>Dream\Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\DClasses\Crypt\DASN1.h">
+      <Filter>Dream\Crypt</Filter>
+    </ClInclude>
+    <ClInclude Include="..\DClasses\Crypt\DOID.h">
+      <Filter>Dream\Crypt</Filter>
+    </ClInclude>
+    <ClInclude Include="..\DClasses\Base\DUnicode.h">
+      <Filter>Dream\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\DClasses\Base\DMath.h">
+      <Filter>Dream\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\DClasses\WinExtra\Tools\DAPIHook.h">
+      <Filter>Dream\WinExtra\Tools</Filter>
+    </ClInclude>
+    <ClInclude Include="..\DClasses\WinExtra\Tools\DCOM.h">
+      <Filter>Dream\WinExtra\Tools</Filter>
+    </ClInclude>
+    <ClInclude Include="..\DClasses\WinExtra\Tools\DConsole.h">
+      <Filter>Dream\WinExtra\Tools</Filter>
+    </ClInclude>
+    <ClInclude Include="..\DClasses\WinExtra\Tools\DRegKey.h">
+      <Filter>Dream\WinExtra\Tools</Filter>
+    </ClInclude>
+    <ClInclude Include="..\DClasses\WinExtra\Tools\DPlanTask.h">
+      <Filter>Dream\WinExtra\Tools</Filter>
+    </ClInclude>
+    <ClInclude Include="..\DClasses\WinExtra\Security\DWinSAL.h">
+      <Filter>Dream\WinExtra\Security</Filter>
+    </ClInclude>
+    <ClInclude Include="..\DClasses\WinExtra\Security\DWinUAC.h">
+      <Filter>Dream\WinExtra\Security</Filter>
+    </ClInclude>
+    <ClInclude Include="..\DClasses\WinExtra\DWinUI\DCtrlX.h">
+      <Filter>Dream\WinExtra\DWinUI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\DClasses\Base\DBitStream.h">
+      <Filter>Dream\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\DClasses\Base\DBuffer.h">
+      <Filter>Dream\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\DClasses\Base\DList.h">
+      <Filter>Dream\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\DClasses\Base\DMisc.h">
+      <Filter>Dream\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\DClasses\Base\DString.h">
+      <Filter>Dream\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\DClasses\Base\DTime.h">
+      <Filter>Dream\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\DClasses\Base\DStrMgr.h">
+      <Filter>Dream\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\DClasses\Base\DTimer.h">
+      <Filter>Dream\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\DClasses\WinExtra\DWinUI\DUser.h">
+      <Filter>Dream\WinExtra\DWinUI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\DClasses\PB\DPBCodec.h">
+      <Filter>Dream\PB</Filter>
+    </ClInclude>
+    <ClInclude Include="..\DClasses\PB\DPBHelper.h">
+      <Filter>Dream\PB</Filter>
+    </ClInclude>
+    <ClInclude Include="..\DClasses\WinExtra\DWinUI\DCommDlg.h">
+      <Filter>Dream\WinExtra\DWinUI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\DClasses\WinExtra\DWinUI\DFrame.h">
+      <Filter>Dream\WinExtra\DWinUI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\DClasses\WinExtra\DWinUI\DScroll.h">
+      <Filter>Dream\WinExtra\DWinUI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\DClasses\WinExtra\DWinUI\DSplit.h">
+      <Filter>Dream\WinExtra\DWinUI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\DClasses\WinExtra\DWinUI\DTheme.h">
+      <Filter>Dream\WinExtra\DWinUI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\DClasses\Base\DError.h">
+      <Filter>Dream\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\DClasses\Base\DFile.h">
+      <Filter>Dream\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\DClasses\Base\DLog.h">
+      <Filter>Dream\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\DClasses\Base\DPath.h">
+      <Filter>Dream\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\DClasses\WinExtra\DWinApp.h">
+      <Filter>Dream\WinExtra</Filter>
+    </ClInclude>
+    <ClInclude Include="DContainWindow.h">
+      <Filter>Window</Filter>
+    </ClInclude>
+    <ClInclude Include="DMouseWindow.h">
+      <Filter>Window</Filter>
+    </ClInclude>
+    <ClInclude Include="DSplitWindow.h">
+      <Filter>Window</Filter>
+    </ClInclude>
+    <ClInclude Include="..\DClasses\WinExtra\Tools\DWinIniFile.h">
+      <Filter>Dream\WinExtra\Tools</Filter>
+    </ClInclude>
+    <ClInclude Include="..\DClasses\WinExtra\Tools\DWinDbg.h">
+      <Filter>Dream\WinExtra\Tools</Filter>
+    </ClInclude>
+    <ClInclude Include="DScrollWindow.h">
+      <Filter>Window</Filter>
+    </ClInclude>
+    <ClInclude Include="DFrameWindow.h">
+      <Filter>Window</Filter>
+    </ClInclude>
+    <ClInclude Include="..\DClasses\WinExtra\DWinUI\DRes.h">
+      <Filter>Dream\WinExtra\DWinUI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\DClasses\Base\DAPI.h">
+      <Filter>Dream\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\DClasses\Net\Socket\DTCP.h">
+      <Filter>Dream\Net\Socket</Filter>
+    </ClInclude>
+    <ClInclude Include="..\DClasses\Net\Socket\DUDP.h">
+      <Filter>Dream\Net\Socket</Filter>
+    </ClInclude>
+    <ClInclude Include="..\DClasses\Net\Protocol\DDNS.h">
+      <Filter>Dream\Net\Protocol</Filter>
+    </ClInclude>
+    <ClInclude Include="..\DClasses\Net\Base\DIP.h">
+      <Filter>Dream\Net\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\DClasses\Net\Base\DMac.h">
+      <Filter>Dream\Net\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\DClasses\Net\Base\DNet.h">
+      <Filter>Dream\Net\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\DClasses\WinExtra\Kernel\DWinMem.h">
+      <Filter>Dream\WinExtra\Kernel</Filter>
+    </ClInclude>
+    <ClInclude Include="..\DClasses\WinExtra\Kernel\DWinFileMapping.h">
+      <Filter>Dream\WinExtra\Kernel</Filter>
+    </ClInclude>
+    <ClInclude Include="..\DClasses\Base\DAllocator.h">
+      <Filter>Dream\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\DClasses\Codec\DColorSpace.h">
+      <Filter>Dream\Codec</Filter>
+    </ClInclude>
+    <ClInclude Include="..\DClasses\Codec\DDCT.h">
+      <Filter>Dream\Codec</Filter>
+    </ClInclude>
+    <ClInclude Include="..\DClasses\Codec\DHuffman.h">
+      <Filter>Dream\Codec</Filter>
+    </ClInclude>
+    <ClInclude Include="..\DClasses\Codec\DQuickTable.h">
+      <Filter>Dream\Codec</Filter>
+    </ClInclude>
+    <ClInclude Include="..\DClasses\Codec\DSampler.h">
+      <Filter>Dream\Codec</Filter>
+    </ClInclude>
+    <ClInclude Include="..\DClasses\Video\DVideoCapture.h">
+      <Filter>Dream\Video</Filter>
+    </ClInclude>
+    <ClInclude Include="..\DClasses\Video\DVideoDevice.h">
+      <Filter>Dream\Video</Filter>
+    </ClInclude>
+    <ClInclude Include="..\DClasses\File\Image\DBmpFile.h">
+      <Filter>Dream\File\Image</Filter>
+    </ClInclude>
+    <ClInclude Include="..\DClasses\File\Image\DJpegFile.h">
+      <Filter>Dream\File\Image</Filter>
+    </ClInclude>
+    <ClInclude Include="..\DClasses\Math\DBigNumHD.h">
+      <Filter>Dream\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\DClasses\Math\DMatrix.h">
+      <Filter>Dream\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\DClasses\Net\Socket\DNetIO.h">
+      <Filter>Dream\Net\Socket</Filter>
+    </ClInclude>
+    <ClInclude Include="..\DClasses\Net\Socket\DRaw.h">
+      <Filter>Dream\Net\Socket</Filter>
+    </ClInclude>
+    <ClInclude Include="..\DClasses\File\Image\DPngFile.h">
+      <Filter>Dream\File\Image</Filter>
+    </ClInclude>
+    <ClInclude Include="..\DClasses\File\Image\DGifFile.h">
+      <Filter>Dream\File\Image</Filter>
+    </ClInclude>
+    <ClInclude Include="..\DClasses\Base\DThread.h">
+      <Filter>Dream\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="afxres.h">
+      <Filter>resource</Filter>
+    </ClInclude>
+    <ClInclude Include="..\DClasses\Base\DRect.h">
+      <Filter>Dream\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\DClasses\Base\DVector.h">
+      <Filter>Dream\Base</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="dream_win.rc">
+      <Filter>resource</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="icon_app.ico">
+      <Filter>resource</Filter>
+    </None>
+  </ItemGroup>
+</Project>

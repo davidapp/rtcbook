@@ -1,4 +1,4 @@
-#include "stdatl.h"
+#include "atl.h"
 #include "atldlgs.h"
 #include "resource.h"
 #include "maindlg.h"

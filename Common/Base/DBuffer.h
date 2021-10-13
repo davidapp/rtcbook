@@ -4,6 +4,7 @@
 #include "Base/DAtomic.h"
 #include "Base/DList.h"
 #include <string>
+#include <list>
 
 ///////////////////////////////////////////////////////////////////////////////
 // Classes in this file:
@@ -42,6 +43,22 @@ public:
     DBool   Reserve(DInt32 nLen);
     DBuffer GetSub(DInt32 start, DInt32 end);
     DVoid   SetSub(DInt32 start, DByte* pBuf, DUInt32 len);
+
+public:
+    // Base16 = HEX
+    DBool InitWithHexString(DCStr str);
+    DBool InitWithHexString(std::string& str);
+    std::string ToHexString(DUInt32 maxlen = 0);
+    std::string ToHexList(DUInt32 width = 16);
+    DBool HexToBuffer(DCStr hexStr);
+    static DBool IsValidHexStr(DCStr hexStr, DUInt32* reason = NULL);
+
+    // Base64
+    DBool InitWithBase64String(DCStr str);
+    DBool InitWithBase64String(std::string& str);
+    std::string ToBase64String();
+    static DBool IsValidBase64Str(DCStr base64Str, DUInt32* reason = NULL);
+    static DUInt32 GetBase64BufSize(DCStr base64Str);
 
 public:
     DUInt32 GetRefCount() const;
@@ -110,7 +127,7 @@ private:
     DBuffer m_cache;
     DUInt32 m_cachepos;
     DUInt32 m_totalsize;
-    DSList  m_bufList;
+    std::list<void*> m_bufList;
 
 private:
     DVoid FlushCacheToList();

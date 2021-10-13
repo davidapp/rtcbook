@@ -1,23 +1,40 @@
-// Main.cpp : Defines the entry point for the application.
-//
-
-#include "Base/DMemAlloc.h"
-#include "WinExtra/DWinApp.h"
+#include "atl.h"
+#include "atldlgs.h"
 #include "resource.h"
-#include "MainDlg.h"
+#include "maindlg.h"
 
+CAppModule _Module;
 
-int APIENTRY wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLine, int nCmdShow)
+int Run(LPTSTR /*lpCmdLine*/ = NULL, int nCmdShow = SW_SHOWDEFAULT)
 {
-	D_UNUSED(hPrevInstance);
-	D_UNUSED(lpCmdLine);
-	DMemAlloc::Init();
-	DWinApp::SetAppInstance(hInstance);
+    CMessageLoop theLoop;
+    _Module.AddMessageLoop(&theLoop);
 
-	DMainDialog<IDD_MAINDIALOG, TRUE> dlg;
-	dlg.DoModal();
+    CMainDlg dlgMain;
 
-	DMessageLoop* loop = DMessageLoop::GetCurrentLoop();
-	loop->Run();
-	return 0;
+    if (dlgMain.Create(NULL) == NULL)
+    {
+        ATLTRACE(_T("Main dialog creation failed!\n"));
+        return 0;
+    }
+
+    dlgMain.ShowWindow(nCmdShow);
+
+    int nRet = theLoop.Run();
+
+    _Module.RemoveMessageLoop();
+    return nRet;
+}
+
+int WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPTSTR lpCmdLine, int nCmdShow)
+{
+    ::InitCommonControls();
+
+    _Module.Init(NULL, hInstance);
+
+    int nRet = Run(lpCmdLine, nCmdShow);
+
+    _Module.Term();
+
+    return nRet;
 }
