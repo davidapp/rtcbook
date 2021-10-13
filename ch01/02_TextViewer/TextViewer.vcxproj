@@ -23,6 +23,7 @@
     <ProjectGuid>{B87B0B4F-7DA1-434F-BC38-1E6584B71394}</ProjectGuid>
     <RootNamespace>TextViewer</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+    <ProjectName>02_TextViewer</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -133,82 +134,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\DClasses\Base\DAllocator.cpp" />
-    <ClCompile Include="..\..\DClasses\Base\DAPI.cpp" />
-    <ClCompile Include="..\..\DClasses\Base\DBitStream.cpp" />
-    <ClCompile Include="..\..\DClasses\Base\DBuffer.cpp" />
-    <ClCompile Include="..\..\DClasses\Base\DError.cpp" />
-    <ClCompile Include="..\..\DClasses\Base\DFile.cpp" />
-    <ClCompile Include="..\..\DClasses\Base\DFloatKit.cpp" />
-    <ClCompile Include="..\..\DClasses\Base\DList.cpp" />
-    <ClCompile Include="..\..\DClasses\Base\DLog.cpp" />
-    <ClCompile Include="..\..\DClasses\Base\DMath.cpp" />
-    <ClCompile Include="..\..\DClasses\Base\DMemAlloc.cpp" />
-    <ClCompile Include="..\..\DClasses\Base\DMisc.cpp" />
-    <ClCompile Include="..\..\DClasses\Base\DPath.cpp" />
-    <ClCompile Include="..\..\DClasses\Base\DRect.cpp" />
-    <ClCompile Include="..\..\DClasses\Base\DStdLib.cpp" />
-    <ClCompile Include="..\..\DClasses\Base\DString.cpp" />
-    <ClCompile Include="..\..\DClasses\Base\DStrMgr.cpp" />
-    <ClCompile Include="..\..\DClasses\Base\DThread.cpp" />
-    <ClCompile Include="..\..\DClasses\Base\DTime.cpp" />
-    <ClCompile Include="..\..\DClasses\Base\DTimer.cpp" />
-    <ClCompile Include="..\..\DClasses\Base\DUnicode.cpp" />
-    <ClCompile Include="..\..\DClasses\Base\DUTF8.cpp" />
-    <ClCompile Include="..\..\DClasses\Base\DVector.cpp" />
-    <ClCompile Include="..\..\DClasses\WinExtra\DWinApp.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\DClasses\Base\DAllocator.h" />
-    <ClInclude Include="..\..\DClasses\Base\DAPI.h" />
-    <ClInclude Include="..\..\DClasses\Base\DBitStream.h" />
-    <ClInclude Include="..\..\DClasses\Base\DBuffer.h" />
-    <ClInclude Include="..\..\DClasses\Base\DError.h" />
-    <ClInclude Include="..\..\DClasses\Base\DFile.h" />
-    <ClInclude Include="..\..\DClasses\Base\DFloatKit.h" />
-    <ClInclude Include="..\..\DClasses\Base\DList.h" />
-    <ClInclude Include="..\..\DClasses\Base\DLog.h" />
-    <ClInclude Include="..\..\DClasses\Base\DMath.h" />
-    <ClInclude Include="..\..\DClasses\Base\DMemAlloc.h" />
-    <ClInclude Include="..\..\DClasses\Base\DMisc.h" />
-    <ClInclude Include="..\..\DClasses\Base\DPath.h" />
-    <ClInclude Include="..\..\DClasses\Base\DRect.h" />
-    <ClInclude Include="..\..\DClasses\Base\DSPrintf.h" />
-    <ClInclude Include="..\..\DClasses\Base\DSScanf.h" />
-    <ClInclude Include="..\..\DClasses\Base\DStdLib.h" />
-    <ClInclude Include="..\..\DClasses\Base\DStdLibDef.h" />
-    <ClInclude Include="..\..\DClasses\Base\DString.h" />
-    <ClInclude Include="..\..\DClasses\Base\DStrMgr.h" />
-    <ClInclude Include="..\..\DClasses\Base\DTest.h" />
-    <ClInclude Include="..\..\DClasses\Base\DThread.h" />
-    <ClInclude Include="..\..\DClasses\Base\DTime.h" />
-    <ClInclude Include="..\..\DClasses\Base\DTimer.h" />
-    <ClInclude Include="..\..\DClasses\Base\DUnicode.h" />
-    <ClInclude Include="..\..\DClasses\Base\DUTF8.h" />
-    <ClInclude Include="..\..\DClasses\Base\DVector.h" />
-    <ClInclude Include="..\..\DClasses\DConfig.h" />
-    <ClInclude Include="..\..\DClasses\DConfig_Win.h" />
-    <ClInclude Include="..\..\DClasses\Dream.h" />
-    <ClInclude Include="..\..\DClasses\DTypes.h" />
-    <ClInclude Include="..\..\DClasses\WinExtra\DWinApp.h" />
-    <ClInclude Include="..\..\DClasses\WinExtra\DWinUI\DBase.h" />
-    <ClInclude Include="..\..\DClasses\WinExtra\DWinUI\DCommDlg.h" />
-    <ClInclude Include="..\..\DClasses\WinExtra\DWinUI\DCrack.h" />
-    <ClInclude Include="..\..\DClasses\WinExtra\DWinUI\DCtrl.h" />
-    <ClInclude Include="..\..\DClasses\WinExtra\DWinUI\DCtrlX.h" />
-    <ClInclude Include="..\..\DClasses\WinExtra\DWinUI\DDlg.h" />
-    <ClInclude Include="..\..\DClasses\WinExtra\DWinUI\DFrame.h" />
-    <ClInclude Include="..\..\DClasses\WinExtra\DWinUI\DGDI.h" />
-    <ClInclude Include="..\..\DClasses\WinExtra\DWinUI\DMsg.h" />
-    <ClInclude Include="..\..\DClasses\WinExtra\DWinUI\DPool.h" />
-    <ClInclude Include="..\..\DClasses\WinExtra\DWinUI\DRes.h" />
-    <ClInclude Include="..\..\DClasses\WinExtra\DWinUI\DScroll.h" />
-    <ClInclude Include="..\..\DClasses\WinExtra\DWinUI\DSplit.h" />
-    <ClInclude Include="..\..\DClasses\WinExtra\DWinUI\DTheme.h" />
-    <ClInclude Include="..\..\DClasses\WinExtra\DWinUI\DThunk.h" />
-    <ClInclude Include="..\..\DClasses\WinExtra\DWinUI\DUser.h" />
-    <ClInclude Include="..\..\DClasses\WinExtra\DWinUI\DWnd.h" />
     <ClInclude Include="DMainDlg.h" />
     <ClInclude Include="resource.h" />
   </ItemGroup>

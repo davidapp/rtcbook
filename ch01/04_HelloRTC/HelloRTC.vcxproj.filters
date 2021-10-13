@@ -1,14 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Source Files">
-      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
-      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
-    </Filter>
-    <Filter Include="Resource Files">
-      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
-      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
-    </Filter>
     <Filter Include="Window">
       <UniqueIdentifier>{2f4a787d-a11a-4742-a418-7309900e9174}</UniqueIdentifier>
     </Filter>
@@ -22,12 +14,13 @@
     <Filter Include="Common\Base">
       <UniqueIdentifier>{daf088ef-4f90-49ab-b875-1ed664fd5134}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Resource">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="stdatl.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\Common\Net\DIOCPServer.cpp">
       <Filter>Common\Net</Filter>
     </ClCompile>
@@ -46,16 +39,16 @@
     <ClCompile Include="..\..\Common\Net\DWinSocket.cpp">
       <Filter>Common\Net</Filter>
     </ClCompile>
+    <ClCompile Include="stdatl.cpp">
+      <Filter>Resource</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="maindlg.h">
       <Filter>Window</Filter>
     </ClInclude>
     <ClInclude Include="resource.h">
-      <Filter>Resource Files</Filter>
-    </ClInclude>
-    <ClInclude Include="stdatl.h">
-      <Filter>Source Files</Filter>
+      <Filter>Resource</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Common\Net\DIOCPServer.h">
       <Filter>Common\Net</Filter>
@@ -90,15 +83,18 @@
     <ClInclude Include="..\..\Common\Net\DWinSocket.h">
       <Filter>Common\Net</Filter>
     </ClInclude>
+    <ClInclude Include="stdatl.h">
+      <Filter>Resource</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="res\HelloRTC.ico">
-      <Filter>Resource Files</Filter>
+      <Filter>Resource</Filter>
     </Image>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="HelloRTC.rc">
-      <Filter>Resource Files</Filter>
+      <Filter>Resource</Filter>
     </ResourceCompile>
   </ItemGroup>
 </Project>

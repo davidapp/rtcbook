@@ -60,6 +60,7 @@
     <ProjectGuid>{272f51af-d425-412d-ad17-c57dd9ec4985}</ProjectGuid>
     <RootNamespace>rtcbook</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+    <ProjectName>04_HelloRTC</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">

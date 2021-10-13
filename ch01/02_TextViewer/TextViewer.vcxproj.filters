@@ -1,262 +1,40 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Dream">
-      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
-      <Extensions>h;hh;hpp;hxx;hm;inl;inc;ipp;xsd</Extensions>
-    </Filter>
-    <Filter Include="Dream\Base">
-      <UniqueIdentifier>{a41d3b0f-dc5c-41dd-aca8-1ba7999fd2ca}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Dream\WinExtra">
-      <UniqueIdentifier>{3b7bff67-fbc8-4db3-8995-38d48b888ca7}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Dream\WinExtra\DWinUI">
-      <UniqueIdentifier>{1c12fbc9-c94b-451d-a954-f7220fec968c}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Window">
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Common">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="Common\Base">
+      <UniqueIdentifier>{a41d3b0f-dc5c-41dd-aca8-1ba7999fd2ca}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource">
+      <UniqueIdentifier>{adb48f85-7541-489b-aaf1-bc90d011827a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="..\..\DClasses\Base\DAllocator.cpp">
-      <Filter>Dream\Base</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\DClasses\Base\DAPI.cpp">
-      <Filter>Dream\Base</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\DClasses\Base\DBitStream.cpp">
-      <Filter>Dream\Base</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\DClasses\Base\DBuffer.cpp">
-      <Filter>Dream\Base</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\DClasses\Base\DError.cpp">
-      <Filter>Dream\Base</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\DClasses\Base\DFile.cpp">
-      <Filter>Dream\Base</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\DClasses\Base\DFloatKit.cpp">
-      <Filter>Dream\Base</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\DClasses\Base\DList.cpp">
-      <Filter>Dream\Base</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\DClasses\Base\DLog.cpp">
-      <Filter>Dream\Base</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\DClasses\Base\DMath.cpp">
-      <Filter>Dream\Base</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\DClasses\Base\DMemAlloc.cpp">
-      <Filter>Dream\Base</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\DClasses\Base\DMisc.cpp">
-      <Filter>Dream\Base</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\DClasses\Base\DPath.cpp">
-      <Filter>Dream\Base</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\DClasses\Base\DStdLib.cpp">
-      <Filter>Dream\Base</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\DClasses\Base\DString.cpp">
-      <Filter>Dream\Base</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\DClasses\Base\DStrMgr.cpp">
-      <Filter>Dream\Base</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\DClasses\Base\DTime.cpp">
-      <Filter>Dream\Base</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\DClasses\Base\DTimer.cpp">
-      <Filter>Dream\Base</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\DClasses\Base\DUnicode.cpp">
-      <Filter>Dream\Base</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\DClasses\Base\DUTF8.cpp">
-      <Filter>Dream\Base</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\DClasses\WinExtra\DWinApp.cpp">
-      <Filter>Dream\WinExtra</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\DClasses\Base\DThread.cpp">
-      <Filter>Dream\Base</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\DClasses\Base\DRect.cpp">
-      <Filter>Dream\Base</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\DClasses\Base\DVector.cpp">
-      <Filter>Dream\Base</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DMainDlg.h">
       <Filter>Window</Filter>
     </ClInclude>
     <ClInclude Include="resource.h">
-      <Filter>Window</Filter>
+      <Filter>Resource</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\DClasses\Base\DAllocator.h">
-      <Filter>Dream\Base</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\DClasses\Base\DAPI.h">
-      <Filter>Dream\Base</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\DClasses\Base\DBitStream.h">
-      <Filter>Dream\Base</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\DClasses\Base\DBuffer.h">
-      <Filter>Dream\Base</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\DClasses\Base\DError.h">
-      <Filter>Dream\Base</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\DClasses\Base\DFile.h">
-      <Filter>Dream\Base</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\DClasses\Base\DFloatKit.h">
-      <Filter>Dream\Base</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\DClasses\Base\DList.h">
-      <Filter>Dream\Base</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\DClasses\Base\DLog.h">
-      <Filter>Dream\Base</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\DClasses\Base\DMath.h">
-      <Filter>Dream\Base</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\DClasses\Base\DMemAlloc.h">
-      <Filter>Dream\Base</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\DClasses\Base\DMisc.h">
-      <Filter>Dream\Base</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\DClasses\Base\DPath.h">
-      <Filter>Dream\Base</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\DClasses\Base\DSPrintf.h">
-      <Filter>Dream\Base</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\DClasses\Base\DSScanf.h">
-      <Filter>Dream\Base</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\DClasses\Base\DStdLib.h">
-      <Filter>Dream\Base</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\DClasses\Base\DStdLibDef.h">
-      <Filter>Dream\Base</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\DClasses\Base\DString.h">
-      <Filter>Dream\Base</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\DClasses\Base\DStrMgr.h">
-      <Filter>Dream\Base</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\DClasses\Base\DTest.h">
-      <Filter>Dream\Base</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\DClasses\Base\DTime.h">
-      <Filter>Dream\Base</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\DClasses\Base\DTimer.h">
-      <Filter>Dream\Base</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\DClasses\Base\DUnicode.h">
-      <Filter>Dream\Base</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\DClasses\Base\DUTF8.h">
-      <Filter>Dream\Base</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\DClasses\WinExtra\DWinUI\DBase.h">
-      <Filter>Dream\WinExtra\DWinUI</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\DClasses\WinExtra\DWinUI\DCommDlg.h">
-      <Filter>Dream\WinExtra\DWinUI</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\DClasses\WinExtra\DWinUI\DCrack.h">
-      <Filter>Dream\WinExtra\DWinUI</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\DClasses\WinExtra\DWinUI\DCtrl.h">
-      <Filter>Dream\WinExtra\DWinUI</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\DClasses\WinExtra\DWinUI\DCtrlX.h">
-      <Filter>Dream\WinExtra\DWinUI</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\DClasses\WinExtra\DWinUI\DDlg.h">
-      <Filter>Dream\WinExtra\DWinUI</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\DClasses\WinExtra\DWinUI\DFrame.h">
-      <Filter>Dream\WinExtra\DWinUI</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\DClasses\WinExtra\DWinUI\DGDI.h">
-      <Filter>Dream\WinExtra\DWinUI</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\DClasses\WinExtra\DWinUI\DMsg.h">
-      <Filter>Dream\WinExtra\DWinUI</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\DClasses\WinExtra\DWinUI\DPool.h">
-      <Filter>Dream\WinExtra\DWinUI</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\DClasses\WinExtra\DWinUI\DRes.h">
-      <Filter>Dream\WinExtra\DWinUI</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\DClasses\WinExtra\DWinUI\DScroll.h">
-      <Filter>Dream\WinExtra\DWinUI</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\DClasses\WinExtra\DWinUI\DSplit.h">
-      <Filter>Dream\WinExtra\DWinUI</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\DClasses\WinExtra\DWinUI\DTheme.h">
-      <Filter>Dream\WinExtra\DWinUI</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\DClasses\WinExtra\DWinUI\DThunk.h">
-      <Filter>Dream\WinExtra\DWinUI</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\DClasses\WinExtra\DWinUI\DUser.h">
-      <Filter>Dream\WinExtra\DWinUI</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\DClasses\WinExtra\DWinUI\DWnd.h">
-      <Filter>Dream\WinExtra\DWinUI</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\DClasses\WinExtra\DWinApp.h">
-      <Filter>Dream\WinExtra</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\DClasses\DConfig.h">
-      <Filter>Dream\WinExtra</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\DClasses\DConfig_Win.h">
-      <Filter>Dream\WinExtra</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\DClasses\Dream.h">
-      <Filter>Dream\WinExtra</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\DClasses\DTypes.h">
-      <Filter>Dream\WinExtra</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\DClasses\Base\DThread.h">
-      <Filter>Dream\Base</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\DClasses\Base\DRect.h">
-      <Filter>Dream\Base</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\DClasses\Base\DVector.h">
-      <Filter>Dream\Base</Filter>
-    </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <ResourceCompile Include="TextViewer.rc">
-      <Filter>Window</Filter>
-    </ResourceCompile>
   </ItemGroup>
   <ItemGroup>
     <Image Include="icon1.ico">
-      <Filter>Window</Filter>
+      <Filter>Resource</Filter>
     </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="TextViewer.rc">
+      <Filter>Resource</Filter>
+    </ResourceCompile>
   </ItemGroup>
 </Project>
