@@ -63,7 +63,7 @@ public:
     {
         ::EndDialog(m_hWnd, wID);
         m_hWnd = NULL;
-        ::PostQuitMessage(0);
+        PostQuitMessage(0);
         return 0;
     }
 

@@ -1,6 +1,4 @@
 #include "atl.h"
-#include "atldlgs.h"
-#include "resource.h"
 #include "maindlg.h"
 
 CAppModule _Module;

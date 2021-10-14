@@ -10,9 +10,27 @@
     <Filter Include="Resource">
       <UniqueIdentifier>{12280c4b-467b-493f-98a2-62a8f51ebc65}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Common\Base">
+      <UniqueIdentifier>{d226a8f6-d6f7-4020-b27f-e8d387fb030e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Common\Image">
+      <UniqueIdentifier>{d61568db-6873-4c55-bd45-58c8774e19c1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="..\..\Common\Base\DBuffer.cpp">
+      <Filter>Common\Base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\Base\DFile.cpp">
+      <Filter>Common\Base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\Base\DUtil.cpp">
+      <Filter>Common\Base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\Image\DBmpFile.cpp">
+      <Filter>Common\Image</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="MainWindow.h">
@@ -20,6 +38,33 @@
     </ClInclude>
     <ClInclude Include="resource.h">
       <Filter>Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\DConfig.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\DConfig_iOS.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\DConfig_Win.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\DTypes.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\Base\DAtomic.h">
+      <Filter>Common\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\Base\DBuffer.h">
+      <Filter>Common\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\Base\DFile.h">
+      <Filter>Common\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\Base\DUtil.h">
+      <Filter>Common\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\Image\DBmpFile.h">
+      <Filter>Common\Image</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

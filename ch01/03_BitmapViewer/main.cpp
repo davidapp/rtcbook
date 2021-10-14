@@ -1,30 +1,41 @@
-﻿// Main.cpp : Defines the entry point for the application.
-//
+﻿#include "atl.h"
+#include "atldlgs.h"
+#include "resource.h"
+#include "MainWindow.h"
 
-#include "DConfig.h"
-#include "DTypes.h"
-#include "WinExtra/DWinApp.h"
-#include "DMainWindow.h"
+CAppModule _Module;
 
-int APIENTRY wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmdLine, int nCmdShow)
+int Run(LPTSTR /*lpCmdLine*/ = NULL, int nCmdShow = SW_SHOWDEFAULT)
 {
-	D_UNUSED(hPrevInstance);
-	D_UNUSED(lpCmdLine);
-	
-	DWinApp::SetAppInstance(hInstance);
-	HMENU hMenu = LoadMenu(hInstance, MAKEINTRESOURCE(IDR_MENU1));
+    CMessageLoop theLoop;
+    _Module.AddMessageLoop(&theLoop);
 
-	DMainWindow wnd;
-	RECT r = {300,300,940,780};
-	DPRect dr(&r);
-	DHMenu dm(hMenu);
-	wnd.Create(NULL, dr, dm, L"DWinUI Test Window", WS_OVERLAPPEDWINDOW|WS_VISIBLE, WS_EX_STATICEDGE);
-	wnd.ShowWindow(nCmdShow);
-	wnd.UpdateWindow();
+    CMainWindow winMain;
 
-	DMessageLoop *loop = DMessageLoop::GetCurrentLoop();
-	loop->Run();
+    if (winMain.Create(NULL, CRect(0,0,400,300), L"Bitmap Viewer", SW_SHOW) == NULL)
+    {
+        ATLTRACE(_T("Main window creation failed!\n"));
+        return 0;
+    }
 
-	return 0;
+    winMain.ShowWindow(nCmdShow);
+    winMain.UpdateWindow();
+
+    int nRet = theLoop.Run();
+
+    _Module.RemoveMessageLoop();
+    return nRet;
 }
 
+int WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPTSTR lpCmdLine, int nCmdShow)
+{
+    ::InitCommonControls();
+
+    _Module.Init(NULL, hInstance);
+
+    int nRet = Run(lpCmdLine, nCmdShow);
+
+    _Module.Term();
+
+    return nRet;
+}
