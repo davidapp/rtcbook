@@ -148,10 +148,11 @@ public:
         return 0;
     }
 
-    CEdit	m_text;
-    CEdit	m_ansibin;
-    CEdit	m_unicodebin;
-    CEdit	m_utf8bin;
+    CEdit m_text;
+    CEdit m_ansibin;
+    CEdit m_unicodebin;
+    CEdit m_utf8bin;
+
     CButton m_t2all;
     CButton m_a2t;
     CButton m_u2t;

@@ -212,9 +212,8 @@ public:
         return 0;
     }
 
-
-    CEdit	m_hex;
-    CEdit	m_base;
+    CEdit m_hex;
+    CEdit m_base;
 
     CButton m_tobase64;
     CButton m_frombase64;
