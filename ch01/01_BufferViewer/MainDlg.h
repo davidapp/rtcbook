@@ -47,6 +47,8 @@ public:
 
     LRESULT OnInitDialog(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/)
     {
+        CenterWindow(GetParent());
+
         m_hex = GetDlgItem(IDC_HEXEDIT);
         m_base = GetDlgItem(IDC_BASEEDIT);
 
