@@ -23,7 +23,7 @@
     <ClCompile Include="..\..\Common\Base\DFile.cpp" />
     <ClCompile Include="..\..\Common\Base\DUtil.cpp" />
     <ClCompile Include="..\..\Common\Image\DBmpFile.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="main.cpp" />
   </ItemGroup>
@@ -37,7 +37,7 @@
     <ClInclude Include="..\..\Common\DConfig_Win.h" />
     <ClInclude Include="..\..\Common\DTypes.h" />
     <ClInclude Include="..\..\Common\Image\DBmpFile.h">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
     </ClInclude>
     <ClInclude Include="MainWindow.h" />
     <ClInclude Include="resource.h" />

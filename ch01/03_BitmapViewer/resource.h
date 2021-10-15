@@ -1,6 +1,6 @@
 ﻿//{{NO_DEPENDENCIES}}
 // Microsoft Visual C++ generated include file.
-// Used by dream_win.rc
+// Used by BitmapViewer.rc
 //
 #define IDR_MENU1                       101
 #define IDI_ICON                        102
@@ -81,13 +81,17 @@
 #define ID_BITMAP_LOADANDDRAW           40082
 #define ID_BITMAP_LOADJPEG              40083
 #define ID_LOAD_JPEG                    40084
+#define ID_BITMAP_LOAD                  40085
+#define ID_BITMAP_INFO                  40086
+#define ID_HELP_ABOUT                   40087
+#define ID_BITMAP_LOADANDBLT            40088
 
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        104
-#define _APS_NEXT_COMMAND_VALUE         40085
+#define _APS_NEXT_COMMAND_VALUE         40089
 #define _APS_NEXT_CONTROL_VALUE         1005
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
