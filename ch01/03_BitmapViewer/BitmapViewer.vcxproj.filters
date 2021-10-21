@@ -13,7 +13,7 @@
     <Filter Include="Common\Base">
       <UniqueIdentifier>{d226a8f6-d6f7-4020-b27f-e8d387fb030e}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Common\Image">
+    <Filter Include="Common\File">
       <UniqueIdentifier>{d61568db-6873-4c55-bd45-58c8774e19c1}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -28,8 +28,8 @@
     <ClCompile Include="..\..\Common\Base\DUtil.cpp">
       <Filter>Common\Base</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Common\Image\DBmpFile.cpp">
-      <Filter>Common\Image</Filter>
+    <ClCompile Include="..\..\Common\File\DBmpFile.cpp">
+      <Filter>Common\File</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -63,8 +63,8 @@
     <ClInclude Include="..\..\Common\Base\DUtil.h">
       <Filter>Common\Base</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Common\Image\DBmpFile.h">
-      <Filter>Common\Image</Filter>
+    <ClInclude Include="..\..\Common\File\DBmpFile.h">
+      <Filter>Common\File</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

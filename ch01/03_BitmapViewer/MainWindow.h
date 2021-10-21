@@ -7,7 +7,7 @@
 #include "atlmisc.h"
 #include "atlctrls.h"
 #include "atlgdi.h"
-#include "Image/DBmpFile.h"
+#include "File/DBmpFile.h"
 #include "Base/DFile.h"
 #include "Base/DUtil.h"
 

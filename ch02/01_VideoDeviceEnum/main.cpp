@@ -12,7 +12,7 @@ int Run(LPTSTR /*lpCmdLine*/ = NULL, int nCmdShow = SW_SHOWDEFAULT)
 
     CMainWindow winMain;
 
-    if (winMain.Create(NULL, (LPRECT)CRect(0,0,800,600), L"Video Capturer",
+    if (winMain.Create(NULL, (LPRECT)CRect(0,0,800,600), L"Video Capture",
         WS_VISIBLE | WS_OVERLAPPEDWINDOW, 0, ::LoadMenu(NULL, MAKEINTRESOURCE(IDR_MENU1))) == NULL)
     {
         ATLTRACE(_T("Main window creation failed!\n"));

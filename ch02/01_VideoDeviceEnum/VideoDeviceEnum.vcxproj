@@ -144,7 +144,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="MainWindow.h" />
     <ClInclude Include="resource.h" />
+    <ClInclude Include="SettingDlg.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="VideoDeviceEnum.rc" />
