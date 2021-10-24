@@ -11,7 +11,11 @@ public:
 
 public:
     static std::string  UCS2ToUTF8(DUInt16* pUnicode, DUInt32 uBufSize);
+    static std::string  UCS2ToUTF8(const std::wstring& wstr);
+
     static std::wstring UTF8ToUCS2(DByte* pUTF8Str, DUInt32 uBufSize);
+    static std::wstring UTF8ToUCS2(const std::string& str);
+    
     static std::string  UCS4ToUTF8(DUInt32* pUnicode61, DUInt32 uBufSize);
 
 public:

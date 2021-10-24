@@ -78,6 +78,12 @@ std::string DUTF8::UCS2ToUTF8(DUInt16* pUnicode, DUInt32 uBufSize)
     return strRet;
 }
 
+std::string DUTF8::UCS2ToUTF8(const std::wstring& wstr)
+{
+    return DUTF8::UCS2ToUTF8((DUInt16*)wstr.c_str(), wstr.length() * 2);
+}
+
+
 std::wstring DUTF8::UTF8ToUCS2(DByte* pUTF8Str, DUInt32 uBufSize)
 {
     std::wstring strRet;
@@ -97,6 +103,11 @@ std::wstring DUTF8::UTF8ToUCS2(DByte* pUTF8Str, DUInt32 uBufSize)
         }
     }
     return strRet;
+}
+
+std::wstring DUTF8::UTF8ToUCS2(const std::string& str)
+{
+    return DUTF8::UTF8ToUCS2((DByte*)str.c_str(), str.length());
 }
 
 std::string DUTF8::UCS4ToUTF8(DUInt32* pUnicode61, DUInt32 uBufSize)

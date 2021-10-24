@@ -144,6 +144,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\Common\Base\DUTF8.h" />
+    <ClInclude Include="..\..\Common\Base\DUtil.h" />
+    <ClInclude Include="..\..\Common\Video\WinDSCamera.h" />
     <ClInclude Include="MainWindow.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="SettingDlg.h" />
@@ -152,6 +155,9 @@
     <ResourceCompile Include="VideoDeviceEnum.rc" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\Common\Base\DUTF8.cpp" />
+    <ClCompile Include="..\..\Common\Base\DUtil.cpp" />
+    <ClCompile Include="..\..\Common\Video\WinDSCamera.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

@@ -13,6 +13,12 @@
       <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
       <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
     </Filter>
+    <Filter Include="Common\Base">
+      <UniqueIdentifier>{ab28219d-6519-4407-8911-1c9a3a186eb0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Common\Video">
+      <UniqueIdentifier>{24700aca-cf59-4718-9759-d9559a0a5f7d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="VideoDeviceEnum.rc">
@@ -29,8 +35,26 @@
     <ClInclude Include="SettingDlg.h">
       <Filter>Window</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\Common\Base\DUTF8.h">
+      <Filter>Common\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\Base\DUtil.h">
+      <Filter>Common\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\Video\WinDSCamera.h">
+      <Filter>Common\Video</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="..\..\Common\Base\DUTF8.cpp">
+      <Filter>Common\Base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\Base\DUtil.cpp">
+      <Filter>Common\Base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\Video\WinDSCamera.cpp">
+      <Filter>Common\Video</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

@@ -1,14 +1,6 @@
-﻿//
-//  WinDSCamera.cpp
-//
-//  Created by Dai Wei(bmw.dai@gmail.com) on 05/03/2021 for Dream.
-//  Copyright 2021. All rights reserved.
-//
-
-#include "WinDSCamera.h"
-#include "Base/DStdLib.h"
+﻿#include "WinDSCamera.h"
 #include <Initguid.h>
-#include <mutex>
+#include "Base/DUTF8.h"
 
 #pragma comment(lib, "strmiids.lib")
 
@@ -23,7 +15,6 @@ DEFINE_GUID(MEDIASUBTYPE_HDYC, 0x43594448, 0x0000, 0x0010, 0x80, 0x00, 0x00, 0xA
 
 ICreateDevEnum* _dsDevEnum;
 IEnumMoniker* _dsMonikerDevEnum;
-std::recursive_mutex _mutex;
 
 // 初始化COM，并创建 ICreateDevEnum 接口
 DBool WinDSCamera::Init() 
@@ -55,21 +46,22 @@ DVoid WinDSCamera::UnInit()
 // 通过 CLSID_SystemDeviceEnum 对象的 IID_ICreateDevEnum 接口，枚举系统的摄像头
 // 要枚举的是 CLSID_VideoInputDeviceCategory 类别下的 IEnumMoniker 接口
 // 返回一个 DData 的 DArray，包含：设备的名称，路径(DeviceID)，ProductID
-DArray* WinDSCamera::GetDevices() 
+std::vector<DCameraInfo> WinDSCamera::GetDevices()
 {
+    std::vector<DCameraInfo> info;
+
     if (_dsDevEnum == nullptr) {
-        return nullptr;
+        return info;
     }
 
     // 每次重新创建新的 IEnumMoniker，便于实时更新
     SAFE_RELEASE(_dsMonikerDevEnum)
     HRESULT hr = _dsDevEnum->CreateClassEnumerator(CLSID_VideoInputDeviceCategory, &_dsMonikerDevEnum, 0);
     if (hr != NOERROR || _dsMonikerDevEnum == nullptr) {
-        return nullptr;
+        return info;
     }
     _dsMonikerDevEnum->Reset();
 
-    DArray* pArrayRet = DArray::CreateDArray();
     ULONG cFetched = ULONG();
     IMoniker* pM = nullptr;
     // 枚举不到就直接返回空数组
@@ -80,7 +72,7 @@ DArray* WinDSCamera::GetDevices()
         hr = pM->BindToStorage(nullptr, nullptr, IID_IPropertyBag, (void**)&pBag);
         if (S_OK == hr) 
         {
-            DData* pItem = DData::CreateDData(5);
+            DCameraInfo dev = {};
 
             // 1.设备的名称，"Description"优先，"FriendlyName"兜底，填入UTF8编码
             VARIANT varName;
@@ -92,39 +84,44 @@ DArray* WinDSCamera::GetDevices()
             }
             if (SUCCEEDED(hr)) 
             {
-                DString strName = varName.bstrVal;
-                DStringA strNameU8 = strName.ToUTF8();
-                pItem->AddStringA(DCAMERA_STRINGA_DEVICE_NAME, strNameU8);
+                dev.m_device_name = DUTF8::UCS2ToUTF8((DUInt16*)varName.bstrVal, wcslen(varName.bstrVal)*2);
             }
 
             // 2.设备的路径，"DevicePath"，用这个当作设备ID
             hr = pBag->Read(L"DevicePath", &varName, 0);
             if (SUCCEEDED(hr)) 
             {
-                DString strDeviceID = varName.bstrVal;
-                DStringA strDeviceIDU8 = strDeviceID.ToUTF8();
-                pItem->AddStringA(DCAMERA_STRINGA_DEVICE_ID, strDeviceIDU8);
-
-                // 3.产品ID，通过 Path 中的某一段来获得
-                DStringA strProductID = WinDSCamera::GetProductIdFromPath(strDeviceIDU8);
-                pItem->AddStringA(DCAMERA_STRINGA_PRODUCT_ID, strProductID);
+                dev.m_device_path = DUTF8::UCS2ToUTF8((DUInt16*)varName.bstrVal, wcslen(varName.bstrVal) * 2);
             }
             VariantClear(&varName);
             pBag->Release();
-
-            pArrayRet->AddData(pItem);
-            pItem->Release();
+            info.push_back(dev);
         }
         pM->Release();
     }
 
-	return pArrayRet;
+	return info;
+}
+
+std::wstring WinDSCamera::GetInfoString(const DCameraInfo& info)
+{
+    std::wstring ret, temp;
+    temp = L"device name: \r\n";
+    ret += temp;
+    temp = DUTF8::UTF8ToUCS2(info.m_device_name) + L"\r\n";
+    ret += temp;
+    temp = L"device path: \r\n";
+    ret += temp;
+    temp = DUTF8::UTF8ToUCS2(info.m_device_path) + L"\r\n";
+    ret += temp;
+    return ret;
 }
 
 // 给定一个视频采集设备的ID，获取这个采集设备的能力
-DArray* WinDSCamera::GetDeviceCaps(DStr deviceID) 
+std::vector<DCameraCaps> WinDSCamera::GetDeviceCaps(DStr deviceID)
 {
-    DArray* pArrRet = DArray::CreateDArray();
+    std::vector<DCameraCaps> caps;
+    /*
     IBaseFilter* captureDevice = nullptr;
     IPin* outputCapturePin = nullptr;
     IAMStreamConfig* streamConfig = nullptr;
@@ -258,7 +255,8 @@ DArray* WinDSCamera::GetDeviceCaps(DStr deviceID)
     SAFE_RELEASE(outputCapturePin);
     SAFE_RELEASE(captureDevice);
 
-    return pArrRet;
+    return pArrRet;*/
+    return caps;
 }
 
 DVoid WinDSCamera::FreeMediaType(AM_MEDIA_TYPE& mt)
@@ -318,8 +316,7 @@ IBaseFilter* WinDSCamera::GetDeviceFilter(DCStr deviceUniqueIdUTF8)
             hr = pBag->Read(L"DevicePath", &varName, 0);
             if (SUCCEEDED(hr))
             {
-                DString strName = varName.bstrVal;
-                DStringA strNameU8 = strName.ToUTF8();
+                std::string strNameU8 = DUTF8::UCS2ToUTF8((DUInt16*)varName.bstrVal, wcslen(varName.bstrVal)*2);
                 if (strNameU8 == deviceUniqueIdUTF8)
                 {
                     pM->BindToObject(nullptr, nullptr, IID_IBaseFilter, (void**)&captureFilter);
@@ -342,7 +339,7 @@ IBaseFilter* WinDSCamera::GetDeviceFilter(DCStr deviceUniqueIdUTF8)
 // 通过 IBaseFilter 查询到 IID_ISpecifyPropertyPages
 DBool WinDSCamera::ShowSettingDialog(DCStr deviceUniqueIdUTF8, DVoid* parentWindow, DUInt32 positionX, DUInt32 positionY) 
 {
-    std::unique_lock<std::recursive_mutex> ul(_mutex);
+    // std::unique_lock<std::recursive_mutex> ul(_mutex);
     DBool bResult = false;
     IBaseFilter* filter = nullptr;
     do
@@ -387,25 +384,25 @@ DBool WinDSCamera::ShowSettingDialog(DCStr deviceUniqueIdUTF8, DVoid* parentWind
 // Example of device path:
 // "\\?\usb#vid_0408&pid_2010&mi_00#7&258e7aaf&0&0000#{65e8773d-8f56-11d0-a3b9-00a0c9223196}\global"
 // "\\?\avc#sony&dv-vcr&camcorder&dv#65b2d50301460008#{65e8773d-8f56-11d0-a3b9-00a0c9223196}\global"
-DStringA WinDSCamera::GetProductIdFromPath(DStringA& path) 
+std::string WinDSCamera::GetProductIdFromPath(std::string& path)
 {
-    DStringA strRet;
-    DChar* startPos = path.GetStr() + path.FindOneOf("\\\\?\\");
-    if (startPos < path.GetStr()) {
+    std::string strRet;
+    /*DChar* startPos = path.find("\\\\?\\");
+    if (startPos < path.c_str()) {
         strRet = "";
         return strRet;
     }
     startPos += 4;
 
-    DChar* pos = DStdLib::strchr(startPos, '&');
-    if (!pos || pos >= path.GetStr() + DStdLib::strlen(path.GetStr())) 
+    DChar* pos = strchr(startPos, '&');
+    if (!pos || pos >= path.c_str() + strlen(path.c_str())) 
     {
         strRet = "";
         return strRet;
     }
-    pos = DStdLib::strchr(pos + 1, '&');
+    pos = strchr(pos + 1, '&');
     DUInt32 bytesToCopy = (DUInt32)(pos - startPos);
-    if (pos && (bytesToCopy <= (DUInt32)path.GetDataLength()) && bytesToCopy <= 1024) 
+    if (pos && (bytesToCopy <= (DUInt32)path.size()) && bytesToCopy <= 1024) 
     {
         strRet.SetStr(startPos, bytesToCopy);
     }
@@ -413,7 +410,7 @@ DStringA WinDSCamera::GetProductIdFromPath(DStringA& path)
     {
         strRet = "";
         return strRet;
-    }
+    }*/
     return strRet;
 }
 
@@ -492,21 +489,3 @@ DBool WinDSCamera::PinMatchesCategory(IPin* pPin, REFGUID Category)
     }
     return bFound;
 }
-
-#if defined(D_INCLUDE_TEST) && (D_INCLUDE_TEST==1)
-#include "Base/DTest.h"
-
-DVoid WinDSCamera::TestDevices()
-{
-    WinDSCamera camera;
-    camera.Init();
-    DArray* pArr = camera.GetDevices();
-    pArr->Dump();
-    DStringA strA = pArr->GetData(0)->GetStringA(1);
-    DArray* pCapArr = camera.GetDeviceCaps(strA.GetStr());
-    pCapArr->Dump();
-    pArr->Release();
-}
-
-
-#endif

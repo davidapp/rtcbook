@@ -2,6 +2,7 @@
 #include "atldlgs.h"
 #include "resource.h"
 #include "MainWindow.h"
+#include "Video/WinDSCamera.h"
 
 CAppModule _Module;
 
@@ -33,9 +34,11 @@ int WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPTSTR lp
     ::InitCommonControls();
 
     _Module.Init(NULL, hInstance);
+    WinDSCamera::Init();
 
     int nRet = Run(lpCmdLine, nCmdShow);
 
+    WinDSCamera::UnInit();
     _Module.Term();
 
     return nRet;
