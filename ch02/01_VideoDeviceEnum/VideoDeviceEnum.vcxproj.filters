@@ -56,8 +56,5 @@
     <ClCompile Include="..\..\Common\Video\WinDSCamera.cpp">
       <Filter>Common\Video</Filter>
     </ClCompile>
-    <ClCompile Include="SETTINGDLG.CPP">
-      <Filter>Common</Filter>
-    </ClCompile>
   </ItemGroup>
 </Project>
