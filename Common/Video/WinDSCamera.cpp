@@ -45,7 +45,6 @@ DVoid WinDSCamera::UnInit()
 
 // 通过 CLSID_SystemDeviceEnum 对象的 IID_ICreateDevEnum 接口，枚举系统的摄像头
 // 要枚举的是 CLSID_VideoInputDeviceCategory 类别下的 IEnumMoniker 接口
-// 返回一个 DData 的 DArray，包含：设备的名称，路径(DeviceID)，ProductID
 std::vector<DCameraInfo> WinDSCamera::GetDevices()
 {
     std::vector<DCameraInfo> info;
