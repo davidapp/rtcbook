@@ -29,6 +29,7 @@ public:
         MESSAGE_HANDLER(WM_INITDIALOG, OnInitDialog)
         COMMAND_RANGE_HANDLER(IDOK, IDNO, OnCloseCmd)
         COMMAND_HANDLER(IDC_COMBO1, CBN_SELCHANGE, OnCbnSelchangeCombo1)
+        COMMAND_ID_HANDLER(IDC_SHOWINFO, OnShowInfo)
     END_MSG_MAP()
 
     LRESULT OnInitDialog(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/)
@@ -62,15 +63,24 @@ public:
     LRESULT OnCbnSelchangeCombo1(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/)
     {
         std::vector<DCameraInfo> devs = WinDSCamera::GetDevices();
-        if (devs.size() > 0) {
-            int index = m_devlist.GetCurSel();
+        DUInt32 index = m_devlist.GetCurSel();
+        if (index < devs.size()) {
             std::wstring infostr = WinDSCamera::GetInfoString(devs[index]);
             m_info.SetWindowText(infostr.c_str());
         }
         return 0;
     }
 
-
+    LRESULT OnShowInfo(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/)
+    {
+        std::vector<DCameraInfo> devs = WinDSCamera::GetDevices();
+        DUInt32 index = m_devlist.GetCurSel();
+        if (index < devs.size()) {
+            WinDSCamera::ShowSettingDialog(devs[index].m_device_path.c_str(), this->m_hWnd, 0, 0);
+        }
+        return 0;
+    }
+    
     CComboBox m_devlist;
     CEdit m_info;
 };
