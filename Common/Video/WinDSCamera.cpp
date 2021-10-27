@@ -73,17 +73,15 @@ std::vector<DCameraInfo> WinDSCamera::GetDevices()
         {
             DCameraInfo dev = {};
 
-            // 1.设备的名称，"Description"优先，"FriendlyName"兜底，填入UTF8编码
             VARIANT varName;
-            VariantInit(&varName);
-            hr = pBag->Read(L"Description", &varName, 0);
-            if (FAILED(hr)) 
-            {
-                hr = pBag->Read(L"FriendlyName", &varName, 0);
-            }
+            varName.vt = VT_BSTR;
+
+            // 1.设备的名称，"FriendlyName"，填入UTF8编码
+            hr = pBag->Read(L"FriendlyName", &varName, 0);
             if (SUCCEEDED(hr)) 
             {
                 dev.m_device_name = DUTF8::UCS2ToUTF8((DUInt16*)varName.bstrVal, wcslen(varName.bstrVal)*2);
+                SysFreeString(varName.bstrVal);
             }
 
             // 2.设备的路径，"DevicePath"，用这个当作设备ID
@@ -91,8 +89,17 @@ std::vector<DCameraInfo> WinDSCamera::GetDevices()
             if (SUCCEEDED(hr)) 
             {
                 dev.m_device_path = DUTF8::UCS2ToUTF8((DUInt16*)varName.bstrVal, wcslen(varName.bstrVal) * 2);
+                SysFreeString(varName.bstrVal);
             }
-            VariantClear(&varName);
+
+            // 3.设备的描述，"Description"
+            hr = pBag->Read(L"Description", &varName, 0);
+            if (SUCCEEDED(hr))
+            {
+                dev.m_device_desc = DUTF8::UCS2ToUTF8((DUInt16*)varName.bstrVal, wcslen(varName.bstrVal) * 2);
+                SysFreeString(varName.bstrVal);
+            }
+
             pBag->Release();
             info.push_back(dev);
         }
@@ -112,6 +119,10 @@ std::wstring WinDSCamera::GetInfoString(const DCameraInfo& info)
     temp = L"device path: \r\n";
     ret += temp;
     temp = DUTF8::UTF8ToUCS2(info.m_device_path) + L"\r\n";
+    ret += temp;
+    temp = L"device description: \r\n";
+    ret += temp;
+    temp = DUTF8::UTF8ToUCS2(info.m_device_desc) + L"\r\n";
     ret += temp;
     return ret;
 }

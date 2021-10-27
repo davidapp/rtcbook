@@ -9,6 +9,7 @@ class DCameraInfo {
 public:
     std::string m_device_name;
     std::string m_device_path;
+    std::string m_device_desc;
 };
 
 class DCameraCaps {
