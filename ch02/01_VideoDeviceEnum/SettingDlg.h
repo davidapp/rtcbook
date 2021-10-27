@@ -30,6 +30,7 @@ public:
         COMMAND_RANGE_HANDLER(IDOK, IDNO, OnCloseCmd)
         COMMAND_HANDLER(IDC_COMBO1, CBN_SELCHANGE, OnCbnSelchangeCombo1)
         COMMAND_ID_HANDLER(IDC_SHOWINFO, OnShowInfo)
+        COMMAND_ID_HANDLER(IDC_DUMPCAPS, OnDumpCaps)
     END_MSG_MAP()
 
     LRESULT OnInitDialog(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/)
@@ -78,6 +79,11 @@ public:
         if (index < devs.size()) {
             WinDSCamera::ShowSettingDialog(devs[index].m_device_path.c_str(), this->m_hWnd, 0, 0);
         }
+        return 0;
+    }
+
+    LRESULT OnDumpCaps(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/)
+    {
         return 0;
     }
     

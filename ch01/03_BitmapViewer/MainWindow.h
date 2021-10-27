@@ -29,7 +29,8 @@ public:
         MSG_WM_SIZE(OnSize)
         COMMAND_ID_HANDLER(ID_BITMAP_LOAD, OnLoadBitmap)
         COMMAND_ID_HANDLER(ID_BITMAP_LOADANDBLT, OnLoadBitmapAndBlt)
-        COMMAND_ID_HANDLER(ID_BITMAP_INFO, OnInfoBitmap)
+        COMMAND_ID_HANDLER(ID_BITMAP_FILEHEADER, OnFileHeader)
+        COMMAND_ID_HANDLER(ID_BITMAP_INFOHEADER, OnInfoHeader)
     END_MSG_MAP()
 
     //Create
@@ -75,7 +76,7 @@ public:
             }
 
             m_info = info;
-            DBmpFile::Free(&info);
+            //DBmpFile::Free(&info);
         }
         return 0;
     }
@@ -95,12 +96,20 @@ public:
                 DIB_RGB_COLORS, SRCCOPY);
 
             m_info = info;
-            DBmpFile::Free(&info);
+            //DBmpFile::Free(&info);
         }
         return 0;
     }
 
-    LRESULT OnInfoBitmap(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL& bHandled)
+    LRESULT OnFileHeader(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL& bHandled)
+    {
+        std::string str = DUtil::DumpBitmapFileHeader(m_info.fileHead);
+        std::wstring strMsg = DUtil::s2ws(str);
+        MessageBox(strMsg.c_str());
+        return 0;
+    }
+
+    LRESULT OnInfoHeader(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL& bHandled)
     {
         CString strMsg, strTemp;
         strTemp.Format(L"Width: %u\r\n", m_info.imageWidth);

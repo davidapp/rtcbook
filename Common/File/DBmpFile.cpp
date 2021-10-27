@@ -1,33 +1,10 @@
 ﻿#include "DBmpFile.h"
 #include "Base/DFile.h"
-
+#include "Video/VideoDefines.h"
 // DBITMAPFILEHEADER(14) + DBITMAPINFOHEADER(40) + 可选PALETTE + RGB_Data
 // RGB_Data 部分要注意：1）每一行会按4字节对齐 2）最开始的一行是左下角的
 // Multi-byte integers in the Windows BMP format are stored with the least significant bytes first. 
 // Data stored in the BMP format consists entirely of complete bytes so bit string ordering is not an issue.
-
-typedef struct tagDBITMAPFILEHEADER {
-    DUInt16 bfType;			// 0x4D42 'BM'
-    DUInt32 bfSize;			// FileSize
-    DUInt16 bfReserved1;	// 0
-    DUInt16 bfReserved2;	// 0
-    DUInt32 bfOffBits;		// Offset of Pixel Data
-} DBITMAPFILEHEADER;
-// 2+4+2+2+4 = 14
-
-typedef struct tagDBITMAPINFOHEADER {
-    DUInt32 biSize;			// Sizeof(DBITMAPINFOHEADER) = 40
-    DInt32 biWidth;
-    DInt32 biHeight;
-    DUInt16 biPlanes;		// Always 1
-    DUInt16 biBitCount;		// 1 4 8 16 24 32
-    DUInt32 biCompression;	// BI_RGB
-    DUInt32 biSizeImage;	// 0
-    DInt32 biXPelsPerMeter;	// pixel/meter
-    DInt32 biYPelsPerMeter;	// pixel/meter
-    DUInt32 biClrUsed;		// 0
-    DUInt32 biClrImportant;	// 0
-} DBITMAPINFOHEADER;
 
 
 DBool DBmpFile::Load(DCStr strPath, DBmpInfo* info)
@@ -41,15 +18,17 @@ DBool DBmpFile::Load(DCStr strPath, DBmpInfo* info)
     DBITMAPFILEHEADER* pFileHeader = (DBITMAPFILEHEADER*)fileHead.GetBuf();
     DBITMAPINFOHEADER* pInfoHeader = (DBITMAPINFOHEADER*)infoHead.GetBuf();
 
-    info->infoHead = infoHead.GetBuf();
     info->imageWidth = pInfoHeader->biWidth;
     info->imageHeight = pInfoHeader->biHeight;
     info->imageBits = pInfoHeader->biBitCount;
     info->imageLineBytes = GetAlignWidth24(pInfoHeader->biWidth);
     DBuffer bufData = bufRead.ReadFixBuffer(buf.GetSize() - 54);
     info->imageBuf = bufData.GetBuf();
+    info->fileHead = fileHead.GetBuf();
+    info->infoHead = infoHead.GetBuf();
 
     bufData.Detach();
+    fileHead.Detach();
     infoHead.Detach();
 
     return true;
@@ -57,8 +36,9 @@ DBool DBmpFile::Load(DCStr strPath, DBmpInfo* info)
 
 DVoid DBmpFile::Free(DBmpInfo* info)
 {
-    DBuffer bufHead, bufBitmap;
-    bufHead.Attach(info->infoHead);
+    DBuffer bufFile, bufInfo, bufBitmap;
+    bufFile.Attach(info->fileHead);
+    bufInfo.Attach(info->infoHead);
     bufBitmap.Attach(info->imageBuf);
 }
 

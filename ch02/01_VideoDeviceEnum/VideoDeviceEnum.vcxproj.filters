@@ -44,6 +44,9 @@
     <ClInclude Include="..\..\Common\Video\WinDSCamera.h">
       <Filter>Common\Video</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\Common\Video\VideoDefines.h">
+      <Filter>Common\Video</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />

@@ -1,5 +1,6 @@
 ﻿#include "DUtil.h"
 #include <locale>
+#include "File/DBmpFile.h"
 
 std::string DUtil::ws2s(const std::wstring& ws)
 {
@@ -90,5 +91,132 @@ DUInt64 DUtil::Swap64(DUInt64 h)
     p2[5] = p1[2];
     p2[6] = p1[1];
     p2[7] = p1[0];
+    return ret;
+}
+
+std::string DUtil::UInt8ToStr(DUInt8 c)
+{
+    char buf[10] = {};
+#if defined(BUILD_FOR_WINDOWS)
+    sprintf_s(buf, 10, "%d", c);
+#else
+    sprintf(buf, "%d", c);
+#endif
+    std::string str = buf;
+    return str;
+}
+
+std::string DUtil::UInt16ToStr(DUInt16 c, DBool bLE)
+{
+    char buf[10] = {};
+    if (bLE) {
+        c = Swap16(c);
+    }
+#if defined(BUILD_FOR_WINDOWS)
+    sprintf_s(buf, 10, "%d", c);
+#else
+    sprintf(buf, "%d", c);
+#endif
+    std::string str = buf;
+    return str;
+}
+
+std::string DUtil::UInt32ToStr(DUInt32 c, DBool bLE)
+{
+    char buf[20] = {};
+    if (bLE) {
+        c = Swap32(c);
+    }
+#if defined(BUILD_FOR_WINDOWS)
+    sprintf_s(buf, 20, "%d", c);
+#else
+    sprintf(buf, "%d", c);
+#endif
+    std::string str = buf;
+    return str;
+}
+
+std::string DUtil::UInt8ToStr16(DUInt8 c)
+{
+    char buf[10] = {};
+#if defined(BUILD_FOR_WINDOWS)
+    sprintf_s(buf, 10, "0x%02x", c);
+#else
+    sprintf(buf, "0x%02x", c);
+#endif
+    std::string str = buf;
+    return str;
+}
+
+std::string DUtil::UInt16ToStr16(DUInt16 c, DBool bLE)
+{
+    char buf[10] = {};
+    if (bLE) {
+        c = Swap16(c);
+    }
+#if defined(BUILD_FOR_WINDOWS)
+    sprintf_s(buf, 10, "0x%02x %02x", c >> 8, c & 0x00FF);
+#else
+    sprintf(buf, "0x%02x %02x", c >> 8, c & 0x00FF);
+#endif
+    std::string str = buf;
+    return str;
+}
+
+std::string DUtil::UInt32ToStr16(DUInt32 c, DBool bLE)
+{
+    char buf[20] = {};
+    if (bLE) {
+        c = Swap32(c);
+    }
+#if defined(BUILD_FOR_WINDOWS)
+    sprintf_s(buf, 20, "0x%02x %02x %02x %02x", c >> 24, (c >> 16) & 0x000000FF, (c >> 8) & 0x000000FF, c & 0x000000FF);
+#else
+    sprintf(buf, "0x%02x %02x %02x %02x", c >> 24, (c >> 16) & 0x000000FF, (c >> 8) & 0x000000FF, c & 0x000000FF);
+#endif
+    std::string str = buf;
+    return str;
+}
+
+std::string DUtil::DumpBitmapFileHeader(void* pFileHeader)
+{
+    std::string ret, temp;
+    DBITMAPFILEHEADER* p = (DBITMAPFILEHEADER*)pFileHeader;
+    if (p == nullptr) return "null";
+
+    temp = "DBITMAPFILEHEADER(14 bytes):\r\n";
+    ret += temp;
+    
+    temp = "bfType(2 bytes): ";
+    ret += temp;
+    ret += UInt16ToStr16(p->bfType);
+    ret += "\r\n";
+    
+    temp = "bfSize(4 bytes): ";
+    ret += temp;
+    ret += UInt32ToStr(p->bfType);
+    ret += "\r\n";
+
+    temp = "bfReserved1(2 bytes): ";
+    ret += temp;
+    ret += UInt16ToStr16(p->bfReserved1);
+    ret += "\r\n";
+
+    temp = "bfReserved2(2 bytes): ";
+    ret += temp;
+    ret += UInt16ToStr16(p->bfReserved2);
+    ret += "\r\n";
+
+    temp = "bfOffBits(4 bytes): ";
+    ret += temp;
+    ret += UInt32ToStr(p->bfOffBits);
+    ret += "\r\n";
+
+    return ret;
+}
+
+std::string DUtil::DumpBitmapInfoHeader(void* pFileHeader)
+{
+    std::string ret, temp;
     return ret;
 }

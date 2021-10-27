@@ -6,6 +6,29 @@
 typedef DUInt32 DColor;
 #define DRGB(r,g,b) ((DUInt32)(((DUInt8)(r)|((DUInt16)((DUInt8)(g))<<8))|(((DUInt32)(DUInt8)(b))<<16)))
 
+typedef struct tagDBITMAPFILEHEADER {
+    DUInt16 bfType;			// 0x4D42 'BM'
+    DUInt32 bfSize;			// FileSize
+    DUInt16 bfReserved1;	// 0
+    DUInt16 bfReserved2;	// 0
+    DUInt32 bfOffBits;		// Offset of Pixel Data
+} DBITMAPFILEHEADER;
+// 2+4+2+2+4 = 14
+
+typedef struct tagDBITMAPINFOHEADER {
+    DUInt32 biSize;			// Sizeof(DBITMAPINFOHEADER) = 40
+    DInt32 biWidth;
+    DInt32 biHeight;
+    DUInt16 biPlanes;		// Always 1
+    DUInt16 biBitCount;		// 1 4 8 16 24 32
+    DUInt32 biCompression;	// BI_RGB
+    DUInt32 biSizeImage;	// 0
+    DInt32 biXPelsPerMeter;	// pixel/meter
+    DInt32 biYPelsPerMeter;	// pixel/meter
+    DUInt32 biClrUsed;		// 0
+    DUInt32 biClrImportant;	// 0
+} DBITMAPINFOHEADER;
+
 
 typedef struct tagDBmpInfo {
     DUInt32 pixelFormat;
@@ -15,6 +38,7 @@ typedef struct tagDBmpInfo {
     DUInt32 imageWidth;
     DUInt32 imageHeight;
     DByte* imageBuf;
+    DByte* fileHead;
     DByte* infoHead;
 } DBmpInfo;
 

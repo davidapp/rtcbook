@@ -146,6 +146,7 @@
   <ItemGroup>
     <ClInclude Include="..\..\Common\Base\DUTF8.h" />
     <ClInclude Include="..\..\Common\Base\DUtil.h" />
+    <ClInclude Include="..\..\Common\Video\VideoDefines.h" />
     <ClInclude Include="..\..\Common\Video\WinDSCamera.h" />
     <ClInclude Include="MainWindow.h" />
     <ClInclude Include="resource.h" />

@@ -1,7 +1,6 @@
 ﻿#include "WinDSCamera.h"
 #include <Initguid.h>
 #include "Base/DUTF8.h"
-#include "Video/VideoDefines.h"
 
 #pragma comment(lib, "strmiids.lib")
 
@@ -389,14 +388,12 @@ DBool WinDSCamera::ShowSettingDialog(DCStr deviceUniqueIdUTF8, DVoid* parentWind
 
 std::string WinDSCamera::GetVideoInfo(VIDEOINFOHEADER* pInfo)
 {
-    std::string ret, temp;
-    return ret;
+
 }
 
 std::string WinDSCamera::GetVideoInfo2(VIDEOINFOHEADER2* pInfo)
 {
-    std::string ret, temp;
-    return ret;
+
 }
 
 // Example of device path:

@@ -4,11 +4,6 @@
 //
 #define IDR_MENU1                       101
 #define IDI_ICON                        102
-#define IDD_DIALOG1                     103
-#define IDC_LIST1                       1001
-#define IDC_LIST2                       1002
-#define IDC_LIST3                       1003
-#define IDC_CREATE                      1004
 #define ID_TEST_IN_FALSE                40001
 #define ID_TEST_IN_TRUE                 40002
 #define ID_TEST_DUMPDCCAPS              40006
@@ -85,13 +80,15 @@
 #define ID_BITMAP_INFO                  40086
 #define ID_HELP_ABOUT                   40087
 #define ID_BITMAP_LOADANDBLT            40088
+#define ID_BITMAP_FILEHEADER            40089
+#define ID_BITMAP_INFOHEADER            40090
 
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        104
-#define _APS_NEXT_COMMAND_VALUE         40089
+#define _APS_NEXT_COMMAND_VALUE         40091
 #define _APS_NEXT_CONTROL_VALUE         1005
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
