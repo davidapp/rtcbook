@@ -21,11 +21,11 @@ public:
 
 public:
     static std::string UInt8ToStr(DUInt8 c);
-    static std::string UInt16ToStr(DUInt16 c, DBool bLE = false);
-    static std::string UInt32ToStr(DUInt32 c, DBool bLE=false);
+    static std::string UInt16ToStr(DUInt16 c, DBool bLE = true);
+    static std::string UInt32ToStr(DUInt32 c, DBool bLE = true);
     static std::string UInt8ToStr16(DUInt8 c);
-    static std::string UInt16ToStr16(DUInt16 c, DBool bLE = false);
-    static std::string UInt32ToStr16(DUInt32 c, DBool bLE = false);
+    static std::string UInt16ToStr16(DUInt16 c, DBool bLE = true);
+    static std::string UInt32ToStr16(DUInt32 c, DBool bLE = true);
 
 public:
     static std::string DumpBitmapFileHeader(void* pFileHeader); // DBITMAPFILEHEADER

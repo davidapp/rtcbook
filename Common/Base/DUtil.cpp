@@ -109,7 +109,7 @@ std::string DUtil::UInt8ToStr(DUInt8 c)
 std::string DUtil::UInt16ToStr(DUInt16 c, DBool bLE)
 {
     char buf[10] = {};
-    if (bLE) {
+    if (!bLE) {
         c = Swap16(c);
     }
 #if defined(BUILD_FOR_WINDOWS)
@@ -124,7 +124,7 @@ std::string DUtil::UInt16ToStr(DUInt16 c, DBool bLE)
 std::string DUtil::UInt32ToStr(DUInt32 c, DBool bLE)
 {
     char buf[20] = {};
-    if (bLE) {
+    if (!bLE) {
         c = Swap32(c);
     }
 #if defined(BUILD_FOR_WINDOWS)
@@ -151,7 +151,7 @@ std::string DUtil::UInt8ToStr16(DUInt8 c)
 std::string DUtil::UInt16ToStr16(DUInt16 c, DBool bLE)
 {
     char buf[10] = {};
-    if (bLE) {
+    if (!bLE) {
         c = Swap16(c);
     }
 #if defined(BUILD_FOR_WINDOWS)
@@ -166,7 +166,7 @@ std::string DUtil::UInt16ToStr16(DUInt16 c, DBool bLE)
 std::string DUtil::UInt32ToStr16(DUInt32 c, DBool bLE)
 {
     char buf[20] = {};
-    if (bLE) {
+    if (!bLE) {
         c = Swap32(c);
     }
 #if defined(BUILD_FOR_WINDOWS)
@@ -189,7 +189,7 @@ std::string DUtil::DumpBitmapFileHeader(void* pFileHeader)
     
     temp = "bfType(2 bytes): ";
     ret += temp;
-    ret += UInt16ToStr16(p->bfType);
+    ret += UInt16ToStr16(p->bfType, false);
     ret += "\r\n";
     
     temp = "bfSize(4 bytes): ";
@@ -218,5 +218,66 @@ std::string DUtil::DumpBitmapFileHeader(void* pFileHeader)
 std::string DUtil::DumpBitmapInfoHeader(void* pFileHeader)
 {
     std::string ret, temp;
+    DBITMAPINFOHEADER* p = (DBITMAPINFOHEADER*)pFileHeader;
+    if (p == nullptr) return "null";
+
+    temp = "DBITMAPINFOHEADER(40 bytes):\r\n";
+    ret += temp;
+
+    temp = "biSize(4 bytes): ";
+    ret += temp;
+    ret += UInt32ToStr(p->biSize);
+    ret += "\r\n";
+
+    temp = "biWidth(4 bytes): ";
+    ret += temp;
+    ret += UInt32ToStr(p->biWidth);
+    ret += "\r\n";
+
+    temp = "biHeight(4 bytes): ";
+    ret += temp;
+    ret += UInt32ToStr(p->biHeight);
+    ret += "\r\n";
+
+    temp = "biPlanes(2 bytes): ";
+    ret += temp;
+    ret += UInt16ToStr(p->biPlanes);
+    ret += "\r\n";
+
+    temp = "biBitCount(2 bytes): ";
+    ret += temp;
+    ret += UInt16ToStr(p->biBitCount);
+    ret += "\r\n";
+
+    temp = "biCompression(4 bytes): ";
+    ret += temp;
+    ret += UInt32ToStr(p->biCompression);
+    ret += "\r\n";
+
+    temp = "biSizeImage(4 bytes): ";
+    ret += temp;
+    ret += UInt32ToStr(p->biSizeImage);
+    ret += "\r\n";
+
+    temp = "biXPelsPerMeter(4 bytes): ";
+    ret += temp;
+    ret += UInt32ToStr(p->biXPelsPerMeter);
+    ret += "\r\n";
+
+    temp = "biYPelsPerMeter(4 bytes): ";
+    ret += temp;
+    ret += UInt32ToStr(p->biYPelsPerMeter);
+    ret += "\r\n";
+
+    temp = "biClrUsed(4 bytes): ";
+    ret += temp;
+    ret += UInt32ToStr(p->biClrUsed);
+    ret += "\r\n";
+
+    temp = "biClrImportant(4 bytes): ";
+    ret += temp;
+    ret += UInt32ToStr(p->biClrImportant);
+    ret += "\r\n";
+
     return ret;
 }

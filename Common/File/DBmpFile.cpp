@@ -40,6 +40,9 @@ DVoid DBmpFile::Free(DBmpInfo* info)
     bufFile.Attach(info->fileHead);
     bufInfo.Attach(info->infoHead);
     bufBitmap.Attach(info->imageBuf);
+    info->fileHead = nullptr;
+    info->infoHead = nullptr;
+    info->imageBuf = nullptr;
 }
 
 DUInt32 DBmpFile::GetRGB(DBmpInfo* pInfo, DUInt32 x, DUInt32 y)

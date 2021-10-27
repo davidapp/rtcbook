@@ -75,8 +75,10 @@ public:
                 }
             }
 
+            if (m_info.imageBuf) {
+                DBmpFile::Free(&m_info);
+            }
             m_info = info;
-            //DBmpFile::Free(&info);
         }
         return 0;
     }
@@ -95,8 +97,10 @@ public:
                 info.imageWidth, info.imageHeight, info.imageBuf, (const BITMAPINFO*)info.infoHead,
                 DIB_RGB_COLORS, SRCCOPY);
 
+            if (m_info.imageBuf) {
+                DBmpFile::Free(&m_info);
+            }
             m_info = info;
-            //DBmpFile::Free(&info);
         }
         return 0;
     }
@@ -105,25 +109,23 @@ public:
     {
         std::string str = DUtil::DumpBitmapFileHeader(m_info.fileHead);
         std::wstring strMsg = DUtil::s2ws(str);
-        MessageBox(strMsg.c_str());
+        MessageBox(strMsg.c_str(), L"BITMAPFILEHEADER");
         return 0;
     }
 
     LRESULT OnInfoHeader(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL& bHandled)
     {
-        CString strMsg, strTemp;
-        strTemp.Format(L"Width: %u\r\n", m_info.imageWidth);
-        strMsg += strTemp;
-        strTemp.Format(L"Height: %u\r\n", m_info.imageHeight);
-        strMsg += strTemp;
-        strTemp.Format(L"Bits: %u\r\n", m_info.imageBits);
-        strMsg += strTemp;
-        MessageBox(strMsg);
+        std::string str = DUtil::DumpBitmapInfoHeader(m_info.infoHead);
+        std::wstring strMsg = DUtil::s2ws(str);
+        MessageBox(strMsg.c_str(), L"BITMAPINFOHEADER");
         return 0;
     }
 
     virtual void OnFinalMessage(HWND /*hWnd*/)
     {
+        if (m_info.imageBuf) {
+            DBmpFile::Free(&m_info);
+        }
         PostQuitMessage(0);
     }
 
