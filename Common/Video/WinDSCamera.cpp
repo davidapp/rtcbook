@@ -11,8 +11,8 @@
         (p) = NULL;     \
     }
 
-//DEFINE_GUID(MEDIASUBTYPE_I420, 0x30323449, 0x0000, 0x0010, 0x80, 0x00, 0x00, 0xAA, 0x00, 0x38, 0x9B, 0x71);
-//DEFINE_GUID(MEDIASUBTYPE_HDYC, 0x43594448, 0x0000, 0x0010, 0x80, 0x00, 0x00, 0xAA, 0x00, 0x38, 0x9B, 0x71);
+DEFINE_GUID(MEDIASUBTYPE_I420, 0x30323449, 0x0000, 0x0010, 0x80, 0x00, 0x00, 0xAA, 0x00, 0x38, 0x9B, 0x71);
+DEFINE_GUID(MEDIASUBTYPE_HDYC, 0x43594448, 0x0000, 0x0010, 0x80, 0x00, 0x00, 0xAA, 0x00, 0x38, 0x9B, 0x71);
 
 ICreateDevEnum* _dsDevEnum;
 IEnumMoniker* _dsMonikerDevEnum;
@@ -94,12 +94,14 @@ std::vector<DCameraInfo> WinDSCamera::GetDevices()
             }
 
             // 3.拿到设备的 IBaseFilter*
-            hr = pM->BindToStorage(nullptr, nullptr, IID_IBaseFilter, (void**)&dev.m_filter);
+            IBaseFilter* pFilter = nullptr;
+            hr = pM->BindToObject(nullptr, nullptr, IID_IBaseFilter, (void**)&pFilter);
             if (SUCCEEDED(hr))
             {
-                info.push_back(dev);
+                dev.m_filter = pFilter;
             }
 
+            info.push_back(dev);
             pBag->Release();
         }
 
@@ -124,18 +126,17 @@ std::wstring WinDSCamera::GetInfoString(const DCameraInfo& info)
 }
 
 // 给定一个视频采集设备的ID，获取这个采集设备的能力
-std::vector<DCameraCaps> WinDSCamera::GetDeviceCaps(DStr deviceID)
+std::vector<DCameraCaps> WinDSCamera::GetDeviceCaps(IBaseFilter* pFilter)
 {
     std::vector<DCameraCaps> caps;
-    /*
-    IBaseFilter* captureDevice = nullptr;
+
+    IBaseFilter* captureDevice = pFilter;
     IPin* outputCapturePin = nullptr;
     IAMStreamConfig* streamConfig = nullptr;
     IAMVideoControl* videoControlConfig = nullptr;
 
     do
     {
-        captureDevice = GetDeviceFilter(deviceID);
         if (!captureDevice) {
             break;
         }
@@ -150,36 +151,37 @@ std::vector<DCameraCaps> WinDSCamera::GetDeviceCaps(DStr deviceID)
             break;
         }
 
+        // https://docs.microsoft.com/en-us/previous-versions/ms784113(v=vs.85)
         int count, size;
         hr = streamConfig->GetNumberOfCapabilities(&count, &size);
         if (FAILED(hr)){
             break;
         }
 
+
         // used for FPS
         HRESULT hrVC = captureDevice->QueryInterface(IID_IAMVideoControl, (void**)&videoControlConfig);
 
         AM_MEDIA_TYPE* pmt = NULL;
-        VIDEO_STREAM_CONFIG_CAPS caps = {};
+        VIDEO_STREAM_CONFIG_CAPS vscaps = {};
         for (int32_t tmp = 0; tmp < count; ++tmp)
         {
-            hr = streamConfig->GetStreamCaps(tmp, &pmt, reinterpret_cast<BYTE*>(&caps));
+            // https://docs.microsoft.com/en-us/previous-versions/ms784114(v=vs.85)
+            hr = streamConfig->GetStreamCaps(tmp, &pmt, reinterpret_cast<BYTE*>(&vscaps));
             if (FAILED(hr)) {
                 continue;
             }
 
+            DCameraCaps cap = {};
+
             // 枚举视频类型，看视频的格式
             if (pmt->majortype == MEDIATYPE_Video && pmt->formattype == FORMAT_VideoInfo)
             {
-                DData* pData = DData::CreateDData(10);
-                // 所属的平台
-                pData->AddUInt32(DPFINFO_UINT32_OS_PLATFORM, 1); //Windows
-
                 // 支持的分辨率
                 VIDEOINFOHEADER* h = reinterpret_cast<VIDEOINFOHEADER*>(pmt->pbFormat);
-                pData->AddUInt32(DPFINFO_UINT32_WIDTH, h->bmiHeader.biWidth);
-                pData->AddUInt32(DPFINFO_UINT32_HEIGHT, h->bmiHeader.biHeight);
-                
+                cap.m_width = h->bmiHeader.biWidth;
+                cap.m_height = h->bmiHeader.biHeight;
+
                 // 支持的帧率
                 DInt64 avgTimePerFrame = h->AvgTimePerFrame;
                 if (hrVC == S_OK)
@@ -190,49 +192,52 @@ std::vector<DCameraCaps> WinDSCamera::GetDeviceCaps(DStr deviceID)
                     SIZE size;
                     size.cx = h->bmiHeader.biWidth;
                     size.cy = h->bmiHeader.biHeight;
+                    // https://docs.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-iamvideocontrol-getframeratelist
                     hrVC = videoControlConfig->GetFrameRateList(outputCapturePin, tmp, size, (long*)&listSize, (LONGLONG**)&frameDurationList);
                     if (hrVC == S_OK && listSize > 0 && 0 != (max_fps = GetMaxOfFrameArray(frameDurationList, listSize)))
                     {
-                        pData->AddUInt32(DPFINFO_UINT32_FRAMERATE, static_cast<int>(10000000 / max_fps));
-                        pData->AddBool(DPFINFO_BOOL_IS_MAX_FRAMERATE, true);
+                        //pData->AddUInt32(DPFINFO_UINT32_FRAMERATE, static_cast<int>(10000000 / max_fps));
+                        //pData->AddBool(DPFINFO_BOOL_IS_MAX_FRAMERATE, true);
+                        CoTaskMemFree(frameDurationList);
                     }
                     else
                     {
-                        if (avgTimePerFrame > 0)
-                            pData->AddUInt32(DPFINFO_UINT32_FRAMERATE, static_cast<int>(10000000 / avgTimePerFrame));
-                        else
-                            pData->AddUInt32(DPFINFO_UINT32_FRAMERATE, 0);
+                        //if (avgTimePerFrame > 0)
+                        //    pData->AddUInt32(DPFINFO_UINT32_FRAMERATE, static_cast<int>(10000000 / avgTimePerFrame));
+                        //else
+                        //    pData->AddUInt32(DPFINFO_UINT32_FRAMERATE, 0);
 
-                        pData->AddBool(DPFINFO_BOOL_IS_MAX_FRAMERATE, false);
+                        //pData->AddBool(DPFINFO_BOOL_IS_MAX_FRAMERATE, false);
                     }
                 }
                 else
                 {   
                     // use existing method in case IAMVideoControl is not supported
-                    if (avgTimePerFrame > 0)
-                        pData->AddUInt32(DPFINFO_UINT32_FRAMERATE, static_cast<int>(10000000 / avgTimePerFrame));
-                    else
-                        pData->AddUInt32(DPFINFO_UINT32_FRAMERATE, 0);
+                    //if (avgTimePerFrame > 0)
+                    //    pData->AddUInt32(DPFINFO_UINT32_FRAMERATE, static_cast<int>(10000000 / avgTimePerFrame));
+                    //else
+                    //    pData->AddUInt32(DPFINFO_UINT32_FRAMERATE, 0);
 
-                    pData->AddBool(DPFINFO_BOOL_IS_MAX_FRAMERATE, false);
+                    //pData->AddBool(DPFINFO_BOOL_IS_MAX_FRAMERATE, false);
                 }
 
-                DPixelFormat mformat = DPixelFormat::kUnknown;
+                // 像素格式
+                DPixelFmt mformat = DPixelFmt::Unknown;
                 if (pmt->subtype == MEDIASUBTYPE_RGB24)
                 {
-                    mformat = DPixelFormat::kRGB;
+                    mformat = DPixelFmt::RGB24;
                 }
                 else if (pmt->subtype == MEDIASUBTYPE_I420)
                 {
-                    mformat = DPixelFormat::kI420;
+                    mformat = DPixelFmt::I420;
                 }
                 else if (pmt->subtype == MEDIASUBTYPE_IYUV)
                 {
-                    mformat = DPixelFormat::kIYUV;
+                    mformat = DPixelFmt::IYUV;
                 }
                 else if (pmt->subtype == MEDIASUBTYPE_YUY2)
                 {
-                    mformat = DPixelFormat::kYUY2;
+                    mformat = DPixelFmt::YUY2;
                 }
                 else
                 {
@@ -240,11 +245,14 @@ std::vector<DCameraCaps> WinDSCamera::GetDeviceCaps(DStr deviceID)
                     StringFromGUID2(pmt->subtype, strGuid, 39);
                     continue;
                 }
-                pData->AddUInt32(DPFINFO_UINT32_PIXEL_FORMAT, (DUInt32)mformat);
-
-                pArrRet->AddData(pData);
-                pData->Release();
             }
+            else if (pmt->majortype == MEDIATYPE_Video && pmt->formattype == FORMAT_VideoInfo2)
+            {
+                VIDEOINFOHEADER2* h = reinterpret_cast<VIDEOINFOHEADER2*>(pmt->pbFormat);
+                cap.m_width = h->bmiHeader.biWidth;
+                cap.m_height = h->bmiHeader.biHeight;
+            }
+            caps.push_back(cap);
 
             if (pmt) {
                 FreeMediaType(*pmt);
@@ -261,7 +269,6 @@ std::vector<DCameraCaps> WinDSCamera::GetDeviceCaps(DStr deviceID)
     SAFE_RELEASE(outputCapturePin);
     SAFE_RELEASE(captureDevice);
 
-    return pArrRet;*/
     return caps;
 }
 
@@ -289,68 +296,13 @@ DUInt64 WinDSCamera::GetMaxOfFrameArray(DUInt64* maxFps, DUInt32 size)
     return maxFPS;
 }
 
-// 通过 DeviceID 拿到一个 IBaseFilter*
-// 方法是遍历，匹配 "DevicePath"，BindToObject IID_IBaseFilter
-IBaseFilter* WinDSCamera::GetDeviceFilter(DCStr deviceUniqueIdUTF8) 
-{
-    IBaseFilter* captureFilter = nullptr;
-
-    do
-    {
-        SAFE_RELEASE(_dsMonikerDevEnum);
-        HRESULT hr = _dsDevEnum->CreateClassEnumerator(CLSID_VideoInputDeviceCategory, &_dsMonikerDevEnum, 0);
-        if (hr != S_OK)
-        {
-            break;
-        }
-
-        _dsMonikerDevEnum->Reset();
-        ULONG cFetched = 0;
-        IMoniker* pM = NULL;
-        while (S_OK == _dsMonikerDevEnum->Next(1, &pM, &cFetched))
-        {
-            IPropertyBag* pBag;
-            hr = pM->BindToStorage(nullptr, nullptr, IID_IPropertyBag, (void**)&pBag);
-            if (hr != S_OK)
-            {
-                pM->Release();
-                continue;
-            }
-
-            VARIANT varName;
-            VariantInit(&varName);
-            hr = pBag->Read(L"DevicePath", &varName, 0);
-            if (SUCCEEDED(hr))
-            {
-                std::string strNameU8 = DUTF8::UCS2ToUTF8((DUInt16*)varName.bstrVal, wcslen(varName.bstrVal)*2);
-                if (strNameU8 == deviceUniqueIdUTF8)
-                {
-                    pM->BindToObject(nullptr, nullptr, IID_IBaseFilter, (void**)&captureFilter);
-                }
-            }
-            VariantClear(&varName);
-            pBag->Release();
-            pM->Release();
-
-            if (captureFilter)
-            {
-                break;
-            }
-        }
-    } while (0);
-
-    return captureFilter;
-}
-
 // 通过 IBaseFilter 查询到 IID_ISpecifyPropertyPages
-DBool WinDSCamera::ShowSettingDialog(DCStr deviceUniqueIdUTF8, DVoid* parentWindow, DUInt32 positionX, DUInt32 positionY) 
+DBool WinDSCamera::ShowSettingDialog(IBaseFilter* filter, DVoid* parentWindow, DUInt32 positionX, DUInt32 positionY)
 {
     // std::unique_lock<std::recursive_mutex> ul(_mutex);
     DBool bResult = false;
-    IBaseFilter* filter = nullptr;
     do
     {
-        filter = GetDeviceFilter(deviceUniqueIdUTF8);
         if (!filter) {
             break;
         }
@@ -370,6 +322,7 @@ DBool WinDSCamera::ShowSettingDialog(DCStr deviceUniqueIdUTF8, DVoid* parentWind
         hr = OleCreatePropertyFrame((HWND)parentWindow, positionX, positionY,
             L"Capture Settings", 1, (LPUNKNOWN*)&filter, uuid.cElems, uuid.pElems,
             LOCALE_USER_DEFAULT, 0, NULL);
+
         if (!SUCCEEDED(hr))
         {
             break;
@@ -397,39 +350,6 @@ std::string WinDSCamera::GetVideoInfo2(VIDEOINFOHEADER2* pInfo)
 {
     std::string ret, temp;
     return ret;
-}
-
-// Example of device path:
-// "\\?\usb#vid_0408&pid_2010&mi_00#7&258e7aaf&0&0000#{65e8773d-8f56-11d0-a3b9-00a0c9223196}\global"
-// "\\?\avc#sony&dv-vcr&camcorder&dv#65b2d50301460008#{65e8773d-8f56-11d0-a3b9-00a0c9223196}\global"
-std::string WinDSCamera::GetProductIdFromPath(std::string& path)
-{
-    std::string strRet;
-    /*DChar* startPos = path.find("\\\\?\\");
-    if (startPos < path.c_str()) {
-        strRet = "";
-        return strRet;
-    }
-    startPos += 4;
-
-    DChar* pos = strchr(startPos, '&');
-    if (!pos || pos >= path.c_str() + strlen(path.c_str())) 
-    {
-        strRet = "";
-        return strRet;
-    }
-    pos = strchr(pos + 1, '&');
-    DUInt32 bytesToCopy = (DUInt32)(pos - startPos);
-    if (pos && (bytesToCopy <= (DUInt32)path.size()) && bytesToCopy <= 1024) 
-    {
-        strRet.SetStr(startPos, bytesToCopy);
-    }
-    else 
-    {
-        strRet = "";
-        return strRet;
-    }*/
-    return strRet;
 }
 
 // 拿到 IBaseFilter 的 INPUT IPin

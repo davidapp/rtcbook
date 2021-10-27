@@ -39,6 +39,7 @@ public:
 
         m_devlist = GetDlgItem(IDC_COMBO1);
         m_info = GetDlgItem(IDC_EDIT1);
+        m_capList = GetDlgItem(IDC_CAPLIST);
 
         std::vector<DCameraInfo> devs = WinDSCamera::GetDevices();
         for (const DCameraInfo& dev : devs) {
@@ -77,16 +78,30 @@ public:
         std::vector<DCameraInfo> devs = WinDSCamera::GetDevices();
         DUInt32 index = m_devlist.GetCurSel();
         if (index < devs.size()) {
-            WinDSCamera::ShowSettingDialog(devs[index].m_device_path.c_str(), this->m_hWnd, 0, 0);
+            WinDSCamera::ShowSettingDialog(devs[index].m_filter, this->m_hWnd, 0, 0);
         }
         return 0;
     }
 
     LRESULT OnDumpCaps(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/)
     {
+        std::vector<DCameraInfo> devs = WinDSCamera::GetDevices();
+        DUInt32 index = m_devlist.GetCurSel();
+        if (index < devs.size()) {
+            m_capList.ResetContent();
+
+            std::vector<DCameraCaps> caps = WinDSCamera::GetDeviceCaps(devs[index].m_filter);
+            for (DUInt32 i = 0; i < caps.size(); i++)
+            {
+                CString str;
+                str.Format(L"%d_%d*%d", i, caps[i].m_width, caps[i].m_height);
+                m_capList.AddString(str);
+            }
+        }
         return 0;
     }
     
     CComboBox m_devlist;
     CEdit m_info;
+    CListBox m_capList;
 };

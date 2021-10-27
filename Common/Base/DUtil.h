@@ -28,8 +28,16 @@ public:
     static std::string UInt32ToStr16(DUInt32 c, DBool bLE = true);
 
 public:
+    static std::wstring GUIDToStr(GUID id);
+
+public:
     static std::string DumpBitmapFileHeader(void* pFileHeader); // DBITMAPFILEHEADER
-    static std::string DumpBitmapInfoHeader(void* pFileHeader); // DBITMAPINFOHEADER
+    static std::string DumpBitmapInfoHeader(void* pInfoHeader); // DBITMAPINFOHEADER
+
+public:
+    static std::string Dump_AM_MEDIA_TYPE(void* amt);
+    static std::string Dump_VIDEO_STREAM_CONFIG_CAPS(void* vscc);
+    static std::string Dump_VIDEOINFOHEADER(void* vih);
 
     D_DISALLOW_ALL_DEFAULT(DUtil)
 };

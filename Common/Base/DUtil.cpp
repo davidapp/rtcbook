@@ -178,6 +178,15 @@ std::string DUtil::UInt32ToStr16(DUInt32 c, DBool bLE)
     return str;
 }
 
+std::wstring DUtil::GUIDToStr(GUID id)
+{
+    WCHAR strGuid[39];
+    ::StringFromGUID2(id, strGuid, 39);
+    std::wstring wstr = strGuid;
+    return wstr;
+}
+
+
 std::string DUtil::DumpBitmapFileHeader(void* pFileHeader)
 {
     std::string ret, temp;
@@ -279,5 +288,23 @@ std::string DUtil::DumpBitmapInfoHeader(void* pFileHeader)
     ret += UInt32ToStr(p->biClrImportant);
     ret += "\r\n";
 
+    return ret;
+}
+
+std::string DUtil::Dump_AM_MEDIA_TYPE(void* amt)
+{
+    std::string ret, temp;
+    return ret;
+}
+
+std::string DUtil::Dump_VIDEO_STREAM_CONFIG_CAPS(void* vscc)
+{
+    std::string ret, temp;
+    return ret;
+}
+
+std::string DUtil::Dump_VIDEOINFOHEADER(void* vih)
+{
+    std::string ret, temp;
     return ret;
 }

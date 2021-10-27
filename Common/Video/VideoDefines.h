@@ -9,5 +9,6 @@ enum class DPixelFmt {
     BGRA,
     RGB565,
     I420,
-    IYUV
+    IYUV,
+    YUY2
 };
