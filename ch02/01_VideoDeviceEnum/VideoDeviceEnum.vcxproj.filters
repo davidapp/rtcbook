@@ -47,6 +47,9 @@
     <ClInclude Include="..\..\Common\Video\VideoDefines.h">
       <Filter>Common\Video</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\Common\Base\DBuffer.h">
+      <Filter>Common\Base</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
@@ -58,6 +61,9 @@
     </ClCompile>
     <ClCompile Include="..\..\Common\Video\WinDSCamera.cpp">
       <Filter>Common\Video</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\Base\DBuffer.cpp">
+      <Filter>Common\Base</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

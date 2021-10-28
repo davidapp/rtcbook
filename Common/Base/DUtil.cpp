@@ -2,6 +2,7 @@
 #include <locale>
 #include "File/DBmpFile.h"
 #include "Base/DBuffer.h"
+#include "Video/VideoDefines.h"
 
 #if defined(BUILD_FOR_WINDOWS)
 #include <dshow.h>
@@ -392,13 +393,13 @@ typedef struct _AMMediaType
 std::string DUtil::Dump_AM_MEDIA_TYPE(void* amt)
 {
     std::string ret, temp;
-    AM_MEDIA_TYPE* p = (AM_MEDIA_TYPE*)amt;
+    DAM_MEDIA_TYPE* p = (DAM_MEDIA_TYPE*)amt;
     if (p == nullptr) return ret;
 
     char buf[128] = {};
     temp = "AM_MEDIA_TYPE(128 bytes):\r\n";
     ret += temp;
-    sprintf_s(buf, 128, "sizeof(AM_MEDIA_TYPE) = %d\r\n", sizeof(AM_MEDIA_TYPE));
+    sprintf_s(buf, 128, "sizeof(AM_MEDIA_TYPE) = %d\r\n", sizeof(DAM_MEDIA_TYPE));
     ret += buf;
 
     temp = "majortype(16 bytes): ";
@@ -421,6 +422,7 @@ std::string DUtil::Dump_AM_MEDIA_TYPE(void* amt)
 
     temp = "bTemporalCompression(1 byte): ";
     ret += temp;
+
     temp = BoolToStr(p->bTemporalCompression);
     ret += temp;
     ret += "\r\n";
