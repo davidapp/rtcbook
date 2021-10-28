@@ -24,12 +24,15 @@ public:
     static std::string UInt8ToStr(DUInt8 c);
     static std::string UInt16ToStr(DUInt16 c, DBool bLE = true);
     static std::string UInt32ToStr(DUInt32 c, DBool bLE = true);
+    static std::string UInt64ToStr(DUInt64 c, DBool bLE = true);
     static std::string UInt8ToStr16(DUInt8 c);
     static std::string UInt16ToStr16(DUInt16 c, DBool bLE = true);
     static std::string UInt32ToStr16(DUInt32 c, DBool bLE = true);
+    static std::string UInt64ToStr16(DUInt64 c, DBool bLE = true);
     static std::string Int8ToStr(DInt8 c);
     static std::string Int16ToStr(DInt16 c, DBool bLE = true);
     static std::string Int32ToStr(DInt32 c, DBool bLE = true);
+    static std::string Int64ToStr(DInt64 c, DBool bLE = true);
     static std::string AddrToStr(void* p);
     static std::string BuffToStr(void* p, DUInt32 len);
 

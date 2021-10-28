@@ -53,6 +53,10 @@ public:
     // 指定的设备，有哪些采集能力
     static std::vector<DCameraCaps> GetDeviceCaps(IBaseFilter* pFilter);
 
+    static std::string MajorTypeName(GUID id);
+    static std::string SubTypeName(GUID id);
+    static std::string FormatTypeName(GUID id);
+
     // https://msdn.microsoft.com/en-us/library/windows/desktop/dd407325(v=vs.85).aspx
     static std::string GetVideoInfo(VIDEOINFOHEADER* pInfo);
 

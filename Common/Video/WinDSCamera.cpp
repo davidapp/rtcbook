@@ -133,7 +133,9 @@ std::vector<DCameraCaps> WinDSCamera::GetDeviceCaps(IBaseFilter* pFilter)
 
     IBaseFilter* captureDevice = pFilter;
     IPin* outputCapturePin = nullptr;
-    IAMStreamConfig* streamConfig = nullptr;
+    IAMStreamConfig* streamConfig = nullptr; 
+    // use IAMStreamConfig::SetFormat to set
+    // use IAMStreamConfig::GetFormat to get the current format
     IAMVideoControl* videoControlConfig = nullptr;
 
     do
@@ -163,7 +165,7 @@ std::vector<DCameraCaps> WinDSCamera::GetDeviceCaps(IBaseFilter* pFilter)
         HRESULT hrVC = captureDevice->QueryInterface(IID_IAMVideoControl, (void**)&videoControlConfig);
 
         AM_MEDIA_TYPE* pmt = NULL;
-        VIDEO_STREAM_CONFIG_CAPS vscaps = {};
+        VIDEO_STREAM_CONFIG_CAPS vscaps = {}; // should ignore it 
         for (int32_t tmp = 0; tmp < count; ++tmp)
         {
             // https://docs.microsoft.com/en-us/previous-versions/ms784114(v=vs.85)
@@ -173,7 +175,7 @@ std::vector<DCameraCaps> WinDSCamera::GetDeviceCaps(IBaseFilter* pFilter)
             }
 
             DCameraCaps cap = {};
-            cap.m_amt = DUtil::Dump_AM_MEDIA_TYPE(&pmt);
+            cap.m_amt = DUtil::Dump_AM_MEDIA_TYPE(pmt);
 
             // 枚举视频类型，看视频的格式
             if (pmt->majortype == MEDIATYPE_Video && pmt->formattype == FORMAT_VideoInfo)
@@ -240,11 +242,13 @@ std::vector<DCameraCaps> WinDSCamera::GetDeviceCaps(IBaseFilter* pFilter)
                 {
                     mformat = DPixelFmt::YUY2;
                 }
+                else if (pmt->subtype == MEDIASUBTYPE_MJPG)
+                {
+                    mformat = DPixelFmt::MJPG;
+                }
                 else
                 {
-                    WCHAR strGuid[39];
-                    StringFromGUID2(pmt->subtype, strGuid, 39);
-                    continue;
+                    mformat = DPixelFmt::Unknown;
                 }
             }
             else if (pmt->majortype == MEDIATYPE_Video && pmt->formattype == FORMAT_VideoInfo2)
@@ -339,6 +343,54 @@ DBool WinDSCamera::ShowSettingDialog(IBaseFilter* filter, DVoid* parentWindow, D
 
     SAFE_RELEASE(filter);
     return bResult;
+}
+
+std::string WinDSCamera::MajorTypeName(GUID id)
+{
+    // https://docs.microsoft.com/en-us/windows/win32/directshow/major-types
+    if (id == MEDIATYPE_Video) return "MEDIATYPE_Video";
+    else if (id == MEDIATYPE_Audio) return "MEDIATYPE_Audio";
+    else if (id == MEDIATYPE_AnalogAudio) return "MEDIATYPE_AnalogAudio";
+    else if (id == MEDIATYPE_AnalogVideo) return "MEDIATYPE_AnalogVideo";
+    else if (id == MEDIATYPE_AUXLine21Data) return "MEDIATYPE_AUXLine21Data";
+    else if (id == MEDIATYPE_Interleaved) return "MEDIATYPE_Interleaved";
+    else if (id == MEDIATYPE_Midi) return "MEDIATYPE_Midi";
+    else if (id == MEDIATYPE_MPEG2_PES) return "MEDIATYPE_MPEG2_PES";
+    else if (id == MEDIATYPE_MPEG2_SECTIONS) return "MEDIATYPE_MPEG2_SECTIONS";
+    else if (id == MEDIATYPE_ScriptCommand) return "MEDIATYPE_ScriptCommand";
+    else if (id == MEDIATYPE_Stream) return "MEDIATYPE_Stream";
+    else if (id == MEDIATYPE_Text) return "MEDIATYPE_Text";
+    else if (id == MEDIATYPE_VBI) return "MEDIATYPE_VBI";
+    return "MEDIATYPE_Unknown";
+}
+
+std::string WinDSCamera::SubTypeName(GUID id)
+{
+    // https://docs.microsoft.com/en-us/windows/win32/directshow/video-subtypes
+    if (id == MEDIASUBTYPE_RGB565) return "MEDIASUBTYPE_RGB565";
+    else if (id == MEDIASUBTYPE_RGB24) return "MEDIASUBTYPE_RGB24";
+    else if (id == MEDIASUBTYPE_RGB32) return "MEDIASUBTYPE_RGB32";
+    else if (id == MEDIASUBTYPE_ARGB32) return "MEDIASUBTYPE_ARGB32";
+    // https://docs.microsoft.com/en-us/windows/win32/directshow/yuv-video-subtypes
+    else if (id == MEDIASUBTYPE_AYUV) return "MEDIASUBTYPE_AYUV";
+    else if (id == MEDIASUBTYPE_YUY2) return "MEDIASUBTYPE_YUY2";
+    else if (id == MEDIASUBTYPE_UYVY) return "MEDIASUBTYPE_UYVY";
+    else if (id == MEDIASUBTYPE_YV12) return "MEDIASUBTYPE_YV12";
+    else if (id == MEDIASUBTYPE_NV12) return "MEDIASUBTYPE_NV12";
+    else if (id == MEDIASUBTYPE_I420) return "MEDIASUBTYPE_I420";
+    else if (id == MEDIASUBTYPE_IYUV) return "MEDIASUBTYPE_IYUV";
+    else if (id == MEDIASUBTYPE_Y411) return "MEDIASUBTYPE_Y411";
+    else if (id == MEDIASUBTYPE_YVU9) return "MEDIASUBTYPE_YVU9";
+    else if (id == MEDIASUBTYPE_YVYU) return "MEDIASUBTYPE_YVYU";
+    else if (id == MEDIASUBTYPE_MJPG) return "MEDIASUBTYPE_MJPG";
+    return "MEDIASUBTYPE_Unknown";
+}
+
+std::string WinDSCamera::FormatTypeName(GUID id)
+{
+    if (id == FORMAT_VideoInfo) return "FORMAT_VideoInfo";
+    else if (id == FORMAT_VideoInfo2) return "FORMAT_VideoInfo2";
+    return "FORMAT_Unknown";
 }
 
 std::string WinDSCamera::GetVideoInfo(VIDEOINFOHEADER* pInfo)

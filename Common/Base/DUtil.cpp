@@ -6,6 +6,7 @@
 
 #if defined(BUILD_FOR_WINDOWS)
 #include <dshow.h>
+#include "Video/WinDSCamera.h"
 #endif
 
 std::string DUtil::ws2s(const std::wstring& ws)
@@ -148,6 +149,21 @@ std::string DUtil::UInt32ToStr(DUInt32 c, DBool bLE)
     return str;
 }
 
+std::string DUtil::UInt64ToStr(DUInt64 c, DBool bLE)
+{
+    char buf[40] = {};
+    if (!bLE) {
+        c = Swap64(c);
+    }
+#if defined(BUILD_FOR_WINDOWS)
+    sprintf_s(buf, 40, "%llu", c);
+#else
+    sprintf(buf, "%llu", c);
+#endif
+    std::string str = buf;
+    return str;
+}
+
 std::string DUtil::UInt8ToStr16(DUInt8 c)
 {
     char buf[10] = {};
@@ -190,6 +206,17 @@ std::string DUtil::UInt32ToStr16(DUInt32 c, DBool bLE)
     return str;
 }
 
+std::string DUtil::UInt64ToStr16(DUInt64 c, DBool bLE)
+{
+    char buf[40] = {};
+    if (!bLE) {
+        c = Swap64(c);
+    }
+    DBuffer bufTemp(&c, 8);
+    std::string str = bufTemp.ToHexString();
+    return str;
+}
+
 std::string DUtil::Int8ToStr(DInt8 c)
 {
     char buf[10] = {};
@@ -227,6 +254,21 @@ std::string DUtil::Int32ToStr(DInt32 c, DBool bLE)
     sprintf_s(buf, 20, "%d", c);
 #else
     sprintf(buf, "%d", c);
+#endif
+    std::string str = buf;
+    return str;
+}
+
+std::string DUtil::Int64ToStr(DInt64 c, DBool bLE)
+{
+    char buf[40] = {};
+    if (!bLE) {
+        c = Swap64(c);
+    }
+#if defined(BUILD_FOR_WINDOWS)
+    sprintf_s(buf, 40, "%lld", c);
+#else
+    sprintf(buf, "%lld", c);
 #endif
     std::string str = buf;
     return str;
@@ -375,34 +417,23 @@ std::string DUtil::GUIDToStr(GUID id)
     return str;
 }
 
-/*
-typedef struct _AMMediaType
-    {
-    GUID majortype;
-    GUID subtype;
-    BOOL bFixedSizeSamples;
-    BOOL bTemporalCompression;
-    ULONG lSampleSize;
-    GUID formattype;
-    IUnknown *pUnk;
-    ULONG cbFormat;
-    BYTE* pbFormat;
-    } AM_MEDIA_TYPE;
-*/
 // https://docs.microsoft.com/en-us/previous-versions/ms779120(v=vs.85)
 std::string DUtil::Dump_AM_MEDIA_TYPE(void* amt)
 {
     std::string ret, temp;
-    DAM_MEDIA_TYPE* p = (DAM_MEDIA_TYPE*)amt;
+    AM_MEDIA_TYPE* p = (AM_MEDIA_TYPE*)amt;
     if (p == nullptr) return ret;
 
     char buf[128] = {};
-    temp = "AM_MEDIA_TYPE(128 bytes):\r\n";
-    ret += temp;
-    sprintf_s(buf, 128, "sizeof(AM_MEDIA_TYPE) = %d\r\n", sizeof(DAM_MEDIA_TYPE));
+    sprintf_s(buf, 128, "sizeof(AM_MEDIA_TYPE) = %d\r\n", sizeof(AM_MEDIA_TYPE));
     ret += buf;
 
+    DBuffer bufTemp(p, sizeof(AM_MEDIA_TYPE));
+    ret += bufTemp.ToHexList();
+
     temp = "majortype(16 bytes): ";
+    ret += temp;
+    temp = WinDSCamera::MajorTypeName(p->majortype);
     ret += temp;
     temp = GUIDToStr(p->majortype);
     ret += temp;
@@ -410,30 +441,35 @@ std::string DUtil::Dump_AM_MEDIA_TYPE(void* amt)
 
     temp = "subtype(16 bytes): ";
     ret += temp;
+    temp = WinDSCamera::SubTypeName(p->subtype);
+    ret += temp;
     temp = GUIDToStr(p->subtype);
     ret += temp;
     ret += "\r\n";
 
-    temp = "bFixedSizeSamples(1 byte): ";
+    // BOOL is int on Windows
+    temp = "bFixedSizeSamples(4 byte): ";
     ret += temp;
-    temp = BoolToStr(p->bFixedSizeSamples);
+    temp = UInt32ToStr(p->bFixedSizeSamples);
     ret += temp;
     ret += "\r\n";
 
-    temp = "bTemporalCompression(1 byte): ";
+    temp = "bTemporalCompression(4 byte): ";
     ret += temp;
 
-    temp = BoolToStr(p->bTemporalCompression);
+    temp = UInt32ToStr(p->bTemporalCompression);
     ret += temp;
     ret += "\r\n";
 
     temp = "lSampleSize(4 bytes): ";
     ret += temp;
-    temp = UInt32ToStr(p->lSampleSize, false);
+    temp = UInt32ToStr(p->lSampleSize);
     ret += temp;
     ret += "\r\n";
 
     temp = "formattype(16 bytes): ";
+    ret += temp;
+    temp = WinDSCamera::FormatTypeName(p->formattype);
     ret += temp;
     temp = GUIDToStr(p->formattype);
     ret += temp;
@@ -447,7 +483,13 @@ std::string DUtil::Dump_AM_MEDIA_TYPE(void* amt)
 
     temp = "cbFormat(4 bytes): ";
     ret += temp;
-    temp = UInt32ToStr(p->cbFormat, false);
+    temp = UInt32ToStr(p->cbFormat);
+    ret += temp;
+    ret += "\r\n";
+
+    temp = "pbFormat(4/8 bytes): ";
+    ret += temp;
+    temp = AddrToStr(p->pbFormat);
     ret += temp;
     ret += "\r\n";
 
