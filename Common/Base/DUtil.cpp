@@ -1,6 +1,11 @@
 ﻿#include "DUtil.h"
 #include <locale>
 #include "File/DBmpFile.h"
+#include "Base/DBuffer.h"
+
+#if defined(BUILD_FOR_WINDOWS)
+#include <dshow.h>
+#endif
 
 std::string DUtil::ws2s(const std::wstring& ws)
 {
@@ -94,13 +99,19 @@ DUInt64 DUtil::Swap64(DUInt64 h)
     return ret;
 }
 
+std::string DUtil::BoolToStr(DBool b)
+{
+    if (b) return "true";
+    return "false";
+}
+
 std::string DUtil::UInt8ToStr(DUInt8 c)
 {
     char buf[10] = {};
 #if defined(BUILD_FOR_WINDOWS)
-    sprintf_s(buf, 10, "%d", c);
+    sprintf_s(buf, 10, "%u", c);
 #else
-    sprintf(buf, "%d", c);
+    sprintf(buf, "%u", c);
 #endif
     std::string str = buf;
     return str;
@@ -113,9 +124,9 @@ std::string DUtil::UInt16ToStr(DUInt16 c, DBool bLE)
         c = Swap16(c);
     }
 #if defined(BUILD_FOR_WINDOWS)
-    sprintf_s(buf, 10, "%d", c);
+    sprintf_s(buf, 10, "%u", c);
 #else
-    sprintf(buf, "%d", c);
+    sprintf(buf, "%u", c);
 #endif
     std::string str = buf;
     return str;
@@ -128,9 +139,9 @@ std::string DUtil::UInt32ToStr(DUInt32 c, DBool bLE)
         c = Swap32(c);
     }
 #if defined(BUILD_FOR_WINDOWS)
-    sprintf_s(buf, 20, "%d", c);
+    sprintf_s(buf, 20, "%u", c);
 #else
-    sprintf(buf, "%d", c);
+    sprintf(buf, "%u", c);
 #endif
     std::string str = buf;
     return str;
@@ -178,12 +189,65 @@ std::string DUtil::UInt32ToStr16(DUInt32 c, DBool bLE)
     return str;
 }
 
-std::wstring DUtil::GUIDToStr(GUID id)
+std::string DUtil::Int8ToStr(DInt8 c)
 {
-    WCHAR strGuid[39];
-    ::StringFromGUID2(id, strGuid, 39);
-    std::wstring wstr = strGuid;
-    return wstr;
+    char buf[10] = {};
+#if defined(BUILD_FOR_WINDOWS)
+    sprintf_s(buf, 10, "%d", c);
+#else
+    sprintf(buf, "%d", c);
+#endif
+    std::string str = buf;
+    return str;
+}
+
+std::string DUtil::Int16ToStr(DInt16 c, DBool bLE)
+{
+    char buf[10] = {};
+    if (!bLE) {
+        c = Swap16(c);
+    }
+#if defined(BUILD_FOR_WINDOWS)
+    sprintf_s(buf, 10, "%d", c);
+#else
+    sprintf(buf, "%d", c);
+#endif
+    std::string str = buf;
+    return str;
+}
+
+std::string DUtil::Int32ToStr(DInt32 c, DBool bLE)
+{
+    char buf[20] = {};
+    if (!bLE) {
+        c = Swap32(c);
+    }
+#if defined(BUILD_FOR_WINDOWS)
+    sprintf_s(buf, 20, "%d", c);
+#else
+    sprintf(buf, "%d", c);
+#endif
+    std::string str = buf;
+    return str;
+}
+
+std::string DUtil::AddrToStr(void* p)
+{
+    char buf[20] = {};
+#if defined(BUILD_FOR_WINDOWS)
+    sprintf_s(buf, 20, "0x%p", p);
+#else
+    sprintf(buf, "0x%p", p);
+#endif
+    std::string str = buf;
+    return str;
+}
+
+std::string DUtil::BuffToStr(void* p, DUInt32 len)
+{
+    DBuffer buf(p, len);
+    std::string ret = buf.ToHexString();
+    return ret;
 }
 
 
@@ -291,9 +355,100 @@ std::string DUtil::DumpBitmapInfoHeader(void* pFileHeader)
     return ret;
 }
 
+#if defined(BUILD_FOR_WINDOWS)
+
+std::string DUtil::RECTToStr(RECT rc)
+{
+    char buf[30] = {};
+    sprintf_s(buf, 30, "(%d, %d, %d, %d)", rc.left, rc.top, rc.right, rc.bottom);
+    std::string str = buf;
+    return str;
+}
+
+std::string DUtil::GUIDToStr(GUID id)
+{
+    WCHAR strGuid[39];
+    int res = ::StringFromGUID2(id, strGuid, 39);
+    std::wstring wstr = strGuid;
+    std::string str = ws2s(wstr);
+    return str;
+}
+
+/*
+typedef struct _AMMediaType
+    {
+    GUID majortype;
+    GUID subtype;
+    BOOL bFixedSizeSamples;
+    BOOL bTemporalCompression;
+    ULONG lSampleSize;
+    GUID formattype;
+    IUnknown *pUnk;
+    ULONG cbFormat;
+    BYTE* pbFormat;
+    } AM_MEDIA_TYPE;
+*/
+// https://docs.microsoft.com/en-us/previous-versions/ms779120(v=vs.85)
 std::string DUtil::Dump_AM_MEDIA_TYPE(void* amt)
 {
     std::string ret, temp;
+    AM_MEDIA_TYPE* p = (AM_MEDIA_TYPE*)amt;
+    if (p == nullptr) return ret;
+
+    char buf[128] = {};
+    temp = "AM_MEDIA_TYPE(128 bytes):\r\n";
+    ret += temp;
+    sprintf_s(buf, 128, "sizeof(AM_MEDIA_TYPE) = %d\r\n", sizeof(AM_MEDIA_TYPE));
+    ret += buf;
+
+    temp = "majortype(16 bytes): ";
+    ret += temp;
+    temp = GUIDToStr(p->majortype);
+    ret += temp;
+    ret += "\r\n";
+
+    temp = "subtype(16 bytes): ";
+    ret += temp;
+    temp = GUIDToStr(p->subtype);
+    ret += temp;
+    ret += "\r\n";
+
+    temp = "bFixedSizeSamples(1 byte): ";
+    ret += temp;
+    temp = BoolToStr(p->bFixedSizeSamples);
+    ret += temp;
+    ret += "\r\n";
+
+    temp = "bTemporalCompression(1 byte): ";
+    ret += temp;
+    temp = BoolToStr(p->bTemporalCompression);
+    ret += temp;
+    ret += "\r\n";
+
+    temp = "lSampleSize(4 bytes): ";
+    ret += temp;
+    temp = UInt32ToStr(p->lSampleSize, false);
+    ret += temp;
+    ret += "\r\n";
+
+    temp = "formattype(16 bytes): ";
+    ret += temp;
+    temp = GUIDToStr(p->formattype);
+    ret += temp;
+    ret += "\r\n";
+
+    temp = "pUnk(4/8 bytes): ";
+    ret += temp;
+    temp = AddrToStr(p->pUnk);
+    ret += temp;
+    ret += "\r\n";
+
+    temp = "cbFormat(4 bytes): ";
+    ret += temp;
+    temp = UInt32ToStr(p->cbFormat, false);
+    ret += temp;
+    ret += "\r\n";
+
     return ret;
 }
 
@@ -308,3 +463,5 @@ std::string DUtil::Dump_VIDEOINFOHEADER(void* vih)
     std::string ret, temp;
     return ret;
 }
+
+#endif

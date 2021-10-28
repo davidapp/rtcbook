@@ -30,6 +30,7 @@ public:
     DUInt32 m_frame_rate;
     DBool   m_is_max_fr;
     DUInt32 m_pixel_format;
+    std::string m_amt;
 };
 
 

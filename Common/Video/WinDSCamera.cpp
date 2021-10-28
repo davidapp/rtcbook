@@ -1,6 +1,7 @@
 ﻿#include "WinDSCamera.h"
 #include <Initguid.h>
 #include "Base/DUTF8.h"
+#include "Base/DUtil.h"
 #include "Video/VideoDefines.h"
 
 #pragma comment(lib, "strmiids.lib")
@@ -158,7 +159,6 @@ std::vector<DCameraCaps> WinDSCamera::GetDeviceCaps(IBaseFilter* pFilter)
             break;
         }
 
-
         // used for FPS
         HRESULT hrVC = captureDevice->QueryInterface(IID_IAMVideoControl, (void**)&videoControlConfig);
 
@@ -173,6 +173,7 @@ std::vector<DCameraCaps> WinDSCamera::GetDeviceCaps(IBaseFilter* pFilter)
             }
 
             DCameraCaps cap = {};
+            cap.m_amt = DUtil::Dump_AM_MEDIA_TYPE(&pmt);
 
             // 枚举视频类型，看视频的格式
             if (pmt->majortype == MEDIATYPE_Video && pmt->formattype == FORMAT_VideoInfo)

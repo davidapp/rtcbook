@@ -31,6 +31,7 @@ public:
         COMMAND_HANDLER(IDC_COMBO1, CBN_SELCHANGE, OnCbnSelchangeCombo1)
         COMMAND_ID_HANDLER(IDC_SHOWINFO, OnShowInfo)
         COMMAND_ID_HANDLER(IDC_DUMPCAPS, OnDumpCaps)
+        COMMAND_HANDLER(IDC_CAPLIST, LBN_SELCHANGE, OnLbnSelchangeCaplist)
     END_MSG_MAP()
 
     LRESULT OnInitDialog(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/)
@@ -96,6 +97,21 @@ public:
                 CString str;
                 str.Format(L"%d_%d*%d", i, caps[i].m_width, caps[i].m_height);
                 m_capList.AddString(str);
+            }
+        }
+        return 0;
+    }
+
+    LRESULT OnLbnSelchangeCaplist(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/)
+    {
+        std::vector<DCameraInfo> devs = WinDSCamera::GetDevices();
+        DUInt32 index = m_devlist.GetCurSel();
+        if (index < devs.size()) {
+            std::vector<DCameraCaps> caps = WinDSCamera::GetDeviceCaps(devs[index].m_filter);
+            DUInt32 indexcap = m_capList.GetCurSel();
+            if (indexcap < caps.size()) {
+                std::wstring wstr = DUtil::s2ws(caps[indexcap].m_amt);
+                m_info.SetWindowText(wstr.c_str());
             }
         }
         return 0;
