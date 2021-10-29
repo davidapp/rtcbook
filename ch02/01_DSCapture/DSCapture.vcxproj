@@ -24,7 +24,7 @@
     <ProjectGuid>{92b11be2-bc67-427a-9291-15111c9ee0c3}</ProjectGuid>
     <RootNamespace>VideoDeviceEnum</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
-    <ProjectName>01_VideoDeviceEnum</ProjectName>
+    <ProjectName>01_DSCapture</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -154,7 +154,7 @@
     <ClInclude Include="SettingDlg.h" />
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="VideoDeviceEnum.rc" />
+    <ResourceCompile Include="DSCapture.rc" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\Common\Base\DBuffer.cpp" />

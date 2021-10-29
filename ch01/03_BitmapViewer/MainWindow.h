@@ -107,7 +107,7 @@ public:
 
     LRESULT OnFileHeader(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL& bHandled)
     {
-        std::string str = DUtil::DumpBitmapFileHeader(m_info.fileHead);
+        std::string str = DBmpFile::DumpBitmapFileHeader(m_info.fileHead);
         std::wstring strMsg = DUtil::s2ws(str);
         MessageBox(strMsg.c_str(), L"BITMAPFILEHEADER");
         return 0;
@@ -115,7 +115,7 @@ public:
 
     LRESULT OnInfoHeader(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL& bHandled)
     {
-        std::string str = DUtil::DumpBitmapInfoHeader(m_info.infoHead);
+        std::string str = DBmpFile::DumpBitmapInfoHeader(m_info.infoHead);
         std::wstring strMsg = DUtil::s2ws(str);
         MessageBox(strMsg.c_str(), L"BITMAPINFOHEADER");
         return 0;

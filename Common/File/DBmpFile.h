@@ -55,4 +55,8 @@ public:
     static DUInt32 GetAlignWidth24(DUInt32 w);
     static DBuffer Make24BitBitmap(DUInt32 w, DUInt32 h, DBuffer data);
     static DBuffer Make32BitBitmap(DUInt32 w, DUInt32 h, DBuffer data);
+
+public:
+    static std::string DumpBitmapFileHeader(void* pFileHeader); // DBITMAPFILEHEADER
+    static std::string DumpBitmapInfoHeader(void* pInfoHeader); // DBITMAPINFOHEADER
 };

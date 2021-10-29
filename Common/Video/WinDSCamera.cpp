@@ -175,7 +175,7 @@ std::vector<DCameraCaps> WinDSCamera::GetDeviceCaps(IBaseFilter* pFilter)
             }
 
             DCameraCaps cap = {};
-            cap.m_amt = DUtil::Dump_AM_MEDIA_TYPE(pmt);
+            cap.m_amt = Dump_AM_MEDIA_TYPE(pmt);
             DInt64 avgTimePerFrame = 0;
 
             // 枚举视频类型，看视频的格式
@@ -186,6 +186,8 @@ std::vector<DCameraCaps> WinDSCamera::GetDeviceCaps(IBaseFilter* pFilter)
                 cap.m_width = h->bmiHeader.biWidth;
                 cap.m_height = h->bmiHeader.biHeight;
                 avgTimePerFrame = h->AvgTimePerFrame;
+                cap.m_amt += "\r\n";
+                cap.m_amt += Dump_VIDEOINFOHEADER(h);
             }
             else if (pmt->majortype == MEDIATYPE_Video && pmt->formattype == FORMAT_VideoInfo2)
             {
@@ -193,6 +195,8 @@ std::vector<DCameraCaps> WinDSCamera::GetDeviceCaps(IBaseFilter* pFilter)
                 cap.m_width = h->bmiHeader.biWidth;
                 cap.m_height = h->bmiHeader.biHeight;
                 avgTimePerFrame = h->AvgTimePerFrame;
+                cap.m_amt += "\r\n";
+                cap.m_amt += Dump_VIDEOINFOHEADER2(h);
             }
 
             // 像素格式
@@ -259,7 +263,7 @@ std::vector<DCameraCaps> WinDSCamera::GetDeviceCaps(IBaseFilter* pFilter)
                 }
             }
 
-            cap.m_amt += "FrameRate: ";
+            cap.m_amt += "\r\nFrameRate: ";
             cap.m_amt += cap.m_frlist;
             cap.m_amt += "\r\n";
 
@@ -398,19 +402,129 @@ std::string WinDSCamera::FormatTypeName(GUID id)
     return "FORMAT_Unknown";
 }
 
-std::string WinDSCamera::GetVideoInfo(VIDEOINFOHEADER* pInfo)
+std::string WinDSCamera::RECTToStr(RECT rc)
 {
-    // https://msdn.microsoft.com/en-us/library/windows/desktop/dd407325(v=vs.85).aspx
+    char buf[30] = {};
+    sprintf_s(buf, 30, "(%d, %d, %d, %d)", rc.left, rc.top, rc.right, rc.bottom);
+    std::string str = buf;
+    return str;
+}
+
+std::string WinDSCamera::GUIDToStr(GUID id)
+{
+    WCHAR strGuid[39];
+    int res = ::StringFromGUID2(id, strGuid, 39);
+    std::wstring wstr = strGuid;
+    std::string str = DUtil::ws2s(wstr);
+    return str;
+}
+
+std::string WinDSCamera::Dump_AM_MEDIA_TYPE(void* amt)
+{
+    // https://docs.microsoft.com/en-us/previous-versions/ms779120(v=vs.85)
     std::string ret, temp;
+    AM_MEDIA_TYPE* p = (AM_MEDIA_TYPE*)amt;
+    if (p == nullptr) return ret;
+
+    char buf[128] = {};
+    sprintf_s(buf, 128, "sizeof(AM_MEDIA_TYPE) = %d\r\n", sizeof(AM_MEDIA_TYPE));
+    ret += buf;
+
+    //DBuffer bufTemp(p, sizeof(AM_MEDIA_TYPE));
+    //ret += bufTemp.ToHexList();
+
+    temp = "majortype(16 bytes): ";
+    ret += temp;
+    temp = WinDSCamera::MajorTypeName(p->majortype);
+    ret += temp;
+    temp = GUIDToStr(p->majortype);
+    ret += temp;
+    ret += "\r\n";
+
+    temp = "subtype(16 bytes): ";
+    ret += temp;
+    temp = WinDSCamera::SubTypeName(p->subtype);
+    ret += temp;
+    temp = GUIDToStr(p->subtype);
+    ret += temp;
+    ret += "\r\n";
+
+    // BOOL is int on Windows
+    temp = "bFixedSizeSamples(4 byte): ";
+    ret += temp;
+    temp = DUtil::UInt32ToStr(p->bFixedSizeSamples);
+    ret += temp;
+    ret += "\r\n";
+
+    temp = "bTemporalCompression(4 byte): ";
+    ret += temp;
+
+    temp = DUtil::UInt32ToStr(p->bTemporalCompression);
+    ret += temp;
+    ret += "\r\n";
+
+    temp = "lSampleSize(4 bytes): ";
+    ret += temp;
+    temp = DUtil::UInt32ToStr(p->lSampleSize);
+    ret += temp;
+    ret += "\r\n";
+
+    temp = "formattype(16 bytes): ";
+    ret += temp;
+    temp = WinDSCamera::FormatTypeName(p->formattype);
+    ret += temp;
+    temp = GUIDToStr(p->formattype);
+    ret += temp;
+    ret += "\r\n";
+
+    temp = "pUnk(4/8 bytes): ";
+    ret += temp;
+    temp = DUtil::AddrToStr(p->pUnk);
+    ret += temp;
+    ret += "\r\n";
+
+    temp = "cbFormat(4 bytes): ";
+    ret += temp;
+    temp = DUtil::UInt32ToStr(p->cbFormat);
+    ret += temp;
+    ret += "\r\n";
+
+    temp = "pbFormat(4/8 bytes): ";
+    ret += temp;
+    temp = DUtil::AddrToStr(p->pbFormat);
+    ret += temp;
+    ret += "\r\n";
+
+    //DBuffer bufFormat(p->pbFormat, p->cbFormat);
+    //ret += "pbFormat Buffer:\r\n";
+    //ret += bufFormat.ToHexList();
+
     return ret;
 }
 
-std::string WinDSCamera::GetVideoInfo2(VIDEOINFOHEADER2* pInfo)
+
+std::string WinDSCamera::Dump_VIDEOINFOHEADER(void* vih)
+{
+    // https://msdn.microsoft.com/en-us/library/windows/desktop/dd407325(v=vs.85).aspx
+    std::string ret, temp;
+    char buf[128] = {};
+    sprintf_s(buf, 128, "sizeof(VIDEOINFOHEADER) = %d\r\n", sizeof(VIDEOINFOHEADER));
+    ret += buf;
+
+    return ret;
+}
+
+std::string WinDSCamera::Dump_VIDEOINFOHEADER2(void* vih2)
 {
     // https://msdn.microsoft.com/en-us/library/windows/desktop/dd407326(v=vs.85).aspx
     std::string ret, temp;
+    char buf[128] = {};
+    sprintf_s(buf, 128, "sizeof(VIDEOINFOHEADER2) = %d\r\n", sizeof(VIDEOINFOHEADER2));
+    ret += buf;
+
     return ret;
 }
+
 
 // 拿到 IBaseFilter 的 INPUT IPin
 IPin* WinDSCamera::GetInputPin(IBaseFilter* filter) 

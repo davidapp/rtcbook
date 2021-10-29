@@ -47,8 +47,11 @@ public:
     static std::string SubTypeName(GUID id);
     static std::string FormatTypeName(GUID id);
 
-    static std::string GetVideoInfo(VIDEOINFOHEADER* pInfo);
-    static std::string GetVideoInfo2(VIDEOINFOHEADER2* pInfo);
+    static std::string RECTToStr(RECT rc);
+    static std::string GUIDToStr(GUID id);
+    static std::string Dump_AM_MEDIA_TYPE(void* amt);
+    static std::string Dump_VIDEOINFOHEADER(void* vih);
+    static std::string Dump_VIDEOINFOHEADER2(void* vih2);
 
 private:
     // Helper Functions

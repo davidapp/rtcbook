@@ -1,11 +1,11 @@
 ﻿#include "DBmpFile.h"
 #include "Base/DFile.h"
-#include "Video/VideoDefines.h"
+#include "Base/DUtil.h"
+
 // DBITMAPFILEHEADER(14) + DBITMAPINFOHEADER(40) + 可选PALETTE + RGB_Data
 // RGB_Data 部分要注意：1）每一行会按4字节对齐 2）最开始的一行是左下角的
 // Multi-byte integers in the Windows BMP format are stored with the least significant bytes first. 
 // Data stored in the BMP format consists entirely of complete bytes so bit string ordering is not an issue.
-
 
 DBool DBmpFile::Load(DCStr strPath, DBmpInfo* info)
 {
@@ -119,4 +119,108 @@ DBuffer DBmpFile::Make32BitBitmap(DUInt32 w, DUInt32 h, DBuffer data)
     gb.AddFixBuffer(data);
     DBuffer buf = gb.Finish();
     return buf;
+}
+
+std::string DBmpFile::DumpBitmapFileHeader(void* pFileHeader)
+{
+    std::string ret, temp;
+    DBITMAPFILEHEADER* p = (DBITMAPFILEHEADER*)pFileHeader;
+    if (p == nullptr) return "null";
+
+    temp = "DBITMAPFILEHEADER(14 bytes):\r\n";
+    ret += temp;
+
+    temp = "bfType(2 bytes): ";
+    ret += temp;
+    ret += DUtil::UInt16ToStr16(p->bfType, false);
+    ret += "\r\n";
+
+    temp = "bfSize(4 bytes): ";
+    ret += temp;
+    ret += DUtil::UInt32ToStr(p->bfType);
+    ret += "\r\n";
+
+    temp = "bfReserved1(2 bytes): ";
+    ret += temp;
+    ret += DUtil::UInt16ToStr16(p->bfReserved1);
+    ret += "\r\n";
+
+    temp = "bfReserved2(2 bytes): ";
+    ret += temp;
+    ret += DUtil::UInt16ToStr16(p->bfReserved2);
+    ret += "\r\n";
+
+    temp = "bfOffBits(4 bytes): ";
+    ret += temp;
+    ret += DUtil::UInt32ToStr(p->bfOffBits);
+    ret += "\r\n";
+
+    return ret;
+}
+
+std::string DBmpFile::DumpBitmapInfoHeader(void* pFileHeader)
+{
+    std::string ret, temp;
+    DBITMAPINFOHEADER* p = (DBITMAPINFOHEADER*)pFileHeader;
+    if (p == nullptr) return "null";
+
+    temp = "DBITMAPINFOHEADER(40 bytes):\r\n";
+    ret += temp;
+
+    temp = "biSize(4 bytes): ";
+    ret += temp;
+    ret += DUtil::UInt32ToStr(p->biSize);
+    ret += "\r\n";
+
+    temp = "biWidth(4 bytes): ";
+    ret += temp;
+    ret += DUtil::UInt32ToStr(p->biWidth);
+    ret += "\r\n";
+
+    temp = "biHeight(4 bytes): ";
+    ret += temp;
+    ret += DUtil::UInt32ToStr(p->biHeight);
+    ret += "\r\n";
+
+    temp = "biPlanes(2 bytes): ";
+    ret += temp;
+    ret += DUtil::UInt16ToStr(p->biPlanes);
+    ret += "\r\n";
+
+    temp = "biBitCount(2 bytes): ";
+    ret += temp;
+    ret += DUtil::UInt16ToStr(p->biBitCount);
+    ret += "\r\n";
+
+    temp = "biCompression(4 bytes): ";
+    ret += temp;
+    ret += DUtil::UInt32ToStr(p->biCompression);
+    ret += "\r\n";
+
+    temp = "biSizeImage(4 bytes): ";
+    ret += temp;
+    ret += DUtil::UInt32ToStr(p->biSizeImage);
+    ret += "\r\n";
+
+    temp = "biXPelsPerMeter(4 bytes): ";
+    ret += temp;
+    ret += DUtil::UInt32ToStr(p->biXPelsPerMeter);
+    ret += "\r\n";
+
+    temp = "biYPelsPerMeter(4 bytes): ";
+    ret += temp;
+    ret += DUtil::UInt32ToStr(p->biYPelsPerMeter);
+    ret += "\r\n";
+
+    temp = "biClrUsed(4 bytes): ";
+    ret += temp;
+    ret += DUtil::UInt32ToStr(p->biClrUsed);
+    ret += "\r\n";
+
+    temp = "biClrImportant(4 bytes): ";
+    ret += temp;
+    ret += DUtil::UInt32ToStr(p->biClrImportant);
+    ret += "\r\n";
+
+    return ret;
 }
