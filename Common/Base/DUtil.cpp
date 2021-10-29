@@ -292,18 +292,3 @@ std::string DUtil::BuffToStr(void* p, DUInt32 len)
     std::string ret = buf.ToHexString();
     return ret;
 }
-
-std::string DUtil::FRArrayToStr(void* p, DUInt32 len)
-{
-    DUInt64* ptr = (DUInt64*)p;
-    std::string ret;
-    ret += "[";
-    for (DUInt32 i = 0; i < len; i++) {
-        ret += UInt32ToStr((DUInt32)(10000000 / ptr[i]));
-        if (i != len - 1) {
-            ret += ", ";
-        }
-    }
-    ret += "]\r\n";
-    return ret;
-}

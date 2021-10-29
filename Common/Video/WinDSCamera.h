@@ -49,6 +49,7 @@ public:
 
     static std::string RECTToStr(RECT rc);
     static std::string GUIDToStr(GUID id);
+    static std::string FRArrayToStr(void* p, DUInt32 len);
     static std::string Dump_AM_MEDIA_TYPE(void* amt);
     static std::string Dump_VIDEOINFOHEADER(void* vih);
     static std::string Dump_VIDEOINFOHEADER2(void* vih2);

@@ -242,7 +242,7 @@ std::vector<DCameraCaps> WinDSCamera::GetDeviceCaps(IBaseFilter* pFilter)
                 if (hrVC == S_OK && listSize > 0 && 0 != (max_fps = GetMaxOfFrameArray(frameDurationList, listSize)))
                 {
                     cap.m_frame_rate = (DUInt32)(10000000 / max_fps);
-                    cap.m_frlist = DUtil::FRArrayToStr(frameDurationList, listSize);
+                    cap.m_frlist = FRArrayToStr(frameDurationList, listSize);
                     CoTaskMemFree(frameDurationList);
                 }
             }
@@ -254,7 +254,7 @@ std::vector<DCameraCaps> WinDSCamera::GetDeviceCaps(IBaseFilter* pFilter)
                 {
                     cap.m_frame_rate = (DUInt32)(10000000 / avgTimePerFrame);
                     DUInt64 fr = cap.m_frame_rate;
-                    cap.m_frlist = DUtil::FRArrayToStr(&fr, 1); 
+                    cap.m_frlist = FRArrayToStr(&fr, 1); 
                 }
                 else
                 {
@@ -417,6 +417,21 @@ std::string WinDSCamera::GUIDToStr(GUID id)
     std::wstring wstr = strGuid;
     std::string str = DUtil::ws2s(wstr);
     return str;
+}
+
+std::string WinDSCamera::FRArrayToStr(void* p, DUInt32 len)
+{
+    DUInt64* ptr = (DUInt64*)p;
+    std::string ret;
+    ret += "[";
+    for (DUInt32 i = 0; i < len; i++) {
+        ret += DUtil::UInt32ToStr((DUInt32)(10000000 / ptr[i]));
+        if (i != len - 1) {
+            ret += ", ";
+        }
+    }
+    ret += "]\r\n";
+    return ret;
 }
 
 std::string WinDSCamera::Dump_AM_MEDIA_TYPE(void* amt)
