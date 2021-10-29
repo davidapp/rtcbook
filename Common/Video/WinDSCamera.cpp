@@ -136,8 +136,8 @@ std::vector<DCameraCaps> WinDSCamera::GetDeviceCaps(IBaseFilter* pFilter)
     IAMStreamConfig* streamConfig = nullptr; 
     // use IAMStreamConfig::SetFormat to set
     // use IAMStreamConfig::GetFormat to get the current format
-    IAMVideoControl* videoControlConfig = nullptr;
 
+    IAMVideoControl* videoControlConfig = nullptr; // use IAMVideoControl to get frame rate
     do
     {
         if (!captureDevice) {
@@ -165,7 +165,7 @@ std::vector<DCameraCaps> WinDSCamera::GetDeviceCaps(IBaseFilter* pFilter)
         HRESULT hrVC = captureDevice->QueryInterface(IID_IAMVideoControl, (void**)&videoControlConfig);
 
         AM_MEDIA_TYPE* pmt = NULL;
-        VIDEO_STREAM_CONFIG_CAPS vscaps = {}; // should ignore it 
+        VIDEO_STREAM_CONFIG_CAPS vscaps = {}; // we should ignore it 
         for (int32_t tmp = 0; tmp < count; ++tmp)
         {
             // https://docs.microsoft.com/en-us/previous-versions/ms784114(v=vs.85)
@@ -176,6 +176,7 @@ std::vector<DCameraCaps> WinDSCamera::GetDeviceCaps(IBaseFilter* pFilter)
 
             DCameraCaps cap = {};
             cap.m_amt = DUtil::Dump_AM_MEDIA_TYPE(pmt);
+            DInt64 avgTimePerFrame = 0;
 
             // 枚举视频类型，看视频的格式
             if (pmt->majortype == MEDIATYPE_Video && pmt->formattype == FORMAT_VideoInfo)
@@ -184,79 +185,84 @@ std::vector<DCameraCaps> WinDSCamera::GetDeviceCaps(IBaseFilter* pFilter)
                 VIDEOINFOHEADER* h = reinterpret_cast<VIDEOINFOHEADER*>(pmt->pbFormat);
                 cap.m_width = h->bmiHeader.biWidth;
                 cap.m_height = h->bmiHeader.biHeight;
-
-                // 支持的帧率
-                DInt64 avgTimePerFrame = h->AvgTimePerFrame;
-                if (hrVC == S_OK)
-                {
-                    DUInt64* frameDurationList;
-                    DUInt64 max_fps;
-                    DUInt32 listSize;
-                    SIZE size;
-                    size.cx = h->bmiHeader.biWidth;
-                    size.cy = h->bmiHeader.biHeight;
-                    // https://docs.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-iamvideocontrol-getframeratelist
-                    hrVC = videoControlConfig->GetFrameRateList(outputCapturePin, tmp, size, (long*)&listSize, (LONGLONG**)&frameDurationList);
-                    if (hrVC == S_OK && listSize > 0 && 0 != (max_fps = GetMaxOfFrameArray(frameDurationList, listSize)))
-                    {
-                        //pData->AddUInt32(DPFINFO_UINT32_FRAMERATE, static_cast<int>(10000000 / max_fps));
-                        //pData->AddBool(DPFINFO_BOOL_IS_MAX_FRAMERATE, true);
-                        CoTaskMemFree(frameDurationList);
-                    }
-                    else
-                    {
-                        //if (avgTimePerFrame > 0)
-                        //    pData->AddUInt32(DPFINFO_UINT32_FRAMERATE, static_cast<int>(10000000 / avgTimePerFrame));
-                        //else
-                        //    pData->AddUInt32(DPFINFO_UINT32_FRAMERATE, 0);
-
-                        //pData->AddBool(DPFINFO_BOOL_IS_MAX_FRAMERATE, false);
-                    }
-                }
-                else
-                {   
-                    // use existing method in case IAMVideoControl is not supported
-                    //if (avgTimePerFrame > 0)
-                    //    pData->AddUInt32(DPFINFO_UINT32_FRAMERATE, static_cast<int>(10000000 / avgTimePerFrame));
-                    //else
-                    //    pData->AddUInt32(DPFINFO_UINT32_FRAMERATE, 0);
-
-                    //pData->AddBool(DPFINFO_BOOL_IS_MAX_FRAMERATE, false);
-                }
-
-                // 像素格式
-                DPixelFmt mformat = DPixelFmt::Unknown;
-                if (pmt->subtype == MEDIASUBTYPE_RGB24)
-                {
-                    mformat = DPixelFmt::RGB24;
-                }
-                else if (pmt->subtype == MEDIASUBTYPE_I420)
-                {
-                    mformat = DPixelFmt::I420;
-                }
-                else if (pmt->subtype == MEDIASUBTYPE_IYUV)
-                {
-                    mformat = DPixelFmt::IYUV;
-                }
-                else if (pmt->subtype == MEDIASUBTYPE_YUY2)
-                {
-                    mformat = DPixelFmt::YUY2;
-                }
-                else if (pmt->subtype == MEDIASUBTYPE_MJPG)
-                {
-                    mformat = DPixelFmt::MJPG;
-                }
-                else
-                {
-                    mformat = DPixelFmt::Unknown;
-                }
+                avgTimePerFrame = h->AvgTimePerFrame;
             }
             else if (pmt->majortype == MEDIATYPE_Video && pmt->formattype == FORMAT_VideoInfo2)
             {
                 VIDEOINFOHEADER2* h = reinterpret_cast<VIDEOINFOHEADER2*>(pmt->pbFormat);
                 cap.m_width = h->bmiHeader.biWidth;
                 cap.m_height = h->bmiHeader.biHeight;
+                avgTimePerFrame = h->AvgTimePerFrame;
             }
+
+            // 像素格式
+            DPixelFmt mformat = DPixelFmt::Unknown;
+            if (pmt->subtype == MEDIASUBTYPE_RGB24)
+            {
+                mformat = DPixelFmt::RGB24;
+            }
+            else if (pmt->subtype == MEDIASUBTYPE_I420)
+            {
+                mformat = DPixelFmt::I420;
+            }
+            else if (pmt->subtype == MEDIASUBTYPE_IYUV)
+            {
+                mformat = DPixelFmt::IYUV;
+            }
+            else if (pmt->subtype == MEDIASUBTYPE_YUY2)
+            {
+                mformat = DPixelFmt::YUY2;
+            }
+            else if (pmt->subtype == MEDIASUBTYPE_MJPG)
+            {
+                mformat = DPixelFmt::MJPG;
+            }
+            else
+            {
+                mformat = DPixelFmt::Unknown;
+            }
+            cap.m_pixel_format = (DUInt32)mformat;
+
+            // 支持的帧率
+            if (hrVC == S_OK)
+            {
+                DUInt64* frameDurationList;
+                DUInt64 max_fps;
+                DUInt32 listSize;
+                SIZE size;
+                size.cx = cap.m_width;
+                size.cy = cap.m_height;
+
+                // https://docs.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-iamvideocontrol-getframeratelist
+                hrVC = videoControlConfig->GetFrameRateList(outputCapturePin, tmp, size, (long*)&listSize, (LONGLONG**)&frameDurationList);
+                if (hrVC == S_OK && listSize > 0 && 0 != (max_fps = GetMaxOfFrameArray(frameDurationList, listSize)))
+                {
+                    cap.m_frame_rate = (DUInt32)(10000000 / max_fps);
+                    cap.m_frlist = DUtil::FRArrayToStr(frameDurationList, listSize);
+                    CoTaskMemFree(frameDurationList);
+                }
+            }
+            
+            if (cap.m_frlist.length()==0)
+            {
+                // use existing method in case IAMVideoControl is not supported
+                if (avgTimePerFrame > 0)
+                {
+                    cap.m_frame_rate = (DUInt32)(10000000 / avgTimePerFrame);
+                    DUInt64 fr = cap.m_frame_rate;
+                    cap.m_frlist = DUtil::FRArrayToStr(&fr, 1); 
+                }
+                else
+                {
+                    cap.m_frame_rate = 0;
+                    cap.m_frlist = "[]";
+                }
+            }
+
+            cap.m_amt += "FrameRate: ";
+            cap.m_amt += cap.m_frlist;
+            cap.m_amt += "\r\n";
+
             caps.push_back(cap);
 
             if (pmt) {
@@ -304,7 +310,6 @@ DUInt64 WinDSCamera::GetMaxOfFrameArray(DUInt64* maxFps, DUInt32 size)
 // 通过 IBaseFilter 查询到 IID_ISpecifyPropertyPages
 DBool WinDSCamera::ShowSettingDialog(IBaseFilter* filter, DVoid* parentWindow, DUInt32 positionX, DUInt32 positionY)
 {
-    // std::unique_lock<std::recursive_mutex> ul(_mutex);
     DBool bResult = false;
     do
     {
@@ -395,12 +400,14 @@ std::string WinDSCamera::FormatTypeName(GUID id)
 
 std::string WinDSCamera::GetVideoInfo(VIDEOINFOHEADER* pInfo)
 {
+    // https://msdn.microsoft.com/en-us/library/windows/desktop/dd407325(v=vs.85).aspx
     std::string ret, temp;
     return ret;
 }
 
 std::string WinDSCamera::GetVideoInfo2(VIDEOINFOHEADER2* pInfo)
 {
+    // https://msdn.microsoft.com/en-us/library/windows/desktop/dd407326(v=vs.85).aspx
     std::string ret, temp;
     return ret;
 }

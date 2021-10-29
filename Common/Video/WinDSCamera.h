@@ -13,24 +13,14 @@ public:
     IBaseFilter* m_filter;
 };
 
-//IAMExtDevice* m_ext_device;
-//IAMVideoControl* m_video_config; // 拿 FrameRate
-
-//IPin* m_outputPin;
-//IAMStreamConfig* m_stream_config; // GetNumberOfCapabolities GetStreamCaps 拿 AM_MEDIA_TYPE* 和 VIDEO_STREAM_CONFIG_CAPS 
-// 内有像素格式+宽高
-
-// AM_MEDIA_TYPE: majortype, formattype, pbformat, subtype
-// pbformat -> VIDEOINFOHEAD* VIDEOINFOHEADER2*
-
 class DCameraCaps {
 public:
     DUInt32 m_width;
     DUInt32 m_height;
     DUInt32 m_frame_rate;
-    DBool   m_is_max_fr;
     DUInt32 m_pixel_format;
     std::string m_amt;
+    std::string m_frlist;
 };
 
 
@@ -57,10 +47,7 @@ public:
     static std::string SubTypeName(GUID id);
     static std::string FormatTypeName(GUID id);
 
-    // https://msdn.microsoft.com/en-us/library/windows/desktop/dd407325(v=vs.85).aspx
     static std::string GetVideoInfo(VIDEOINFOHEADER* pInfo);
-
-    // https://msdn.microsoft.com/en-us/library/windows/desktop/dd407326(v=vs.85).aspx
     static std::string GetVideoInfo2(VIDEOINFOHEADER2* pInfo);
 
 private:

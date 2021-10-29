@@ -35,6 +35,7 @@ public:
     static std::string Int64ToStr(DInt64 c, DBool bLE = true);
     static std::string AddrToStr(void* p);
     static std::string BuffToStr(void* p, DUInt32 len);
+    static std::string FRArrayToStr(void* p, DUInt32 len);
 
 public:
     static std::string DumpBitmapFileHeader(void* pFileHeader); // DBITMAPFILEHEADER
@@ -45,8 +46,8 @@ public:
     static std::string RECTToStr(RECT rc);
     static std::string GUIDToStr(GUID id);
     static std::string Dump_AM_MEDIA_TYPE(void* amt);
-    static std::string Dump_VIDEO_STREAM_CONFIG_CAPS(void* vscc);
     static std::string Dump_VIDEOINFOHEADER(void* vih);
+    static std::string Dump_VIDEOINFOHEADER2(void* vih2);
 #endif
 
     D_DISALLOW_ALL_DEFAULT(DUtil)

@@ -293,6 +293,21 @@ std::string DUtil::BuffToStr(void* p, DUInt32 len)
     return ret;
 }
 
+std::string DUtil::FRArrayToStr(void* p, DUInt32 len)
+{
+    DUInt64* ptr = (DUInt64*)p;
+    std::string ret;
+    ret += "[";
+    for (DUInt32 i = 0; i < len; i++) {
+        ret += UInt32ToStr((DUInt32)(10000000 / ptr[i]));
+        if (i != len - 1) {
+            ret += ", ";
+        }
+    }
+    ret += "]\r\n";
+    return ret;
+}
+
 
 std::string DUtil::DumpBitmapFileHeader(void* pFileHeader)
 {
@@ -428,8 +443,8 @@ std::string DUtil::Dump_AM_MEDIA_TYPE(void* amt)
     sprintf_s(buf, 128, "sizeof(AM_MEDIA_TYPE) = %d\r\n", sizeof(AM_MEDIA_TYPE));
     ret += buf;
 
-    DBuffer bufTemp(p, sizeof(AM_MEDIA_TYPE));
-    ret += bufTemp.ToHexList();
+    //DBuffer bufTemp(p, sizeof(AM_MEDIA_TYPE));
+    //ret += bufTemp.ToHexList();
 
     temp = "majortype(16 bytes): ";
     ret += temp;
@@ -493,16 +508,21 @@ std::string DUtil::Dump_AM_MEDIA_TYPE(void* amt)
     ret += temp;
     ret += "\r\n";
 
+    //DBuffer bufFormat(p->pbFormat, p->cbFormat);
+    //ret += "pbFormat Buffer:\r\n";
+    //ret += bufFormat.ToHexList();
+
+     
     return ret;
 }
 
-std::string DUtil::Dump_VIDEO_STREAM_CONFIG_CAPS(void* vscc)
+std::string DUtil::Dump_VIDEOINFOHEADER(void* vih)
 {
     std::string ret, temp;
     return ret;
 }
 
-std::string DUtil::Dump_VIDEOINFOHEADER(void* vih)
+std::string DUtil::Dump_VIDEOINFOHEADER2(void* vih2)
 {
     std::string ret, temp;
     return ret;
