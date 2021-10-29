@@ -7,7 +7,6 @@ typedef DUInt32 DColor;
 #define DRGB(r,g,b) ((DUInt32)(((DUInt8)(r)|((DUInt16)((DUInt8)(g))<<8))|(((DUInt32)(DUInt8)(b))<<16)))
 
 #include <pshpack2.h>
-
 typedef struct tagDBITMAPFILEHEADER {
     DUInt16 bfType;			// 0x4D42 'BM'
     DUInt32 bfSize;			// FileSize

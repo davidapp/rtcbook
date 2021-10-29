@@ -14,6 +14,12 @@
     <ClCompile Include="..\..\Common\Video\WinDSCamera.cpp">
       <Filter>Common\Video</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\Common\File\DBmpFile.cpp">
+      <Filter>Common\File</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\Base\DFile.cpp">
+      <Filter>Common\Base</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Common\Base\DBuffer.h">
@@ -40,6 +46,12 @@
     <ClInclude Include="resource.h">
       <Filter>Resource</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\Common\File\DBmpFile.h">
+      <Filter>Common\File</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\Base\DFile.h">
+      <Filter>Common\Base</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Common">
@@ -56,6 +68,9 @@
     </Filter>
     <Filter Include="Common\Video">
       <UniqueIdentifier>{e6cea01f-8eca-4d29-8d0e-3e177b9f9245}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Common\File">
+      <UniqueIdentifier>{48d512d3-04d8-4484-a19d-660a40a151b6}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

@@ -145,8 +145,10 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Common\Base\DBuffer.h" />
+    <ClInclude Include="..\..\Common\Base\DFile.h" />
     <ClInclude Include="..\..\Common\Base\DUTF8.h" />
     <ClInclude Include="..\..\Common\Base\DUtil.h" />
+    <ClInclude Include="..\..\Common\File\DBmpFile.h" />
     <ClInclude Include="..\..\Common\Video\VideoDefines.h" />
     <ClInclude Include="..\..\Common\Video\WinDSCamera.h" />
     <ClInclude Include="MainWindow.h" />
@@ -158,8 +160,10 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\Common\Base\DBuffer.cpp" />
+    <ClCompile Include="..\..\Common\Base\DFile.cpp" />
     <ClCompile Include="..\..\Common\Base\DUTF8.cpp" />
     <ClCompile Include="..\..\Common\Base\DUtil.cpp" />
+    <ClCompile Include="..\..\Common\File\DBmpFile.cpp" />
     <ClCompile Include="..\..\Common\Video\WinDSCamera.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>

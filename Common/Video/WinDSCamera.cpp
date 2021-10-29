@@ -3,6 +3,7 @@
 #include "Base/DUTF8.h"
 #include "Base/DUtil.h"
 #include "Video/VideoDefines.h"
+#include "File/DBmpFile.h"
 
 #pragma comment(lib, "strmiids.lib")
 
@@ -263,7 +264,7 @@ std::vector<DCameraCaps> WinDSCamera::GetDeviceCaps(IBaseFilter* pFilter)
                 }
             }
 
-            cap.m_amt += "\r\nFrameRate: ";
+            cap.m_amt += "FrameRate: ";
             cap.m_amt += cap.m_frlist;
             cap.m_amt += "\r\n";
 
@@ -517,14 +518,46 @@ std::string WinDSCamera::Dump_AM_MEDIA_TYPE(void* amt)
     return ret;
 }
 
-
 std::string WinDSCamera::Dump_VIDEOINFOHEADER(void* vih)
 {
     // https://msdn.microsoft.com/en-us/library/windows/desktop/dd407325(v=vs.85).aspx
     std::string ret, temp;
+
+    VIDEOINFOHEADER* h = (VIDEOINFOHEADER*)vih;
+
     char buf[128] = {};
     sprintf_s(buf, 128, "sizeof(VIDEOINFOHEADER) = %d\r\n", sizeof(VIDEOINFOHEADER));
     ret += buf;
+
+    temp = "rcSource(4*4 bytes):";
+    ret += temp;
+    ret += RECTToStr(h->rcSource);
+    ret += "\r\n";
+
+    temp = "rcTarget(4*4 bytes):";
+    ret += temp;
+    ret += RECTToStr(h->rcTarget);
+    ret += "\r\n";
+
+    temp = "dwBitRate(4 bytes):";
+    ret += temp;
+    ret += DUtil::UInt32ToStr(h->dwBitRate);
+    ret += "\r\n";
+
+    temp = "dwBitErrorRate(4 bytes):";
+    ret += temp;
+    ret += DUtil::UInt32ToStr(h->dwBitErrorRate);
+    ret += "\r\n";
+
+    temp = "AvgTimePerFrame(8 bytes):";
+    ret += temp;
+    ret += DUtil::Int64ToStr(h->AvgTimePerFrame);
+    ret += "\r\n";
+
+    temp = "bmiHeader(40 bytes):\r\n";
+    ret += temp;
+    ret += DBmpFile::DumpBitmapInfoHeader(&(h->bmiHeader));
+    ret += "\r\n";
 
     return ret;
 }
@@ -533,9 +566,72 @@ std::string WinDSCamera::Dump_VIDEOINFOHEADER2(void* vih2)
 {
     // https://msdn.microsoft.com/en-us/library/windows/desktop/dd407326(v=vs.85).aspx
     std::string ret, temp;
+
+    VIDEOINFOHEADER2* h = (VIDEOINFOHEADER2*)vih2;
+
     char buf[128] = {};
     sprintf_s(buf, 128, "sizeof(VIDEOINFOHEADER2) = %d\r\n", sizeof(VIDEOINFOHEADER2));
     ret += buf;
+
+    temp = "rcSource(4*4 bytes):";
+    ret += temp;
+    ret += RECTToStr(h->rcSource);
+    ret += "\r\n";
+
+    temp = "rcTarget(4*4 bytes):";
+    ret += temp;
+    ret += RECTToStr(h->rcTarget);
+    ret += "\r\n";
+
+    temp = "dwBitRate(4 bytes):";
+    ret += temp;
+    ret += DUtil::UInt32ToStr(h->dwBitRate);
+    ret += "\r\n";
+
+    temp = "dwBitErrorRate(4 bytes):";
+    ret += temp;
+    ret += DUtil::UInt32ToStr(h->dwBitErrorRate);
+    ret += "\r\n";
+
+    temp = "AvgTimePerFrame(8 bytes):";
+    ret += temp;
+    ret += DUtil::Int64ToStr(h->AvgTimePerFrame);
+    ret += "\r\n";
+
+    temp = "dwInterlaceFlags(4 bytes):";
+    ret += temp;
+    ret += DUtil::UInt32ToStr(h->dwInterlaceFlags);
+    ret += "\r\n";
+
+    temp = "dwCopyProtectFlags(4 bytes):";
+    ret += temp;
+    ret += DUtil::UInt32ToStr(h->dwCopyProtectFlags);
+    ret += "\r\n";
+
+    temp = "dwPictAspectRatioX(4 bytes):";
+    ret += temp;
+    ret += DUtil::UInt32ToStr(h->dwPictAspectRatioX);
+    ret += "\r\n";
+
+    temp = "dwPictAspectRatioY(4 bytes):";
+    ret += temp;
+    ret += DUtil::UInt32ToStr(h->dwPictAspectRatioY);
+    ret += "\r\n";
+
+    temp = "dwControlFlags(4 bytes):";
+    ret += temp;
+    ret += DUtil::UInt32ToStr(h->dwControlFlags);
+    ret += "\r\n";
+
+    temp = "dwReserved2(4 bytes):";
+    ret += temp;
+    ret += DUtil::UInt32ToStr(h->dwReserved2);
+    ret += "\r\n";
+
+    temp = "bmiHeader(40 bytes):\r\n";
+    ret += temp;
+    ret += DBmpFile::DumpBitmapInfoHeader(&(h->bmiHeader));
+    ret += "\r\n";
 
     return ret;
 }
