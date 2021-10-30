@@ -541,7 +541,7 @@ std::string WinDSCamera::Dump_VIDEOINFOHEADER(void* vih)
 
     temp = "dwBitRate(4 bytes):";
     ret += temp;
-    ret += DUtil::UInt32ToStr(h->dwBitRate);
+    ret += DUtil::UInt32ToStr(h->dwBitRate); // biSizeImage * MaxFRS * 8
     ret += "\r\n";
 
     temp = "dwBitErrorRate(4 bytes):";

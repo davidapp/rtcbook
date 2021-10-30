@@ -121,8 +121,26 @@ DBuffer DBmpFile::Make32BitBitmap(DUInt32 w, DUInt32 h, DBuffer data)
     return buf;
 }
 
+std::string DBmpFile::biCompToStr(DUInt32 biCompression)
+{
+    // https://docs.microsoft.com/en-us/windows/win32/directshow/fourcc-codes
+    if (biCompression == BI_RGB) return "BI_RGB";
+    else if (biCompression == BI_BITFIELDS) return "BI_RGB";
+
+    char buf[10] = {};
+    char* p = (char*)&biCompression;
+#if defined(BUILD_FOR_WINDOWS)
+    sprintf_s(buf, 10, "%c%c%c%c", p[0], p[1], p[2], p[3]);
+#else
+    sprintf(buf, "%c%c%c%c", p[0], p[1], p[2], p[3]);
+#endif
+    std::string ret = buf;
+    return ret;
+}
+
 std::string DBmpFile::DumpBitmapFileHeader(void* pFileHeader)
 {
+    //https://docs.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-bitmapfileheader
     std::string ret, temp;
     DBITMAPFILEHEADER* p = (DBITMAPFILEHEADER*)pFileHeader;
     if (p == nullptr) return "null";
@@ -160,6 +178,7 @@ std::string DBmpFile::DumpBitmapFileHeader(void* pFileHeader)
 
 std::string DBmpFile::DumpBitmapInfoHeader(void* pFileHeader)
 {
+    // https://docs.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-bitmapinfoheader
     std::string ret, temp;
     DBITMAPINFOHEADER* p = (DBITMAPINFOHEADER*)pFileHeader;
     if (p == nullptr) return "null";
@@ -194,7 +213,7 @@ std::string DBmpFile::DumpBitmapInfoHeader(void* pFileHeader)
 
     temp = "biCompression(4 bytes): ";
     ret += temp;
-    ret += DUtil::UInt32ToStr(p->biCompression);
+    ret += biCompToStr(p->biCompression);
     ret += "\r\n";
 
     temp = "biSizeImage(4 bytes): ";
