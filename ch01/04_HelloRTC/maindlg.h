@@ -1,6 +1,5 @@
 #pragma once
 
-#include "stdatl.h"
 #include "atlctrls.h"
 #include "atlmisc.h"
 #include "atlcrack.h"
@@ -31,8 +30,6 @@ public:
         COMMAND_ID_HANDLER(IDC_START, OnStartServer)
         COMMAND_ID_HANDLER(IDC_STOP, OnStopServer)
         COMMAND_ID_HANDLER(IDC_INFO, OnInfo)
-        COMMAND_ID_HANDLER(IDC_CONNECT, OnConnect)
-        COMMAND_ID_HANDLER(IDC_DISCONNECT, OnDisconnect)
         MESSAGE_HANDLER(WM_LOG, OnLog)
     END_MSG_MAP()
 
@@ -48,13 +45,15 @@ public:
             IMAGE_ICON, ::GetSystemMetrics(SM_CXSMICON), ::GetSystemMetrics(SM_CYSMICON), LR_DEFAULTCOLOR);
         SetIcon(hIconSmall, FALSE);
 
-        // register object for message filtering
-        CMessageLoop* pLoop = _Module.GetMessageLoop();
-        pLoop->AddMessageFilter(this);
+        m_start = GetDlgItem(IDC_START);
+        m_stop = GetDlgItem(IDC_STOP);
+        m_stop.EnableWindow(FALSE);
 
         m_port = GetDlgItem(IDC_PORT);
         m_port.SetWindowText(L"1229");
         m_log = GetDlgItem(IDC_LOG);
+
+
         return TRUE;
     }
 
@@ -69,33 +68,23 @@ public:
         return 0;
     }
 
-    LRESULT OnSelChange(WORD wNotifyCode, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/)
-    {
-        if (wNotifyCode == BN_CLICKED)
-        {
-            
-        }
-        return 0;
-    }
-
-    LRESULT OnCancel(WORD /*wNotifyCode*/, WORD wID, HWND /*hWndCtl*/, BOOL& /*bHandled*/)
-    {
-        CloseDialog(wID);
-        return 0;
-    }
-
     LRESULT OnStartServer(WORD /*wNotifyCode*/, WORD wID, HWND /*hWndCtl*/, BOOL& /*bHandled*/)
     {
         CString strPort;
         m_port.GetWindowText(strPort);
         DUInt16 port = _wtoi(strPort);
         DIOCPServer::Start(m_hWnd, port);
+        m_start.EnableWindow(FALSE);
+        m_stop.EnableWindow(TRUE);
+
         return 0;
     }
 
     LRESULT OnStopServer(WORD /*wNotifyCode*/, WORD wID, HWND /*hWndCtl*/, BOOL& /*bHandled*/)
     {
         
+        m_start.EnableWindow(TRUE);
+        m_stop.EnableWindow(FALSE);
         return 0;
     }
 
@@ -105,24 +94,6 @@ public:
         std::wstring winfo = DUtil::s2ws(info);
         AppendLog((wchar_t*)winfo.c_str());
         return 0;
-    }
-
-    LRESULT OnConnect(WORD /*wNotifyCode*/, WORD wID, HWND /*hWndCtl*/, BOOL& /*bHandled*/)
-    {
-
-        return 0;
-    }
-
-    LRESULT OnDisconnect(WORD /*wNotifyCode*/, WORD wID, HWND /*hWndCtl*/, BOOL& /*bHandled*/)
-    {
-
-        return 0;
-    }
-
-    void CloseDialog(int nVal)
-    {
-        DestroyWindow();
-        ::PostQuitMessage(nVal);
     }
 
     void AppendLog(wchar_t* str)
@@ -135,6 +106,16 @@ public:
         m_log.SetWindowText(strOld);
     }
 
+    LRESULT OnCancel(WORD /*wNotifyCode*/, WORD wID, HWND /*hWndCtl*/, BOOL& /*bHandled*/)
+    {
+        DestroyWindow();
+        ::PostQuitMessage(0);
+        return 0;
+    }
+
     CEdit m_port;
     CEdit m_log;
+
+    CButton m_start;
+    CButton m_stop;
 };

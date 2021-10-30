@@ -56,17 +56,17 @@ std::string DIOCPServer::Info()
 
 DUInt32 DIOCPServer::ListenThread(DUInt16 nPort)
 {
-    // 创建 IO 完成端口，保留一个线程给客户端
+    // 创建 IO 完成端口
     SYSTEM_INFO SystemInfo;
     GetSystemInfo(&SystemInfo);
-    HANDLE CompletionPort = CreateIoCompletionPort(INVALID_HANDLE_VALUE, NULL, 0, SystemInfo.dwNumberOfProcessors - 1);
+    HANDLE CompletionPort = CreateIoCompletionPort(INVALID_HANDLE_VALUE, NULL, 0, SystemInfo.dwNumberOfProcessors);
     if (CompletionPort == NULL) {
         SendMessage(g_NotifyWnd, WM_LOG, (WPARAM)DEVENT_IOCP_ERROR, 0);
         return DEVENT_IOCP_ERROR;
     }
 
     // 需要的线程数为 并发执行线程数的2倍
-    for (DUInt32 i = 0; i < 2 * (SystemInfo.dwNumberOfProcessors - 1); i++)
+    for (DUInt32 i = 0; i < 2 * SystemInfo.dwNumberOfProcessors; i++)
     {
         std::thread worker(DIOCPServer::ServerWorkerThread, (DVoid*)CompletionPort);
         worker.detach();
