@@ -1,4 +1,6 @@
 ﻿#include "DTCPClient.h"
+#include "Base/DUtil.h"
+#include "Net/DNet.h"
 
 #if defined(BUILD_FOR_WINDOWS)
 #include <winsock2.h>
@@ -99,7 +101,7 @@ DVoid DTCPSocket::Renew()
 DTCPClient::DTCPClient()
 {
     m_sock = DBadSocket;
-    m_strIP.Empty();
+    m_strIP.clear();
     m_wPort = 0;
     m_pConnSink = NULL;
     m_pDataSink = NULL;
@@ -121,10 +123,10 @@ DTCPClient::~DTCPClient()
 {
     Close();
 
-    m_strIP.Empty();
+    m_strIP.clear();
     if (m_read != 0)
     {
-        DThread::WaitFinish(m_read, 5);
+        //DThread::WaitFinish(m_read, 5);
     }
     m_read = 0;	//The thread must be dead before dealloc!
 }
@@ -135,12 +137,12 @@ DBool DTCPClient::SyncConnect(DCStr strIP, DUInt16 wPort)
     SOCKADDR_IN addr;
     memset(&addr, 0, sizeof(SOCKADDR_IN));
     addr.sin_family = AF_INET;
-    addr.sin_addr.s_addr = DIP::IPStrToUint32(strIP);
-    addr.sin_port = DNet::Swap16(wPort);
+    addr.sin_addr.s_addr = DNet::IPStrToUint32(strIP);
+    addr.sin_port = DUtil::Swap16(wPort);
     if (connect(m_sock, (SOCKADDR*)&addr, sizeof(SOCKADDR_IN)) == SOCKET_ERROR)
     {
-        DUInt32 errCode = DError::GetLastNetError();
-        DStringA strReasonA = DError::GetLastNetErrorStr();
+        DUInt32 errCode = DNet::GetLastNetError();
+        std::string strReasonA = DNet::GetLastNetErrorStr();
         return false;
     }
 #else
@@ -151,9 +153,9 @@ DBool DTCPClient::SyncConnect(DCStr strIP, DUInt16 wPort)
     addr.sin_port = htons(wPort);
     if (connect(m_sock, (sockaddr*)&addr, sizeof(struct sockaddr_in)) == DSockError)
     {
-        DUInt32 errCode = DError::GetLastNetError();
+        DUInt32 errCode = DNet::GetLastNetError();
         D_UNUSED(errCode);
-        DStringA strReasonA = DError::GetLastNetErrorStr();
+        std::string strReasonA = DNet::GetLastNetErrorStr();
         return false;
     }
 #endif
@@ -170,9 +172,9 @@ DBool DTCPClient::SyncSend(DBuffer buf)
         DInt32 ret = (DInt32)send(m_sock, pStart, sizeAll - sent, 0);//MSG_DONTROUTE MSG_OOB
         if (ret == DSockError)
         {
-            DUInt32 errCode = DError::GetLastNetError();
+            DUInt32 errCode = DNet::GetLastNetError();
             D_UNUSED(errCode);
-            DStringA strReasonA = DError::GetLastNetErrorStr();
+            std::string strReasonA = DNet::GetLastNetErrorStr();
             return false;
         }
         sent += ret;
@@ -183,8 +185,8 @@ DBool DTCPClient::SyncSend(DBuffer buf)
 
 DBuffer DTCPClient::SyncRecv(DUInt32 size)
 {
-    DByte* pBuf = (DByte*)DALLOC(size);
-    DMemZero(pBuf, size);
+    DByte* pBuf = (DByte*)malloc(size);
+    memset(pBuf, 0, size);
     DChar* pStart = (DChar*)pBuf;
     DUInt32 read = 0;
     while (read < size)
@@ -192,9 +194,9 @@ DBuffer DTCPClient::SyncRecv(DUInt32 size)
         int ret = (int)recv(m_sock, pStart, size - read, 0);//MSG_DONTROUTE MSG_OOB
         if (ret == DSockError)
         {
-            DUInt32 errCode = DError::GetLastNetError();
+            DUInt32 errCode = DNet::GetLastNetError();
             D_UNUSED(errCode);
-            DStringA strReasonA = DError::GetLastNetErrorStr();
+            std::string strReasonA = DNet::GetLastNetErrorStr();
             break;
         }
         else if (ret == 0)
@@ -206,7 +208,7 @@ DBuffer DTCPClient::SyncRecv(DUInt32 size)
     }
 
     DBuffer bufRet((DByte*)pBuf, read);
-    DFREE(pBuf);
+    free(pBuf);
     return bufRet;
 }
 
@@ -215,9 +217,9 @@ DVoid DTCPClient::SetConnSink(DTCPClientSink* pSink)
     m_pConnSink = pSink;
 }
 
-DBool DTCPClient::Connect(DStringA ip, DUInt16 wPort)
+DBool DTCPClient::Connect(std::string ip, DUInt16 wPort)
 {
-    DNetIO::AddConnReq(this, ip, wPort);
+    //DNetIO::AddConnReq(this, ip, wPort);
     m_strIP = ip;
     m_wPort = wPort;
     return true;
@@ -227,7 +229,7 @@ DVoid DTCPClient::DisConnect()
 {
     shutdown(m_sock, 2);//SD_BOTH
     Close();
-    m_strIP.Empty();
+    m_strIP.clear();
 }
 
 DVoid DTCPClient::SetDataSink(DTCPDataSink* pSink)
@@ -253,18 +255,16 @@ DVoid DTCPClient::BeginRead()
         DInt32 ret = (DInt32)recv(m_sock, (char*)tempbuf, 4096, 0);//MSG_DONTROUTE MSG_OOB
         if (ret == DSockError)
         {
-            DUInt32 errCode = DError::GetLastNetError();
-            DStringA strReasonA = DError::GetLastNetErrorStr();
+            DUInt32 errCode = DNet::GetLastNetError();
+            std::string strReasonA = DNet::GetLastNetErrorStr();
             if (m_pDataSink)
             {
                 m_pDataSink->OnBroken(this, errCode, strReasonA);
             }
-            DLogDev(logFilter, "[%d] return as (ret==-1).", m_read);
 
             if (m_read)
             {
-                //DLog("[%d] Remove Thread Info.\n", m_read);
-                DThread::CloseThreadHandle(m_read);
+                //DThread::CloseThreadHandle(m_read);
                 m_read = 0;
             }
 
@@ -278,7 +278,7 @@ DVoid DTCPClient::BeginRead()
             }
             else
             {
-                this->m_strIP.Empty();
+                this->m_strIP.clear();
                 Renew();	//we renew the client broken socket
             }
             return;
@@ -289,12 +289,12 @@ DVoid DTCPClient::BeginRead()
             {
                 m_pDataSink->OnClose(this);
             }
-            DLogDev(logFilter, "[%d] return as (ret==0).", m_read);
+            //DLogDev(logFilter, "[%d] return as (ret==0).", m_read);
 
             if (m_read)
             {
-                DLogDev(logFilter, "[%d] Remove Thread Info.", m_read);
-                DThread::CloseThreadHandle(m_read);
+                //DLogDev(logFilter, "[%d] Remove Thread Info.", m_read);
+                //DThread::CloseThreadHandle(m_read);
                 m_read = 0;//We set it to zero to prevent the dealloc wait for the thread!
             }
 
@@ -308,7 +308,7 @@ DVoid DTCPClient::BeginRead()
             }
             else
             {
-                this->m_strIP.Empty();
+                this->m_strIP.clear();
                 Renew();	//we renew the client broken socket
             }
             return;
@@ -328,16 +328,16 @@ DBool DTCPClient::Recv()
     {
         if (m_sock)
         {
-            DBool bResult = DThread::Create(ReadThread, this, &m_read);
+            //DBool bResult = DThread::Create(ReadThread, this, &m_read);
             if (m_pConnSink == NULL)
             {
-                DLogDev(logFilter, "Server Recv Thread %d Begin.", m_read);
+                //DLogDev(logFilter, "Server Recv Thread %d Begin.", m_read);
             }
             else
             {
-                DLogDev(logFilter, "Client Recv Thread %d Begin.", m_read);
+                //DLogDev(logFilter, "Client Recv Thread %d Begin.", m_read);
             }
-            return bResult;
+            return false;// bResult;
         }
         return false;
     }

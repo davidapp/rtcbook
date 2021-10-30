@@ -39,6 +39,9 @@
     <ClInclude Include="MainDlg.h">
       <Filter>Dialog</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\Common\Net\DTCPClient.h">
+      <Filter>Common\Net</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\Common\Base\DBuffer.cpp">
@@ -51,6 +54,9 @@
       <Filter>Common\Net</Filter>
     </ClCompile>
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="..\..\Common\Net\DTCPClient.cpp">
+      <Filter>Common\Net</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="HelloRTC_Win.rc">
