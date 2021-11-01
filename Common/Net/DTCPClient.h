@@ -9,9 +9,9 @@ class DTCPClient;
 class DTCPClientSink
 {
 public:
-    virtual DVoid OnConnecting(DTCPClient* sock, std::string strIP, DUInt16 wPort);
-    virtual DVoid OnConnectOK(DTCPClient* sock);
-    virtual DVoid OnConnectError(DTCPClient* sock, DUInt32 code, std::string strReason);
+    virtual DVoid OnConnecting(DTCPClient* sock, std::string strIP, DUInt16 wPort) = 0;
+    virtual DVoid OnConnectOK(DTCPClient* sock) = 0;
+    virtual DVoid OnConnectError(DTCPClient* sock, DUInt32 code, std::string strReason) = 0;
 public:
     DTCPClientSink() {};
     virtual ~DTCPClientSink() {};
@@ -20,14 +20,14 @@ public:
 class DTCPDataSink
 {
 public:
-    virtual DVoid OnPreSend(DTCPClient* sock, DBuffer buffer);
-    virtual DVoid OnSendOK(DTCPClient* sock);
-    virtual DVoid OnSendError(DTCPClient* sock, DUInt32 code, std::string strReason);
-    virtual DVoid OnSendTimeout(DTCPClient* sock);
+    virtual DVoid OnPreSend(DTCPClient* sock, DBuffer buffer) = 0;
+    virtual DVoid OnSendOK(DTCPClient* sock) = 0;
+    virtual DVoid OnSendError(DTCPClient* sock, DUInt32 code, std::string strReason) = 0;
+    virtual DVoid OnSendTimeout(DTCPClient* sock) = 0;
 
-    virtual DVoid OnRecvBuf(DTCPClient* sock, DBuffer buf);
-    virtual DVoid OnClose(DTCPClient* sock);
-    virtual DVoid OnBroken(DTCPClient* sock, DUInt32 code, std::string strReason);
+    virtual DVoid OnRecvBuf(DTCPClient* sock, DBuffer buf) = 0;
+    virtual DVoid OnClose(DTCPClient* sock) = 0;
+    virtual DVoid OnBroken(DTCPClient* sock, DUInt32 code, std::string strReason) = 0;
 public:
     DTCPDataSink() {};
     virtual ~DTCPDataSink() {};
