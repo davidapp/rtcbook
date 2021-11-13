@@ -64,6 +64,10 @@ public:
         {
             strLog.Format(L"Server is listened at %hd\r\n", (DUInt16)lParam);
         }
+        else if (wParam == DEVENT_SERVER_NEWCONN)
+        {
+            strLog.Format(L"New Connection from port: %d\r\n", (DUInt32)lParam);
+        }
         AppendLog((wchar_t*)strLog.GetString());
         return 0;
     }

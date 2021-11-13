@@ -19,6 +19,6 @@ public:
     static std::string Info();
 
 private:
-    static DUInt32 ListenThread(DUInt16 nPort);
+    static DUInt32 ServerListenThread(DUInt16 nPort);
     static DUInt32 ServerWorkerThread(DVoid* CompletionPortID);
 };

@@ -34,7 +34,7 @@ std::mutex g_threads_guard;
 DBool DIOCPServer::Start(HWND hNotifyWnd, DUInt16 port)
 {
     g_NotifyWnd = hNotifyWnd;
-    std::thread listen(DIOCPServer::ListenThread, port);
+    std::thread listen(DIOCPServer::ServerListenThread, port);
     listen.detach();
     return true;
 }
@@ -54,7 +54,7 @@ std::string DIOCPServer::Info()
     return ret;
 }
 
-DUInt32 DIOCPServer::ListenThread(DUInt16 nPort)
+DUInt32 DIOCPServer::ServerListenThread(DUInt16 nPort)
 {
     // 创建 IO 完成端口
     SYSTEM_INFO SystemInfo;

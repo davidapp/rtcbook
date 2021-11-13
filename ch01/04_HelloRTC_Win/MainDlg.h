@@ -35,6 +35,12 @@ public:
     LRESULT OnInitDialog(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/)
     {
         CenterWindow();
+        m_ip = GetDlgItem(IDC_IP);
+        m_port = GetDlgItem(IDC_PORT);
+        m_name = GetDlgItem(IDC_NAME);
+        m_ip.SetWindowText(L"127.0.0.1");
+        m_port.SetWindowText(L"1229");
+        m_name.SetWindowTextW(L"David");
 
         m_sock.SetConnSink(this);
         m_sock.SetDataSink(this);
