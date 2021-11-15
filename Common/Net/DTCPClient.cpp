@@ -90,6 +90,90 @@ DVoid DTCPSocket::Renew()
     Create();
 }
 
+DBool DTCPSocket::SyncConnect(DCStr strIP, DUInt16 wPort)
+{
+#if defined(BUILD_FOR_WINDOWS) && (BUILD_FOR_WINDOWS==1)
+    SOCKADDR_IN addr;
+    memset(&addr, 0, sizeof(SOCKADDR_IN));
+    addr.sin_family = AF_INET;
+    addr.sin_addr.s_addr = DNet::IPStrToUint32(strIP);
+    addr.sin_port = DUtil::Swap16(wPort);
+    if (connect(m_sock, (SOCKADDR*)&addr, sizeof(SOCKADDR_IN)) == SOCKET_ERROR)
+    {
+        DUInt32 errCode = DNet::GetLastNetError();
+        std::string strReasonA = DNet::GetLastNetErrorStr();
+        return false;
+    }
+#else
+    struct sockaddr_in addr;
+    memset(&addr, 0, sizeof(struct sockaddr_in));
+    addr.sin_family = AF_INET;
+    inet_pton(AF_INET, strIP, &addr.sin_addr.s_addr);
+    addr.sin_port = htons(wPort);
+    if (connect(m_sock, (sockaddr*)&addr, sizeof(struct sockaddr_in)) == DSockError)
+    {
+        DUInt32 errCode = DNet::GetLastNetError();
+        D_UNUSED(errCode);
+        std::string strReasonA = DNet::GetLastNetErrorStr();
+        return false;
+    }
+#endif
+    return true;
+}
+
+DBool DTCPSocket::SyncSend(DBuffer buf)
+{
+    DUInt32 sent = 0;
+    DChar* pStart = (DChar*)buf.GetBuf();
+    DUInt32 sizeAll = buf.GetSize();
+    while (sent < sizeAll)
+    {
+        DInt32 ret = (DInt32)send(m_sock, pStart, sizeAll - sent, 0);//MSG_DONTROUTE MSG_OOB
+        if (ret == DSockError)
+        {
+            DUInt32 errCode = DNet::GetLastNetError();
+            D_UNUSED(errCode);
+            std::string strReasonA = DNet::GetLastNetErrorStr();
+            return false;
+        }
+        sent += ret;
+        pStart += ret;
+    }
+    return true;
+}
+
+DBuffer DTCPSocket::SyncRecv(DUInt32 size, DUInt32* res)
+{
+    DByte* pBuf = (DByte*)malloc(size);
+    if (pBuf == nullptr) {
+        return DBuffer();
+    }
+
+    memset(pBuf, 0, size);
+    DChar* pStart = (DChar*)pBuf;
+    DUInt32 read = 0;
+    while (read < size)
+    {
+        int ret = (int)recv(m_sock, pStart, size - read, 0);//MSG_DONTROUTE MSG_OOB
+        if (ret == DSockError)
+        {
+            DUInt32 errCode = DNet::GetLastNetError();
+            D_UNUSED(errCode);
+            std::string strReasonA = DNet::GetLastNetErrorStr();
+            break;
+        }
+        else if (ret == 0)
+        {
+            break;
+        }
+        read += ret;
+        pStart += ret;
+    }
+
+    DBuffer bufRet((DByte*)pBuf, read);
+    free(pBuf);
+    return bufRet;
+}
 
 ////////////////////////////////////////////////////////////////////////////
 // DTCPClient
@@ -129,87 +213,6 @@ DTCPClient::~DTCPClient()
         //DThread::WaitFinish(m_read, 5);
     }
     m_read = 0;	//The thread must be dead before dealloc!
-}
-
-DBool DTCPClient::SyncConnect(DCStr strIP, DUInt16 wPort)
-{
-#if defined(BUILD_FOR_WINDOWS) && (BUILD_FOR_WINDOWS==1)
-    SOCKADDR_IN addr;
-    memset(&addr, 0, sizeof(SOCKADDR_IN));
-    addr.sin_family = AF_INET;
-    addr.sin_addr.s_addr = DNet::IPStrToUint32(strIP);
-    addr.sin_port = DUtil::Swap16(wPort);
-    if (connect(m_sock, (SOCKADDR*)&addr, sizeof(SOCKADDR_IN)) == SOCKET_ERROR)
-    {
-        DUInt32 errCode = DNet::GetLastNetError();
-        std::string strReasonA = DNet::GetLastNetErrorStr();
-        return false;
-    }
-#else
-    struct sockaddr_in addr;
-    memset(&addr, 0, sizeof(struct sockaddr_in));
-    addr.sin_family = AF_INET;
-    inet_pton(AF_INET, strIP, &addr.sin_addr.s_addr);
-    addr.sin_port = htons(wPort);
-    if (connect(m_sock, (sockaddr*)&addr, sizeof(struct sockaddr_in)) == DSockError)
-    {
-        DUInt32 errCode = DNet::GetLastNetError();
-        D_UNUSED(errCode);
-        std::string strReasonA = DNet::GetLastNetErrorStr();
-        return false;
-    }
-#endif
-    return true;
-}
-
-DBool DTCPClient::SyncSend(DBuffer buf)
-{
-    DUInt32 sent = 0;
-    DChar* pStart = (DChar*)buf.GetBuf();
-    DUInt32 sizeAll = buf.GetSize();
-    while (sent < sizeAll)
-    {
-        DInt32 ret = (DInt32)send(m_sock, pStart, sizeAll - sent, 0);//MSG_DONTROUTE MSG_OOB
-        if (ret == DSockError)
-        {
-            DUInt32 errCode = DNet::GetLastNetError();
-            D_UNUSED(errCode);
-            std::string strReasonA = DNet::GetLastNetErrorStr();
-            return false;
-        }
-        sent += ret;
-        pStart += ret;
-    }
-    return true;
-}
-
-DBuffer DTCPClient::SyncRecv(DUInt32 size)
-{
-    DByte* pBuf = (DByte*)malloc(size);
-    memset(pBuf, 0, size);
-    DChar* pStart = (DChar*)pBuf;
-    DUInt32 read = 0;
-    while (read < size)
-    {
-        int ret = (int)recv(m_sock, pStart, size - read, 0);//MSG_DONTROUTE MSG_OOB
-        if (ret == DSockError)
-        {
-            DUInt32 errCode = DNet::GetLastNetError();
-            D_UNUSED(errCode);
-            std::string strReasonA = DNet::GetLastNetErrorStr();
-            break;
-        }
-        else if (ret == 0)
-        {
-            break;
-        }
-        read += ret;
-        pStart += ret;
-    }
-
-    DBuffer bufRet((DByte*)pBuf, read);
-    free(pBuf);
-    return bufRet;
 }
 
 DVoid DTCPClient::SetConnSink(DTCPClientSink* pSink)

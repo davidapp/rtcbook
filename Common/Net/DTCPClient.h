@@ -49,6 +49,12 @@ public:
     DVoid Renew();
 
 public:
+    // block method wrappers
+    DBool SyncConnect(DCStr strIP, DUInt16 wPort);
+    DBool SyncSend(DBuffer buf);
+    DBuffer SyncRecv(DUInt32 size, DUInt32 *res);
+
+public:
     DSocket m_sock;
 };
 
@@ -59,12 +65,6 @@ public:
     DTCPClient();
     DTCPClient(DSocket sock, DCStr strIP, DUInt16 wPort);
     ~DTCPClient();
-
-public:
-    // block method wrappers
-    DBool SyncConnect(DCStr strIP, DUInt16 wPort);
-    DBool SyncSend(DBuffer buf);
-    DBuffer SyncRecv(DUInt32 size = 1024);
 
 public:
     // async connection methods
