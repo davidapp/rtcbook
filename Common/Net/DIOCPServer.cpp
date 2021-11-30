@@ -120,7 +120,7 @@ DUInt32 DIOCPServer::ServerListenThread(DUInt16 nPort)
 
             PerHandleData->Socket = Accept;
             memcpy(&PerHandleData->ClientAddr, &saRemote, RemoteLen);
-            if (CreateIoCompletionPort((HANDLE)Accept, CompletionPort, (DWORD)PerHandleData, 0) == NULL)
+            if (CreateIoCompletionPort((HANDLE)Accept, CompletionPort, (ULONG_PTR)PerHandleData, 0) == NULL)
             {
                 SendMessage(g_NotifyWnd, WM_LOG, (WPARAM)DEVENT_ASSOCIATE_ERROR, (LPARAM)PerHandleData);
                 closesocket(Accept);
@@ -154,7 +154,7 @@ DUInt32 DIOCPServer::ServerWorkerThread(DVoid* CompletionPortID)
         DWORD BytesTransferred;
         PER_HANDLE_DATA* PerHandleData;
         PER_IO_DATA* PerIoData;
-        BOOL ret = GetQueuedCompletionStatus(CompletionPort, &BytesTransferred, (LPDWORD)&PerHandleData,
+        BOOL ret = GetQueuedCompletionStatus(CompletionPort, &BytesTransferred, (PULONG_PTR)&PerHandleData,
             (LPOVERLAPPED*)&PerIoData, INFINITE);
 
         // 如果发生了读写错误，就关闭此 Socket 链接

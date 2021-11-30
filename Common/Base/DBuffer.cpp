@@ -176,7 +176,7 @@ DBool DBuffer::HexToBuffer(DCStr hexStr)
 {
     CopyBeforeWrite();
 
-    DUInt32 len = strlen(hexStr);
+    DUInt32 len = (DUInt32)strlen(hexStr);
     AllocBuffer(len / 2);
     DInt32 index = 0;
     for (DUInt32 i = 0; i < len; i = i + 2)
@@ -223,7 +223,7 @@ DBool DBuffer::HexToBuffer(DCStr hexStr)
 
 DBool DBuffer::IsValidHexStr(DCStr hexStr, DUInt32* reason)
 {
-    DUInt32 len = strlen(hexStr);
+    DUInt32 len = (DUInt32)strlen(hexStr);
     if (len == 0)
     {
         if (reason) *reason = 1;
@@ -281,7 +281,7 @@ DBool DBuffer::InitWithBase64String(std::string& str)
         return false;
     }
     DByte* input = (DByte*)str.c_str();
-    DUInt32 len = str.length();
+    DUInt32 len = (DUInt32)str.length();
     DByte* output = (DByte*)malloc(len);
     DByte* start = output;
     DInt32 out_len = 0;
@@ -366,7 +366,7 @@ std::string DBuffer::ToBase64String()
 
 DBool DBuffer::IsValidBase64Str(DCStr base64Str, DUInt32* reason)
 {
-    DUInt32 len = strlen(base64Str);
+    DUInt32 len = (DUInt32)strlen(base64Str);
     if (len == 0)
     {
         if (reason) *reason = 1;
@@ -406,7 +406,7 @@ DBool DBuffer::IsValidBase64Str(DCStr base64Str, DUInt32* reason)
 
 DUInt32 DBuffer::GetBase64BufSize(DCStr base64Str)
 {
-    DUInt32 len = strlen(base64Str);
+    DUInt32 len = (DUInt32)strlen(base64Str);
     if (len == 0)
     {
         return 0;

@@ -83,7 +83,7 @@ std::vector<DCameraInfo> WinDSCamera::GetDevices()
             hr = pBag->Read(L"FriendlyName", &varName, 0);
             if (SUCCEEDED(hr)) 
             {
-                dev.m_device_name = DUTF8::UCS2ToUTF8((DUInt16*)varName.bstrVal, wcslen(varName.bstrVal)*2);
+                dev.m_device_name = DUTF8::UCS2ToUTF8((DUInt16*)varName.bstrVal, (DUInt32)wcslen(varName.bstrVal)*2);
                 SysFreeString(varName.bstrVal);
             }
 
@@ -91,7 +91,7 @@ std::vector<DCameraInfo> WinDSCamera::GetDevices()
             hr = pBag->Read(L"DevicePath", &varName, 0);
             if (SUCCEEDED(hr)) 
             {
-                dev.m_device_path = DUTF8::UCS2ToUTF8((DUInt16*)varName.bstrVal, wcslen(varName.bstrVal) * 2);
+                dev.m_device_path = DUTF8::UCS2ToUTF8((DUInt16*)varName.bstrVal, (DUInt32)wcslen(varName.bstrVal) * 2);
                 SysFreeString(varName.bstrVal);
             }
 
@@ -443,7 +443,7 @@ std::string WinDSCamera::Dump_AM_MEDIA_TYPE(void* amt)
     if (p == nullptr) return ret;
 
     char buf[128] = {};
-    sprintf_s(buf, 128, "sizeof(AM_MEDIA_TYPE) = %d\r\n", sizeof(AM_MEDIA_TYPE));
+    sprintf_s(buf, 128, "sizeof(AM_MEDIA_TYPE) = %d\r\n", (DInt32)sizeof(AM_MEDIA_TYPE));
     ret += buf;
 
     //DBuffer bufTemp(p, sizeof(AM_MEDIA_TYPE));
@@ -526,7 +526,7 @@ std::string WinDSCamera::Dump_VIDEOINFOHEADER(void* vih)
     VIDEOINFOHEADER* h = (VIDEOINFOHEADER*)vih;
 
     char buf[128] = {};
-    sprintf_s(buf, 128, "sizeof(VIDEOINFOHEADER) = %d\r\n", sizeof(VIDEOINFOHEADER));
+    sprintf_s(buf, 128, "sizeof(VIDEOINFOHEADER) = %d\r\n", (DInt32)sizeof(VIDEOINFOHEADER));
     ret += buf;
 
     temp = "rcSource(4*4 bytes):";
@@ -570,7 +570,7 @@ std::string WinDSCamera::Dump_VIDEOINFOHEADER2(void* vih2)
     VIDEOINFOHEADER2* h = (VIDEOINFOHEADER2*)vih2;
 
     char buf[128] = {};
-    sprintf_s(buf, 128, "sizeof(VIDEOINFOHEADER2) = %d\r\n", sizeof(VIDEOINFOHEADER2));
+    sprintf_s(buf, 128, "sizeof(VIDEOINFOHEADER2) = %d\r\n", (DInt32)sizeof(VIDEOINFOHEADER2));
     ret += buf;
 
     temp = "rcSource(4*4 bytes):";

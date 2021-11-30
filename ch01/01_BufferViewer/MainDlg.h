@@ -104,7 +104,7 @@ public:
             MessageBox(err, L"Tips", MB_ICONERROR);
             return 0;
         }
-        DUInt32 uSize = strA.length();
+        DUInt32 uSize = (DUInt32)strA.length();
         CString msg;
         msg.Format(L"It's Base64, %d chars, %d bytes", uSize, DBuffer::GetBase64BufSize(strA.c_str()));
         MessageBox(msg, L"Tips", MB_OK);
