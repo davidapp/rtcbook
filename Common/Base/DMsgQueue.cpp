@@ -1,341 +1,184 @@
-﻿#include "DFile.h"
-#include "DUtil.h"
+﻿#include "DMsgQueue.h"
+#include <map>
+#include <thread>
 
-#if defined(BUILD_FOR_WINDOWS) && (BUILD_FOR_WINDOWS==1)
-// 把属性可选值都列在这里，要用的时候，就不需要看文档了
-#define WIN_ACCESS 0|GENERIC_READ|GENERIC_WRITE|GENERIC_EXECUTE|GENERIC_ALL
-#define WIN_SHARE  0|FILE_SHARE_READ|FILE_SHARE_WRITE|FILE_SHARE_DELETE
-#define WIN_CREATE CREATE_NEW|CREATE_ALWAYS|OPEN_EXISTING|OPEN_ALWAYS|TRUNCATE_EXISTING
-#define WIN_FLAGS  FILE_FLAG_NO_BUFFERING|FILE_FLAG_SEQUENTIAL_SCAN|FILE_FLAG_RANDOM_ACCESS|FILE_FLAG_WRITE_THROUGH| \
-					FILE_FLAG_DELETE_ON_CLOSE|FILE_FLAG_BACKUP_SEMANTICS|FILE_FLAG_POSIX_SEMANTICS|FILE_FLAG_OPEN_REPARSE_POINT| \
-					FILE_FLAG_OPEN_NO_RECALL|FILE_FLAG_OVERLAPPED
-#define WIN_ATTRS  FILE_ATTRIBUTE_ARCHIVE|FILE_ATTRIBUTE_ENCRYPTED|FILE_ATTRIBUTE_HIDDEN|FILE_ATTRIBUTE_NORMAL|FILE_ATTRIBUTE_NOT_CONTENT_INDEXED \
-					FILE_ATTRIBUTE_OFFLINE|FILE_ATTRIBUTE_READONLY|FILE_ATTRIBUTE_SYSTEM|FILE_ATTRIBUTE_TEMPORARY| \
-					FILE_ATTRIBUTE_DIRECTORY|FILE_ATTRIBUTE_DEVICE|FILE_ATTRIBUTE_SPARSE_FILE|FILE_ATTRIBUTE_COMPRESSED
-#define DCloseFile CloseHandle
-#else
-#include <sys/types.h>	//for off_t
-#include <sys/stat.h>	//for modes
-#include <sys/fcntl.h>  //for open
-#include <unistd.h>     //for read write close
-#define LINUX_FLAGS O_RDONLY|O_WRONLY|O_RDWR|O_CREAT|O_TRUNC|O_APPEND
-#define LINUX_MODES S_IRUSR|S_IWUSR|S_IXUSR|S_IRGRP|S_IW_GRP|S_IXGRP|S_IROTH|S_IWOTH|S_IXOTH
-//permission bits = mode & ~umask
-#define DCloseFile close
-#endif
+std::mutex g_id2qMutex;
+std::map<DHandle, DMsgQueue*> g_id2q;
+DHandle g_qid = 1;
 
-
-//////////////////////////////////////////////////////////////////////////////////////////////////////////
-// DFile
-
-DFile::DFile()
+DVoid* DThreadForQueue(DVoid* pvParam)
 {
-    m_hFile = D_INVALID_FILE;
-}
-
-DFile::DFile(DFileHandle fh)
-{
-    m_hFile = fh;
-}
-
-DFile::~DFile()
-{
-    if (m_hFile != D_INVALID_FILE)
+    /*g_id2qMutex.Lock();
+    DRBTreeNode* pNodeQueue = g_id2q.Find(pvParam);
+    if (pNodeQueue == NULL)
     {
-        DCloseFile(m_hFile);
-    }
-    m_hFile = D_INVALID_FILE;
-}
-
-DVoid DFile::Attach(DFileHandle fh)
-{
-    m_hFile = fh;
-}
-
-DFileHandle DFile::Detach()
-{
-    DFileHandle old = m_hFile;
-    m_hFile = D_INVALID_FILE;
-    return old;
-}
-
-DBool DFile::OpenFileRead(DCStr strPath)
-{
-#if defined(BUILD_FOR_WINDOWS) && (BUILD_FOR_WINDOWS==1)
-    std::string strPathA(strPath);
-    m_hFile = CreateFileW((LPCWSTR)DUtil::s2ws(strPathA).c_str(), GENERIC_READ, FILE_SHARE_READ | FILE_SHARE_WRITE, NULL, OPEN_EXISTING, FILE_FLAG_SEQUENTIAL_SCAN, NULL);
-#else
-    m_hFile = open(strPath, O_RDONLY);
-#endif
-    if (m_hFile == D_INVALID_FILE)
-    {
-        return false;
-    }
-    return true;
-}
-
-DBool DFile::OpenFileWrite(DCStr strPath, DOpenFileMode nFlag)
-{
-#if defined(BUILD_FOR_WINDOWS) && (BUILD_FOR_WINDOWS==1)
-    std::string strPathA(strPath);
-    m_hFile = CreateFileW((LPCWSTR)DUtil::s2ws(strPathA).c_str(), GENERIC_WRITE, FILE_SHARE_READ, NULL, nFlag, FILE_FLAG_SEQUENTIAL_SCAN, NULL);
-#else
-    if (nFlag == DFILE_OPEN_ALWAYS)
-    {
-        m_hFile = open(strPath, O_WRONLY | O_CREAT, S_IWUSR | S_IRUSR | S_IWGRP | S_IRGRP | S_IROTH);
-    }
-    else if (nFlag == DFILE_OPEN_EXISTING)
-    {
-        m_hFile = open(strPath, O_WRONLY);
-    }
-#endif
-    if (m_hFile == D_INVALID_FILE)
-    {
-        return false;
-    }
-    return true;
-}
-
-DBool DFile::OpenFileRW(DCStr strPath, DOpenFileMode nFlag)
-{
-#if defined(BUILD_FOR_WINDOWS) && (BUILD_FOR_WINDOWS==1)
-    std::string strPathA(strPath);
-    if (nFlag == DFILE_OPEN_ALWAYS)
-    {
-        //create if not exist
-        m_hFile = CreateFileW((LPCWSTR)DUtil::s2ws(strPathA).c_str(), GENERIC_READ | GENERIC_WRITE, FILE_SHARE_READ, NULL, OPEN_ALWAYS, FILE_FLAG_SEQUENTIAL_SCAN, NULL);
-    }
-    else if (nFlag == DFILE_OPEN_EXISTING)
-    {
-        //failed if not exist
-        m_hFile = CreateFileW((LPCWSTR)DUtil::s2ws(strPathA).c_str(), GENERIC_READ | GENERIC_WRITE, FILE_SHARE_READ, NULL, OPEN_EXISTING, FILE_FLAG_SEQUENTIAL_SCAN, NULL);
-    }
-#else
-    if (nFlag == DFILE_OPEN_ALWAYS)
-    {
-        m_hFile = open(strPath, O_RDWR | O_CREAT, S_IWUSR | S_IRUSR | S_IWGRP | S_IRGRP | S_IROTH);
-    }
-    else if (nFlag == DFILE_OPEN_EXISTING)
-    {
-        m_hFile = open(strPath, O_RDWR, S_IWUSR | S_IRUSR | S_IWGRP | S_IRGRP | S_IROTH);
-    }
-#endif
-    if (m_hFile == D_INVALID_FILE)
-    {
-        return false;
-    }
-    return true;
-}
-
-DBuffer DFile::Read(DInt32 size, DInt32* result)
-{
-    DBuffer buf;
-    if (m_hFile == D_INVALID_FILE)
-    {
-        return buf;
-    }
-    buf.Reserve((DInt32)size);
-#if defined(BUILD_FOR_WINDOWS) && (BUILD_FOR_WINDOWS==1)
-    DUInt32 readsize = 0;
-    BOOL bOK = ReadFile(m_hFile, buf.GetBuf(), size, (LPDWORD)&readsize, (LPOVERLAPPED)NULL);
-    if (!bOK) return buf;
-#else
-    ssize_t sRead = read(m_hFile, buf.GetBuf(), size);
-    if (result != NULL)
-    {
-        if (sRead == -1)
-        {
-            //Errors
-            *result = -1;
-        }
-        else if (sRead == 0)
-        {
-            //End
-            *result = 0;
-        }
-        else
-        {
-            *result = (DInt32)sRead;
-        }
-    }
-#endif
-    return buf;
-}
-
-DInt32 DFile::ReadTo(DByte* buf, DUInt32 bufsize)
-{
-    DUInt32 readsize = 0;
-    if (m_hFile == D_INVALID_FILE)
-    {
+        g_id2qMutex.Unlock();
         return 0;
     }
+    DMsgQueue* pq = (DMsgQueue*)pNodeQueue->user_data;
+    g_id2qMutex.Unlock();
 
-#if defined(BUILD_FOR_WINDOWS) && (BUILD_FOR_WINDOWS==1)
-    BOOL bOK = ReadFile(m_hFile, buf, bufsize, (LPDWORD)&readsize, (LPOVERLAPPED)NULL);
-    if (!bOK) return 0;
-#else
-    ssize_t sRead = read(m_hFile, buf, bufsize);
-    if (sRead == -1 || sRead == 0) return 0;
-    readsize = (DInt32)sRead;
-#endif
-    return readsize;
-}
-
-DBool DFile::Write(DBuffer buf, DInt32* result)
-{
-    DBool bOK = false;
-#if defined(BUILD_FOR_WINDOWS) && (BUILD_FOR_WINDOWS==1)
-    if (m_hFile != INVALID_HANDLE_VALUE)
+    DBool bQuit = false;
+    while (true)
     {
-        DUInt32 dwWrite = 0;
-        bOK = WriteFile(m_hFile, buf.GetBuf(), buf.GetSize(), (LPDWORD)&dwWrite, NULL) ? true : false;
-        bOK = (dwWrite == buf.GetSize());
-    }
-#else
-    if (m_hFile != -1)
-    {
-        ssize_t dwWrite = write(m_hFile, buf.GetBuf(), buf.GetSize());
-        bOK = (dwWrite == buf.GetSize());
-        if (result != NULL)
+        if (pq->m_queue.GetSize() == 0)
         {
-            if (dwWrite == -1)
+            pq->m_wait.Reset();
+            DThread::WaitEvent(pq->m_wait, D_INFINITE);
+        }
+
+        pq->m_queueMutex.Lock();
+        DSLinkNode* pMsgNode = pq->m_queue.GetHead();
+        if (pMsgNode == NULL) break;
+        pq->m_queueMutex.Unlock();
+
+        DSLinkNode* pNode = pq->m_msgfunc.GetHead();
+        while (pNode != NULL)
+        {
+            if (((DQMsg*)(pMsgNode->pData))->msg == DM_QUITMSG)
             {
-                //Error
-                *result = -1;
+                pq->m_queueMutex.Lock();
+                pq->m_queue.Delete(pMsgNode);
+                pq->m_queueMutex.Unlock();
+                //delete pMsgNode->pData;
+                bQuit = true;
+                break;
             }
-            else if (dwWrite == 0)
-            {
-                //Never
-                *result = 0;
-            }
-            else
-            {
-                *result = (DInt32)dwWrite;
-            }
+
+            DMsgFunc func = (DMsgFunc)pNode->pData;
+            func(((DQMsg*)(pMsgNode->pData))->msg, ((DQMsg*)(pMsgNode->pData))->para1, ((DQMsg*)(pMsgNode->pData))->para2);
+
+            delete (DQMsg*)(pMsgNode->pData);
+            pq->m_queueMutex.Lock();
+            pq->m_queue.Delete(pMsgNode);
+            pq->m_queueMutex.Unlock();
+
+            pNode = pNode->pNext;
+        }
+
+        if (bQuit)
+        {
+            break;
         }
     }
-#endif
-    return bOK;
+
+    g_id2qMutex.Lock();
+    g_id2q.Erase(pNodeQueue);
+    g_id2qMutex.Unlock();
+
+    delete pq;
+    DPrintf("DMsgQueue Quit.\n");
+    return 0;*/
+    return 0;
 }
 
-
-DBool DFile::SeekToEnd()
+DVoid DMsgQueue::Init()
 {
-    return SetPos(0, DFILE_END);
+    
 }
 
-DInt64 DFile::GetSize()
+DVoid DMsgQueue::Destroy()
 {
-#if defined(BUILD_FOR_WINDOWS) && (BUILD_FOR_WINDOWS==1)
-    LARGE_INTEGER lpSize;
-    lpSize.QuadPart = 0;
-    if (GetFileSizeEx(m_hFile, &lpSize))
-    {
-        return lpSize.QuadPart;
+
+}
+
+DHandle DMsgQueue::Create(DCStr queueName, DUInt32 maxSize)
+{
+    DMsgQueue* pq = new DMsgQueue();
+    pq->m_name = queueName;
+    pq->m_queue.clear();
+    pq->m_msgfunc.clear();
+    pq->m_wait.Reset();
+    pq->maxSize = maxSize;
+
+    g_id2q.insert(std::pair<DHandle, DMsgQueue*>(g_qid, pq));
+
+    std::thread t = std::thread(DThreadForQueue, (DVoid*)(g_qid));
+    t.detach();
+
+    return g_qid++;
+}
+
+DHandle DMsgQueue::GetQueue(DCStr queueName)
+{
+    for (auto pNode = g_id2q.begin(); pNode != g_id2q.end(); pNode++) {
+        DMsgQueue* pq = (DMsgQueue*)pNode->second;
+        if (pq->m_name == queueName) {
+            return pNode->first;
+        }
     }
     return 0;
-#else
-    off_t oldpos = lseek(m_hFile, 0, SEEK_CUR);
-    off_t len = lseek(m_hFile, 0, SEEK_END);
-    lseek(m_hFile, oldpos, SEEK_SET);
-    return len;
-#endif
 }
 
-DInt64 DFile::GetPos()
+DBool DMsgQueue::PostQueueMsg(DHandle qid, DUInt32 msg, DVoid* para1, DVoid* para2)
 {
-#if defined(BUILD_FOR_WINDOWS) && (BUILD_FOR_WINDOWS==1)
-    LARGE_INTEGER pos;
-    pos.QuadPart = 0;
-    LARGE_INTEGER newpos;
-    DBool bOK = SetFilePointerEx(m_hFile, pos, &newpos, FILE_CURRENT) ? true : false;
-    if (bOK)
-    {
-        return newpos.QuadPart;
+    auto pNodeQueue = g_id2q.find(qid);
+    if (pNodeQueue == g_id2q.end()) return false;
+
+    DMsgQueue* pQueue = pNodeQueue->second;
+    if (pQueue->m_queue.size() > pQueue->maxSize) {
+        return false;
     }
-    else
-    {
-        return 0;
+
+    DQMsg newmsg;
+    newmsg.msg = msg;
+    newmsg.para1 = para1;
+    newmsg.para2 = para2;
+    pQueue->m_queueMutex.lock();
+    pQueue->m_queue.push_back(newmsg);
+    pQueue->m_queueMutex.unlock();
+    pQueue->m_wait.Set();
+    return true;
+}
+
+DBool DMsgQueue::SendQueueMsg(DHandle qid, DUInt32 msg, DVoid* para1, DVoid* para2)
+{
+    return true;
+}
+
+DVoid DMsgQueue::PostQuitMsg(DHandle qid)
+{
+    PostQueueMsg(qid, DM_QUITMSG, 0, 0);
+}
+
+DVoid DMsgQueue::AddHandler(DHandle qid, DMsgFunc handler)
+{
+    auto pNodeQueue = g_id2q.find(qid);
+    if (pNodeQueue == g_id2q.end()) return;
+
+    DMsgQueue* pq = (DMsgQueue*)pNodeQueue->second;
+    if (pq == NULL) return;
+
+    DBool bFind = false;
+    for (auto pNode = pq->m_msgfunc.begin(); pNode != pq->m_msgfunc.end(); pNode++) {
+        if (*pNode == handler) {
+            bFind = true;
+        }
     }
-#else
-    off_t oldpos = lseek(m_hFile, 0, SEEK_CUR);
-    return (DInt64)oldpos;
-#endif
-}
 
-DBool DFile::SetPos(DUInt64 pos, DFileMoveMethod dwMoveMethod)
-{
-    DBool bOK = false;
-    if (m_hFile == D_INVALID_FILE)
-        return bOK;
-#if defined(BUILD_FOR_WINDOWS)
-    LARGE_INTEGER distance;
-    distance.QuadPart = pos;
-    LARGE_INTEGER newpos;
-    //Each handle has a pointer
-    bOK = SetFilePointerEx(m_hFile, distance, &newpos, dwMoveMethod) ? true : false;
-#else
-    //TODO
-#endif
-    return bOK;
-}
-
-DBool DFile::SetEndOfFile()
-{
-#if defined(BUILD_FOR_WINDOWS)
-    return ::SetEndOfFile(m_hFile) ? true : false;
-#else
-    //TODO
-#endif
-    return false;
-}
-
-DBool DFile::Flush()
-{
-#if defined(BUILD_FOR_WINDOWS) && (BUILD_FOR_WINDOWS==1)
-    return FlushFileBuffers(m_hFile) ? true : false;
-#else
-    //TODO
-#endif
-    return false;
-}
-
-DBuffer DFile::IOControl(DInt32 controlCode, DUInt32 sizeofOut, DBuffer& inbuf)
-{
-    DBuffer buf;
-    buf.Reserve((DInt32)sizeofOut);
-#if defined(BUILD_FOR_WINDOWS) && (BUILD_FOR_WINDOWS==1)
-    DUInt32 readsize = 0;
-    DeviceIoControl(m_hFile, controlCode, buf.GetBuf(), buf.GetSize(), buf.GetBuf(), buf.GetSize(), (LPDWORD)&readsize, (LPOVERLAPPED)NULL);
-#else
-    //TODO File Cache Using fd
-    int suc = 0;//setvbuf((FILE *)m_hFile,(char *)inbuf.GetBuf(), controlCode, sizeofOut);
-    if (suc == 0)
-    {
-
+    if (!bFind) {
+        pq->m_msgfunc.push_back(handler);
     }
-    else
-    {
-
-    }
-#endif
-    return buf;
 }
 
-void DFile::Close()
+DVoid DMsgQueue::RemoveHandler(DHandle qid, DMsgFunc handler)
 {
-    if (m_hFile != D_INVALID_FILE)
-    {
-        DCloseFile(m_hFile);
-    }
-    m_hFile = D_INVALID_FILE;
+    auto pNodeQueue = g_id2q.find(qid);
+    if (pNodeQueue == g_id2q.end()) return;
+
+    DMsgQueue* pq = (DMsgQueue*)pNodeQueue->second;
+    if (pq == NULL) return;
+
+    pq->m_msgfunc.remove(handler);
 }
 
-
-DBuffer DFile::FilePath2Buffer(DCStr strPath)
+DVoid DMsgQueue::RemoveAllHandler(DHandle qid)
 {
-    DFile file;
-    file.OpenFileRead(strPath);
-    DBuffer readBuf = file.Read((DInt32)file.GetSize());
-    return readBuf;
+    auto pNodeQueue = g_id2q.find(qid);
+    if (pNodeQueue == g_id2q.end()) return;
+
+    DMsgQueue* pq = (DMsgQueue*)pNodeQueue->second;
+    if (pq == NULL) return;
+
+    pq->m_msgfunc.clear();
 }

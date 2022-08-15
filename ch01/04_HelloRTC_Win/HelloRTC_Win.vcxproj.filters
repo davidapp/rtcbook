@@ -43,7 +43,7 @@
       <Filter>Common\Net</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Common\Base\DMsgQueue.h">
-      <Filter>Common</Filter>
+      <Filter>Common\Base</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -61,7 +61,7 @@
       <Filter>Common\Net</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Common\Base\DMsgQueue.cpp">
-      <Filter>Dialog</Filter>
+      <Filter>Common\Base</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
