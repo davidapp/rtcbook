@@ -78,16 +78,19 @@ public:
         CString strPort;
         m_port.GetWindowText(strPort);
         DUInt16 port = _wtoi(strPort);
-        DSelectServer::Start(m_hWnd, port);
+
+        m_server.SetServerSink(this);
+        m_server.SetDataSink(this);
+        m_server.Start(port);
+
         m_start.EnableWindow(FALSE);
         m_stop.EnableWindow(TRUE);
-
         return 0;
     }
 
     LRESULT OnStopServer(WORD /*wNotifyCode*/, WORD wID, HWND /*hWndCtl*/, BOOL& /*bHandled*/)
     {
-        DSelectServer::Stop();
+        m_server.Stop();
         m_start.EnableWindow(TRUE);
         m_stop.EnableWindow(FALSE);
         return 0;
@@ -95,7 +98,7 @@ public:
 
     LRESULT OnInfo(WORD /*wNotifyCode*/, WORD wID, HWND /*hWndCtl*/, BOOL& /*bHandled*/)
     {
-        std::string info = DSelectServer::Info();
+        std::string info = DSelectServer::GetInfo();
         std::wstring winfo = DUtil::s2ws(info);
         AppendLog((wchar_t*)winfo.c_str());
         return 0;
@@ -124,4 +127,6 @@ public:
 
     CButton m_start;
     CButton m_stop;
+
+    DSelectServer m_server;
 };

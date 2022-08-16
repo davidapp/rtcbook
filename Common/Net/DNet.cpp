@@ -68,10 +68,6 @@ DVoid* DX86_STDCALL ConnHandler(DUInt32 msg, DVoid* para1, DVoid* para2)
 
         delete pData;
     }
-    else if (msg == DM_NET_DISC)
-    {
-
-    }
     return NULL;
 }
 

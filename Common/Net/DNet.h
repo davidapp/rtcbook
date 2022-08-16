@@ -30,6 +30,7 @@ public:
 public:
     static DChar*  StrToUChar(DChar* pStr, DByte* pByte);
     static DUInt32 IPStrToUint32(DCStr strIP);
+
 public:
     static DHandle GetConnQueue();
     static DHandle GetSendQueue();
@@ -37,7 +38,6 @@ public:
     // TCP
     static DVoid AddConnReq(DTCPClient* sock, std::string strIP, DUInt16 wPort);
     static DVoid AddSendReq(DTCPClient* sock, DBuffer buffer);
-
     // UDP
     //static DVoid AddSendToReq(DUDPSocket* sock, std::string strIP, DUInt16 wPort, DBuffer buffer, DUDPDataSink* pSink);
 };

@@ -25,6 +25,7 @@
     <ClCompile Include="..\..\Common\Net\DNet.cpp" />
     <ClCompile Include="..\..\Common\Net\DSelectServer.cpp" />
     <ClCompile Include="..\..\Common\Net\DTCPClient.cpp" />
+    <ClCompile Include="..\..\Common\Net\DTCPServer.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -39,6 +40,7 @@
     <ClInclude Include="..\..\Common\Net\DNet.h" />
     <ClInclude Include="..\..\Common\Net\DSelectServer.h" />
     <ClInclude Include="..\..\Common\Net\DTCPClient.h" />
+    <ClInclude Include="..\..\Common\Net\DTCPServer.h" />
     <ClInclude Include="MainDlg.h" />
     <ClInclude Include="resource.h" />
   </ItemGroup>

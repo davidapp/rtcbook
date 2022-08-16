@@ -186,9 +186,19 @@ public:
 
     LRESULT OnSend(WORD /*wNotifyCode*/, WORD wID, HWND /*hWndCtl*/, BOOL& /*bHandled*/)
     {
-        DBuffer buf(16);
-        buf.FillWithRandom();
-        m_sock.SyncSend(buf);
+        CString strText;
+        m_input.GetWindowText(strText);
+        if (strText.GetLength() != 0) {
+            m_sendText = strText;
+            m_input.SetWindowText(L"");
+            DGrowBuffer gb;
+            gb.AddUInt32(strText.GetLength() + 5, true);
+            gb.AddUInt8(1); // cmd
+            std::wstring wstr(strText.GetString());
+            gb.AddString(wstr);
+            DBuffer bufSend = gb.Finish();
+            m_sock.Send(bufSend);
+        }
         return 0;
     }
 
@@ -210,6 +220,8 @@ public:
     CButton m_disconnect;
     CButton m_setname;
     CButton m_send;
+
+    CString m_sendText;
 
     DTCPClient m_sock;
 };
