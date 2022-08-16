@@ -5,6 +5,7 @@
 #include "Base/DUtil.h"
 #include <list>
 #include <mutex>
+#include <thread>
 
 typedef DVoid* (DX86_STDCALL* DMsgFunc)(DUInt32, DVoid*, DVoid*);
 
@@ -31,8 +32,6 @@ typedef struct tagDQMsg
 class DMsgQueue
 {
 public:
-    static DVoid Init();
-    static DVoid Destroy();
     static DHandle Create(DCStr queueName, DUInt32 maxSize = 500);
     static DHandle GetQueue(DCStr queueName);
     static DBool PostQueueMsg(DHandle qid, DUInt32 msg, DVoid* para1, DVoid* para2);
@@ -45,14 +44,15 @@ public:
     static DVoid RemoveAllHandler(DHandle qid);
 
 public:
-    DMsgQueue() = default;
+    DMsgQueue(DCStr queueName, DUInt32 maxSize);
     ~DMsgQueue() = default;
     std::list<DQMsg> m_queue;
     std::list<DMsgFunc> m_msgfunc;
     std::mutex m_queueMutex;
-    DEvent m_wait;
+    std::thread m_t;
     std::string m_name;
-    DUInt32 maxSize;
+    DEvent m_wait;
+    DUInt32 m_maxSize;
 
 public:
     D_DISALLOW_COPY_AND_ASSIGN(DMsgQueue)

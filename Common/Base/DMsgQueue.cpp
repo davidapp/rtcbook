@@ -1,6 +1,5 @@
 ﻿#include "DMsgQueue.h"
 #include <map>
-#include <thread>
 
 std::mutex g_id2qMutex;
 std::map<DHandle, DMsgQueue*> g_id2q;
@@ -8,53 +7,47 @@ DHandle g_qid = 1;
 
 DVoid* DThreadForQueue(DVoid* pvParam)
 {
-    /*g_id2qMutex.Lock();
-    DRBTreeNode* pNodeQueue = g_id2q.Find(pvParam);
-    if (pNodeQueue == NULL)
+    g_id2qMutex.lock();
+    auto pNodeQueue = g_id2q.find((DHandle)pvParam);
+    if (pNodeQueue == g_id2q.end())
     {
-        g_id2qMutex.Unlock();
+        g_id2qMutex.unlock();
         return 0;
     }
-    DMsgQueue* pq = (DMsgQueue*)pNodeQueue->user_data;
-    g_id2qMutex.Unlock();
+    DMsgQueue* pq = (DMsgQueue*)pNodeQueue->second;
+    g_id2qMutex.unlock();
 
     DBool bQuit = false;
     while (true)
     {
-        if (pq->m_queue.GetSize() == 0)
+        if (pq->m_queue.size() == 0)
         {
             pq->m_wait.Reset();
-            DThread::WaitEvent(pq->m_wait, D_INFINITE);
+            DEvent::WaitEvent(pq->m_wait, D_INFINITE);
         }
 
-        pq->m_queueMutex.Lock();
-        DSLinkNode* pMsgNode = pq->m_queue.GetHead();
-        if (pMsgNode == NULL) break;
-        pq->m_queueMutex.Unlock();
+        pq->m_queueMutex.lock();
+        DQMsg msgNode = pq->m_queue.front();
+        pq->m_queueMutex.unlock();
 
-        DSLinkNode* pNode = pq->m_msgfunc.GetHead();
-        while (pNode != NULL)
+        auto pFunc = pq->m_msgfunc.begin();
+        while (pFunc != pq->m_msgfunc.end())
         {
-            if (((DQMsg*)(pMsgNode->pData))->msg == DM_QUITMSG)
+            if (msgNode.msg == DM_QUITMSG)
             {
-                pq->m_queueMutex.Lock();
-                pq->m_queue.Delete(pMsgNode);
-                pq->m_queueMutex.Unlock();
-                //delete pMsgNode->pData;
                 bQuit = true;
                 break;
             }
 
-            DMsgFunc func = (DMsgFunc)pNode->pData;
-            func(((DQMsg*)(pMsgNode->pData))->msg, ((DQMsg*)(pMsgNode->pData))->para1, ((DQMsg*)(pMsgNode->pData))->para2);
+            DMsgFunc func = *pFunc;
+            func(msgNode.msg, msgNode.para1, msgNode.para2);
 
-            delete (DQMsg*)(pMsgNode->pData);
-            pq->m_queueMutex.Lock();
-            pq->m_queue.Delete(pMsgNode);
-            pq->m_queueMutex.Unlock();
-
-            pNode = pNode->pNext;
+            pFunc++;
         }
+
+        pq->m_queueMutex.lock();
+        pq->m_queue.pop_front();
+        pq->m_queueMutex.unlock();
 
         if (bQuit)
         {
@@ -62,40 +55,28 @@ DVoid* DThreadForQueue(DVoid* pvParam)
         }
     }
 
-    g_id2qMutex.Lock();
-    g_id2q.Erase(pNodeQueue);
-    g_id2qMutex.Unlock();
-
+    g_id2qMutex.lock();
+    g_id2q.erase(pNodeQueue);
+    g_id2qMutex.unlock();
     delete pq;
-    DPrintf("DMsgQueue Quit.\n");
-    return 0;*/
+
     return 0;
 }
 
-DVoid DMsgQueue::Init()
+DMsgQueue::DMsgQueue(DCStr queueName, DUInt32 maxSize)
 {
-    
-}
-
-DVoid DMsgQueue::Destroy()
-{
-
+    m_name = queueName;
+    m_maxSize = maxSize;
 }
 
 DHandle DMsgQueue::Create(DCStr queueName, DUInt32 maxSize)
 {
-    DMsgQueue* pq = new DMsgQueue();
-    pq->m_name = queueName;
+    DMsgQueue* pq = new DMsgQueue(queueName, maxSize);
     pq->m_queue.clear();
     pq->m_msgfunc.clear();
     pq->m_wait.Reset();
-    pq->maxSize = maxSize;
-
+    pq->m_t = std::thread(DThreadForQueue, (DVoid*)(g_qid));
     g_id2q.insert(std::pair<DHandle, DMsgQueue*>(g_qid, pq));
-
-    std::thread t = std::thread(DThreadForQueue, (DVoid*)(g_qid));
-    t.detach();
-
     return g_qid++;
 }
 
@@ -116,7 +97,7 @@ DBool DMsgQueue::PostQueueMsg(DHandle qid, DUInt32 msg, DVoid* para1, DVoid* par
     if (pNodeQueue == g_id2q.end()) return false;
 
     DMsgQueue* pQueue = pNodeQueue->second;
-    if (pQueue->m_queue.size() > pQueue->maxSize) {
+    if (pQueue->m_queue.size() > pQueue->m_maxSize) {
         return false;
     }
 

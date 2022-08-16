@@ -44,6 +44,9 @@ public:
 class DEvent
 {
 public:
+    static DVoid WaitEvent(DEvent& ev, DUInt32 timeinms);
+
+public:
     DEvent();
     ~DEvent();
     DVoid Create(DCWStr wName, DBool bAuto = false);

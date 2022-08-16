@@ -310,6 +310,26 @@ typedef struct tagDEventData
 }DEventData;
 #endif
 
+DVoid DEvent::WaitEvent(DEvent& ev, DUInt32 timeinms)
+{
+#if defined(BUILD_FOR_WINDOWS)
+    ::WaitForSingleObject((HANDLE)ev, timeinms);
+#else
+    DEventData* event = (DEventData*)ev.handle;
+    struct timespec t;
+    t.tv_usec = timeinms * 1000; // ms：毫秒；μs：微秒  1ms = 1000μs
+    // 1s  = 1000ms
+    // 1ms = 1000us
+    // 1us = 1000ns
+    pthread_mutex_lock(&event->mutex);
+    while (!event->flag) {
+        // 由于存在虚假唤醒，须使用 while 循环来检查
+        pthread_cond_timewait(&event->cond, &event->mutex, &t);
+    }
+    pthread_mutex_unlock(&event->mutex);
+#endif
+}
+
 DEvent::DEvent()
 {
     handle = NULL;
