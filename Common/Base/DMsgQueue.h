@@ -24,7 +24,8 @@ typedef struct tagDQMsg
 
 #define DM_NET_CONN   1000
 #define DM_NET_SEND   1001
-#define DM_TASK_MSG   1002
+#define DM_NET_DISC   1002
+#define DM_TASK_MSG   1003
 
 #define D_WM_HANDLER  WM_USER+1
 

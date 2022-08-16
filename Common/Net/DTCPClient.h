@@ -28,6 +28,7 @@ public:
     virtual DVoid OnRecvBuf(DTCPClient* sock, DBuffer buf) = 0;
     virtual DVoid OnClose(DTCPClient* sock) = 0;
     virtual DVoid OnBroken(DTCPClient* sock, DUInt32 code, std::string strReason) = 0;
+
 public:
     DTCPDataSink() {};
     virtual ~DTCPDataSink() {};

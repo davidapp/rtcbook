@@ -13,7 +13,7 @@
 #undef APSTUDIO_READONLY_SYMBOLS
 
 /////////////////////////////////////////////////////////////////////////////
-// Chinese (Simplified, PRC) resources
+// Chinese (Simplified, China) resources
 
 #if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_CHS)
 LANGUAGE LANG_CHINESE, SUBLANG_CHINESE_SIMPLIFIED
@@ -50,7 +50,7 @@ END
 // Dialog
 //
 
-IDD_MAINDIALOG DIALOGEX 0, 0, 416, 250
+IDD_MAINDIALOG DIALOGEX 0, 0, 277, 251
 STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "HelloRTC Client"
 FONT 8, "MS Shell Dlg", 400, 0, 0x1
@@ -60,15 +60,15 @@ BEGIN
     EDITTEXT        IDC_IP,37,21,110,14,ES_AUTOHSCROLL
     LTEXT           "IP: ",IDC_STATIC,17,23,12,8
     LTEXT           "Port: ",IDC_STATIC,158,24,19,8
-    EDITTEXT        IDC_PORT,186,21,54,14,ES_AUTOHSCROLL
-    GROUPBOX        "Connection",IDC_STATIC,7,7,402,57
-    GROUPBOX        "Chat",IDC_STATIC,7,73,402,170
-    EDITTEXT        IDC_CHAT,16,87,200,129,ES_MULTILINE | ES_AUTOHSCROLL | ES_READONLY | WS_VSCROLL
-    EDITTEXT        IDC_INPUT,17,220,156,14,ES_AUTOHSCROLL
-    PUSHBUTTON      "Send",IDC_SEND,179,220,50,14
-    CONTROL         "",IDC_STATIC,"Static",SS_BLACKFRAME,238,89,155,125
+    EDITTEXT        IDC_PORT,182,21,54,14,ES_AUTOHSCROLL
+    GROUPBOX        "Connection",IDC_STATIC,7,7,263,57
+    GROUPBOX        "Chat",IDC_STATIC,7,74,263,170
+    EDITTEXT        IDC_CHAT,16,87,254,130,ES_MULTILINE | ES_AUTOHSCROLL | ES_READONLY | WS_VSCROLL | WS_HSCROLL
+    EDITTEXT        IDC_INPUT,17,222,196,14,ES_AUTOHSCROLL
+    PUSHBUTTON      "Send",IDC_SEND,217,222,50,14
     LTEXT           "Name: ",IDC_STATIC,155,45,24,8
-    EDITTEXT        IDC_NAME,186,44,81,14,ES_AUTOHSCROLL
+    EDITTEXT        IDC_NAME,182,43,54,14,ES_AUTOHSCROLL
+    PUSHBUTTON      "Set",IDC_SETNAME,240,42,28,15
 END
 
 
@@ -83,9 +83,9 @@ BEGIN
     IDD_MAINDIALOG, DIALOG
     BEGIN
         LEFTMARGIN, 7
-        RIGHTMARGIN, 409
+        RIGHTMARGIN, 270
         TOPMARGIN, 7
-        BOTTOMMARGIN, 243
+        BOTTOMMARGIN, 244
     END
 END
 #endif    // APSTUDIO_INVOKED
@@ -101,7 +101,7 @@ BEGIN
     0
 END
 
-#endif    // Chinese (Simplified, PRC) resources
+#endif    // Chinese (Simplified, China) resources
 /////////////////////////////////////////////////////////////////////////////
 
 

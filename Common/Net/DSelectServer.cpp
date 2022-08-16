@@ -6,12 +6,10 @@
 #include <vector>
 #include <sstream>
 
-HWND g_NotifyWnd;
 std::vector<DTCPSocket> g_clients;
 
-DBool DSelectServer::Start(HWND hNotifyWnd, DUInt16 port)
+DBool DSelectServer::Start(DUInt16 port)
 {
-    g_NotifyWnd = hNotifyWnd;
     std::thread listen(DSelectServer::ServerListenThread, port);
     listen.detach();
     return true;
@@ -37,20 +35,19 @@ DUInt32 DSelectServer::ServerListenThread(DUInt16 nPort)
     DTCPSocket serverSocket;
     if (!serverSocket.Create())
     {
-        SendMessage(g_NotifyWnd, WM_LOG, (WPARAM)DEVENT_SOCKET_ERROR, 0);
         return DEVENT_SOCKET_ERROR;
     }
 
     if (!serverSocket.Bind(nPort)) {
-        SendMessage(g_NotifyWnd, WM_LOG, (WPARAM)DEVENT_BIND_ERROR, 0);
+        //SendMessage(g_NotifyWnd, WM_LOG, (WPARAM)DEVENT_BIND_ERROR, 0);
         return DEVENT_BIND_ERROR;
     }
 
     if (serverSocket.Listen(5)) {
-        SendMessage(g_NotifyWnd, WM_LOG, (WPARAM)DEVENT_SERVER_READY, (LPARAM)nPort);
+        //SendMessage(g_NotifyWnd, WM_LOG, (WPARAM)DEVENT_SERVER_READY, (LPARAM)nPort);
     }
     else {
-        SendMessage(g_NotifyWnd, WM_LOG, (WPARAM)DEVENT_LISTEN_ERROR, (LPARAM)nPort);
+        //SendMessage(g_NotifyWnd, WM_LOG, (WPARAM)DEVENT_LISTEN_ERROR, (LPARAM)nPort);
         return DEVENT_LISTEN_ERROR;
     }
 

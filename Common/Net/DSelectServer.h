@@ -14,7 +14,7 @@
 class DSelectServer
 {
 public:
-    static DBool Start(HWND hNotifyWnd, DUInt16 port);
+    static DBool Start(DUInt16 port);
     static DBool Stop();
     static std::string Info();
 

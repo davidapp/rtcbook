@@ -252,7 +252,7 @@ DVoid DTCPClient::SetConnSink(DTCPClientSink* pSink)
 
 DBool DTCPClient::Connect(std::string ip, DUInt16 wPort)
 {
-    //DNetIO::AddConnReq(this, ip, wPort);
+    DNet::AddConnReq(this, ip, wPort);
     m_strIP = ip;
     m_wPort = wPort;
     return true;
