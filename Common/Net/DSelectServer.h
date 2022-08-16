@@ -18,7 +18,9 @@ public:
     static DBool Stop();
     static std::string Info();
 
+public:
+    static DUInt32 GetMaxFDSetSize();
+
 private:
     static DUInt32 ServerListenThread(DUInt16 nPort);
-    static DUInt32 ServerWorkerThread(DVoid* CompletionPortID);
 };

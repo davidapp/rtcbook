@@ -90,6 +90,38 @@ DVoid DTCPSocket::Renew()
     Create();
 }
 
+DBool DTCPSocket::Bind(DUInt16 port)
+{
+    SOCKADDR_IN InternetAddr = {};
+    InternetAddr.sin_family = AF_INET;
+    InternetAddr.sin_addr.s_addr = htonl(INADDR_ANY);
+    InternetAddr.sin_port = htons(port);
+    int ret = bind(m_sock, (PSOCKADDR)&InternetAddr, sizeof(InternetAddr));
+    if (ret != 0) {
+        return false;
+    }
+    return true;
+}
+
+DBool DTCPSocket::Listen(DInt32 backlog)
+{
+    int ret = listen(m_sock, backlog);
+    if (ret != 0) {
+        return false;
+    }
+    return true;
+}
+
+DTCPSocket DTCPSocket::Accept()
+{
+    SOCKADDR_IN ClientAddr;
+    int ClientAddrLen;
+    SOCKET NewConnection = accept(m_sock, (SOCKADDR*)&ClientAddr, &ClientAddrLen);
+    DTCPSocket sockRet;
+    sockRet.Attach(NewConnection);
+    return sockRet;
+}
+
 DBool DTCPSocket::SyncConnect(DCStr strIP, DUInt16 wPort)
 {
 #if defined(BUILD_FOR_WINDOWS) && (BUILD_FOR_WINDOWS==1)
@@ -352,7 +384,7 @@ DBool DTCPClient::Send(DBuffer buf)
 {
     if (m_sock)
     {
-        //DNetIO::AddSendReq(this, buf);
+        DNet::AddSendReq(this, buf);
     }
     return true;
 }

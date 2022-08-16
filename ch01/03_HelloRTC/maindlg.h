@@ -53,6 +53,7 @@ public:
         m_port.SetWindowText(L"1229");
         m_log = GetDlgItem(IDC_LOG);
 
+        DNet::Init();
 
         return TRUE;
     }
@@ -114,6 +115,7 @@ public:
     {
         DestroyWindow();
         ::PostQuitMessage(0);
+        DNet::UnInit();
         return 0;
     }
 

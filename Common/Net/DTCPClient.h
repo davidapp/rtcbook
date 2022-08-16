@@ -49,6 +49,11 @@ public:
     DVoid Renew();
 
 public:
+    DBool Bind(DUInt16 port);
+    DBool Listen(DInt32 backlog);
+    DTCPSocket Accept();
+
+public:
     // block method wrappers
     DBool SyncConnect(DCStr strIP, DUInt16 wPort);
     DBool SyncSend(DBuffer buf);

@@ -42,8 +42,11 @@ public:
         m_port.SetWindowText(L"1229");
         m_name.SetWindowTextW(L"David");
 
+        DNet::Init();
+
         m_sock.SetConnSink(this);
         m_sock.SetDataSink(this);
+
         return TRUE;
     }
 
@@ -140,6 +143,7 @@ public:
     {
         DestroyWindow();
         ::PostQuitMessage(0);
+        DNet::UnInit();
         return 0;
     }
 

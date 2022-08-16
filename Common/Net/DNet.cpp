@@ -130,3 +130,23 @@ DHandle DNet::GetSendQueue()
 {
     return g_sendqueue;
 }
+
+DVoid DNet::AddConnReq(DTCPClient* sock, std::string strIP, DUInt16 wPort)
+{
+    DConnData* pData = new DConnData();
+    pData->sock = sock->m_sock;
+    pData->strIP = strIP.c_str();
+    pData->wPort = wPort;
+    pData->pSink = sock->m_pConnSink;
+    DMsgQueue::PostQueueMsg(g_connqueue, DM_NET_CONN, pData, sock);
+}
+
+DVoid DNet::AddSendReq(DTCPClient* sock, DBuffer buffer)
+{
+    DSendData* pData = new DSendData();
+    pData->sock = sock->m_sock;
+    pData->buffer = buffer.GetBuf();
+    pData->pSink = sock->m_pDataSink;
+    buffer.Detach();
+    DMsgQueue::PostQueueMsg(g_sendqueue, DM_NET_SEND, pData, sock);
+}
