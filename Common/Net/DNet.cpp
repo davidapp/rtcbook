@@ -1,11 +1,15 @@
 ﻿#include "DNet.h"
 #include "Base/DUtil.h"
+#include "Base/DMsgQueue.h"
 
 #if defined(BUILD_FOR_WINDOWS)
 #pragma comment(lib, "ws2_32.lib")
 WSADATA g_wsaData;
 #else
 #endif
+
+DHandle g_connqueue;
+DHandle g_sendqueue;
 
 DBool DNet::Init()
 {
@@ -15,6 +19,8 @@ DBool DNet::Init()
         return false;
     }
 #endif
+    g_connqueue = DMsgQueue::Create("ConnQueue", 100);
+    g_sendqueue = DMsgQueue::Create("SendQueue", 100);
     return true;
 }
 
@@ -38,10 +44,9 @@ DUInt32 DNet::GetLastNetError()
 #endif
 }
 
-std::string DNet::GetLastNetErrorStr()
+std::string DNet::GetLastNetErrorStr(DUInt32 errCode)
 {
 #if defined(BUILD_FOR_WINDOWS)
-    DUInt32 errCode = GetLastNetError();
     DWORD systemLocale = MAKELANGID(LANG_ENGLISH, SUBLANG_ENGLISH_US);
     HLOCAL hlocal = NULL;
     BOOL fOk = ::FormatMessageW(FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS | FORMAT_MESSAGE_ALLOCATE_BUFFER,
@@ -62,14 +67,17 @@ std::string DNet::GetLastNetErrorStr()
     std::wstring strRet;
     if (fOk && hlocal)
     {
-        strRet = (DCWStr)::LocalLock(hlocal);
-        ::LocalFree(hlocal);
+        LPVOID ptr = ::LocalLock(hlocal);
+        if (ptr != NULL) {
+            strRet = (DCWStr)ptr;
+            ::LocalFree(hlocal);
+        }
     }
 
     return DUtil::ws2s(strRet);
 #else
     std::string strRet;
-    strRet = strerror(errno);
+    strRet = strerror(errCode);
     return strRet;
 #endif
 }
@@ -111,4 +119,14 @@ DUInt32 DNet::IPStrToUint32(DCStr strIP)
     pStart = StrToUChar(pStart + 1, pByte + 3);
     if (pStart == NULL || (*pStart != '\0')) return 0;
     return ret;
+}
+
+DHandle DNet::GetConnQueue()
+{
+    return g_connqueue;
+}
+
+DHandle DNet::GetSendQueue()
+{
+    return g_sendqueue;
 }

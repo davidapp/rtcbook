@@ -76,6 +76,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>..\..\Common;..\..\Test;</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -127,7 +128,22 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\Common\Base\DBuffer.cpp" />
+    <ClCompile Include="..\..\Common\Base\DFile.cpp" />
+    <ClCompile Include="..\..\Common\Base\DMsgQueue.cpp" />
+    <ClCompile Include="..\..\Common\Base\DUTF8.cpp" />
+    <ClCompile Include="..\..\Common\Base\DUtil.cpp" />
+    <ClCompile Include="..\Base\DTestMsgQueue.cpp" />
     <ClCompile Include="main.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\Common\Base\DAtomic.h" />
+    <ClInclude Include="..\..\Common\Base\DBuffer.h" />
+    <ClInclude Include="..\..\Common\Base\DFile.h" />
+    <ClInclude Include="..\..\Common\Base\DMsgQueue.h" />
+    <ClInclude Include="..\..\Common\Base\DUTF8.h" />
+    <ClInclude Include="..\..\Common\Base\DUtil.h" />
+    <ClInclude Include="..\Base\DTestMsgQueue.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

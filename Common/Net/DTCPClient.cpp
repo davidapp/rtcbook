@@ -101,7 +101,7 @@ DBool DTCPSocket::SyncConnect(DCStr strIP, DUInt16 wPort)
     if (connect(m_sock, (SOCKADDR*)&addr, sizeof(SOCKADDR_IN)) == SOCKET_ERROR)
     {
         DUInt32 errCode = DNet::GetLastNetError();
-        std::string strReasonA = DNet::GetLastNetErrorStr();
+        std::string strReasonA = DNet::GetLastNetErrorStr(errCode);
         return false;
     }
 #else
@@ -132,8 +132,7 @@ DBool DTCPSocket::SyncSend(DBuffer buf)
         if (ret == DSockError)
         {
             DUInt32 errCode = DNet::GetLastNetError();
-            D_UNUSED(errCode);
-            std::string strReasonA = DNet::GetLastNetErrorStr();
+            std::string strReasonA = DNet::GetLastNetErrorStr(errCode);
             return false;
         }
         sent += ret;
@@ -158,8 +157,7 @@ DBuffer DTCPSocket::SyncRecv(DUInt32 size, DUInt32* res)
         if (ret == DSockError)
         {
             DUInt32 errCode = DNet::GetLastNetError();
-            D_UNUSED(errCode);
-            std::string strReasonA = DNet::GetLastNetErrorStr();
+            std::string strReasonA = DNet::GetLastNetErrorStr(errCode);
             break;
         }
         else if (ret == 0)
@@ -259,7 +257,7 @@ DVoid DTCPClient::BeginRead()
         if (ret == DSockError)
         {
             DUInt32 errCode = DNet::GetLastNetError();
-            std::string strReasonA = DNet::GetLastNetErrorStr();
+            std::string strReasonA = DNet::GetLastNetErrorStr(errCode);
             if (m_pDataSink)
             {
                 m_pDataSink->OnBroken(this, errCode, strReasonA);

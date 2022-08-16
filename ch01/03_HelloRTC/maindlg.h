@@ -5,7 +5,7 @@
 #include "atlcrack.h"
 #include "Base/DUtil.h"
 #include "Net/DNet.h"
-#include "Net/DIOCPServer.h"
+#include "Net/DSelectServer.h"
 #include <locale>
 #include <string>
 
@@ -77,7 +77,7 @@ public:
         CString strPort;
         m_port.GetWindowText(strPort);
         DUInt16 port = _wtoi(strPort);
-        DIOCPServer::Start(m_hWnd, port);
+        DSelectServer::Start(m_hWnd, port);
         m_start.EnableWindow(FALSE);
         m_stop.EnableWindow(TRUE);
 
@@ -86,7 +86,7 @@ public:
 
     LRESULT OnStopServer(WORD /*wNotifyCode*/, WORD wID, HWND /*hWndCtl*/, BOOL& /*bHandled*/)
     {
-        
+        DSelectServer::Stop();
         m_start.EnableWindow(TRUE);
         m_stop.EnableWindow(FALSE);
         return 0;
@@ -94,7 +94,7 @@ public:
 
     LRESULT OnInfo(WORD /*wNotifyCode*/, WORD wID, HWND /*hWndCtl*/, BOOL& /*bHandled*/)
     {
-        std::string info = DIOCPServer::Info();
+        std::string info = DSelectServer::Info();
         std::wstring winfo = DUtil::s2ws(info);
         AppendLog((wchar_t*)winfo.c_str());
         return 0;
