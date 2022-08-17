@@ -24,8 +24,12 @@
     <ClCompile Include="..\..\Common\Base\DUtil.cpp" />
     <ClCompile Include="..\..\Common\Net\DNet.cpp" />
     <ClCompile Include="..\..\Common\Net\DSelectServer.cpp" />
+    <ClCompile Include="..\..\Common\Net\DTCP.cpp" />
     <ClCompile Include="..\..\Common\Net\DTCPClient.cpp" />
     <ClCompile Include="..\..\Common\Net\DTCPServer.cpp" />
+    <ClCompile Include="..\..\Common\Net\DUDP.cpp" />
+    <ClCompile Include="..\..\Common\Net\DUDPClient.cpp" />
+    <ClCompile Include="..\..\Common\Net\DUDPServer.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -39,8 +43,12 @@
     <ClInclude Include="..\..\Common\DTypes.h" />
     <ClInclude Include="..\..\Common\Net\DNet.h" />
     <ClInclude Include="..\..\Common\Net\DSelectServer.h" />
+    <ClInclude Include="..\..\Common\Net\DTCP.h" />
     <ClInclude Include="..\..\Common\Net\DTCPClient.h" />
     <ClInclude Include="..\..\Common\Net\DTCPServer.h" />
+    <ClInclude Include="..\..\Common\Net\DUDP.h" />
+    <ClInclude Include="..\..\Common\Net\DUDPClient.h" />
+    <ClInclude Include="..\..\Common\Net\DUDPServer.h" />
     <ClInclude Include="MainDlg.h" />
     <ClInclude Include="resource.h" />
   </ItemGroup>

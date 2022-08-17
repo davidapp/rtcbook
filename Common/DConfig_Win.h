@@ -74,3 +74,5 @@ typedef HANDLE DFileHandle;
 
 // Socket
 typedef SOCKET DSocket;
+#define DBadSocket INVALID_SOCKET
+#define DSockError SOCKET_ERROR

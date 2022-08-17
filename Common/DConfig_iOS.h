@@ -69,3 +69,5 @@ typedef int DFileHandle;
 
 //Socket
 typedef int DSocket;
+#define DBadSocket -1
+#define DSockError -1

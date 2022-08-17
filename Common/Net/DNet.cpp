@@ -6,8 +6,6 @@
 #include <WS2tcpip.h>
 #pragma comment(lib, "ws2_32.lib")
 WSADATA g_wsaData;
-#define DBadSocket INVALID_SOCKET
-#define DSockError SOCKET_ERROR
 #else
 #include <sys/types.h>
 #include <sys/socket.h>
@@ -15,165 +13,7 @@ WSADATA g_wsaData;
 #include <netinet/in.h>
 #include <unistd.h>
 #include <string.h>
-#define DBadSocket -1
-#define DSockError -1
 #endif
-
-DHandle g_connqueue;
-DHandle g_sendqueue;
-
-DVoid* DX86_STDCALL ConnHandler(DUInt32 msg, DVoid* para1, DVoid* para2)
-{
-    if (msg == DM_NET_CONN)
-    {
-        DConnData* pData = (DConnData*)para1;
-        DTCPClient* sock = (DTCPClient*)para2;
-        DTCPClientSink* pSink = pData->pSink;
-#if defined(BUILD_FOR_WINDOWS)
-        SOCKADDR_IN addr;
-        memset(&addr, 0, sizeof(SOCKADDR_IN));
-        addr.sin_family = AF_INET;
-        inet_pton(AF_INET, pData->strIP.c_str(), &addr.sin_addr.s_addr);
-        addr.sin_port = htons(pData->wPort);
-#else
-        sockaddr_in addr;
-        memset(&addr, 0, sizeof(sockaddr_in));
-        addr.sin_family = AF_INET;
-        inet_pton(AF_INET, pData->strIP, &addr.sin_addr);
-        addr.sin_port = htons(pData->wPort);
-#endif
-        if (pSink)
-        {
-            pSink->OnConnecting(sock, pData->strIP, pData->wPort);
-        }
-#if defined(BUILD_FOR_WINDOWS)
-        if (connect(pData->sock, (SOCKADDR*)&addr, sizeof(SOCKADDR_IN)) == SOCKET_ERROR)
-#else
-        if (connect(pData->sock, (sockaddr*)&addr, sizeof(sockaddr_in)) == DSockError)
-#endif
-        {
-            DUInt32 errCode = DNet::GetLastNetError();
-            std::string strReason = DNet::GetLastNetErrorStr(errCode);
-            if (pSink)
-            {
-                pSink->OnConnectError(sock, errCode, strReason);
-            }
-            delete pData;
-            return NULL;
-        }
-        if (pSink)
-        {
-            pSink->OnConnectOK(sock);
-        }
-
-        delete pData;
-    }
-    return NULL;
-}
-
-DVoid* DX86_STDCALL SendHandler(DUInt32 msg, DVoid* para1, DVoid* para2)
-{
-    if (msg == DM_NET_SEND)
-    {
-        DSendData* pData = (DSendData*)para1;
-        DTCPClient* sock = (DTCPClient*)para2;
-        DBuffer buf;
-        buf.Attach(pData->buffer);
-        DTCPDataSink* pSink = pData->pSink;
-        DChar* pStart = (DChar*)pData->buffer;
-        DUInt32 size = buf.GetSize();
-        //DUInt32 sizeHead = DNet::H2N(size);
-        if (pSink)
-        {
-            pSink->OnPreSend(sock, buf);
-        }
-        DUInt32 sent = 0;
-        while (sent < size)
-        {
-            DInt32 ret = (DInt32)send(pData->sock, pStart, size - sent, 0);//MSG_DONTROUTE MSG_OOB
-            if (ret == DSockError)
-            {
-                DUInt32 errCode = DNet::GetLastNetError();
-                std::string strReasonA = DNet::GetLastNetErrorStr(errCode);
-                if (pSink)
-                {
-                    pSink->OnSendError(sock, errCode, strReasonA);
-                }
-                delete pData;
-                return NULL;
-            }
-            sent += ret;
-            pStart += ret;
-        }
-        if (pSink)
-        {
-            pSink->OnSendOK(sock);
-        }
-        delete pData;
-    }
-    return NULL;
-}
-
-
-DVoid* DX86_STDCALL SendToHandler(DUInt32 msg, DVoid* para1, DVoid* para2)
-{
-    /*
-    if (msg == DM_NET_SEND)
-    {
-        DSendToData* pData = (DSendToData*)para1;
-        DUDPClient* sock = (DUDPClient*)para2;
-        DBuffer buf;
-        buf.Attach(pData->buffer);
-        DUDPDataSink* pSink = pData->pSink;
-        DChar* pStart = (DChar*)buf.GetBuf();
-        DUInt32 size = buf.GetSize();
-        if (pSink)
-        {
-            pSink->OnPreSend(sock, (DByte*)pStart, size);
-        }
-#if defined(BUILD_FOR_WINDOWS)
-        SOCKADDR_IN ReceiverAddr = { 0 };
-#else
-        struct sockaddr_in ReceiverAddr = { 0 };
-#endif
-        ReceiverAddr.sin_family = AF_INET;
-        ReceiverAddr.sin_port = htons(pData->wPort);
-        inet_pton(AF_INET, pData->strIP, &ReceiverAddr.sin_addr.s_addr);
-
-        DUInt32 sent = 0;
-        while (sent < size)
-        {
-#if defined(BUILD_FOR_WINDOWS)
-            DInt32 ret = sendto(pData->sock, pStart, size - sent, 0, (SOCKADDR*)&ReceiverAddr, sizeof(ReceiverAddr));
-#else
-            DInt32 ret = (DInt32)sendto(pData->sock, pStart, size - sent, 0, (sockaddr*)&ReceiverAddr, sizeof(ReceiverAddr));
-#endif
-            if (ret == DSockError)
-            {
-                DUInt32 errCode = DError::GetLastNetError();
-                DStringA strReasonA = DError::GetLastNetErrorStr();
-                if (pSink)
-                {
-                    pSink->OnSendError(sock, errCode, strReasonA);
-                }
-                return NULL;
-            }
-            sent += ret;
-            pStart += ret;
-        }
-        if (pSink)
-        {
-            pSink->OnSendOK(sock);
-            sock->Recv();
-        }
-        DStringA strA;
-        strA.Attach(pData->strIP);
-
-        delete pData;
-    }
-    */
-    return NULL;
-}
 
 DBool DNet::Init()
 {
@@ -183,11 +23,6 @@ DBool DNet::Init()
         return false;
     }
 #endif
-    g_connqueue = DMsgQueue::Create("ConnQueue", 100);
-    DMsgQueue::AddHandler(g_connqueue, ConnHandler);
-
-    g_sendqueue = DMsgQueue::Create("SendQueue", 100);
-    DMsgQueue::AddHandler(g_sendqueue, SendHandler);
     return true;
 }
 
@@ -298,32 +133,3 @@ std::string DNet::UInt32ToIPStr(DUInt32 uip)
     return str;
 }
 
-DHandle DNet::GetConnQueue()
-{
-    return g_connqueue;
-}
-
-DHandle DNet::GetSendQueue()
-{
-    return g_sendqueue;
-}
-
-DVoid DNet::AddConnReq(DTCPClient* sock, std::string strIP, DUInt16 wPort)
-{
-    DConnData* pData = new DConnData();
-    pData->sock = sock->m_sock;
-    pData->strIP = strIP.c_str();
-    pData->wPort = wPort;
-    pData->pSink = sock->m_pConnSink;
-    DMsgQueue::PostQueueMsg(g_connqueue, DM_NET_CONN, pData, sock);
-}
-
-DVoid DNet::AddSendReq(DTCPClient* sock, DBuffer buffer)
-{
-    DSendData* pData = new DSendData();
-    pData->sock = sock->m_sock;
-    pData->buffer = buffer.GetBuf();
-    pData->pSink = sock->m_pDataSink;
-    buffer.Detach();
-    DMsgQueue::PostQueueMsg(g_sendqueue, DM_NET_SEND, pData, sock);
-}

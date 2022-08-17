@@ -52,15 +52,17 @@ public:
 
         m_ip.SetWindowText(L"127.0.0.1");
         m_port.SetWindowText(L"1229");
-        m_name.SetWindowTextW(L"David");
+        m_name.SetWindowText(L"David");
 
         DNet::Init();
 
         g_NotifyWnd = m_hWnd;
-        g_connState = CONN_STATE_DISCONNECT;
+
+        m_sock.Init();
         m_sock.SetConnSink(this);
         m_sock.SetDataSink(this);
 
+        SendMessage(g_NotifyWnd, WM_UPDATEUI, 0, 0);
         return TRUE;
     }
 
@@ -69,10 +71,8 @@ public:
     {
         CString str;
         str.Format(L"Connecting to %S:%d", strIP.c_str(), wPort);
-        SendMessage(g_NotifyWnd, WM_LOG, (WPARAM)str.GetString(), 0);
-
-        g_connState = CONN_STATE_CONNECTING;
-        SendMessage(g_NotifyWnd, WM_UPDATEUI, 0, 0);
+        ::PostMessage(g_NotifyWnd, WM_LOG, (WPARAM)str.GetString(), 0);
+        ::PostMessage(g_NotifyWnd, WM_UPDATEUI, 0, 0);
     }
 
     virtual DVoid OnConnectOK(DTCPClient* sock)
@@ -80,8 +80,6 @@ public:
         CString str;
         str.Format(L"Connected OK");
         SendMessage(g_NotifyWnd, WM_LOG, (WPARAM)str.GetString(), 0);
-
-        g_connState = CONN_STATE_CONNECTED;
         SendMessage(g_NotifyWnd, WM_UPDATEUI, 0, 0);
     }
 
@@ -89,56 +87,54 @@ public:
     {
         CString str;
         str.Format(L"Connect Error.code:%d reason:%S", code, strReason.c_str());
-        SendMessage(g_NotifyWnd, WM_LOG, (WPARAM)str.GetString(), 0);
-
-        g_connState = CONN_STATE_DISCONNECT;
-        SendMessage(g_NotifyWnd, WM_UPDATEUI, 0, 0);
+        ::PostMessage(g_NotifyWnd, WM_LOG, (WPARAM)str.GetString(), 0);
+        ::PostMessage(g_NotifyWnd, WM_UPDATEUI, 0, 0);
     }
 
     // DTCPDataSink
-    virtual DVoid OnPreSend(DTCPClient* sock, DBuffer buffer)
+    virtual DVoid OnPreSend(DSocket sock, DBuffer buffer)
     {
         CString str;
         str.Format(L"OnPreSend size:%d data:%S", buffer.GetSize(), buffer.ToHexString().c_str());
         SendMessage(g_NotifyWnd, WM_LOG, (WPARAM)str.GetString(), 0);
     }
 
-    virtual DVoid OnSendOK(DTCPClient* sock)
+    virtual DVoid OnSendOK(DSocket sock)
     {
         CString str;
         str.Format(L"OnOnSendOK");
         SendMessage(g_NotifyWnd, WM_LOG, (WPARAM)str.GetString(), 0);
     }
 
-    virtual DVoid OnSendError(DTCPClient* sock, DUInt32 code, std::string strReason)
+    virtual DVoid OnSendError(DSocket sock, DUInt32 code, std::string strReason)
     {
         CString str;
         str.Format(L"Connect Error.code:%d reason:%S", code, strReason.c_str());
         SendMessage(g_NotifyWnd, WM_LOG, (WPARAM)str.GetString(), 0);
     }
 
-    virtual DVoid OnSendTimeout(DTCPClient* sock)
+    virtual DVoid OnSendTimeout(DSocket sock)
     {
         CString str;
         str.Format(L"OnSendTimeout");
         SendMessage(g_NotifyWnd, WM_LOG, (WPARAM)str.GetString(), 0);
     }
 
-    virtual DVoid OnRecvBuf(DTCPClient* sock, DBuffer buf)
+    virtual DVoid OnRecvBuf(DSocket sock, DBuffer buf)
     {
         CString str;
         str.Format(L"OnRecvBuf size:%d data:%S", buf.GetSize(), buf.ToHexString().c_str());
         SendMessage(g_NotifyWnd, WM_LOG, (WPARAM)str.GetString(), 0);
     }
 
-    virtual DVoid OnClose(DTCPClient* sock)
+    virtual DVoid OnClose(DSocket sock)
     {
         CString str;
         str.Format(L"OnClose");
         SendMessage(g_NotifyWnd, WM_LOG, (WPARAM)str.GetString(), 0);
     }
 
-    virtual DVoid OnBroken(DTCPClient* sock, DUInt32 code, std::string strReason)
+    virtual DVoid OnBroken(DSocket sock, DUInt32 code, std::string strReason)
     {
         CString str;
         str.Format(L"OnBroken");
@@ -147,21 +143,21 @@ public:
 
     LRESULT OnUpdateUI(UINT /*uMsg*/, WPARAM wParam, LPARAM lParam, BOOL& /*bHandled*/)
     {
-        if (g_connState == CONN_STATE_DISCONNECT) {
+        if (m_sock.GetState() == CONN_STATE_DISCONNECT) {
             m_connect.EnableWindow();
             m_disconnect.EnableWindow(0);
             m_setname.EnableWindow(0);
             m_send.EnableWindow(0);
             m_input.EnableWindow(0);
         }
-        else if (g_connState == CONN_STATE_CONNECTING) {
+        else if (m_sock.GetState() == CONN_STATE_CONNECTING) {
             m_connect.EnableWindow(0);
-            m_disconnect.EnableWindow(0);
+            m_disconnect.EnableWindow(1);
             m_setname.EnableWindow(0);
             m_send.EnableWindow(0);
             m_input.EnableWindow(0);
         }
-        else if (g_connState == CONN_STATE_CONNECTED) {
+        else if (m_sock.GetState() == CONN_STATE_CONNECTED) {
             m_connect.EnableWindow(0);
             m_disconnect.EnableWindow(1);
             m_setname.EnableWindow(1);
@@ -223,6 +219,7 @@ public:
     {
         DestroyWindow();
         ::PostQuitMessage(0);
+        m_sock.UnInit();
         DNet::UnInit();
         return 0;
     }

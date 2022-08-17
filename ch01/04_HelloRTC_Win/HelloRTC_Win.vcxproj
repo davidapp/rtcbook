@@ -149,6 +149,7 @@
     <ClInclude Include="..\..\Common\Base\DMsgQueue.h" />
     <ClInclude Include="..\..\Common\Base\DUtil.h" />
     <ClInclude Include="..\..\Common\Net\DNet.h" />
+    <ClInclude Include="..\..\Common\Net\DTCP.h" />
     <ClInclude Include="..\..\Common\Net\DTCPClient.h" />
     <ClInclude Include="MainDlg.h" />
     <ClInclude Include="resource.h" />
@@ -158,6 +159,7 @@
     <ClCompile Include="..\..\Common\Base\DMsgQueue.cpp" />
     <ClCompile Include="..\..\Common\Base\DUtil.cpp" />
     <ClCompile Include="..\..\Common\Net\DNet.cpp" />
+    <ClCompile Include="..\..\Common\Net\DTCP.cpp" />
     <ClCompile Include="..\..\Common\Net\DTCPClient.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
