@@ -35,9 +35,12 @@ class DMsgQueue
 public:
     static DHandle Create(DCStr queueName, DUInt32 maxSize = 500);
     static DHandle GetQueue(DCStr queueName);
+    static DVoid RemoveQueue(DHandle qid);
+
     static DUInt32 PostQueueMsg(DHandle qid, DUInt32 msg, DVoid* para1, DVoid* para2);
     static DUInt32 SendQueueMsg(DHandle qid, DUInt32 msg, DVoid* para1, DVoid* para2);
-    static DVoid PostQuitMsg(DHandle qid);
+    static DVoid  PostQuitMsg(DHandle qid);
+    static DVoid* GetThreadHandle(DHandle qid);
 
     static DBool   IsInQueue(DHandle qid);
     static DHandle GetCurQueueID();

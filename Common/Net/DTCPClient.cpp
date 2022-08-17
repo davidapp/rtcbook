@@ -90,6 +90,17 @@ DVoid DTCPSocket::Renew()
     Create();
 }
 
+DBool DTCPSocket::operator==(const DTCPSocket sock)
+{
+    if (m_sock == sock.m_sock) return true;
+    return false;
+}
+
+DBool DTCPSocket::IsValid()
+{
+    return m_sock != DBadSocket;
+}
+
 DBool DTCPSocket::Bind(DUInt16 port)
 {
     SOCKADDR_IN InternetAddr = {};
@@ -112,19 +123,17 @@ DBool DTCPSocket::Listen(DInt32 backlog)
     return true;
 }
 
-DTCPSocket DTCPSocket::Accept(std::string& ip, DUInt16& port)
+DTCPSocket DTCPSocket::Accept()
 {
     DTCPSocket sockRet;
-    SOCKADDR_IN ClientAddr;
-    int ClientAddrLen = 0;
-    SOCKET NewConnection = accept(m_sock, (SOCKADDR*)&ClientAddr, &ClientAddrLen);
-    if (ClientAddrLen > 0) {
-        sockRet.Attach(NewConnection);
-        ip = DNet::UInt32ToIPStr(ClientAddr.sin_addr.S_un.S_addr);
-        port = ClientAddr.sin_port;
-        return sockRet;
-    }
+    SOCKET NewConnection = accept(m_sock, 0, 0);
+    sockRet.Attach(NewConnection);
     return sockRet;
+}
+
+DInt32 DTCPSocket::Shutdown(DInt32 how)
+{
+    return shutdown(m_sock, how);
 }
 
 DBool DTCPSocket::SyncConnect(DCStr strIP, DUInt16 wPort)

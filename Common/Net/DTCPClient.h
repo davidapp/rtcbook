@@ -48,11 +48,14 @@ public:
     DVoid Attach(DSocket sock);
     DVoid Detach();
     DVoid Renew();
+    DBool operator==(const DTCPSocket sock);
+    DBool IsValid();
 
 public:
     DBool Bind(DUInt16 port);
     DBool Listen(DInt32 backlog);
-    DTCPSocket Accept(std::string& ip, DUInt16& port);
+    DTCPSocket Accept();
+    DInt32 Shutdown(DInt32 how);
 
 public:
     // block method wrappers

@@ -10,4 +10,8 @@ class DSelectServer : public DTCPServer
 {
 public:
     virtual DVoid ServerLoop();
+    virtual DVoid Stop();
+
+private:
+    DUInt32 m_replyQueue;
 };

@@ -739,15 +739,15 @@ DVoid DGrowBuffer::AddDouble(DDouble d)
 }
 
 DVoid DGrowBuffer::AddStringA(std::string& sa)
-{/*
-    DInt32 strLen = sa.GetDataLength();
+{
+    DInt32 strLen = sa.size();
     if (m_cachepos + strLen + 4 > DGROWBUFFER_SIZE)
     {
         DBuffer buf(strLen + 4);
         buf.SetSub(0, (DByte*)&strLen, 4);
-        buf.SetSub(4, (DByte*)sa.GetStr(), strLen);
+        buf.SetSub(4, (DByte*)sa.c_str(), strLen);
         FlushCacheToList();
-        m_bufList.Add(buf.GetBuf());
+        m_bufList.push_back(buf.GetBuf());
         buf.AddRef();
         m_totalsize += buf.GetSize();
         return;
@@ -757,27 +757,26 @@ DVoid DGrowBuffer::AddStringA(std::string& sa)
     {
         FlushCacheToList();
         m_cache.SetSub(0, (DByte*)&strLen, 4);
-        m_cache.SetSub(4, (DByte*)sa.GetStr(), strLen);
+        m_cache.SetSub(4, (DByte*)sa.c_str(), strLen);
         m_cachepos += strLen + 4;
         return;
     }
 
     m_cache.SetSub(m_cachepos, (DByte*)&strLen, 4);
-    m_cache.SetSub(m_cachepos + 4, (DByte*)sa.GetStr(), strLen);
+    m_cache.SetSub(m_cachepos + 4, (DByte*)sa.c_str(), strLen);
     m_cachepos += strLen + 4;
-    */
 }
 
 DVoid DGrowBuffer::AddString(std::wstring& s)
-{/*
-    DInt32 strLen = s.GetDataLength() * 2;
+{
+    DInt32 strLen = s.size() * 2;
     if (m_cachepos + strLen + 4 > DGROWBUFFER_SIZE)
     {
         DBuffer buf(strLen + 4);
         buf.SetSub(0, (DByte*)&strLen, 4);
-        buf.SetSub(4, (DByte*)s.GetStr(), strLen);
+        buf.SetSub(4, (DByte*)s.c_str(), strLen);
         FlushCacheToList();
-        m_bufList.Add(buf.GetBuf());
+        m_bufList.push_back(buf.GetBuf());
         buf.AddRef();
         m_totalsize += buf.GetSize();
         return;
@@ -787,15 +786,14 @@ DVoid DGrowBuffer::AddString(std::wstring& s)
     {
         FlushCacheToList();
         m_cache.SetSub(0, (DByte*)&strLen, 4);
-        m_cache.SetSub(4, (DByte*)s.GetStr(), strLen);
+        m_cache.SetSub(4, (DByte*)s.c_str(), strLen);
         m_cachepos += strLen + 4;
         return;
     }
 
     m_cache.SetSub(m_cachepos, (DByte*)&strLen, 4);
-    m_cache.SetSub(m_cachepos + 4, (DByte*)s.GetStr(), strLen);
+    m_cache.SetSub(m_cachepos + 4, (DByte*)s.c_str(), strLen);
     m_cachepos += strLen + 4;
-    */
 }
 
 DVoid DGrowBuffer::AddBuffer(DBuffer b)

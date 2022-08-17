@@ -9,6 +9,10 @@
 #include <locale>
 #include <string>
 
+HWND g_NotifyWnd;
+DUInt32 g_serverState;
+#define WM_UPDATEUI WM_USER+1001
+
 class CMainDlg : public CDialogImpl<CMainDlg>, public CMessageFilter , public DTCPServerSink, public DTCPDataSink
 {
 public:
@@ -21,29 +25,47 @@ public:
 
     virtual DVoid OnListening(DTCPServer* sock, DUInt16 wPort)
     {
-
+        CString str;
+        str.Format(L"Listening at port:%d", wPort);
+        SendMessage(g_NotifyWnd, WM_LOG, (WPARAM)str.GetString(), 0);
+        g_serverState = 1;
+        SendMessage(g_NotifyWnd, WM_UPDATEUI, 0, 0);
     }
 
     virtual DVoid OnListenOK(DTCPServer* sock, DUInt16 wPort)
     {
-
+        CString str;
+        str.Format(L"Listen OK at port:%d", wPort);
+        SendMessage(g_NotifyWnd, WM_LOG, (WPARAM)str.GetString(), 0);
     }
 
     virtual DVoid OnListenError(DTCPServer* sock, DUInt32 code, std::string strReason)
     {
-
+        CString str;
+        str.Format(L"Listen Error code:%d reason:%S", code, strReason.c_str());
+        SendMessage(g_NotifyWnd, WM_LOG, (WPARAM)str.GetString(), 0);
     }
 
-    virtual DVoid OnListenStop(DTCPServer* sock, DUInt32 code, std::string strReason)
+    virtual DVoid OnNewConn(DTCPServer* sock, DTCPSocket newsock)
     {
-
+        CString str;
+        str.Format(L"A new connection is coming");
+        SendMessage(g_NotifyWnd, WM_LOG, (WPARAM)str.GetString(), 0);
     }
 
-    virtual DVoid OnNewConn(DTCPServer* sock, DTCPClient* newsock)
+    virtual DVoid OnError(DTCPServer* sock, DUInt32 code, std::string strReason)
     {
-
+        CString str;
+        str.Format(L"Server Error code:%d reason:%S", code, strReason.c_str());
+        SendMessage(g_NotifyWnd, WM_LOG, (WPARAM)str.GetString(), 0);
     }
 
+    virtual DVoid OnStop(DTCPServer* sock)
+    {
+        CString str;
+        str.Format(L"Server Stop");
+        SendMessage(g_NotifyWnd, WM_LOG, (WPARAM)str.GetString(), 0);
+    }
 
     virtual DVoid OnPreSend(DTCPClient* sock, DBuffer buffer)
     {
@@ -115,6 +137,8 @@ public:
         m_port.SetWindowText(L"1229");
         m_log = GetDlgItem(IDC_LOG);
 
+        g_NotifyWnd = m_hWnd;
+
         DNet::Init();
 
         return TRUE;
@@ -122,15 +146,7 @@ public:
 
     LRESULT OnLog(UINT /*uMsg*/, WPARAM wParam, LPARAM lParam, BOOL& /*bHandled*/)
     {
-        CString strLog;
-        /*if (wParam == DEVENT_SERVER_READY)
-        {
-            strLog.Format(L"Server is listened at %hd\r\n", (DUInt16)lParam);
-        }
-        else if (wParam == DEVENT_SERVER_NEWCONN)
-        {
-            strLog.Format(L"New Connection from port: %d\r\n", (DUInt32)lParam);
-        }*/
+        CString strLog = (LPCWSTR)wParam;
         AppendLog((wchar_t*)strLog.GetString());
         return 0;
     }

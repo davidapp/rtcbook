@@ -55,11 +55,6 @@ DVoid* DThreadForQueue(DVoid* pvParam)
         }
     }
 
-    g_id2qMutex.lock();
-    g_id2q.erase(pNodeQueue);
-    g_id2qMutex.unlock();
-    delete pq;
-
     return 0;
 }
 
@@ -90,6 +85,26 @@ DHandle DMsgQueue::GetQueue(DCStr queueName)
         }
     }
     return 0;
+}
+
+DVoid DMsgQueue::RemoveQueue(DHandle qid)
+{
+    g_id2qMutex.lock();
+    auto pNodeQueue = g_id2q.find((DHandle)qid);
+    if (pNodeQueue == g_id2q.end())
+    {
+        g_id2qMutex.unlock();
+        return;
+    }
+    
+    DMsgQueue* pq = (DMsgQueue*)pNodeQueue->second;
+    pq->m_t.join();
+
+    pq->m_queue.clear();
+    pq->m_msgfunc.clear();
+    pq->m_wait.Close();
+    g_id2q.erase((DHandle)qid);
+    g_id2qMutex.unlock();
 }
 
 DUInt32 DMsgQueue::PostQueueMsg(DHandle qid, DUInt32 msg, DVoid* para1, DVoid* para2)
@@ -168,6 +183,17 @@ DCStr DMsgQueue::GetCurQueueName()
 DUInt32 DMsgQueue::GetCoreCount()
 {
     return std::thread::hardware_concurrency();
+}
+
+DVoid* DMsgQueue::GetThreadHandle(DHandle qid)
+{
+    auto pNodeQueue = g_id2q.find(qid);
+    if (pNodeQueue == g_id2q.end()) return NULL;
+
+    DMsgQueue* pq = (DMsgQueue*)pNodeQueue->second;
+    if (pq == NULL) return NULL;
+
+    return pq->m_t.native_handle();
 }
 
 DVoid DMsgQueue::AddHandler(DHandle qid, DMsgFunc handler)

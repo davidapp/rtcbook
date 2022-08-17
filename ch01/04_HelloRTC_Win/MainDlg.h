@@ -96,37 +96,51 @@ public:
     // DTCPDataSink
     virtual DVoid OnPreSend(DTCPClient* sock, DBuffer buffer)
     {
-
+        CString str;
+        str.Format(L"OnPreSend size:%d data:%S", buffer.GetSize(), buffer.ToHexString().c_str());
+        SendMessage(g_NotifyWnd, WM_LOG, (WPARAM)str.GetString(), 0);
     }
 
     virtual DVoid OnSendOK(DTCPClient* sock)
     {
-
+        CString str;
+        str.Format(L"OnOnSendOK");
+        SendMessage(g_NotifyWnd, WM_LOG, (WPARAM)str.GetString(), 0);
     }
 
     virtual DVoid OnSendError(DTCPClient* sock, DUInt32 code, std::string strReason)
     {
-
+        CString str;
+        str.Format(L"Connect Error.code:%d reason:%S", code, strReason.c_str());
+        SendMessage(g_NotifyWnd, WM_LOG, (WPARAM)str.GetString(), 0);
     }
 
     virtual DVoid OnSendTimeout(DTCPClient* sock)
     {
-
+        CString str;
+        str.Format(L"OnSendTimeout");
+        SendMessage(g_NotifyWnd, WM_LOG, (WPARAM)str.GetString(), 0);
     }
 
     virtual DVoid OnRecvBuf(DTCPClient* sock, DBuffer buf)
     {
-
+        CString str;
+        str.Format(L"OnRecvBuf size:%d data:%S", buf.GetSize(), buf.ToHexString().c_str());
+        SendMessage(g_NotifyWnd, WM_LOG, (WPARAM)str.GetString(), 0);
     }
 
     virtual DVoid OnClose(DTCPClient* sock)
     {
-
+        CString str;
+        str.Format(L"OnClose");
+        SendMessage(g_NotifyWnd, WM_LOG, (WPARAM)str.GetString(), 0);
     }
 
     virtual DVoid OnBroken(DTCPClient* sock, DUInt32 code, std::string strReason)
     {
-
+        CString str;
+        str.Format(L"OnBroken");
+        SendMessage(g_NotifyWnd, WM_LOG, (WPARAM)str.GetString(), 0);
     }
 
     LRESULT OnUpdateUI(UINT /*uMsg*/, WPARAM wParam, LPARAM lParam, BOOL& /*bHandled*/)
@@ -188,13 +202,14 @@ public:
     {
         CString strText;
         m_input.GetWindowText(strText);
-        if (strText.GetLength() != 0) {
+        DUInt32 inputlen = strText.GetLength();
+        if (inputlen != 0) {
             m_sendText = strText;
             m_input.SetWindowText(L"");
             DGrowBuffer gb;
-            gb.AddUInt32(strText.GetLength() + 5, true);
+            gb.AddUInt32(inputlen * 2 + 5, true);
             gb.AddUInt8(1); // cmd
-            std::wstring wstr(strText.GetString());
+            std::wstring wstr(m_sendText);
             gb.AddString(wstr);
             DBuffer bufSend = gb.Finish();
             m_sock.Send(bufSend);
