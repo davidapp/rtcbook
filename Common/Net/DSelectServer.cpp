@@ -63,7 +63,7 @@ DVoid DSelectServer::ServerLoop()
         FD_ZERO(&fdread);
         FD_SET(serverSocket.m_sock, &fdread);
         for (auto item = m_vecClients.begin(); item != m_vecClients.end(); item++) {
-            FD_SET(item->m_sock, &fdread);
+            FD_SET((*item)->m_sock, &fdread);
         }
 
         FD_ZERO(&fdwrite);
@@ -78,18 +78,20 @@ DVoid DSelectServer::ServerLoop()
         {
             if (FD_ISSET(serverSocket.m_sock, &fdread))
             {
-                DTCPSocket client = serverSocket.Accept();
-                m_vecClients.push_back(client);
+                std::string remote_ip;
+                DUInt16 remote_port;
+                DTCPSocket client = serverSocket.Accept(remote_ip, remote_port);
+                DTCPClient* newClient = new DTCPClient(client.m_sock, remote_ip.c_str(), remote_port);
+                m_vecClients.push_back(newClient);
             }
             else {
                 for (auto item = m_vecClients.begin(); item != m_vecClients.end(); item++) {
-                    if (FD_ISSET(item->m_sock, &fdread))
+                    if (FD_ISSET((*item)->m_sock, &fdread))
                     {
                         DTCPSocket client;
-                        client.Attach(item->m_sock);
+                        client.Attach((*item)->m_sock);
                         DUInt32 res;
                         DBuffer buf = client.SyncRecv(4, &res);
-
                     }
                 }
             }

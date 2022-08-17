@@ -30,6 +30,7 @@ public:
 public:
     static DChar*  StrToUChar(DChar* pStr, DByte* pByte);
     static DUInt32 IPStrToUint32(DCStr strIP);
+    static std::string UInt32ToIPStr(DUInt32 uip);
 
 public:
     static DHandle GetConnQueue();

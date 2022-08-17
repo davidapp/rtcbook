@@ -43,7 +43,7 @@ protected:
     DUInt16 m_wPort;
     DInt32  m_backlog;
     DInt32  m_state;
-    std::vector<DTCPSocket> m_vecClients;
+    std::vector<DTCPClient*> m_vecClients;
     std::mutex m_clientsMutex;
 
 private:

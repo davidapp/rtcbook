@@ -52,7 +52,7 @@ public:
 public:
     DBool Bind(DUInt16 port);
     DBool Listen(DInt32 backlog);
-    DTCPSocket Accept();
+    DTCPSocket Accept(std::string& ip, DUInt16& port);
 
 public:
     // block method wrappers

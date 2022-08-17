@@ -15,6 +15,7 @@ DUInt32 DTCPServer::ServerThread(DVoid* pThis)
 {
     DTCPServer* pThisServer = (DTCPServer*)pThis;
     pThisServer->ServerLoop();
+    return 0;
 }
 
 DVoid DTCPServer::ServerLoop()

@@ -112,13 +112,18 @@ DBool DTCPSocket::Listen(DInt32 backlog)
     return true;
 }
 
-DTCPSocket DTCPSocket::Accept()
+DTCPSocket DTCPSocket::Accept(std::string& ip, DUInt16& port)
 {
-    SOCKADDR_IN ClientAddr;
-    int ClientAddrLen;
-    SOCKET NewConnection = accept(m_sock, (SOCKADDR*)&ClientAddr, &ClientAddrLen);
     DTCPSocket sockRet;
-    sockRet.Attach(NewConnection);
+    SOCKADDR_IN ClientAddr;
+    int ClientAddrLen = 0;
+    SOCKET NewConnection = accept(m_sock, (SOCKADDR*)&ClientAddr, &ClientAddrLen);
+    if (ClientAddrLen > 0) {
+        sockRet.Attach(NewConnection);
+        ip = DNet::UInt32ToIPStr(ClientAddr.sin_addr.S_un.S_addr);
+        port = ClientAddr.sin_port;
+        return sockRet;
+    }
     return sockRet;
 }
 

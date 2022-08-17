@@ -9,7 +9,7 @@
 #include <locale>
 #include <string>
 
-class CMainDlg : public CDialogImpl<CMainDlg>, public CMessageFilter
+class CMainDlg : public CDialogImpl<CMainDlg>, public CMessageFilter , public DTCPServerSink, public DTCPDataSink
 {
 public:
     enum { IDD = IDD_MAINDIALOG };
@@ -18,6 +18,68 @@ public:
     {
 
     }
+
+    virtual DVoid OnListening(DTCPServer* sock, DUInt16 wPort)
+    {
+
+    }
+
+    virtual DVoid OnListenOK(DTCPServer* sock, DUInt16 wPort)
+    {
+
+    }
+
+    virtual DVoid OnListenError(DTCPServer* sock, DUInt32 code, std::string strReason)
+    {
+
+    }
+
+    virtual DVoid OnListenStop(DTCPServer* sock, DUInt32 code, std::string strReason)
+    {
+
+    }
+
+    virtual DVoid OnNewConn(DTCPServer* sock, DTCPClient* newsock)
+    {
+
+    }
+
+
+    virtual DVoid OnPreSend(DTCPClient* sock, DBuffer buffer)
+    {
+
+    }
+
+    virtual DVoid OnSendOK(DTCPClient* sock)
+    {
+
+    }
+
+    virtual DVoid OnSendError(DTCPClient* sock, DUInt32 code, std::string strReason)
+    {
+
+    }
+
+    virtual DVoid OnSendTimeout(DTCPClient* sock)
+    {
+
+    }
+
+    virtual DVoid OnRecvBuf(DTCPClient* sock, DBuffer buf)
+    {
+
+    }
+
+    virtual DVoid OnClose(DTCPClient* sock)
+    {
+
+    }
+
+    virtual DVoid OnBroken(DTCPClient* sock, DUInt32 code, std::string strReason)
+    {
+
+    }
+
 
     virtual BOOL PreTranslateMessage(MSG* pMsg)
     {
@@ -61,14 +123,14 @@ public:
     LRESULT OnLog(UINT /*uMsg*/, WPARAM wParam, LPARAM lParam, BOOL& /*bHandled*/)
     {
         CString strLog;
-        if (wParam == DEVENT_SERVER_READY)
+        /*if (wParam == DEVENT_SERVER_READY)
         {
             strLog.Format(L"Server is listened at %hd\r\n", (DUInt16)lParam);
         }
         else if (wParam == DEVENT_SERVER_NEWCONN)
         {
             strLog.Format(L"New Connection from port: %d\r\n", (DUInt32)lParam);
-        }
+        }*/
         AppendLog((wchar_t*)strLog.GetString());
         return 0;
     }
@@ -79,7 +141,7 @@ public:
         m_port.GetWindowText(strPort);
         DUInt16 port = _wtoi(strPort);
 
-        m_server.SetServerSink(this);
+        m_server.SetListenSink(this);
         m_server.SetDataSink(this);
         m_server.Start(port);
 
@@ -98,9 +160,9 @@ public:
 
     LRESULT OnInfo(WORD /*wNotifyCode*/, WORD wID, HWND /*hWndCtl*/, BOOL& /*bHandled*/)
     {
-        std::string info = DSelectServer::GetInfo();
-        std::wstring winfo = DUtil::s2ws(info);
-        AppendLog((wchar_t*)winfo.c_str());
+        //std::string info = DSelectServer::GetInfo();
+        //std::wstring winfo = DUtil::s2ws(info);
+        //AppendLog((wchar_t*)winfo.c_str());
         return 0;
     }
 

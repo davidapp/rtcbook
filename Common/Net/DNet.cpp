@@ -288,6 +288,16 @@ DUInt32 DNet::IPStrToUint32(DCStr strIP)
     return ret;
 }
 
+std::string DNet::UInt32ToIPStr(DUInt32 uip)
+{
+    DChar buf[30] = {};
+    std::string str;
+    DByte* pByte = (DByte*)&uip;
+    sprintf(buf, "%d.%d.%d.%d", pByte[0], pByte[1], pByte[2], pByte[3]);
+    str = buf;
+    return str;
+}
+
 DHandle DNet::GetConnQueue()
 {
     return g_connqueue;
