@@ -3,6 +3,7 @@
 #include "DTypes.h"
 #include "Base/DBuffer.h"
 #include <string>
+#include <thread>
 
 class DTCPClient;
 
@@ -87,11 +88,12 @@ public:
 public:
     // async data methods
     DVoid SetDataSink(DTCPDataSink* pSink);
-    DBool Send(DBuffer buf); // Post to Queue
-    DBool Recv(); // Start a new thread to read
-    DTCPDataSink* m_pDataSink;
-
-public:
-    DVoid BeginRead(); // Thread Function
+    DBool Send(DBuffer buf);
+    DBool StartRecv();
+    DVoid StopRecv();
     DUInt32 m_read;
+    DTCPDataSink* m_pDataSink;
+    std::thread m_recvthread;
+
+    DVoid RecvLoop();
 };

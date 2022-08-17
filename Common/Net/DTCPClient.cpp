@@ -284,116 +284,6 @@ DVoid DTCPClient::SetDataSink(DTCPDataSink* pSink)
     m_pDataSink = pSink;
 }
 
-DVoid* ReadThread(DVoid* pvParam)
-{
-    DTCPClient* pThis = (DTCPClient*)pvParam;
-    if (pThis)
-    {
-        pThis->BeginRead();
-    }
-    return 0;
-}
-
-DVoid DTCPClient::BeginRead()
-{
-    DByte tempbuf[4096]; //max for 4K
-    while (1)
-    {
-        DInt32 ret = (DInt32)recv(m_sock, (char*)tempbuf, 4096, 0);//MSG_DONTROUTE MSG_OOB
-        if (ret == DSockError)
-        {
-            DUInt32 errCode = DNet::GetLastNetError();
-            std::string strReasonA = DNet::GetLastNetErrorStr(errCode);
-            if (m_pDataSink)
-            {
-                m_pDataSink->OnBroken(this, errCode, strReasonA);
-            }
-
-            if (m_read)
-            {
-                //DThread::CloseThreadHandle(m_read);
-                m_read = 0;
-            }
-
-            //we assume it is a Server Client if m_pConnSink == NULL
-            if (m_pConnSink == NULL)
-            {
-                /*if (m_pServer)
-                {
-                    m_pServer->RemoveClient(this);
-                }*/
-            }
-            else
-            {
-                this->m_strIP.clear();
-                Renew();	//we renew the client broken socket
-            }
-            return;
-        }
-        else if (ret == 0)
-        {
-            if (m_pDataSink)
-            {
-                m_pDataSink->OnClose(this);
-            }
-            //DLogDev(logFilter, "[%d] return as (ret==0).", m_read);
-
-            if (m_read)
-            {
-                //DLogDev(logFilter, "[%d] Remove Thread Info.", m_read);
-                //DThread::CloseThreadHandle(m_read);
-                m_read = 0;//We set it to zero to prevent the dealloc wait for the thread!
-            }
-
-            //we assume it is a Server Client if m_pConnSink == NULL
-            if (m_pConnSink == NULL)
-            {
-                /*if (m_pServer)
-                {
-                    m_pServer->RemoveClient(this);
-                }*/
-            }
-            else
-            {
-                this->m_strIP.clear();
-                Renew();	//we renew the client broken socket
-            }
-            return;
-        }
-
-        DBuffer buf(tempbuf, ret);
-        if (m_pDataSink)
-        {
-            m_pDataSink->OnRecvBuf(this, buf);
-        }
-    }
-}
-
-DBool DTCPClient::Recv()
-{
-    if (m_read == 0)
-    {
-        if (m_sock)
-        {
-            //DBool bResult = DThread::Create(ReadThread, this, &m_read);
-            if (m_pConnSink == NULL)
-            {
-                //DLogDev(logFilter, "Server Recv Thread %d Begin.", m_read);
-            }
-            else
-            {
-                //DLogDev(logFilter, "Client Recv Thread %d Begin.", m_read);
-            }
-            return false;// bResult;
-        }
-        return false;
-    }
-    else
-    {
-        return true;
-    }
-}
-
 DBool DTCPClient::Send(DBuffer buf)
 {
     if (m_sock)
@@ -402,3 +292,65 @@ DBool DTCPClient::Send(DBuffer buf)
     }
     return true;
 }
+
+DVoid* ReadThread(DVoid* pvParam)
+{
+    DTCPClient* pThis = (DTCPClient*)pvParam;
+    if (pThis)
+    {
+        pThis->RecvLoop();
+    }
+    return 0;
+}
+
+DVoid DTCPClient::RecvLoop()
+{
+    DByte tempbuf[4096]; //max for 4K
+    while (1)
+    {
+        DInt32 ret = (DInt32)recv(m_sock, (char*)tempbuf, 4096, 0); //MSG_DONTROUTE MSG_OOB
+        if (ret == DSockError)
+        {
+            DUInt32 errCode = DNet::GetLastNetError();
+            std::string strReasonA = DNet::GetLastNetErrorStr(errCode);
+            if (m_pDataSink)
+            {
+                m_pDataSink->OnBroken(this, errCode, strReasonA);
+            }
+            break;
+        }
+        else if (ret == 0)
+        {
+            if (m_pDataSink)
+            {
+                m_pDataSink->OnClose(this);
+            }
+            break;
+        }
+        else {
+            DBuffer buf(tempbuf, ret);
+            if (m_pDataSink)
+            {
+                m_pDataSink->OnRecvBuf(this, buf);
+            }
+        }
+    }
+}
+
+DBool DTCPClient::StartRecv()
+{
+    if (!IsValid()) return false;
+
+    m_recvthread = std::thread(ReadThread, this);
+    return true;
+}
+
+DVoid DTCPClient::StopRecv()
+{
+    if (!IsValid()) return;
+    
+    Shutdown(SD_RECEIVE);
+    m_recvthread.join();
+}
+
+

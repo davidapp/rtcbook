@@ -10,7 +10,12 @@
 #include <string>
 
 HWND g_NotifyWnd;
+
 DUInt32 g_connState;
+#define CONN_STATE_DISCONNECT 0
+#define CONN_STATE_CONNECTING 1
+#define CONN_STATE_CONNECTED 2
+
 #define WM_UPDATEUI WM_USER+1001
 
 class CMainDlg : public CDialogImpl<CMainDlg>, public CMessageFilter, DTCPClientSink, DTCPDataSink
@@ -145,21 +150,21 @@ public:
 
     LRESULT OnUpdateUI(UINT /*uMsg*/, WPARAM wParam, LPARAM lParam, BOOL& /*bHandled*/)
     {
-        if (g_connState == 0) {
+        if (g_connState == CONN_STATE_DISCONNECT) {
             m_connect.EnableWindow();
             m_disconnect.EnableWindow(0);
             m_setname.EnableWindow(0);
             m_send.EnableWindow(0);
             m_input.EnableWindow(0);
         }
-        else if (g_connState == 1) {
+        else if (g_connState == CONN_STATE_CONNECTING) {
             m_connect.EnableWindow(0);
             m_disconnect.EnableWindow(0);
             m_setname.EnableWindow(0);
             m_send.EnableWindow(0);
             m_input.EnableWindow(0);
         }
-        else if (g_connState == 2) {
+        else if (g_connState == CONN_STATE_CONNECTED) {
             m_connect.EnableWindow(0);
             m_disconnect.EnableWindow(1);
             m_setname.EnableWindow(1);
