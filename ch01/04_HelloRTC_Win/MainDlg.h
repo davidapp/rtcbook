@@ -10,12 +10,6 @@
 #include <string>
 
 HWND g_NotifyWnd;
-
-DUInt32 g_connState;
-#define CONN_STATE_DISCONNECT 0
-#define CONN_STATE_CONNECTING 1
-#define CONN_STATE_CONNECTED 2
-
 #define WM_UPDATEUI WM_USER+1001
 
 class CMainDlg : public CDialogImpl<CMainDlg>, public CMessageFilter, DTCPClientSink, DTCPDataSink
@@ -63,7 +57,7 @@ public:
         DNet::Init();
 
         g_NotifyWnd = m_hWnd;
-        g_connState = 0;
+        g_connState = CONN_STATE_DISCONNECT;
         m_sock.SetConnSink(this);
         m_sock.SetDataSink(this);
 
@@ -76,7 +70,8 @@ public:
         CString str;
         str.Format(L"Connecting to %S:%d", strIP.c_str(), wPort);
         SendMessage(g_NotifyWnd, WM_LOG, (WPARAM)str.GetString(), 0);
-        g_connState = 1;
+
+        g_connState = CONN_STATE_CONNECTING;
         SendMessage(g_NotifyWnd, WM_UPDATEUI, 0, 0);
     }
 
@@ -85,7 +80,8 @@ public:
         CString str;
         str.Format(L"Connected OK");
         SendMessage(g_NotifyWnd, WM_LOG, (WPARAM)str.GetString(), 0);
-        g_connState = 2;
+
+        g_connState = CONN_STATE_CONNECTED;
         SendMessage(g_NotifyWnd, WM_UPDATEUI, 0, 0);
     }
 
@@ -94,7 +90,8 @@ public:
         CString str;
         str.Format(L"Connect Error.code:%d reason:%S", code, strReason.c_str());
         SendMessage(g_NotifyWnd, WM_LOG, (WPARAM)str.GetString(), 0);
-        g_connState = 0;
+
+        g_connState = CONN_STATE_DISCONNECT;
         SendMessage(g_NotifyWnd, WM_UPDATEUI, 0, 0);
     }
 

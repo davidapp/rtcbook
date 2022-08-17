@@ -229,34 +229,21 @@ DBuffer DTCPSocket::SyncRecv(DUInt32 size, DUInt32* res)
 DTCPClient::DTCPClient()
 {
     m_sock = DBadSocket;
-    m_strIP.clear();
-    m_wPort = 0;
-    m_pConnSink = NULL;
-    m_pDataSink = NULL;
-    m_read = 0;
-    Create();
-}
-
-DTCPClient::DTCPClient(DSocket sock, DCStr strIP, DUInt16 wPort)
-{
-    m_sock = sock;
-    m_strIP = strIP;
-    m_wPort = wPort;
-    m_pConnSink = NULL;
-    m_pDataSink = NULL;
-    m_read = 0;
+    m_strRemoteIP.clear();
+    m_wRemotePort = 0;
+    m_pConnSink = nullptr;
+    m_pDataSink = nullptr;
+    m_nState = CONN_STATE_DISCONNECT;
 }
 
 DTCPClient::~DTCPClient()
 {
-    Close();
-
-    m_strIP.clear();
-    if (m_read != 0)
-    {
-        //DThread::WaitFinish(m_read, 5);
-    }
-    m_read = 0;	//The thread must be dead before dealloc!
+    m_sock = DBadSocket;
+    m_strRemoteIP.clear();
+    m_wRemotePort = 0;
+    m_pConnSink = nullptr;
+    m_pDataSink = nullptr;
+    m_nState = CONN_STATE_DISCONNECT;
 }
 
 DVoid DTCPClient::SetConnSink(DTCPClientSink* pSink)
@@ -266,17 +253,25 @@ DVoid DTCPClient::SetConnSink(DTCPClientSink* pSink)
 
 DBool DTCPClient::Connect(std::string ip, DUInt16 wPort)
 {
-    DNet::AddConnReq(this, ip, wPort);
-    m_strIP = ip;
-    m_wPort = wPort;
+    if (m_nState != CONN_STATE_DISCONNECT) return false;
+
+    m_strRemoteIP = ip;
+    m_wRemotePort = wPort;
+    m_nState = CONN_STATE_CONNECTING;
+    DNet::AddConnReq(this, m_strRemoteIP, m_wRemotePort);
     return true;
 }
 
 DVoid DTCPClient::DisConnect()
 {
-    shutdown(m_sock, 2);//SD_BOTH
+    if (m_nState == CONN_STATE_DISCONNECT) return;
+
+    m_nState = CONN_STATE_DISCONNECT;
+    Shutdown(SD_BOTH);
     Close();
-    m_strIP.clear();
+
+    m_strRemoteIP.clear();
+    m_wRemotePort = 0;
 }
 
 DVoid DTCPClient::SetDataSink(DTCPDataSink* pSink)
@@ -286,10 +281,9 @@ DVoid DTCPClient::SetDataSink(DTCPDataSink* pSink)
 
 DBool DTCPClient::Send(DBuffer buf)
 {
-    if (m_sock)
-    {
-        DNet::AddSendReq(this, buf);
-    }
+    if (m_nState != CONN_STATE_CONNECTED) return false;
+
+    DNet::AddSendReq(this, buf);
     return true;
 }
 

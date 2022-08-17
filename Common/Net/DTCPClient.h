@@ -69,11 +69,14 @@ public:
 };
 
 
+#define CONN_STATE_DISCONNECT 0
+#define CONN_STATE_CONNECTING 1
+#define CONN_STATE_CONNECTED 2
+
 class DTCPClient : public DTCPSocket
 {
 public:
     DTCPClient();
-    DTCPClient(DSocket sock, DCStr strIP, DUInt16 wPort);
     ~DTCPClient();
 
 public:
@@ -82,18 +85,17 @@ public:
     DBool Connect(std::string strIP, DUInt16 wPort);
     DVoid DisConnect();
     DTCPClientSink* m_pConnSink;
-    std::string m_strIP;
-    DUInt16  m_wPort;
+    std::string m_strRemoteIP;
+    DUInt16 m_wRemotePort;
+    DAtomInt32 m_nState;
 
 public:
     // async data methods
     DVoid SetDataSink(DTCPDataSink* pSink);
     DBool Send(DBuffer buf);
     DBool StartRecv();
+    DVoid RecvLoop();
     DVoid StopRecv();
-    DUInt32 m_read;
     DTCPDataSink* m_pDataSink;
     std::thread m_recvthread;
-
-    DVoid RecvLoop();
 };
