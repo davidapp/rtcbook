@@ -71,7 +71,7 @@ public:
     {
         CString str;
         str.Format(L"Connecting to %S:%d", strIP.c_str(), wPort);
-        ::PostMessage(g_NotifyWnd, WM_LOG, (WPARAM)str.GetString(), 0);
+        ::PostMessage(g_NotifyWnd, WM_LOG, (WPARAM)NewStr(str), 0);
         ::PostMessage(g_NotifyWnd, WM_UPDATEUI, 0, 0);
     }
 
@@ -79,7 +79,7 @@ public:
     {
         CString str;
         str.Format(L"Connected OK");
-        SendMessage(g_NotifyWnd, WM_LOG, (WPARAM)str.GetString(), 0);
+        SendMessage(g_NotifyWnd, WM_LOG, (WPARAM)NewStr(str), 0);
         SendMessage(g_NotifyWnd, WM_UPDATEUI, 0, 0);
     }
 
@@ -87,7 +87,7 @@ public:
     {
         CString str;
         str.Format(L"Connect Error.code:%d reason:%S", code, strReason.c_str());
-        ::PostMessage(g_NotifyWnd, WM_LOG, (WPARAM)str.GetString(), 0);
+        ::PostMessage(g_NotifyWnd, WM_LOG, (WPARAM)NewStr(str), 0);
         ::PostMessage(g_NotifyWnd, WM_UPDATEUI, 0, 0);
     }
 
@@ -96,49 +96,49 @@ public:
     {
         CString str;
         str.Format(L"OnPreSend size:%d data:%S", buffer.GetSize(), buffer.ToHexString().c_str());
-        SendMessage(g_NotifyWnd, WM_LOG, (WPARAM)str.GetString(), 0);
+        ::PostMessage(g_NotifyWnd, WM_LOG, (WPARAM)NewStr(str), 0);
     }
 
     virtual DVoid OnSendOK(DSocket sock)
     {
         CString str;
         str.Format(L"OnOnSendOK");
-        SendMessage(g_NotifyWnd, WM_LOG, (WPARAM)str.GetString(), 0);
+        ::PostMessage(g_NotifyWnd, WM_LOG, (WPARAM)NewStr(str), 0);
     }
 
     virtual DVoid OnSendError(DSocket sock, DUInt32 code, std::string strReason)
     {
         CString str;
         str.Format(L"Connect Error.code:%d reason:%S", code, strReason.c_str());
-        SendMessage(g_NotifyWnd, WM_LOG, (WPARAM)str.GetString(), 0);
+        SendMessage(g_NotifyWnd, WM_LOG, (WPARAM)NewStr(str), 0);
     }
 
     virtual DVoid OnSendTimeout(DSocket sock)
     {
         CString str;
         str.Format(L"OnSendTimeout");
-        SendMessage(g_NotifyWnd, WM_LOG, (WPARAM)str.GetString(), 0);
+        SendMessage(g_NotifyWnd, WM_LOG, (WPARAM)NewStr(str), 0);
     }
 
     virtual DVoid OnRecvBuf(DSocket sock, DBuffer buf)
     {
         CString str;
         str.Format(L"OnRecvBuf size:%d data:%S", buf.GetSize(), buf.ToHexString().c_str());
-        SendMessage(g_NotifyWnd, WM_LOG, (WPARAM)str.GetString(), 0);
+        SendMessage(g_NotifyWnd, WM_LOG, (WPARAM)NewStr(str), 0);
     }
 
     virtual DVoid OnClose(DSocket sock)
     {
         CString str;
         str.Format(L"OnClose");
-        SendMessage(g_NotifyWnd, WM_LOG, (WPARAM)str.GetString(), 0);
+        SendMessage(g_NotifyWnd, WM_LOG, (WPARAM)NewStr(str), 0);
     }
 
     virtual DVoid OnBroken(DSocket sock, DUInt32 code, std::string strReason)
     {
         CString str;
         str.Format(L"OnBroken");
-        SendMessage(g_NotifyWnd, WM_LOG, (WPARAM)str.GetString(), 0);
+        SendMessage(g_NotifyWnd, WM_LOG, (WPARAM)NewStr(str), 0);
     }
 
     LRESULT OnUpdateUI(UINT /*uMsg*/, WPARAM wParam, LPARAM lParam, BOOL& /*bHandled*/)
@@ -167,10 +167,22 @@ public:
         return 0;
     }
 
+    WCHAR* NewStr(CString& str) {
+        WCHAR* poststr = new WCHAR[str.GetLength() + 1];
+        memcpy_s(poststr, str.GetLength()*2, str.GetString(), str.GetLength()*2);
+        poststr[str.GetLength()] = 0;
+        return poststr;
+    }
+
+    void DelStr(WCHAR* str) {
+        delete[] str;
+    }
+
     LRESULT OnLog(UINT /*uMsg*/, WPARAM wParam, LPARAM lParam, BOOL& /*bHandled*/)
     {
         CString strLog = (LPCWSTR)wParam;
         AppendLog((wchar_t*)strLog.GetString());
+        DelStr((WCHAR*)wParam);
         return 0;
     }
 
@@ -182,6 +194,7 @@ public:
         strLog += "\r\n";
         strOld += strLog;
         m_chat.SetWindowText(strOld);
+        m_chat.LineScroll(m_chat.GetLineCount());
     }
 
     LRESULT OnConnect(WORD /*wNotifyCode*/, WORD wID, HWND /*hWndCtl*/, BOOL& /*bHandled*/)

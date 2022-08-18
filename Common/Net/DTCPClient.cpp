@@ -137,6 +137,7 @@ DVoid DTCPClient::ConnLoop()
     inet_pton(AF_INET, pData->strIP, &addr.sin_addr);
     addr.sin_port = htons(pData->wPort);
 #endif
+    m_nState = CONN_STATE_CONNECTING;
     if (m_pConnSink)
     {
         m_pConnSink->OnConnecting(this, m_strRemoteIP, m_wRemotePort);
@@ -169,9 +170,13 @@ DBool DTCPClient::Connect(std::string ip, DUInt16 wPort)
 
     m_strRemoteIP = ip;
     m_wRemotePort = wPort;
-    m_nState = CONN_STATE_CONNECTING;
     std::thread connt = std::thread(ConnThread, this);
     m_connthread = connt.native_handle();
+#ifdef WIN32
+    SetThreadDescription(m_connthread, L"ConnThread");
+#else
+    pthread_setname_np(handle, "ConnThread");
+#endif
     connt.detach();
     return true;
 }
@@ -184,7 +189,13 @@ DVoid DTCPClient::DisConnect()
     Shutdown(SD_BOTH);
     Close();
 
-    ::WaitForSingleObject(m_connthread, INFINITE);
+    DWORD exitCode = 0;
+    int rc = GetExitCodeThread(m_connthread, &exitCode);
+    if (rc == 0 && exitCode == STILL_ACTIVE)
+    {
+        ::WaitForSingleObject(m_connthread, INFINITE);
+    }
+    //::CloseHandle((HANDLE)m_connthread);
 
     m_strRemoteIP.clear();
     m_wRemotePort = 0;
