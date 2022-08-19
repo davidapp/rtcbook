@@ -39,23 +39,3 @@ public:
 
     D_DISALLOW_ALL_DEFAULT(DUtil)
 };
-
-
-class DEvent
-{
-public:
-    static DVoid WaitEvent(DEvent& ev, DUInt32 timeinms);
-
-public:
-    DEvent();
-    ~DEvent();
-    DVoid Create(DCWStr wName, DBool bAuto = false);
-    DVoid Close();
-    DBool Set();
-    DBool Reset();
-    DBool Pulse();
-    operator DVoid* () { return handle; }
-
-public:
-    DVoid* handle;
-};
