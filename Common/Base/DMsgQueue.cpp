@@ -23,7 +23,7 @@ DVoid* DThreadForQueue(DVoid* pvParam)
         if (pq->m_queue.size() == 0)
         {
             pq->m_wait.Reset();
-            DEvent::WaitEvent(pq->m_wait, D_INFINITE);
+            DThread::WaitEvent(pq->m_wait, D_INFINITE);
         }
 
         pq->m_queueMutex.lock();
