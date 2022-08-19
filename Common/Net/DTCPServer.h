@@ -6,6 +6,8 @@
 #include <string>
 #include <vector>
 #include <mutex>
+#include <thread>
+#include <utility>
 
 class DTCPServer;
 
@@ -47,8 +49,5 @@ protected:
     DInt32  m_state;
     std::vector<DTCPSocket> m_vecClients;
     std::mutex m_clientsMutex;
-    DVoid* m_serverthread;
-
-private:
-    static DUInt32 ServerThread(DVoid* pThis);
+    std::shared_ptr<std::thread> m_serverthread;
 };

@@ -40,7 +40,6 @@ DVoid DSelectServer::ServerLoop()
 
         m_replyQueue = DMsgQueue::Create("SelectReply", 100);
         DMsgQueue::AddHandler(m_replyQueue, ReplyHandler);
-        m_serverthread = DMsgQueue::GetThreadHandle(m_replyQueue);
     }
     else {
         if (m_pListenSink) {
@@ -128,7 +127,6 @@ DVoid DSelectServer::ServerLoop()
 DVoid DSelectServer::Stop()
 {
     Close(); // Close ª·»√ select ∑µªÿ
-    ::WaitForSingleObject(m_serverthread, INFINITE);
     DMsgQueue::RemoveQueue(m_replyQueue);
 }
 

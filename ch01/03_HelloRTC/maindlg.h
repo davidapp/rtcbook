@@ -67,37 +67,37 @@ public:
         SendMessage(g_NotifyWnd, WM_LOG, (WPARAM)str.GetString(), 0);
     }
 
-    virtual DVoid OnPreSend(DTCPClient* sock, DBuffer buffer)
+    virtual DVoid OnPreSend(DSocket sock, DBuffer buffer)
     {
 
     }
 
-    virtual DVoid OnSendOK(DTCPClient* sock)
+    virtual DVoid OnSendOK(DSocket sock)
     {
 
     }
 
-    virtual DVoid OnSendError(DTCPClient* sock, DUInt32 code, std::string strReason)
+    virtual DVoid OnSendError(DSocket sock, DUInt32 code, std::string strReason)
     {
 
     }
 
-    virtual DVoid OnSendTimeout(DTCPClient* sock)
+    virtual DVoid OnSendTimeout(DSocket sock)
     {
 
     }
 
-    virtual DVoid OnRecvBuf(DTCPClient* sock, DBuffer buf)
+    virtual DVoid OnRecvBuf(DSocket sock, DBuffer buf)
     {
 
     }
 
-    virtual DVoid OnClose(DTCPClient* sock)
+    virtual DVoid OnClose(DSocket sock)
     {
 
     }
 
-    virtual DVoid OnBroken(DTCPClient* sock, DUInt32 code, std::string strReason)
+    virtual DVoid OnBroken(DSocket sock, DUInt32 code, std::string strReason)
     {
 
     }

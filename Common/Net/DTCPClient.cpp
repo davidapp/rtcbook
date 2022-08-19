@@ -156,7 +156,6 @@ DVoid DTCPClient::ConnLoop()
             m_pConnSink->OnConnectOK(this);
         }
     }
-
     m_connThread->detach();
 }
 

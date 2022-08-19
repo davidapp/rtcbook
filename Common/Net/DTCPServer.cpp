@@ -11,17 +11,8 @@ DBool DTCPServer::Start(DUInt16 wPort, DUInt16 backlog)
     m_clientsMutex.lock();
     m_vecClients.clear();
     m_clientsMutex.unlock();
-    std::thread listen(DTCPServer::ServerThread, this);
-    m_serverthread = listen.native_handle();
-    listen.detach();
+    m_serverthread.reset(new std::thread(&DTCPServer::ServerLoop, this));
     return true;
-}
-
-DUInt32 DTCPServer::ServerThread(DVoid* pThis)
-{
-    DTCPServer* pThisServer = (DTCPServer*)pThis;
-    pThisServer->ServerLoop();
-    return 0;
 }
 
 DVoid DTCPServer::ServerLoop()
