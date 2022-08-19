@@ -48,9 +48,6 @@
     <ClInclude Include="..\..\Common\Net\DTCP.h">
       <Filter>Common\Net</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Common\Base\DThread.h">
-      <Filter>Common\Base</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\Common\Base\DBuffer.cpp">
@@ -71,9 +68,6 @@
     </ClCompile>
     <ClCompile Include="..\..\Common\Net\DTCP.cpp">
       <Filter>Common\Net</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Common\Base\DThread.cpp">
-      <Filter>Common\Base</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

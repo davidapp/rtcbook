@@ -5,6 +5,7 @@
 #include "Net/DTCP.h"
 #include <string>
 #include <thread>
+#include <memory>
 
 class DTCPClient;
 
@@ -39,32 +40,33 @@ public:
     virtual ~DTCPClient();
     DVoid Init();
     DVoid UnInit();
+    DAtomInt32 m_nObjState;
+    DUInt32 GetState();
 
 public:
     // async connection methods
     DVoid SetConnSink(DTCPClientSink* pSink);
+    DTCPClientSink* m_pConnSink;
+
     DBool Connect(std::string strIP, DUInt16 wPort);
     DVoid DisConnect();
-    DUInt32 GetState();
-    static DVoid ConnThread(DVoid* pObj);
     DVoid ConnLoop();
-    DTCPClientSink* m_pConnSink;
     std::string m_strRemoteIP;
     DUInt16 m_wRemotePort;
-    DAtomInt32 m_nState;
-    DVoid* m_connthread;
+    std::shared_ptr<std::thread> m_connThread;
 
 public:
     // async data methods
     DVoid SetDataSink(DTCPDataSink* pSink);
-    DBool Send(DBuffer buf);
-    DBool StartRecv();
-    DVoid RecvLoop();
-    DVoid StopRecv();
     DTCPDataSink* m_pDataSink;
-    std::thread m_recvthread;
 
-public:
-    DHandle m_sendqueue;
+    DBool Send(DBuffer buf);
     DVoid AddSendReq(DTCPClient* sock, DBuffer buffer);
+    DHandle m_sendqueue;
+
+    // async recv
+    DBool StartRecv();
+    DVoid StopRecv();
+    DVoid RecvLoop();
+    std::shared_ptr<std::thread> m_recvthread;
 };

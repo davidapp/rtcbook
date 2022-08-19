@@ -209,15 +209,11 @@ DVoid DThread::WaitFinish(DVoid* handle, DUInt32 timeinms)
 #if defined(BUILD_FOR_WINDOWS)
     ::WaitForSingleObject(handle, INFINITE);
 #else
-    DThreadData* pNode = DThread::FindThread(tid);
-    if (pNode != nullptr)
-    {
 #if (defined(BUILD_FOR_IOS) && (BUILD_FOR_IOS==1)) || (defined(BUILD_FOR_MAC) && (BUILD_FOR_MAC==1))
-        pthread_join(pthread_from_mach_thread_np(tid), nullptr);
+    pthread_join(pthread_from_mach_thread_np(handle), nullptr);
 #else
-        pthread_join(tid, nullptr);
+    pthread_join(handle, nullptr);
 #endif
-    }
 #endif
 }
 
@@ -358,7 +354,9 @@ DVoid DMutex::TryLock()
 #if defined(BUILD_FOR_WINDOWS)
     if (handle)
     {
-        //TryLockMutex(handle);
+        if (::WaitForSingleObject(handle, 0) != WAIT_TIMEOUT) { // WAIT_OBJECT_0
+            ::WaitForSingleObject(handle, INFINITE);
+        }
     }
 #else
     if (handle)
@@ -475,7 +473,9 @@ DBool DEvent::Pulse()
 
 
 ///////////////////////////////////////////////////////////////////////////////
-// DSem
+// DSemaphore
+
+
 
 
 

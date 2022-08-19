@@ -2,10 +2,11 @@
 
 #include "DTypes.h"
 #include "Base/DBuffer.h"
-#include "Base/DThread.h"
+#include "Base/DUtil.h"
 #include <list>
 #include <mutex>
 #include <thread>
+#include <memory>
 
 typedef DVoid* (DX86_STDCALL* DMsgFunc)(DUInt32, DVoid*, DVoid*);
 
@@ -58,7 +59,7 @@ public:
     std::list<DQMsg> m_queue;
     std::list<DMsgFunc> m_msgfunc;
     std::mutex m_queueMutex;
-    std::thread m_t;
+    std::shared_ptr<std::thread> m_t;
     std::string m_name;
     DEvent m_wait;
     DUInt32 m_maxSize;

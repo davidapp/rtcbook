@@ -29,7 +29,7 @@ DTCPClient::DTCPClient()
     m_wRemotePort = 0;
     m_pConnSink = nullptr;
     m_pDataSink = nullptr;
-    m_nState = CONN_STATE_DISCONNECT;
+    m_nObjState = CONN_STATE_DISCONNECT;
 }
 
 DTCPClient::~DTCPClient()
@@ -39,7 +39,7 @@ DTCPClient::~DTCPClient()
     m_wRemotePort = 0;
     m_pConnSink = nullptr;
     m_pDataSink = nullptr;
-    m_nState = CONN_STATE_DISCONNECT;
+    m_nObjState = CONN_STATE_DISCONNECT;
 }
 
 DVoid* DX86_STDCALL SendHandler(DUInt32 msg, DVoid* para1, DVoid* para2)
@@ -98,18 +98,11 @@ DVoid DTCPClient::UnInit()
         Close();
     }
     DMsgQueue::RemoveQueue(m_sendqueue);
-    ::WaitForSingleObject(m_connthread, INFINITE);
 }
 
 DVoid DTCPClient::SetConnSink(DTCPClientSink* pSink)
 {
     m_pConnSink = pSink;
-}
-
-DVoid DTCPClient::ConnThread(DVoid* pObj)
-{
-    DTCPClient* pThis = (DTCPClient*)pObj;
-    pThis->ConnLoop();
 }
 
 DVoid DTCPClient::ConnLoop()
@@ -137,7 +130,7 @@ DVoid DTCPClient::ConnLoop()
     inet_pton(AF_INET, pData->strIP, &addr.sin_addr);
     addr.sin_port = htons(pData->wPort);
 #endif
-    m_nState = CONN_STATE_CONNECTING;
+    m_nObjState = CONN_STATE_CONNECTING;
     if (m_pConnSink)
     {
         m_pConnSink->OnConnecting(this, m_strRemoteIP, m_wRemotePort);
@@ -152,58 +145,43 @@ DVoid DTCPClient::ConnLoop()
         std::string strReason = DNet::GetLastNetErrorStr(errCode);
         if (m_pConnSink)
         {
-            m_nState = CONN_STATE_DISCONNECT;
+            m_nObjState = CONN_STATE_DISCONNECT;
             m_pConnSink->OnConnectError(this, errCode, strReason);
         }
-        return;
     }
-    if (m_pConnSink)
-    {
-        m_nState = CONN_STATE_CONNECTED;
-        m_pConnSink->OnConnectOK(this);
+    else {
+        if (m_pConnSink)
+        {
+            m_nObjState = CONN_STATE_CONNECTED;
+            m_pConnSink->OnConnectOK(this);
+        }
     }
+
+    m_connThread->detach();
 }
 
 DBool DTCPClient::Connect(std::string ip, DUInt16 wPort)
 {
-    if (m_nState != CONN_STATE_DISCONNECT) return false;
+    if (m_nObjState != CONN_STATE_DISCONNECT) return false;
 
     m_strRemoteIP = ip;
     m_wRemotePort = wPort;
-    std::thread connt = std::thread(ConnThread, this);
-    m_connthread = connt.native_handle();
-#ifdef WIN32
-    SetThreadDescription(m_connthread, L"ConnThread");
-#else
-    pthread_setname_np(handle, "ConnThread");
-#endif
-    connt.detach();
+    m_connThread.reset(new std::thread(&DTCPClient::ConnLoop, this));
     return true;
 }
 
 DVoid DTCPClient::DisConnect()
 {
-    if (m_nState == CONN_STATE_DISCONNECT) return;
+    if (m_nObjState == CONN_STATE_DISCONNECT) return;
 
-    m_nState = CONN_STATE_DISCONNECT;
+    m_nObjState = CONN_STATE_DISCONNECT;
     Shutdown(SD_BOTH);
     Close();
-
-    DWORD exitCode = 0;
-    int rc = GetExitCodeThread(m_connthread, &exitCode);
-    if (rc == 0 && exitCode == STILL_ACTIVE)
-    {
-        ::WaitForSingleObject(m_connthread, INFINITE);
-    }
-    //::CloseHandle((HANDLE)m_connthread);
-
-    m_strRemoteIP.clear();
-    m_wRemotePort = 0;
 }
 
 DUInt32 DTCPClient::GetState()
 {
-    return m_nState;
+    return m_nObjState;
 }
 
 DVoid DTCPClient::SetDataSink(DTCPDataSink* pSink)
@@ -213,20 +191,10 @@ DVoid DTCPClient::SetDataSink(DTCPDataSink* pSink)
 
 DBool DTCPClient::Send(DBuffer buf)
 {
-    if (m_nState != CONN_STATE_CONNECTED) return false;
+    if (m_nObjState != CONN_STATE_CONNECTED) return false;
 
     AddSendReq(this, buf);
     return true;
-}
-
-DVoid* ReadThread(DVoid* pvParam)
-{
-    DTCPClient* pThis = (DTCPClient*)pvParam;
-    if (pThis)
-    {
-        pThis->RecvLoop();
-    }
-    return 0;
 }
 
 DVoid DTCPClient::RecvLoop()
@@ -272,7 +240,7 @@ DBool DTCPClient::StartRecv()
 {
     if (!IsValid()) return false;
 
-    m_recvthread = std::thread(ReadThread, this);
+    m_recvthread.reset(new std::thread(&DTCPClient::RecvLoop, this));
     return true;
 }
 
@@ -281,7 +249,7 @@ DVoid DTCPClient::StopRecv()
     if (!IsValid()) return;
     
     Shutdown(SD_RECEIVE);
-    m_recvthread.join();
+    m_recvthread->join();
 }
 
 DVoid DTCPClient::AddSendReq(DTCPClient* sock, DBuffer buffer)

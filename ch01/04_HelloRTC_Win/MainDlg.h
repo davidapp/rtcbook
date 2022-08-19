@@ -230,9 +230,9 @@ public:
 
     LRESULT OnCancel(WORD /*wNotifyCode*/, WORD wID, HWND /*hWndCtl*/, BOOL& /*bHandled*/)
     {
+        m_sock.UnInit();
         DestroyWindow();
         ::PostQuitMessage(0);
-        m_sock.UnInit();
         DNet::UnInit();
         return 0;
     }

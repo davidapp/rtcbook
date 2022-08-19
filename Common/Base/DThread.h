@@ -71,11 +71,11 @@ public:
 
 
 
-class DSem
+class DSemaphore
 {
 public:
-    DSem();
-    ~DSem();
+    DSemaphore();
+    ~DSemaphore();
 
 public:
     DVoid* handle;

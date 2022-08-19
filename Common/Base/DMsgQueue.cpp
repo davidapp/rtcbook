@@ -23,7 +23,7 @@ DVoid* DThreadForQueue(DVoid* pvParam)
         if (pq->m_queue.size() == 0)
         {
             pq->m_wait.Reset();
-            DThread::WaitEvent(pq->m_wait, D_INFINITE);
+            DEvent::WaitEvent(pq->m_wait, D_INFINITE);
         }
 
         pq->m_queueMutex.lock();
@@ -71,7 +71,7 @@ DHandle DMsgQueue::Create(DCStr queueName, DUInt32 maxSize)
     pq->m_msgfunc.clear();
     pq->m_wait.Create(NULL);
     pq->m_wait.Reset();
-    pq->m_t = std::thread(DThreadForQueue, (DVoid*)(g_qid));
+    pq->m_t.reset(new std::thread(DThreadForQueue, (DVoid*)(g_qid)));
     g_id2q.insert(std::pair<DHandle, DMsgQueue*>(g_qid, pq));
     return g_qid++;
 }
@@ -98,7 +98,7 @@ DVoid DMsgQueue::RemoveQueue(DHandle qid)
     }
     
     DMsgQueue* pq = (DMsgQueue*)pNodeQueue->second;
-    pq->m_t.join();
+    pq->m_t->join();
 
     pq->m_queue.clear();
     pq->m_msgfunc.clear();
@@ -148,7 +148,7 @@ DBool DMsgQueue::IsInQueue(DHandle qid)
     DMsgQueue* pq = (DMsgQueue*)pNodeQueue->second;
     if (pq == NULL) return false;
 
-    if (pq->m_t.get_id() == std::this_thread::get_id())
+    if (pq->m_t->get_id() == std::this_thread::get_id())
     {
         return true;
     }
@@ -160,7 +160,7 @@ DHandle DMsgQueue::GetCurQueueID()
 {
     for (auto pNodeQueue = g_id2q.begin(); pNodeQueue != g_id2q.end(); pNodeQueue++) {
         DMsgQueue* pq = (DMsgQueue*)pNodeQueue->second;
-        if (pq->m_t.get_id() == std::this_thread::get_id())
+        if (pq->m_t->get_id() == std::this_thread::get_id())
         {
             return pNodeQueue->first;
         }
@@ -172,7 +172,7 @@ DCStr DMsgQueue::GetCurQueueName()
 {
     for (auto pNodeQueue = g_id2q.begin(); pNodeQueue != g_id2q.end(); pNodeQueue++) {
         DMsgQueue* pq = (DMsgQueue*)pNodeQueue->second;
-        if (pq->m_t.get_id() == std::this_thread::get_id())
+        if (pq->m_t->get_id() == std::this_thread::get_id())
         {
             return pq->m_name.c_str();
         }
@@ -193,7 +193,7 @@ DVoid* DMsgQueue::GetThreadHandle(DHandle qid)
     DMsgQueue* pq = (DMsgQueue*)pNodeQueue->second;
     if (pq == NULL) return NULL;
 
-    return pq->m_t.native_handle();
+    return pq->m_t->native_handle();
 }
 
 DVoid DMsgQueue::AddHandler(DHandle qid, DMsgFunc handler)
