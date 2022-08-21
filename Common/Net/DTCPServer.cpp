@@ -14,6 +14,11 @@ DBool DTCPServer::Start(DUInt16 wPort, DUInt16 backlog)
     return true;
 }
 
+DTCPServer::~DTCPServer()
+{
+
+}
+
 DVoid DTCPServer::ServerLoop()
 {
 

@@ -2,6 +2,7 @@
 
 #include "DTypes.h"
 #include "Base/DBuffer.h"
+#include "Base/DUtil.h"
 #include "Net/DTCP.h"
 #include <string>
 #include <thread>
@@ -41,7 +42,7 @@ public:
     DVoid Init();
     DVoid UnInit();
     DAtomInt32 m_nObjState;
-    DUInt32 GetState();
+    inline DUInt32 GetState() { return m_nObjState; }
 
 public:
     // async connection methods
@@ -54,6 +55,7 @@ public:
     std::string m_strRemoteIP;
     DUInt16 m_wRemotePort;
     std::shared_ptr<std::thread> m_connThread;
+    DSPinLock m_wait;
 
 public:
     // async data methods

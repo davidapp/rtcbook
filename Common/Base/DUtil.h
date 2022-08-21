@@ -1,6 +1,7 @@
 ﻿#pragma once
 
 #include "DTypes.h"
+#include "DAtomic.h"
 #include <string>
 
 class DUtil
@@ -35,7 +36,8 @@ public:
     static std::string Int64ToStr(DInt64 c, DBool bLE = true);
     static std::string AddrToStr(void* p);
     static std::string BuffToStr(void* p, DUInt32 len);
-
+    static DInt32 StrToInt32(std::string str);
+    static DInt32 Str16ToInt32(std::wstring wstr);
 
     D_DISALLOW_ALL_DEFAULT(DUtil)
 };
@@ -55,4 +57,34 @@ public:
 
 public:
     DVoid* handle;
+};
+
+
+class DSPinLock
+{
+public:
+    DSPinLock() {
+        m_start = 0;
+        m_flag = 0;
+    }
+    inline DVoid Reset() { m_flag = 0; }
+    inline DVoid Signal() { m_flag = 1; }
+    DUInt32 Wait(DUInt32 need_ms) {
+        m_start = GetTickCount();
+        while (m_flag != 1) {
+            m_now = GetTickCount();
+            if (m_now - m_start < need_ms)
+            ::SwitchToThread();
+        }
+        if (m_now - m_start < need_ms) {
+            return m_now - m_start + 1;
+        }
+        else {
+            return 0;
+        }
+    }
+private:
+    DUInt32 m_start;
+    DUInt32 m_now;
+    DAtomInt32 m_flag;
 };

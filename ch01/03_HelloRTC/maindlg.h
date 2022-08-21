@@ -49,7 +49,7 @@ public:
     virtual DVoid OnNewConn(DTCPServer* sock, DTCPSocket newsock)
     {
         CString str;
-        str.Format(L"A new connection is coming");
+        str.Format(L"New connection is coming from %S", newsock.GetName().c_str());
         ::PostMessage(g_NotifyWnd, WM_LOG, (WPARAM)NewStr(str), 0);
     }
 
@@ -110,14 +110,20 @@ public:
     virtual DVoid OnClose(DSocket sock)
     {
         CString str;
-        str.Format(L"OnClose");
+        DTCPSocket client;
+        client.Attach(sock);
+        std::string clientname = client.GetName();
+        str.Format(L"OnClose from %S", clientname.c_str());
         ::PostMessage(g_NotifyWnd, WM_LOG, (WPARAM)NewStr(str), 0);
     }
 
     virtual DVoid OnBroken(DSocket sock, DUInt32 code, std::string strReason)
     {
         CString str;
-        str.Format(L"OnBroken");
+        DTCPSocket client;
+        client.Attach(sock);
+        std::string clientname = client.GetName();
+        str.Format(L"OnBroken from %S", clientname.c_str());
         ::PostMessage(g_NotifyWnd, WM_LOG, (WPARAM)NewStr(str), 0);
     }
 
@@ -221,6 +227,7 @@ public:
         strLog += "\r\n";
         strOld += strLog;
         m_log.SetWindowText(strOld);
+        m_log.LineScroll(m_log.GetLineCount());
     }
 
     LRESULT OnCancel(WORD /*wNotifyCode*/, WORD wID, HWND /*hWndCtl*/, BOOL& /*bHandled*/)

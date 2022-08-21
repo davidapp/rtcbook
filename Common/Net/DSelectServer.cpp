@@ -99,6 +99,7 @@ DVoid DSelectServer::ServerLoop()
                 DClientData cdata;
                 cdata.m_sock = client.m_sock;
                 cdata.m_name = client.GetName();
+                cdata.m_bQuit = false;
                 m_vecClients.push_back(cdata);
                 if (m_pListenSink) {
                     m_pListenSink->OnNewConn(this, client);
@@ -110,13 +111,45 @@ DVoid DSelectServer::ServerLoop()
                     {
                         DTCPSocket client;
                         client.Attach((*item).m_sock);
-                        DUInt32 res;
+                        DInt32 res;
                         DBuffer buf = client.SyncRecv(4, &res);
-                        DReadBuffer rb(buf);
-                        DUInt32 bufLength = rb.ReadUInt32(true);
-                        DBuffer bufContent = client.SyncRecv(bufLength, &res);
-                        Process(bufContent, (*item).m_sock);
+                        if (res == 0) {
+                            // 客户端主动退出
+                            if (m_pDataSink) {
+                                m_pDataSink->OnClose((*item).m_sock);
+                            }
+                            // TODO 广播一下退出消息
+                            (*item).m_bQuit = true;
+                            client.Shutdown(SD_BOTH);
+                            client.Close();
+                        }
+                        else if (res > 0) {
+                            DReadBuffer rb(buf);
+                            DUInt32 bufLength = rb.ReadUInt32(true);
+                            DBuffer bufContent = client.SyncRecv(bufLength, &res);
+                            if (res > 0) {
+                                Process(bufContent, (*item).m_sock);
+                            }
+                        }
+                        else if (res < 0) {
+                            // 客户端出了问题
+                            if (m_pDataSink) {
+                                DUInt32 errCode = DNet::GetLastNetError();
+                                std::string strReason = DNet::GetLastNetErrorStr(errCode);
+                                m_pDataSink->OnBroken((*item).m_sock, errCode, strReason);
+                            }
+                            // TODO 广播一下异常消息
+                            (*item).m_bQuit = true;
+                            client.Close();
+                        }
                         client.Detach();
+                    }
+                }
+                int last = m_vecClients.size() - 1;
+                for (int i = last; i >= 0; i--)
+                {
+                    if (m_vecClients[i].m_bQuit) {
+                        m_vecClients.erase(std::begin(m_vecClients) + i);
                     }
                 }
             }

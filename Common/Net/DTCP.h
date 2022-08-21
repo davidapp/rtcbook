@@ -56,7 +56,7 @@ public:
     // block method wrappers
     DBool SyncConnect(DCStr strIP, DUInt16 wPort);
     DBool SyncSend(DBuffer buf);
-    DBuffer SyncRecv(DUInt32 size, DUInt32* res);
+    DBuffer SyncRecv(DUInt32 size, DInt32* res);
 
 public:
     DSocket m_sock;

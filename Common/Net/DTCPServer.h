@@ -32,12 +32,14 @@ public:
 typedef struct tagDClientData {
     DSocket m_sock;
     std::string m_name;
+    DBool m_bQuit;
 } DClientData;
 
 class DTCPServer : public DTCPSocket
 {
 public:
     DBool Start(DUInt16 wPort, DUInt16 backlog = 0);
+    ~DTCPServer();
 
     virtual DVoid ServerLoop();
     virtual DVoid Stop();

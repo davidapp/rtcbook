@@ -2,6 +2,7 @@
 #include "Base/DUtil.h"
 #include "Base/DMsgQueue.h"
 #include "Net/DNet.h"
+#include <assert.h>
 
 #if defined(BUILD_FOR_WINDOWS)
 #include <winsock2.h>
@@ -142,22 +143,28 @@ DVoid DTCPClient::ConnLoop()
 #endif
     if (ret == DSockError)
     {
+        m_nObjState = CONN_STATE_DISCONNECT;
+
         DUInt32 errCode = DNet::GetLastNetError();
         std::string strReason = DNet::GetLastNetErrorStr(errCode);
         if (m_pConnSink)
         {
-            m_nObjState = CONN_STATE_DISCONNECT;
             m_pConnSink->OnConnectError(this, errCode, strReason);
         }
     }
     else {
+        m_nObjState = CONN_STATE_CONNECTED;
+
         if (m_pConnSink)
         {
-            m_nObjState = CONN_STATE_CONNECTED;
             m_pConnSink->OnConnectOK(this);
         }
+
+        // 启动 Recv 线程
+        StartRecv();
     }
     m_connThread->detach();
+    m_wait.Signal();
 }
 
 DBool DTCPClient::Connect(std::string ip, DUInt16 wPort)
@@ -174,14 +181,26 @@ DVoid DTCPClient::DisConnect()
 {
     if (m_nObjState == CONN_STATE_DISCONNECT) return;
 
-    m_nObjState = CONN_STATE_DISCONNECT;
-    Shutdown(SD_BOTH);
-    Close();
-}
-
-DUInt32 DTCPClient::GetState()
-{
-    return m_nObjState;
+    if (m_nObjState == CONN_STATE_CONNECTING) {
+        m_nObjState = CONN_STATE_DISCONNECT;
+        m_wait.Reset();
+        Close();
+        DUInt32 res = m_wait.Wait(200);
+        assert(res > 0);
+    }
+    else if (m_nObjState == CONN_STATE_CONNECTED) {
+        m_nObjState = CONN_STATE_DISCONNECT;
+        m_wait.Reset();
+        Shutdown(SD_SEND); // 优雅的关闭
+        DUInt32 res = m_wait.Wait(200);
+        if (res == 0) {
+            // 如果 Server 长时间不响应，我们也不傻等了，线程必须退出
+            m_wait.Reset();
+            Close();
+            res = m_wait.Wait(200);
+            assert(res > 0);
+        }
+    }
 }
 
 DVoid DTCPClient::SetDataSink(DTCPDataSink* pSink)
@@ -206,6 +225,7 @@ DVoid DTCPClient::RecvLoop()
         ret = (DInt32)recv(m_sock, (char*)tempbuf, 4096, 0); //MSG_DONTROUTE MSG_OOB
         if (ret == DSockError)
         {
+            m_nObjState = CONN_STATE_DISCONNECT;
             DUInt32 errCode = DNet::GetLastNetError();
             std::string strReasonA = DNet::GetLastNetErrorStr(errCode);
             if (m_pDataSink)
@@ -216,6 +236,7 @@ DVoid DTCPClient::RecvLoop()
         }
         else if (ret == 0)
         {
+            m_nObjState = CONN_STATE_DISCONNECT;
             if (m_pDataSink)
             {
                 m_pDataSink->OnClose(m_sock);
@@ -230,9 +251,10 @@ DVoid DTCPClient::RecvLoop()
             }
         }
     }
-    if (ret == 0) {
-        DTCPSocket sock(m_sock);
-        sock.Close();
+    if (ret <= 0) {
+        Close();
+        m_recvthread->detach();
+        m_wait.Signal();
     }
 }
 

@@ -293,6 +293,16 @@ std::string DUtil::BuffToStr(void* p, DUInt32 len)
     return ret;
 }
 
+DInt32 DUtil::StrToInt32(std::string str)
+{
+    return atoi(str.c_str());
+}
+
+DInt32 DUtil::Str16ToInt32(std::wstring wstr)
+{
+    return atoi(ws2s(wstr).c_str());
+}
+
 
 ///////////////////////////////////////////////////////////////////////////////
 // DEvent

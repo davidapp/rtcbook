@@ -108,7 +108,7 @@ std::string DTCPSocket::GetName()
     inet_ntop(AF_INET, &sa.sin_addr.S_un.S_addr, ip, 100);
     std::string ret = ip;
     ret += ":";
-    _itoa(sa.sin_port, port, 10);
+    _itoa_s(sa.sin_port, port, 10);
     ret += port;
     return ret;
 }
@@ -199,7 +199,7 @@ DBool DTCPSocket::SyncSend(DBuffer buf)
     return true;
 }
 
-DBuffer DTCPSocket::SyncRecv(DUInt32 size, DUInt32* res)
+DBuffer DTCPSocket::SyncRecv(DUInt32 size, DInt32* res)
 {
     DByte* pBuf = (DByte*)malloc(size);
     if (pBuf == nullptr) {
@@ -209,9 +209,10 @@ DBuffer DTCPSocket::SyncRecv(DUInt32 size, DUInt32* res)
     memset(pBuf, 0, size);
     DChar* pStart = (DChar*)pBuf;
     DUInt32 read = 0;
+    int ret = 0;
     while (read < size)
     {
-        int ret = (int)recv(m_sock, pStart, size - read, 0);//MSG_DONTROUTE MSG_OOB
+        ret = (int)recv(m_sock, pStart, size - read, 0);//MSG_DONTROUTE MSG_OOB
         if (ret == DSockError)
         {
             DUInt32 errCode = DNet::GetLastNetError();
@@ -225,6 +226,7 @@ DBuffer DTCPSocket::SyncRecv(DUInt32 size, DUInt32* res)
         read += ret;
         pStart += ret;
     }
+    *res = ret;
 
     DBuffer bufRet((DByte*)pBuf, read);
     free(pBuf);
