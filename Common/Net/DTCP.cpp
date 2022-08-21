@@ -4,6 +4,7 @@
 
 #if defined(BUILD_FOR_WINDOWS)
 #include <winsock2.h>
+#include <Ws2tcpip.h>
 #else
 #include <sys/types.h>
 #include <sys/socket.h>
@@ -95,6 +96,21 @@ DBool DTCPSocket::operator==(const DTCPSocket sock)
 DBool DTCPSocket::IsValid()
 {
     return m_sock != DBadSocket;
+}
+
+std::string DTCPSocket::GetName()
+{
+    sockaddr_in sa = {0};
+    int sa_size = sizeof(sa);
+    getpeername(m_sock, (sockaddr*)&sa, &sa_size);
+    char ip[100] = { 0 };
+    char port[10] = { 0 };
+    inet_ntop(AF_INET, &sa.sin_addr.S_un.S_addr, ip, 100);
+    std::string ret = ip;
+    ret += ":";
+    _itoa(sa.sin_port, port, 10);
+    ret += port;
+    return ret;
 }
 
 DBool DTCPSocket::Bind(DUInt16 port)

@@ -44,6 +44,7 @@ public:
     DVoid Renew();
     DBool operator==(const DTCPSocket sock);
     DBool IsValid();
+    std::string GetName();
 
 public:
     DBool Bind(DUInt16 port);

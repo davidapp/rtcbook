@@ -102,14 +102,14 @@ public:
     virtual DVoid OnSendOK(DSocket sock)
     {
         CString str;
-        str.Format(L"OnOnSendOK");
+        str.Format(L"OnSendOK");
         ::PostMessage(g_NotifyWnd, WM_LOG, (WPARAM)NewStr(str), 0);
     }
 
     virtual DVoid OnSendError(DSocket sock, DUInt32 code, std::string strReason)
     {
         CString str;
-        str.Format(L"Connect Error.code:%d reason:%S", code, strReason.c_str());
+        str.Format(L"OnSendError code:%d reason:%S", code, strReason.c_str());
         SendMessage(g_NotifyWnd, WM_LOG, (WPARAM)NewStr(str), 0);
     }
 
@@ -217,15 +217,24 @@ public:
         if (inputlen != 0) {
             m_sendText = strText;
             m_input.SetWindowText(L"");
-            DGrowBuffer gb;
-            gb.AddUInt32(inputlen * 2 + 5, true);
-            gb.AddUInt8(1); // cmd
-            std::wstring wstr(m_sendText);
-            gb.AddString(wstr);
-            DBuffer bufSend = gb.Finish();
-            m_sock.Send(bufSend);
+            SendText();
         }
         return 0;
+    }
+
+    void SendText() {
+        DGrowBuffer gb;
+        DUInt32 inputlen = m_sendText.GetLength();
+        gb.AddUInt32(1 + 4 + inputlen * 2, true);
+        gb.AddUInt8(1); // cmd
+        std::wstring wstr(m_sendText);
+        gb.AddString(wstr);
+        DBuffer bufSend = gb.Finish();
+        m_sock.Send(bufSend);
+    }
+
+    void SendName() {
+
     }
 
     LRESULT OnCancel(WORD /*wNotifyCode*/, WORD wID, HWND /*hWndCtl*/, BOOL& /*bHandled*/)

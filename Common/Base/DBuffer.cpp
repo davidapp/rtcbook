@@ -1028,65 +1028,56 @@ DDouble DReadBuffer::ReadDouble()
 }
 
 std::string DReadBuffer::ReadStringA()
-{/*
+{
     DUInt32 strLen = ReadUInt32();
     if (strLen == 0)
     {
-        return DStringA();
+        return std::string();
     }
     DBuffer b = m_buf.GetSub(m_curPos, m_curPos + strLen);
-    DStringA strA((DChar*)b.GetBuf(), (DUInt32)b.GetSize());
+    std::string strA((DChar*)b.GetBuf(), (DUInt32)b.GetSize());
     m_curPos += strLen;
-    return strA;*/
-    return std::string();
+    return strA;
 }
 
 std::string DReadBuffer::ReadFixStringA(int nCount)
 {
-    /*
     if (m_curPos + nCount > m_buf.GetSize())
     {
-        return DStringA();
+        return std::string();
     }
 
     DBuffer b = m_buf.GetSub(m_curPos, m_curPos + nCount);
     m_curPos += nCount;
-    DStringA strA((DChar*)b.GetBuf(), b.GetSize());
+    std::string strA((DChar*)b.GetBuf(), b.GetSize());
     return strA;
-    */
-    return std::string();
 }
 
 std::wstring DReadBuffer::ReadString()
 {
-    /*
     DUInt32 strLen = ReadUInt32();
     if (strLen == 0)
     {
-        return DString();
+        return std::wstring();
     }
+
     DBuffer b = m_buf.GetSub(m_curPos, m_curPos + strLen);
-    DString str((DWChar*)b.GetBuf(), (DUInt32)b.GetSize() / 2);
+    std::wstring str((DWChar*)b.GetBuf(), (DUInt32)b.GetSize() / 2);
     m_curPos += strLen;
     return str;
-    */
-    return std::wstring();
 }
 
 std::wstring DReadBuffer::ReadFixString(int nWCharCount)
 {
-    /*
     if (m_curPos + nWCharCount * 2 > m_buf.GetSize())
     {
-        return DString();
+        return std::wstring();
     }
 
     DBuffer b = m_buf.GetSub(m_curPos, m_curPos + nWCharCount * 2);
     m_curPos += nWCharCount * 2;
-    DString str((DWChar*)b.GetBuf(), b.GetSize());
+    std::wstring str((DWChar*)b.GetBuf(), b.GetSize());
     return str;
-    */
-    return std::wstring();
 }
 
 DBuffer DReadBuffer::ReadBuffer()

@@ -27,79 +27,98 @@ public:
     {
         CString str;
         str.Format(L"Listening at port:%d", wPort);
-        SendMessage(g_NotifyWnd, WM_LOG, (WPARAM)str.GetString(), 0);
+        ::PostMessage(g_NotifyWnd, WM_LOG, (WPARAM)NewStr(str), 0);
         g_serverState = 1;
-        SendMessage(g_NotifyWnd, WM_UPDATEUI, 0, 0);
+        ::PostMessage(g_NotifyWnd, WM_UPDATEUI, 0, 0);
     }
 
     virtual DVoid OnListenOK(DTCPServer* sock, DUInt16 wPort)
     {
         CString str;
         str.Format(L"Listen OK at port:%d", wPort);
-        SendMessage(g_NotifyWnd, WM_LOG, (WPARAM)str.GetString(), 0);
+        ::PostMessage(g_NotifyWnd, WM_LOG, (WPARAM)NewStr(str), 0);
     }
 
     virtual DVoid OnListenError(DTCPServer* sock, DUInt32 code, std::string strReason)
     {
         CString str;
         str.Format(L"Listen Error code:%d reason:%S", code, strReason.c_str());
-        SendMessage(g_NotifyWnd, WM_LOG, (WPARAM)str.GetString(), 0);
+        ::PostMessage(g_NotifyWnd, WM_LOG, (WPARAM)NewStr(str), 0);
     }
 
     virtual DVoid OnNewConn(DTCPServer* sock, DTCPSocket newsock)
     {
         CString str;
         str.Format(L"A new connection is coming");
-        SendMessage(g_NotifyWnd, WM_LOG, (WPARAM)str.GetString(), 0);
+        ::PostMessage(g_NotifyWnd, WM_LOG, (WPARAM)NewStr(str), 0);
     }
 
     virtual DVoid OnError(DTCPServer* sock, DUInt32 code, std::string strReason)
     {
         CString str;
         str.Format(L"Server Error code:%d reason:%S", code, strReason.c_str());
-        SendMessage(g_NotifyWnd, WM_LOG, (WPARAM)str.GetString(), 0);
+        ::PostMessage(g_NotifyWnd, WM_LOG, (WPARAM)NewStr(str), 0);
     }
 
     virtual DVoid OnStop(DTCPServer* sock)
     {
         CString str;
         str.Format(L"Server Stop");
-        SendMessage(g_NotifyWnd, WM_LOG, (WPARAM)str.GetString(), 0);
+        ::PostMessage(g_NotifyWnd, WM_LOG, (WPARAM)NewStr(str), 0);
     }
 
     virtual DVoid OnPreSend(DSocket sock, DBuffer buffer)
     {
-
+        CString str;
+        str.Format(L"OnPreSend");
+        ::PostMessage(g_NotifyWnd, WM_LOG, (WPARAM)NewStr(str), 0);
     }
 
     virtual DVoid OnSendOK(DSocket sock)
     {
-
+        CString str;
+        str.Format(L"OnSendOK");
+        ::PostMessage(g_NotifyWnd, WM_LOG, (WPARAM)NewStr(str), 0);
     }
 
     virtual DVoid OnSendError(DSocket sock, DUInt32 code, std::string strReason)
     {
-
+        CString str;
+        str.Format(L"OnSendError");
+        ::PostMessage(g_NotifyWnd, WM_LOG, (WPARAM)NewStr(str), 0);
     }
 
     virtual DVoid OnSendTimeout(DSocket sock)
     {
-
+        CString str;
+        str.Format(L"OnSendTimeout");
+        ::PostMessage(g_NotifyWnd, WM_LOG, (WPARAM)NewStr(str), 0);
     }
 
     virtual DVoid OnRecvBuf(DSocket sock, DBuffer buf)
     {
-
+        CString str;
+        DTCPSocket client;
+        client.Attach(sock);
+        std::string clientname = client.GetName();
+        std::string clientdata = buf.ToHexString();
+        str.Format(L"OnRecvBuf from %S : %S", clientname.c_str(), clientdata.c_str());
+        ::PostMessage(g_NotifyWnd, WM_LOG, (WPARAM)NewStr(str), 0);
+        client.Detach();
     }
 
     virtual DVoid OnClose(DSocket sock)
     {
-
+        CString str;
+        str.Format(L"OnClose");
+        ::PostMessage(g_NotifyWnd, WM_LOG, (WPARAM)NewStr(str), 0);
     }
 
     virtual DVoid OnBroken(DSocket sock, DUInt32 code, std::string strReason)
     {
-
+        CString str;
+        str.Format(L"OnBroken");
+        ::PostMessage(g_NotifyWnd, WM_LOG, (WPARAM)NewStr(str), 0);
     }
 
 
@@ -148,7 +167,19 @@ public:
     {
         CString strLog = (LPCWSTR)wParam;
         AppendLog((wchar_t*)strLog.GetString());
+        DelStr((WCHAR*)wParam);
         return 0;
+    }
+
+    WCHAR* NewStr(CString& str) {
+        WCHAR* poststr = new WCHAR[str.GetLength() + 1];
+        memcpy_s(poststr, str.GetLength() * 2, str.GetString(), str.GetLength() * 2);
+        poststr[str.GetLength()] = 0;
+        return poststr;
+    }
+
+    void DelStr(WCHAR* str) {
+        delete[] str;
     }
 
     LRESULT OnStartServer(WORD /*wNotifyCode*/, WORD wID, HWND /*hWndCtl*/, BOOL& /*bHandled*/)

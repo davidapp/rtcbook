@@ -6,6 +6,10 @@
 #include <mutex>
 #include <vector>
 
+#define SERVER_REPLY_MSG_INIT 1
+#define SERVER_REPLY_MSG_RECV 2
+
+
 DVoid* DX86_STDCALL ReplyHandler(DUInt32 msg, DVoid* para1, DVoid* para2);
 
 DVoid DSelectServer::ServerLoop()
@@ -92,7 +96,10 @@ DVoid DSelectServer::ServerLoop()
                     break;
                 }
                 DTCPSocket client = Accept();
-                m_vecClients.push_back(client);
+                DClientData cdata;
+                cdata.m_sock = client.m_sock;
+                cdata.m_name = client.GetName();
+                m_vecClients.push_back(cdata);
                 if (m_pListenSink) {
                     m_pListenSink->OnNewConn(this, client);
                 }
@@ -108,8 +115,7 @@ DVoid DSelectServer::ServerLoop()
                         DReadBuffer rb(buf);
                         DUInt32 bufLength = rb.ReadUInt32(true);
                         DBuffer bufContent = client.SyncRecv(bufLength, &res);
-                        DMsgQueue::PostQueueMsg(m_replyQueue, 1, bufContent.GetBuf(), (DVoid*)(*item).m_sock);
-                        bufContent.Detach();
+                        Process(bufContent, (*item).m_sock);
                         client.Detach();
                     }
                 }
@@ -124,6 +130,29 @@ DVoid DSelectServer::ServerLoop()
     }
 }
 
+// 从 client 收到 buf 的处理
+DVoid DSelectServer::Process(DBuffer buf, DSocket client)
+{
+    if (m_pDataSink) {
+        m_pDataSink->OnRecvBuf(client, buf);
+    }
+
+    DReadBuffer rbContent(buf);
+    DUInt8 cmd = rbContent.ReadUInt8();
+    // 看一下命令字
+    if (cmd == 1) {
+        std::wstring wstr = rbContent.ReadString();
+        // 给房间内所有其他 socket 发送一条消息
+
+
+        //DMsgQueue::PostQueueMsg(m_replyQueue, SERVER_REPLY_MSG_RECV, buf, (DVoid*)this);
+    }
+    else if (cmd == 2) {
+
+    }
+}
+
+
 DVoid DSelectServer::Stop()
 {
     Close(); // Close 会让 select 返回
@@ -132,14 +161,6 @@ DVoid DSelectServer::Stop()
 
 DVoid* DX86_STDCALL ReplyHandler(DUInt32 msg, DVoid* para1, DVoid* para2)
 {
-    DBuffer bufRecv;
-    bufRecv.Attach((DByte*)para1);
-    DReadBuffer rb(bufRecv);
 
-    DTCPSocket client;
-    client.Attach((DSocket)para2);
-    if (msg == 1) {
-
-    }
     return nullptr;
 }

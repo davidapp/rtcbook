@@ -136,10 +136,11 @@ DVoid DTCPClient::ConnLoop()
         m_pConnSink->OnConnecting(this, m_strRemoteIP, m_wRemotePort);
     }
 #if defined(BUILD_FOR_WINDOWS)
-    if (connect(m_sock, (SOCKADDR*)&addr, sizeof(SOCKADDR_IN)) == SOCKET_ERROR)
+    int ret = connect(m_sock, (SOCKADDR*)&addr, sizeof(SOCKADDR_IN));
 #else
-    if (connect(m_sock, (sockaddr*)&addr, sizeof(sockaddr_in)) == DSockError)
+    int ret = connect(m_sock, (sockaddr*)&addr, sizeof(sockaddr_in));
 #endif
+    if (ret == DSockError)
     {
         DUInt32 errCode = DNet::GetLastNetError();
         std::string strReason = DNet::GetLastNetErrorStr(errCode);

@@ -12,6 +12,8 @@ public:
     virtual DVoid ServerLoop();
     virtual DVoid Stop();
 
+    DVoid Process(DBuffer buf, DSocket client);
+
 private:
     DUInt32 m_replyQueue;
 };
