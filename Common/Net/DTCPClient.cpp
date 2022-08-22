@@ -3,6 +3,7 @@
 #include "Base/DMsgQueue.h"
 #include "Net/DNet.h"
 #include <assert.h>
+#include <memory>
 
 #if defined(BUILD_FOR_WINDOWS)
 #include <winsock2.h>
@@ -51,11 +52,13 @@ DVoid* DX86_STDCALL WorkHandler(DUInt32 msg, DVoid* para1, DVoid* para2)
     if (msg == DM_NET_SEND)
     {
         DSendData* pData = (DSendData*)para1;
+        std::shared_ptr<DSendData> pSendData(pData); // avoid delete leaks
         DTCPClient* sock = (DTCPClient*)para2;
         DBuffer buf;
         buf.Attach(pData->buffer);
+
         DTCPDataSink* pSink = pData->pSink;
-        DChar* pStart = (DChar*)pData->buffer;
+        
         DUInt32 size = buf.GetSize();
         //DUInt32 sizeHead = DNet::H2N(size);
         if (pSink)
@@ -65,6 +68,10 @@ DVoid* DX86_STDCALL WorkHandler(DUInt32 msg, DVoid* para1, DVoid* para2)
         DUInt32 sent = 0;
         while (sent < size)
         {
+            DChar* pStart = (DChar*)pData->buffer;
+
+
+
             DInt32 ret = (DInt32)send(pData->sock, pStart, size - sent, 0);//MSG_DONTROUTE MSG_OOB
             if (ret == DSockError)
             {
@@ -284,5 +291,5 @@ DVoid DTCPClient::AddSendReq(DTCPClient* sock, DBuffer buffer)
     pData->buffer = buffer.GetBuf();
     pData->pSink = sock->m_pDataSink;
     buffer.Detach();
-    DMsgQueue::PostQueueMsg(m_workqueue, DM_NET_SEND, pData, sock);
+    DMsgQueue::PostQueueMsg(m_workqueue, DM_NET_SEND, (DVoid*)0, sock);
 }
