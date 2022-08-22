@@ -17,19 +17,6 @@ typedef struct tagDQMsg
     DVoid* para2;
 }DQMsg;
 
-//Msgs
-#define DM_QUITMSG    0
-#define DM_BROADCAST  1
-#define DM_TESTPRINT  2
-#define DM_TESTPRINT2 3
-
-#define DM_NET_CONN   1000
-#define DM_NET_SEND   1001
-#define DM_NET_DISC   1002
-#define DM_TASK_MSG   1003
-
-#define D_WM_HANDLER  WM_USER+1
-
 
 class DMsgQueue
 {

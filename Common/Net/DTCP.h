@@ -53,6 +53,12 @@ public:
     DInt32 Shutdown(DInt32 how);
 
 public:
+    DInt32 GetFlag();
+    DInt32 SetFlag(DInt32 newFlag);
+    DVoid SetNonBlock();
+    DVoid SetBlock();
+
+public:
     // block method wrappers
     DBool SyncConnect(DCStr strIP, DUInt16 wPort);
     DBool SyncSend(DBuffer buf);

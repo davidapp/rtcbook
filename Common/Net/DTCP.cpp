@@ -148,6 +148,26 @@ DInt32 DTCPSocket::Shutdown(DInt32 how)
     return shutdown(m_sock, how);
 }
 
+DInt32 DTCPSocket::GetFlag()
+{
+    return 0;// fcntl(m_sock, F_GETFL, 0);
+}
+
+DInt32 DTCPSocket::SetFlag(DInt32 newFlag)
+{
+    return 0;
+}
+
+DVoid DTCPSocket::SetNonBlock()
+{
+
+}
+
+DVoid DTCPSocket::SetBlock()
+{
+
+}
+
 DBool DTCPSocket::SyncConnect(DCStr strIP, DUInt16 wPort)
 {
 #if defined(BUILD_FOR_WINDOWS) && (BUILD_FOR_WINDOWS==1)

@@ -64,7 +64,7 @@ public:
 
     DBool Send(DBuffer buf);
     DVoid AddSendReq(DTCPClient* sock, DBuffer buffer);
-    DHandle m_sendqueue;
+    DHandle m_workqueue;
 
     // async recv
     DBool StartRecv();

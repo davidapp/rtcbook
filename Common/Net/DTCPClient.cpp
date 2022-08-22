@@ -18,16 +18,18 @@
 
 ////////////////////////////////////////////////////////////////////////////
 // DTCPClient
-// 要编写 IPv4 IPv6 都可以用的软件
-// 1) 使用 SOCKADDR_STORAGE 替代 SOCKADDR_IN 和 SOCKADDR_IN6 
-// 2) 不要使用 struct in_addr or struct in6_addr，还是用 SOCKADDR_STORAGE
-// 3) 不要使用 hardcode addresses 
+
+#define DM_SET_VALUE  1001
+#define DM_CALL_BACK  1002
+#define DM_NET_SEND   1003
+
 
 DTCPClient::DTCPClient()
 {
     m_sock = DBadSocket;
     m_strRemoteIP.clear();
     m_wRemotePort = 0;
+    m_workqueue = 0;
     m_pConnSink = nullptr;
     m_pDataSink = nullptr;
     m_nObjState = CONN_STATE_DISCONNECT;
@@ -38,12 +40,13 @@ DTCPClient::~DTCPClient()
     m_sock = DBadSocket;
     m_strRemoteIP.clear();
     m_wRemotePort = 0;
+    m_workqueue = 0;
     m_pConnSink = nullptr;
     m_pDataSink = nullptr;
     m_nObjState = CONN_STATE_DISCONNECT;
 }
 
-DVoid* DX86_STDCALL SendHandler(DUInt32 msg, DVoid* para1, DVoid* para2)
+DVoid* DX86_STDCALL WorkHandler(DUInt32 msg, DVoid* para1, DVoid* para2)
 {
     if (msg == DM_NET_SEND)
     {
@@ -88,17 +91,17 @@ DVoid* DX86_STDCALL SendHandler(DUInt32 msg, DVoid* para1, DVoid* para2)
 
 DVoid DTCPClient::Init()
 {
-    m_sendqueue = DMsgQueue::Create("SendQueue", 100);
-    DMsgQueue::AddHandler(m_sendqueue, SendHandler);
+    m_workqueue = DMsgQueue::Create("WorkQueue", 100);
+    DMsgQueue::AddHandler(m_workqueue, WorkHandler);
 }
 
 DVoid DTCPClient::UnInit()
 {
-    DMsgQueue::PostQuitMsg(m_sendqueue);
+    DMsgQueue::PostQuitMsg(m_workqueue);
     if (IsValid()) {
         Close();
     }
-    DMsgQueue::RemoveQueue(m_sendqueue);
+    DMsgQueue::RemoveQueue(m_workqueue);
 }
 
 DVoid DTCPClient::SetConnSink(DTCPClientSink* pSink)
@@ -281,5 +284,5 @@ DVoid DTCPClient::AddSendReq(DTCPClient* sock, DBuffer buffer)
     pData->buffer = buffer.GetBuf();
     pData->pSink = sock->m_pDataSink;
     buffer.Detach();
-    DMsgQueue::PostQueueMsg(m_sendqueue, DM_NET_SEND, pData, sock);
+    DMsgQueue::PostQueueMsg(m_workqueue, DM_NET_SEND, pData, sock);
 }

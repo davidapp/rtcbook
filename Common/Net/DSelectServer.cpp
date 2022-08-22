@@ -54,9 +54,6 @@ DVoid DSelectServer::ServerLoop()
     }
 
     fd_set fdread;
-    // 1.Data is available for reading.
-    // 2.Connection has been closed, reset, or terminated.
-    // 3.If listen has been called and a connection is pending, the accept function will succeed.
     fd_set fdwrite;
     fd_set fdexp;
     timeval select_timeout = { 10, 0 };
@@ -95,17 +92,23 @@ DVoid DSelectServer::ServerLoop()
                 if (!IsValid()) {
                     break;
                 }
+
+                // 3.If listen has been called and a connection is pending, the accept function will succeed.
                 DTCPSocket client = Accept();
                 DClientData cdata;
                 cdata.m_sock = client.m_sock;
                 cdata.m_name = client.GetName();
                 cdata.m_bQuit = false;
+                m_clientsMutex.lock();
                 m_vecClients.push_back(cdata);
+                m_clientsMutex.unlock();
                 if (m_pListenSink) {
                     m_pListenSink->OnNewConn(this, client);
                 }
             }
             else {
+                // 1.Data is available for reading.
+                // 2.Connection has been closed, reset, or terminated.
                 for (auto item = m_vecClients.begin(); item != m_vecClients.end(); item++) {
                     if (FD_ISSET((*item).m_sock, &fdread))
                     {

@@ -5,6 +5,8 @@ std::mutex g_id2qMutex;
 std::map<DHandle, DMsgQueue*> g_id2q;
 DHandle g_qid = 1;
 
+#define DM_QUITMSG 1000
+
 DVoid* DThreadForQueue(DVoid* pvParam)
 {
     g_id2qMutex.lock();
