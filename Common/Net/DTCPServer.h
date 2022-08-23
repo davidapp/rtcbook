@@ -9,20 +9,33 @@
 #include <thread>
 #include <utility>
 
-class DTCPServer;
-
 class DTCPServerSink
 {
 public:
-    virtual DVoid OnListening(DTCPServer* sock, DUInt16 wPort) = 0;
-    virtual DVoid OnListenOK(DTCPServer* sock, DUInt16 wPort) = 0;
-    virtual DVoid OnListenError(DTCPServer* sock, DUInt32 code, std::string strReason) = 0;
-    virtual DVoid OnNewConn(DTCPServer* sock, DTCPSocket newsock) = 0;
-    virtual DVoid OnError(DTCPServer* sock, DUInt32 code, std::string strReason) = 0;
-    virtual DVoid OnStop(DTCPServer* sock) = 0;
+    virtual DVoid OnListening(DSocket sock, DUInt16 wPort) = 0;
+    virtual DVoid OnListenOK(DSocket sock, DUInt16 wPort) = 0;
+    virtual DVoid OnListenError(DSocket sock, DUInt32 code, std::string strReason) = 0;
+    virtual DVoid OnNewConn(DSocket sock, DSocket newsock) = 0;
+    virtual DVoid OnError(DSocket sock, DUInt32 code, std::string strReason) = 0;
+    virtual DVoid OnStop(DSocket sock) = 0;
+
+    virtual DVoid OnClose(DSocket sock) = 0;
+    virtual DVoid OnBroken(DSocket sock, DUInt32 code, std::string strReason) = 0;
+
+    virtual DVoid OnPreSend(DSocket sock, DBuffer buffer) = 0;
+    virtual DVoid OnSendOK(DSocket sock) = 0;
+    virtual DVoid OnSendError(DSocket sock, DUInt32 code, std::string strReason) = 0;
+    virtual DVoid OnSendTimeout(DSocket sock) = 0;
+
+    virtual DVoid OnRecvBuf(DSocket sock, DBuffer buf) = 0;
+
 public:
-    DTCPServerSink() {};
-    virtual ~DTCPServerSink() {};
+    DTCPServerSink() { m_bIsAlive = true;  };
+    virtual ~DTCPServerSink() { m_bIsAlive = false; }
+    inline bool IsAlive() { return m_bIsAlive; }
+
+private:
+    DAtomBool m_bIsAlive;
 };
 
 #define SERVER_STATE_STOPED 0
@@ -45,15 +58,14 @@ public:
     virtual DVoid Stop();
 
 public:
-    DVoid       SetListenSink(DTCPServerSink* pSink);
-    DVoid       SetDataSink(DTCPDataSink* pSink);
+    DVoid       SetSink(DTCPServerSink* pSink);
     DUInt32     GetClientCount();
     DClientData GetClient(DInt32 index);
     DVoid       RemoveClient(DSocket client);
 
 protected:
     DTCPServerSink* m_pListenSink;
-    DTCPDataSink* m_pDataSink;
+    DTCPServerSink* m_pDataSink;
     DUInt16 m_wPort;
     DInt32  m_backlog;
     DAtomInt32  m_state;

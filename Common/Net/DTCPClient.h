@@ -13,21 +13,28 @@ class DTCPClient;
 class DTCPClientSink
 {
 public:
-    virtual DVoid OnConnecting(DTCPClient* sock, std::string strIP, DUInt16 wPort) = 0;
-    virtual DVoid OnConnectOK(DTCPClient* sock) = 0;
-    virtual DVoid OnConnectError(DTCPClient* sock, DUInt32 code, std::string strReason) = 0;
-public:
-    DTCPClientSink() {};
-    virtual ~DTCPClientSink() {};
-};
+    virtual DVoid OnConnecting(DSocket sock, std::string strIP, DUInt16 wPort) {};
+    virtual DVoid OnConnectOK(DSocket sock) {};
+    virtual DVoid OnConnectError(DSocket sock, DUInt32 code, std::string strReason) {};
 
-typedef struct tagDConnData
-{
-    DSocket sock;
-    std::string strIP;
-    DUInt16 wPort;
-    DTCPClientSink* pSink;
-} DConnData;
+    virtual DVoid OnClose(DSocket sock) {};
+    virtual DVoid OnBroken(DSocket sock, DUInt32 code, std::string strReason) {};
+
+    virtual DVoid OnPreSend(DSocket sock, DBuffer buffer) {};
+    virtual DVoid OnSendOK(DSocket sock) {};
+    virtual DVoid OnSendError(DSocket sock, DUInt32 code, std::string strReason) {};
+    virtual DVoid OnSendTimeout(DSocket sock) {};
+
+    virtual DVoid OnRecvBuf(DSocket sock, DBuffer buf) {};
+
+public:
+    DTCPClientSink() { m_bIsAlive = true; }
+    virtual ~DTCPClientSink() { m_bIsAlive = false; }
+    inline bool IsAlive() { return m_bIsAlive; }
+
+private:
+    DAtomBool m_bIsAlive;
+};
 
 
 #define CONN_STATE_DISCONNECT 0
@@ -46,24 +53,20 @@ public:
 
 public:
     // async connection methods
-    DVoid SetConnSink(DTCPClientSink* pSink);
-    DTCPClientSink* m_pConnSink;
+    DVoid SetSink(DTCPClientSink* pSink);
+    DTCPClientSink* m_pSendSink;
+    DTCPClientSink* m_pRecvSink;
+    DRWLock m_SinkLock;
 
-    DBool Connect(std::string strIP, DUInt16 wPort);
+    DBool Connect(std::string strIP, DUInt16 wPort, DUInt32 timeout_ms = 5000);
     DVoid DisConnect();
-    DVoid ConnLoop();
     std::string m_strRemoteIP;
     DUInt16 m_wRemotePort;
-    std::shared_ptr<std::thread> m_connThread;
     DSPinLock m_wait;
 
 public:
     // async data methods
-    DVoid SetDataSink(DTCPDataSink* pSink);
-    DTCPDataSink* m_pDataSink;
-
     DBool Send(DBuffer buf);
-    DVoid AddSendReq(DTCPClient* sock, DBuffer buffer);
     DHandle m_workqueue;
 
     // async recv

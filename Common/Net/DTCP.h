@@ -4,30 +4,6 @@
 #include "Base/DBuffer.h"
 #include <string>
 
-class DTCPDataSink
-{
-public:
-    virtual DVoid OnPreSend(DSocket sock, DBuffer buffer) = 0;
-    virtual DVoid OnSendOK(DSocket sock) = 0;
-    virtual DVoid OnSendError(DSocket sock, DUInt32 code, std::string strReason) = 0;
-    virtual DVoid OnSendTimeout(DSocket sock) = 0;
-
-    virtual DVoid OnRecvBuf(DSocket sock, DBuffer buf) = 0;
-    virtual DVoid OnClose(DSocket sock) = 0;
-    virtual DVoid OnBroken(DSocket sock, DUInt32 code, std::string strReason) = 0;
-
-public:
-    DTCPDataSink() {};
-    virtual ~DTCPDataSink() {};
-};
-
-
-typedef struct tagDSendData
-{
-    DSocket sock;
-    DByte* buffer;
-    DTCPDataSink* pSink;
-} DSendData;
 
 class DTCPSocket
 {

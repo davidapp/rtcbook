@@ -12,7 +12,12 @@
 HWND g_NotifyWnd;
 #define WM_UPDATEUI WM_USER+1001
 
-class CMainDlg : public CDialogImpl<CMainDlg>, public CMessageFilter, DTCPClientSink, DTCPDataSink
+#define TCP_DEMO_CMD_SEND 1
+#define TCP_DEMO_CMD_INFO 2
+#define TCP_DEMO_CMD_NAME 3
+
+
+class CMainDlg : public CDialogImpl<CMainDlg>, public CMessageFilter, DTCPClientSink
 {
 public:
     enum { IDD = IDD_MAINDIALOG };
@@ -62,15 +67,14 @@ public:
         g_NotifyWnd = m_hWnd;
 
         m_sock.Init();
-        m_sock.SetConnSink(this);
-        m_sock.SetDataSink(this);
+        m_sock.SetSink(this);
 
         SendMessage(g_NotifyWnd, WM_UPDATEUI, 0, 0);
         return TRUE;
     }
 
     // DTCPClientSink
-    virtual DVoid OnConnecting(DTCPClient* sock, std::string strIP, DUInt16 wPort)
+    virtual DVoid OnConnecting(DSocket sock, std::string strIP, DUInt16 wPort)
     {
         CString str;
         str.Format(L"Connecting to %S:%d", strIP.c_str(), wPort);
@@ -78,7 +82,7 @@ public:
         ::PostMessage(g_NotifyWnd, WM_UPDATEUI, 0, 0);
     }
 
-    virtual DVoid OnConnectOK(DTCPClient* sock)
+    virtual DVoid OnConnectOK(DSocket sock)
     {
         CString str;
         str.Format(L"Connected OK");
@@ -86,7 +90,7 @@ public:
         ::PostMessage(g_NotifyWnd, WM_UPDATEUI, 0, 0);
     }
 
-    virtual DVoid OnConnectError(DTCPClient* sock, DUInt32 code, std::string strReason)
+    virtual DVoid OnConnectError(DSocket sock, DUInt32 code, std::string strReason)
     {
         CString str;
         str.Format(L"Connect Error.code:%d reason:%S", code, strReason.c_str());
@@ -246,8 +250,8 @@ public:
     void SendText() {
         DGrowBuffer gb;
         DUInt32 inputlen = m_sendText.GetLength();
-        gb.AddUInt32(1 + 4 + inputlen * 2, true);
-        gb.AddUInt8(1); // cmd
+        gb.AddUInt32(1 + 4 + inputlen * 2, true); // len
+        gb.AddUInt8(TCP_DEMO_CMD_SEND);
         std::wstring wstr(m_sendText);
         gb.AddString(wstr);
         DBuffer bufSend = gb.Finish();
@@ -256,20 +260,27 @@ public:
 
     LRESULT OnInfo(WORD /*wNotifyCode*/, WORD wID, HWND /*hWndCtl*/, BOOL& /*bHandled*/)
     {
+        DGrowBuffer gb;
+        gb.AddUInt32(1, true); // len
+        gb.AddUInt8(TCP_DEMO_CMD_INFO);
+        DBuffer bufSend = gb.Finish();
+        m_sock.Send(bufSend);
         return 0;
-    }
-
-    void SendInfo() {
-
     }
 
     LRESULT OnSetName(WORD /*wNotifyCode*/, WORD wID, HWND /*hWndCtl*/, BOOL& /*bHandled*/)
     {
+        DGrowBuffer gb;
+        CString strText;
+        m_input.GetWindowText(strText);
+        DUInt32 inputlen = strText.GetLength();
+        gb.AddUInt32(1 + 4 + inputlen * 2, true); // len
+        gb.AddUInt8(TCP_DEMO_CMD_NAME);
+        std::wstring wstr(strText);
+        gb.AddString(wstr);
+        DBuffer bufSend = gb.Finish();
+        m_sock.Send(bufSend);
         return 0;
-    }
-
-    void SendName() {
-
     }
 
     LRESULT OnCancel(WORD /*wNotifyCode*/, WORD wID, HWND /*hWndCtl*/, BOOL& /*bHandled*/)

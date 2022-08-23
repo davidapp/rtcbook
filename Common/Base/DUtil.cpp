@@ -429,3 +429,57 @@ DVoid DEvent::WaitEvent(DEvent& ev, DUInt32 timeinms)
 #endif
 
 }
+
+
+DRWLock::DRWLock()
+{
+#if defined(BUILD_FOR_WINDOWS)
+    ::InitializeSRWLock(&m_lock);
+#else
+    pthread_rwlock_init(&m_lock, nullptr);
+#endif
+}
+
+DRWLock::~DRWLock()
+{
+#if defined(BUILD_FOR_WINDOWS)
+#else
+    pthread_rwlock_destroy(&m_lock);
+#endif
+}
+
+DVoid DRWLock::LockWrite()
+{
+#if defined(BUILD_FOR_WINDOWS)
+    ::AcquireSRWLockExclusive(&m_lock);
+#else
+    pthread_rwlock_wrlock(&m_lock);
+#endif
+}
+
+DVoid DRWLock::UnlockWrite()
+{
+#if defined(BUILD_FOR_WINDOWS)
+    ::ReleaseSRWLockExclusive(&m_lock);
+#else
+    pthread_rwlock_unlock(&m_lock);
+#endif
+}
+
+DVoid DRWLock::LockRead()
+{
+#if defined(BUILD_FOR_WINDOWS)
+    ::AcquireSRWLockShared(&m_lock);
+#else
+    pthread_rwlock_rdlock(&m_lock);
+#endif
+}
+
+DVoid DRWLock::UnlockRead()
+{
+#if defined(BUILD_FOR_WINDOWS)
+    ::ReleaseSRWLockShared(&m_lock);
+#else
+    pthread_rwlock_unlock(&m_lock);
+#endif
+}

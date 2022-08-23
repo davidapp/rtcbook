@@ -88,3 +88,22 @@ private:
     DUInt32 m_now;
     DAtomInt32 m_flag;
 };
+
+
+class DRWLock
+{
+public:
+    DRWLock();
+    ~DRWLock();
+    DVoid LockWrite();
+    DVoid UnlockWrite();
+    DVoid LockRead();
+    DVoid UnlockRead();
+
+public:
+#if defined(BUILD_FOR_WINDOWS)
+    SRWLOCK m_lock;
+#else
+    pthread_rwlock_t m_lock;
+#endif
+};
