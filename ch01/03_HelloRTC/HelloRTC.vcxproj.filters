@@ -30,9 +30,6 @@
     <ClCompile Include="..\..\Common\Base\DUtil.cpp">
       <Filter>Common\Base</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Common\Net\DSelectServer.cpp">
-      <Filter>Common\Net</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\Common\Net\DTCPClient.cpp">
       <Filter>Common\Net</Filter>
     </ClCompile>
@@ -76,9 +73,6 @@
     </ClInclude>
     <ClInclude Include="..\..\Common\Base\DUtil.h">
       <Filter>Common\Base</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Common\Net\DSelectServer.h">
-      <Filter>Common\Net</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Common\Net\DTCPClient.h">
       <Filter>Common\Net</Filter>

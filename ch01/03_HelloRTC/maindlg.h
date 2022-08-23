@@ -5,7 +5,7 @@
 #include "atlcrack.h"
 #include "Base/DUtil.h"
 #include "Net/DNet.h"
-#include "Net/DSelectServer.h"
+#include "Net/DTCPServer.h"
 #include <locale>
 #include <string>
 
@@ -13,7 +13,7 @@ HWND g_NotifyWnd;
 DUInt32 g_serverState;
 #define WM_UPDATEUI WM_USER+1001
 
-class CMainDlg : public CDialogImpl<CMainDlg>, public CMessageFilter , public DTCPServerSink, public DTCPDataSink
+class CMainDlg : public CDialogImpl<CMainDlg>, public CMessageFilter , public DTCPServerSink
 {
 public:
     enum { IDD = IDD_MAINDIALOG };
@@ -23,7 +23,7 @@ public:
 
     }
 
-    virtual DVoid OnListening(DTCPServer* sock, DUInt16 wPort)
+    virtual DVoid OnListening(DSocket sock, DUInt16 wPort)
     {
         CString str;
         str.Format(L"Listening at port:%d", wPort);
@@ -32,35 +32,35 @@ public:
         ::PostMessage(g_NotifyWnd, WM_UPDATEUI, 0, 0);
     }
 
-    virtual DVoid OnListenOK(DTCPServer* sock, DUInt16 wPort)
+    virtual DVoid OnListenOK(DSocket sock, DUInt16 wPort)
     {
         CString str;
         str.Format(L"Listen OK at port:%d", wPort);
         ::PostMessage(g_NotifyWnd, WM_LOG, (WPARAM)NewStr(str), 0);
     }
 
-    virtual DVoid OnListenError(DTCPServer* sock, DUInt32 code, std::string strReason)
+    virtual DVoid OnListenError(DSocket sock, DUInt32 code, std::string strReason)
     {
         CString str;
         str.Format(L"Listen Error code:%d reason:%S", code, strReason.c_str());
         ::PostMessage(g_NotifyWnd, WM_LOG, (WPARAM)NewStr(str), 0);
     }
 
-    virtual DVoid OnNewConn(DTCPServer* sock, DTCPSocket newsock)
+    virtual DVoid OnNewConn(DSocket sock, DTCPSocket newsock)
     {
         CString str;
         str.Format(L"New connection is coming from %S", newsock.GetName().c_str());
         ::PostMessage(g_NotifyWnd, WM_LOG, (WPARAM)NewStr(str), 0);
     }
 
-    virtual DVoid OnError(DTCPServer* sock, DUInt32 code, std::string strReason)
+    virtual DVoid OnError(DSocket sock, DUInt32 code, std::string strReason)
     {
         CString str;
         str.Format(L"Server Error code:%d reason:%S", code, strReason.c_str());
         ::PostMessage(g_NotifyWnd, WM_LOG, (WPARAM)NewStr(str), 0);
     }
 
-    virtual DVoid OnStop(DTCPServer* sock)
+    virtual DVoid OnStop(DSocket sock)
     {
         CString str;
         str.Format(L"Server Stop");
@@ -194,8 +194,7 @@ public:
         m_port.GetWindowText(strPort);
         DUInt16 port = _wtoi(strPort);
 
-        m_server.SetListenSink(this);
-        m_server.SetDataSink(this);
+        m_server.SetSink(this);
         m_server.Start(port);
 
         m_start.EnableWindow(FALSE);
@@ -244,5 +243,5 @@ public:
     CButton m_start;
     CButton m_stop;
 
-    DSelectServer m_server;
+    DTCPServer m_server;
 };

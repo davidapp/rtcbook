@@ -2,6 +2,7 @@
 
 #include "DTypes.h"
 #include "Base/DBuffer.h"
+#include "Base/DUtil.h"
 #include "DTCPClient.h"
 #include <string>
 #include <vector>
@@ -12,22 +13,22 @@
 class DTCPServerSink
 {
 public:
-    virtual DVoid OnListening(DSocket sock, DUInt16 wPort) = 0;
-    virtual DVoid OnListenOK(DSocket sock, DUInt16 wPort) = 0;
-    virtual DVoid OnListenError(DSocket sock, DUInt32 code, std::string strReason) = 0;
-    virtual DVoid OnNewConn(DSocket sock, DSocket newsock) = 0;
-    virtual DVoid OnError(DSocket sock, DUInt32 code, std::string strReason) = 0;
-    virtual DVoid OnStop(DSocket sock) = 0;
+    virtual DVoid OnListening(DSocket sock, DUInt16 wPort) {};
+    virtual DVoid OnListenOK(DSocket sock, DUInt16 wPort) {};
+    virtual DVoid OnListenError(DSocket sock, DUInt32 code, std::string strReason) {};
+    virtual DVoid OnNewConn(DSocket sock, DSocket newsock) {};
+    virtual DVoid OnError(DSocket sock, DUInt32 code, std::string strReason) {};
+    virtual DVoid OnStop(DSocket sock) {};
 
-    virtual DVoid OnClose(DSocket sock) = 0;
-    virtual DVoid OnBroken(DSocket sock, DUInt32 code, std::string strReason) = 0;
+    virtual DVoid OnClose(DSocket sock) {};
+    virtual DVoid OnBroken(DSocket sock, DUInt32 code, std::string strReason) {};
 
-    virtual DVoid OnPreSend(DSocket sock, DBuffer buffer) = 0;
-    virtual DVoid OnSendOK(DSocket sock) = 0;
-    virtual DVoid OnSendError(DSocket sock, DUInt32 code, std::string strReason) = 0;
-    virtual DVoid OnSendTimeout(DSocket sock) = 0;
+    virtual DVoid OnPreSend(DSocket sock, DBuffer buffer) {};
+    virtual DVoid OnSendOK(DSocket sock) {};
+    virtual DVoid OnSendError(DSocket sock, DUInt32 code, std::string strReason) {};
+    virtual DVoid OnSendTimeout(DSocket sock) {};
 
-    virtual DVoid OnRecvBuf(DSocket sock, DBuffer buf) = 0;
+    virtual DVoid OnRecvBuf(DSocket sock, DBuffer buf) {};
 
 public:
     DTCPServerSink() { m_bIsAlive = true;  };
@@ -56,6 +57,7 @@ public:
 
     virtual DVoid ServerLoop();
     virtual DVoid Stop();
+    DVoid Process(DBuffer buf, DSocket client);
 
 public:
     DVoid       SetSink(DTCPServerSink* pSink);
@@ -64,12 +66,17 @@ public:
     DVoid       RemoveClient(DSocket client);
 
 protected:
-    DTCPServerSink* m_pListenSink;
-    DTCPServerSink* m_pDataSink;
+    DTCPServerSink* m_pRecvSink;
+    DTCPServerSink* m_pSendSink;
+    DRWLock m_SinkLock;
+
     DUInt16 m_wPort;
     DInt32  m_backlog;
     DAtomInt32  m_state;
+    
     std::vector<DClientData> m_vecClients;
     std::mutex m_clientsMutex;
+
     std::shared_ptr<std::thread> m_serverthread;
+    DUInt32 m_replyQueue;
 };
