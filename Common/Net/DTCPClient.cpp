@@ -58,21 +58,16 @@ DVoid* DX86_STDCALL WorkHandler(DUInt32 msg, DVoid* para1, DVoid* para2)
         buf.Attach(pData->buffer);
 
         DTCPDataSink* pSink = pData->pSink;
-        
-        DUInt32 size = buf.GetSize();
-        //DUInt32 sizeHead = DNet::H2N(size);
         if (pSink)
         {
             pSink->OnPreSend(sock->m_sock, buf);
         }
         DUInt32 sent = 0;
+        DUInt32 size = buf.GetSize();
         while (sent < size)
         {
             DChar* pStart = (DChar*)pData->buffer;
-
-
-
-            DInt32 ret = (DInt32)send(pData->sock, pStart, size - sent, 0);//MSG_DONTROUTE MSG_OOB
+            DInt32 ret = (DInt32)send(pData->sock, pStart, size - sent, 0); //MSG_DONTROUTE MSG_OOB
             if (ret == DSockError)
             {
                 DUInt32 errCode = DNet::GetLastNetError();
@@ -81,7 +76,6 @@ DVoid* DX86_STDCALL WorkHandler(DUInt32 msg, DVoid* para1, DVoid* para2)
                 {
                     pSink->OnSendError(sock->m_sock, errCode, strReasonA);
                 }
-                delete pData;
                 return NULL;
             }
             sent += ret;
@@ -91,7 +85,6 @@ DVoid* DX86_STDCALL WorkHandler(DUInt32 msg, DVoid* para1, DVoid* para2)
         {
             pSink->OnSendOK(sock->m_sock);
         }
-        delete pData;
     }
     return NULL;
 }

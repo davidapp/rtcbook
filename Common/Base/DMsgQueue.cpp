@@ -74,18 +74,23 @@ DHandle DMsgQueue::Create(DCStr queueName, DUInt32 maxSize)
     pq->m_wait.Create(NULL);
     pq->m_wait.Reset();
     pq->m_t.reset(new std::thread(DThreadForQueue, (DVoid*)(g_qid)));
+    g_id2qMutex.lock();
     g_id2q.insert(std::pair<DHandle, DMsgQueue*>(g_qid, pq));
+    g_id2qMutex.unlock();
     return g_qid++;
 }
 
 DHandle DMsgQueue::GetQueue(DCStr queueName)
 {
+    g_id2qMutex.lock();
     for (auto pNode = g_id2q.begin(); pNode != g_id2q.end(); pNode++) {
         DMsgQueue* pq = (DMsgQueue*)pNode->second;
         if (pq->m_name == queueName) {
+            g_id2qMutex.unlock();
             return pNode->first;
         }
     }
+    g_id2qMutex.unlock();
     return 0;
 }
 
@@ -105,6 +110,7 @@ DVoid DMsgQueue::RemoveQueue(DHandle qid)
     pq->m_queue.clear();
     pq->m_msgfunc.clear();
     pq->m_wait.Close();
+    delete pq;
     g_id2q.erase((DHandle)qid);
     g_id2qMutex.unlock();
 }
