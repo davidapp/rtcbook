@@ -30,7 +30,18 @@ DTCPSocket::~DTCPSocket()
     m_sock = DBadSocket;
 }
 
-DBool DTCPSocket::Create(DBool bIPv6)
+DTCPSocket::DTCPSocket(const DTCPSocket& sock)
+{
+    m_sock = sock.m_sock;
+}
+
+DTCPSocket& DTCPSocket::operator=(const DTCPSocket& sock)
+{
+    m_sock = sock.m_sock;
+    return *this;
+}
+
+DBool DTCPSocket::Create()
 {
 #if defined(BUILD_FOR_WINDOWS) && (BUILD_FOR_WINDOWS==1)
     if (m_sock == DBadSocket)
@@ -158,14 +169,26 @@ DInt32 DTCPSocket::SetFlag(DInt32 newFlag)
     return 0;
 }
 
-DVoid DTCPSocket::SetNonBlock()
+DBool DTCPSocket::SetNonBlock()
 {
-
+    unsigned long ul = 1;
+    int nRet = ioctlsocket(m_sock, FIONBIO, (unsigned long*)&ul);
+    if (nRet == SOCKET_ERROR)
+    {
+        return false;
+    }
+    return true;
 }
 
-DVoid DTCPSocket::SetBlock()
+DBool DTCPSocket::SetBlock()
 {
-
+    unsigned long ul = 0;
+    int nRet = ioctlsocket(m_sock, FIONBIO, (unsigned long*)&ul);
+    if (nRet == SOCKET_ERROR)
+    {
+        return false;
+    }
+    return true;
 }
 
 DBool DTCPSocket::SyncConnect(DCStr strIP, DUInt16 wPort)

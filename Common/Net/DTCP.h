@@ -11,9 +11,11 @@ public:
     DTCPSocket();
     explicit DTCPSocket(DSocket sock);
     ~DTCPSocket();
+    DTCPSocket(const DTCPSocket& sock);
+    DTCPSocket& operator=(const DTCPSocket& sock);
 
 public:
-    DBool Create(DBool bIPv6 = false);
+    DBool Create();
     DVoid Close();
     DVoid Attach(DSocket sock);
     DVoid Detach();
@@ -31,8 +33,8 @@ public:
 public:
     DInt32 GetFlag();
     DInt32 SetFlag(DInt32 newFlag);
-    DVoid SetNonBlock();
-    DVoid SetBlock();
+    DBool SetNonBlock();
+    DBool SetBlock();
 
 public:
     // block method wrappers
