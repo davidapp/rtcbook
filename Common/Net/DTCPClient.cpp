@@ -33,11 +33,14 @@ DTCPClient::DTCPClient()
     m_workqueue = 0;
     m_pSendSink = nullptr;
     m_pRecvSink = nullptr;
-    m_nObjState = CONN_STATE_DISCONNECT;
+    m_nObjState = CONN_STATE_UNINIT;
+    m_refCount = 0;
 }
 
 DTCPClient::~DTCPClient()
 {
+    DisConnect();
+
     m_sock = DBadSocket;
     m_strRemoteIP.clear();
     m_wRemotePort = 0;
@@ -153,17 +156,23 @@ DVoid* DX86_STDCALL WorkHandler(DUInt32 msg, DVoid* para1, DVoid* para2)
 
 DVoid DTCPClient::Init()
 {
-    m_workqueue = DMsgQueue::Create("WorkQueue", 100);
-    DMsgQueue::AddHandler(m_workqueue, WorkHandler);
+    if (m_nObjState == CONN_STATE_UNINIT) {
+        m_workqueue = DMsgQueue::Create("WorkQueue", 100);
+        DMsgQueue::AddHandler(m_workqueue, WorkHandler);
+        m_nObjState = CONN_STATE_DISCONNECT;
+    }
 }
 
 DVoid DTCPClient::UnInit()
 {
-    DMsgQueue::PostQuitMsg(m_workqueue);
-    if (IsValid()) {
-        Close();
+    if (m_nObjState == CONN_STATE_DISCONNECT) {
+        DMsgQueue::PostQuitMsg(m_workqueue);
+        if (IsValid()) {
+            Close();
+        }
+        DMsgQueue::RemoveQueue(m_workqueue);
+        m_nObjState = CONN_STATE_UNINIT;
     }
-    DMsgQueue::RemoveQueue(m_workqueue);
 }
 
 DVoid DTCPClient::SetSink(DTCPClientSink* pSink)

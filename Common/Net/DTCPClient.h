@@ -36,10 +36,10 @@ private:
     DAtomBool m_bIsAlive;
 };
 
-
-#define CONN_STATE_DISCONNECT 0
-#define CONN_STATE_CONNECTING 1
-#define CONN_STATE_CONNECTED 2
+#define CONN_STATE_UNINIT 0
+#define CONN_STATE_DISCONNECT 1
+#define CONN_STATE_CONNECTING 2
+#define CONN_STATE_CONNECTED 3
 
 class DTCPClient : public DTCPSocket
 {
@@ -50,6 +50,7 @@ public:
     DVoid UnInit();
     DAtomInt32 m_nObjState;
     inline DUInt32 GetState() { return m_nObjState; }
+    DAtomInt32 m_refCount;
 
 public:
     // async connection methods
@@ -74,4 +75,7 @@ public:
     DVoid StopRecv();
     DVoid RecvLoop();
     std::shared_ptr<std::thread> m_recvthread;
+
+
+    D_DISALLOW_COPY_AND_ASSIGN(DTCPClient)
 };
