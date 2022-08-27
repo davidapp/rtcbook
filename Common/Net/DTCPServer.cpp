@@ -2,6 +2,7 @@
 #include "Base/DUtil.h"
 #include "Base/DMsgQueue.h"
 #include "Net/DNet.h"
+#include <assert.h>
 
 DVoid* DX86_STDCALL ReplyHandler(DUInt32 msg, DVoid* para1, DVoid* para2);
 
@@ -19,6 +20,7 @@ DTCPServer::DTCPServer()
 
 DTCPServer::~DTCPServer()
 {
+    Stop();
     m_nObjState = DTCPSERVER_STATE_STOPED;
     m_wPort = 0;
     m_backlog = 0;
@@ -42,13 +44,28 @@ DBool DTCPServer::Start(DUInt16 wPort, DUInt16 backlog)
     m_serverthread.reset(new std::thread(&DTCPServer::ServerLoop, this));
     m_nObjState = DTCPSERVER_STATE_STARTING;
 
+    m_replyQueue = DMsgQueue::Create("ServerReply");
+    DMsgQueue::AddHandler(m_replyQueue, ReplyHandler);
     return true;
 }
 
-DVoid DTCPServer::Stop()
+DBool DTCPServer::Stop()
 {
-    Close(); // Close 会让 select 返回
+    if (m_nObjState == DTCPSERVER_STATE_STOPED) {
+        return false;
+    }
+
+    if (IsValid()) {
+        m_waitFinish.Reset();
+        Close();
+        DInt32 res = m_waitFinish.Wait(200);
+        assert(res > 0);
+    }
+
+    DMsgQueue::PostQuitMsg(m_replyQueue);
     DMsgQueue::RemoveQueue(m_replyQueue);
+    m_nObjState = DTCPSERVER_STATE_STOPED;
+    return true;
 }
 
 DVoid DTCPServer::ServerLoop()
@@ -93,10 +110,13 @@ DVoid DTCPServer::ServerLoop()
     fd_set fdwrite;
     fd_set fdexp;
     timeval select_timeout = { 10, 0 };
-    int ret = 0;
+    DInt32 ret = 0;
     while (TRUE)
     {
         if (!IsValid()) {
+            if (m_pRecvSink && m_pRecvSink->IsAlive()) {
+                m_pRecvSink->OnStop(this->m_sock);
+            }
             break;
         }
 
@@ -109,23 +129,25 @@ DVoid DTCPServer::ServerLoop()
 
         FD_ZERO(&fdwrite);
         FD_ZERO(&fdexp);
+        ret = select(0, &fdread, NULL, NULL, &select_timeout);
 
-        if ((ret = select(0, &fdread, NULL, NULL, &select_timeout)) == SOCKET_ERROR)
+        if (ret == SOCKET_ERROR)
         {
             if (m_pRecvSink && m_pRecvSink->IsAlive()) {
                 DUInt32 errCode = DNet::GetLastNetError();
                 std::string strReason = DNet::GetLastNetErrorStr(errCode);
                 m_pRecvSink->OnError(this->m_sock, errCode, strReason);
             }
-            Close();
             break;
         }
-
-        if (ret > 0)
+        else if (ret >= 0)
         {
             if (FD_ISSET(m_sock, &fdread))
             {
                 if (!IsValid()) {
+                    if (m_pRecvSink && m_pRecvSink->IsAlive()) {
+                        m_pRecvSink->OnStop(this->m_sock);
+                    }
                     break;
                 }
 
@@ -150,7 +172,7 @@ DVoid DTCPServer::ServerLoop()
                     {
                         DTCPSocket client;
                         client.Attach((*item).m_sock);
-                        DInt32 res;
+                        DInt32 res = 0;
                         DBuffer buf = client.SyncRecv(4, &res);
                         if (res == 0) {
                             // 客户端主动退出
@@ -163,9 +185,10 @@ DVoid DTCPServer::ServerLoop()
                             client.Close();
                         }
                         else if (res > 0) {
+                            // 正常收到 Buffer
                             DReadBuffer rb(buf);
                             DUInt32 bufLength = rb.ReadUInt32(true);
-                            DBuffer bufContent = client.SyncRecv(bufLength, &res);
+                            DBuffer bufContent = client.SyncRecv(bufLength, &ret);
                             if (res > 0) {
                                 Process(bufContent, (*item).m_sock);
                             }
@@ -195,11 +218,8 @@ DVoid DTCPServer::ServerLoop()
         }
     }
 
-    DMsgQueue::PostQuitMsg(m_replyQueue);
-
-    if (m_pRecvSink && m_pRecvSink->IsAlive()) {
-        m_pRecvSink->OnStop(this->m_sock);
-    }
+    m_serverthread->detach();
+    m_waitFinish.Signal();
 }
 
 DVoid DTCPServer::Process(DBuffer buf, DSocket client)
@@ -231,22 +251,30 @@ DVoid DTCPServer::SetSink(DTCPServerSink* pSink)
 
 DUInt32 DTCPServer::GetClientCount()
 {
-    return m_vecClients.size();
+    m_clientsMutex.lock();
+    DUInt32 cSize = m_vecClients.size();
+    m_clientsMutex.unlock();
+    return cSize;
 }
 
 DClientData DTCPServer::GetClient(DInt32 index)
 {
-    return m_vecClients[index];
+    m_clientsMutex.lock();
+    DClientData cData = m_vecClients[index];
+    m_clientsMutex.unlock();
+    return cData;
 }
 
 DVoid DTCPServer::RemoveClient(DSocket client)
 {
+    m_clientsMutex.lock();
     for (auto item = m_vecClients.begin(); item != m_vecClients.end(); item++) {
         if ((*item).m_sock == client) {
             m_vecClients.erase(item);
             break;
         }
     }
+    m_clientsMutex.unlock();
 }
 
 

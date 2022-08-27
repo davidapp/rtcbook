@@ -58,7 +58,7 @@ public:
 
 public:
     DBool Start(DUInt16 wPort, DUInt16 backlog = 0);
-    DVoid Stop();
+    DBool Stop();
     DUInt16 m_wPort;
     DInt32  m_backlog;
 
@@ -80,7 +80,11 @@ public:
 
 protected:
     DVoid ServerLoop();
-    DVoid Process(DBuffer buf, DSocket client);
     std::shared_ptr<std::thread> m_serverthread;
+    DSPinLock m_waitFinish;
+
     DUInt32 m_replyQueue;
+
+private:
+    DVoid Process(DBuffer buf, DSocket client);
 };

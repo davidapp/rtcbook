@@ -73,11 +73,16 @@ public:
         m_start = GetTickCount();
         while (m_flag != 1) {
             m_now = GetTickCount();
-            if (m_now - m_start < need_ms)
-            ::SwitchToThread();
+            if (m_now - m_start < need_ms) {
+                ::SwitchToThread();
+            }
+            else {
+                break;
+            }
         }
-        if (m_now - m_start < need_ms) {
-            return m_now - m_start + 1;
+        DUInt32 diff = m_now - m_start;
+        if (diff < need_ms) {
+            return diff + 1;
         }
         else {
             return 0;

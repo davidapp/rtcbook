@@ -152,18 +152,18 @@ public:
 
     LRESULT OnUpdateUI(UINT /*uMsg*/, WPARAM wParam, LPARAM lParam, BOOL& /*bHandled*/)
     {
-        if (m_sock.GetState() == CONN_STATE_DISCONNECT) {
+        if (m_sock.GetState() == DTCPCLIENT_STATE_DISCONNECT) {
             m_connect.EnableWindow();
             m_disconnect.EnableWindow(FALSE);
             m_setname.EnableWindow(FALSE);
             m_name.EnableWindow(FALSE);
             m_send.EnableWindow(FALSE);
             m_input.EnableWindow(FALSE);
-            m_info.EnableWindow();
+            m_info.EnableWindow(FALSE);
             m_ip.EnableWindow();
             m_port.EnableWindow();
         }
-        else if (m_sock.GetState() == CONN_STATE_CONNECTING) {
+        else if (m_sock.GetState() == DTCPCLIENT_STATE_CONNECTING) {
             m_connect.EnableWindow(FALSE);
             m_disconnect.EnableWindow();
             m_setname.EnableWindow(FALSE);
@@ -174,7 +174,7 @@ public:
             m_ip.EnableWindow(FALSE);
             m_port.EnableWindow(FALSE);
         }
-        else if (m_sock.GetState() == CONN_STATE_CONNECTED) {
+        else if (m_sock.GetState() == DTCPCLIENT_STATE_CONNECTED) {
             m_connect.EnableWindow(FALSE);
             m_disconnect.EnableWindow();
             m_setname.EnableWindow();
