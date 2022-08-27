@@ -272,7 +272,7 @@ public:
     {
         DGrowBuffer gb;
         CString strText;
-        m_input.GetWindowText(strText);
+        m_name.GetWindowText(strText);
         DUInt32 inputlen = strText.GetLength();
         gb.AddUInt32(1 + 4 + inputlen * 2, true); // len
         gb.AddUInt8(TCP_DEMO_CMD_NAME);

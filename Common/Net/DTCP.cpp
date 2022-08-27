@@ -43,7 +43,6 @@ DTCPSocket& DTCPSocket::operator=(const DTCPSocket& sock)
 
 DBool DTCPSocket::Create()
 {
-#if defined(BUILD_FOR_WINDOWS) && (BUILD_FOR_WINDOWS==1)
     if (m_sock == DBadSocket)
     {
         m_sock = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
@@ -52,34 +51,20 @@ DBool DTCPSocket::Create()
             return false;
         }
     }
-#else
-    if (m_sock == DBadSocket)
-    {
-        m_sock = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
-        if (m_sock == DBadSocket)
-        {
-            return false;
-        }
-    }
-#endif
     return true;
 }
 
 DVoid DTCPSocket::Close()
 {
+    if (m_sock != DBadSocket)
+    {
 #if defined(BUILD_FOR_WINDOWS) && (BUILD_FOR_WINDOWS==1)
-    if (m_sock != DBadSocket)
-    {
         closesocket(m_sock);
-        m_sock = DBadSocket;
-    }
 #else
-    if (m_sock != DBadSocket)
-    {
         close(m_sock);
+#endif
         m_sock = DBadSocket;
     }
-#endif
 }
 
 DVoid DTCPSocket::Attach(DSocket sock)
@@ -119,8 +104,7 @@ std::string DTCPSocket::GetName()
     inet_ntop(AF_INET, &sa.sin_addr.S_un.S_addr, ip, 100);
     std::string ret = ip;
     ret += ":";
-    _itoa_s(sa.sin_port, port, 10);
-    ret += port;
+    ret += DUtil::UInt16ToStr(sa.sin_port);
     return ret;
 }
 
@@ -130,7 +114,7 @@ DBool DTCPSocket::Bind(DUInt16 port)
     InternetAddr.sin_family = AF_INET;
     InternetAddr.sin_addr.s_addr = htonl(INADDR_ANY);
     InternetAddr.sin_port = htons(port);
-    int ret = bind(m_sock, (PSOCKADDR)&InternetAddr, sizeof(InternetAddr));
+    DInt32 ret = bind(m_sock, (PSOCKADDR)&InternetAddr, sizeof(InternetAddr));
     if (ret != 0) {
         return false;
     }
@@ -139,7 +123,7 @@ DBool DTCPSocket::Bind(DUInt16 port)
 
 DBool DTCPSocket::Listen(DInt32 backlog)
 {
-    int ret = listen(m_sock, backlog);
+    DInt32 ret = listen(m_sock, backlog);
     if (ret != 0) {
         return false;
     }
@@ -149,7 +133,7 @@ DBool DTCPSocket::Listen(DInt32 backlog)
 DTCPSocket DTCPSocket::Accept()
 {
     DTCPSocket sockRet;
-    SOCKET NewConnection = accept(m_sock, 0, 0);
+    DSocket NewConnection = accept(m_sock, 0, 0);
     sockRet.Attach(NewConnection);
     return sockRet;
 }
@@ -159,21 +143,11 @@ DInt32 DTCPSocket::Shutdown(DInt32 how)
     return shutdown(m_sock, how);
 }
 
-DInt32 DTCPSocket::GetFlag()
-{
-    return 0;// fcntl(m_sock, F_GETFL, 0);
-}
-
-DInt32 DTCPSocket::SetFlag(DInt32 newFlag)
-{
-    return 0;
-}
-
 DBool DTCPSocket::SetNonBlock()
 {
-    unsigned long ul = 1;
-    int nRet = ioctlsocket(m_sock, FIONBIO, (unsigned long*)&ul);
-    if (nRet == SOCKET_ERROR)
+    u_long ul = 1;
+    DInt32 nRet = ioctlsocket(m_sock, FIONBIO, &ul);
+    if (nRet == DSockError)
     {
         return false;
     }
@@ -182,13 +156,35 @@ DBool DTCPSocket::SetNonBlock()
 
 DBool DTCPSocket::SetBlock()
 {
-    unsigned long ul = 0;
-    int nRet = ioctlsocket(m_sock, FIONBIO, (unsigned long*)&ul);
-    if (nRet == SOCKET_ERROR)
+    u_long ul = 0;
+    DInt32 nRet = ioctlsocket(m_sock, FIONBIO, &ul);
+    if (nRet == DSockError)
     {
         return false;
     }
     return true;
+}
+
+DUInt32 DTCPSocket::GetBufRead()
+{
+    u_long ul = 0;
+    DInt32 nRet = ioctlsocket(m_sock, FIONREAD, &ul);
+    if (nRet == DSockError)
+    {
+        return 0;
+    }
+    return ul;
+}
+
+DInt32 DTCPSocket::IsListen()
+{
+    DInt32 optVal;
+    DInt32 optLen = sizeof(DInt32);
+    DInt32 ret = getsockopt(m_sock, SOL_SOCKET, SO_ACCEPTCONN, (char*)&optVal, &optLen);
+    if (ret == DSockError) {
+        return 0;
+    }
+    return optVal;
 }
 
 DBool DTCPSocket::SyncConnect(DCStr strIP, DUInt16 wPort)

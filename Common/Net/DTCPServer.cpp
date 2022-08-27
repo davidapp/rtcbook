@@ -6,21 +6,49 @@
 DVoid* DX86_STDCALL ReplyHandler(DUInt32 msg, DVoid* para1, DVoid* para2);
 
 
+DTCPServer::DTCPServer()
+{
+    m_nObjState = DTCPSERVER_STATE_STOPED;
+    m_wPort = 0;
+    m_backlog = 0;
+    m_pRecvSink = nullptr;
+    m_pSendSink = nullptr;
+    m_vecClients.clear();
+    m_replyQueue = 0;
+}
+
+DTCPServer::~DTCPServer()
+{
+    m_nObjState = DTCPSERVER_STATE_STOPED;
+    m_wPort = 0;
+    m_backlog = 0;
+    m_pRecvSink = nullptr;
+    m_pSendSink = nullptr;
+    m_vecClients.clear();
+    m_replyQueue = 0;
+}
+
 DBool DTCPServer::Start(DUInt16 wPort, DUInt16 backlog)
 {
-    m_state = SERVER_STATE_STARTING;
+    if (m_nObjState != DTCPSERVER_STATE_STOPED) {
+        return false;
+    }
+
     m_wPort = wPort;
     m_backlog = backlog;
     m_clientsMutex.lock();
     m_vecClients.clear();
     m_clientsMutex.unlock();
     m_serverthread.reset(new std::thread(&DTCPServer::ServerLoop, this));
+    m_nObjState = DTCPSERVER_STATE_STARTING;
+
     return true;
 }
 
-DTCPServer::~DTCPServer()
+DVoid DTCPServer::Stop()
 {
-
+    Close(); // Close 会让 select 返回
+    DMsgQueue::RemoveQueue(m_replyQueue);
 }
 
 DVoid DTCPServer::ServerLoop()
@@ -52,9 +80,6 @@ DVoid DTCPServer::ServerLoop()
         if (m_pRecvSink && m_pRecvSink->IsAlive()) {
             m_pRecvSink->OnListenOK(this->m_sock, m_wPort);
         }
-
-        m_replyQueue = DMsgQueue::Create("SelectReply", 100);
-        DMsgQueue::AddHandler(m_replyQueue, ReplyHandler);
     }
     else {
         if (m_pRecvSink && m_pRecvSink->IsAlive()) {
@@ -175,12 +200,6 @@ DVoid DTCPServer::ServerLoop()
     if (m_pRecvSink && m_pRecvSink->IsAlive()) {
         m_pRecvSink->OnStop(this->m_sock);
     }
-}
-
-DVoid DTCPServer::Stop()
-{
-    Close(); // Close 会让 select 返回
-    DMsgQueue::RemoveQueue(m_replyQueue);
 }
 
 DVoid DTCPServer::Process(DBuffer buf, DSocket client)

@@ -36,10 +36,10 @@ private:
     DAtomBool m_bIsAlive;
 };
 
-#define CONN_STATE_UNINIT 0
-#define CONN_STATE_DISCONNECT 1
-#define CONN_STATE_CONNECTING 2
-#define CONN_STATE_CONNECTED 3
+#define DTCPCLIENT_STATE_UNINIT 0
+#define DTCPCLIENT_STATE_DISCONNECT 1
+#define DTCPCLIENT_STATE_CONNECTING 2
+#define DTCPCLIENT_STATE_CONNECTED 3
 
 class DTCPClient : public DTCPSocket
 {
@@ -54,7 +54,7 @@ public:
 
 public:
     // async connection methods
-    DVoid SetSink(DTCPClientSink* pSink);
+    DBool SetSink(DTCPClientSink* pSink);
     DTCPClientSink* m_pSendSink;
     DTCPClientSink* m_pRecvSink;
     DRWLock m_SinkLock;
@@ -63,19 +63,18 @@ public:
     DVoid DisConnect();
     std::string m_strRemoteIP;
     DUInt16 m_wRemotePort;
-    DSPinLock m_wait;
+    DSPinLock m_waitConnFinish;
 
 public:
     // async data methods
     DBool Send(DBuffer buf);
+    DBool StartRecv();
     DHandle m_workqueue;
 
-    // async recv
-    DBool StartRecv();
-    DVoid StopRecv();
+private:
     DVoid RecvLoop();
     std::shared_ptr<std::thread> m_recvthread;
-
+    DSPinLock m_waitRecvFinish;
 
     D_DISALLOW_COPY_AND_ASSIGN(DTCPClient)
 };

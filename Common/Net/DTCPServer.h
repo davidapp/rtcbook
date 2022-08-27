@@ -39,9 +39,9 @@ private:
     DAtomBool m_bIsAlive;
 };
 
-#define SERVER_STATE_STOPED 0
-#define SERVER_STATE_STARTING 1
-#define SERVER_STATE_RUNNING 2
+#define DTCPSERVER_STATE_STOPED 0
+#define DTCPSERVER_STATE_STARTING 1
+#define DTCPSERVER_STATE_RUNNING 2
 
 typedef struct tagDClientData {
     DSocket m_sock;
@@ -49,34 +49,38 @@ typedef struct tagDClientData {
     DBool m_bQuit;
 } DClientData;
 
+
 class DTCPServer : public DTCPSocket
 {
 public:
-    DBool Start(DUInt16 wPort, DUInt16 backlog = 0);
+    DTCPServer();
     ~DTCPServer();
 
-    virtual DVoid ServerLoop();
-    virtual DVoid Stop();
-    DVoid Process(DBuffer buf, DSocket client);
+public:
+    DBool Start(DUInt16 wPort, DUInt16 backlog = 0);
+    DVoid Stop();
+    DUInt16 m_wPort;
+    DInt32  m_backlog;
+
+    inline DUInt32 GetState() { return m_nObjState; }
+    DAtomInt32 m_nObjState;
 
 public:
-    DVoid       SetSink(DTCPServerSink* pSink);
-    DUInt32     GetClientCount();
-    DClientData GetClient(DInt32 index);
-    DVoid       RemoveClient(DSocket client);
-
-protected:
+    DVoid SetSink(DTCPServerSink* pSink);
     DTCPServerSink* m_pRecvSink;
     DTCPServerSink* m_pSendSink;
     DRWLock m_SinkLock;
 
-    DUInt16 m_wPort;
-    DInt32  m_backlog;
-    DAtomInt32  m_state;
-    
+public:
+    DUInt32     GetClientCount();
+    DClientData GetClient(DInt32 index);
+    DVoid       RemoveClient(DSocket client);
     std::vector<DClientData> m_vecClients;
     std::mutex m_clientsMutex;
 
+protected:
+    DVoid ServerLoop();
+    DVoid Process(DBuffer buf, DSocket client);
     std::shared_ptr<std::thread> m_serverthread;
     DUInt32 m_replyQueue;
 };

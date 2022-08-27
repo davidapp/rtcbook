@@ -31,10 +31,10 @@ public:
     DInt32 Shutdown(DInt32 how);
 
 public:
-    DInt32 GetFlag();
-    DInt32 SetFlag(DInt32 newFlag);
     DBool SetNonBlock();
     DBool SetBlock();
+    DUInt32 GetBufRead();
+    DInt32 IsListen();
 
 public:
     // block method wrappers
