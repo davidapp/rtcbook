@@ -81,6 +81,7 @@ public:
 protected:
     DVoid ServerLoop();
     std::shared_ptr<std::thread> m_serverthread;
+    DSPinLock m_waitStart;
     DSPinLock m_waitFinish;
 
     DUInt32 m_replyQueue;

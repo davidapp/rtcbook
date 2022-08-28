@@ -4,6 +4,11 @@
 #include "Base/DBuffer.h"
 #include <string>
 
+#define TCP_DEMO_CMD_SENDTEXT 1
+#define TCP_DEMO_CMD_GETINFO 2
+#define TCP_DEMO_CMD_SETNAME 3
+#define TCP_DEMO_CMD_BROADCAST 4
+#define TCP_DEMO_CMD_PUSH 5
 
 class DTCPSocket
 {

@@ -12,10 +12,6 @@
 HWND g_NotifyWnd;
 #define WM_UPDATEUI WM_USER+1001
 
-#define TCP_DEMO_CMD_SEND 1
-#define TCP_DEMO_CMD_INFO 2
-#define TCP_DEMO_CMD_NAME 3
-
 
 class CMainDlg : public CDialogImpl<CMainDlg>, public CMessageFilter, DTCPClientSink
 {
@@ -251,7 +247,7 @@ public:
         DGrowBuffer gb;
         DUInt32 inputlen = m_sendText.GetLength();
         gb.AddUInt32(1 + 4 + inputlen * 2, true); // len
-        gb.AddUInt8(TCP_DEMO_CMD_SEND);
+        gb.AddUInt8(TCP_DEMO_CMD_SENDTEXT);
         std::wstring wstr(m_sendText);
         gb.AddString(wstr);
         DBuffer bufSend = gb.Finish();
@@ -262,7 +258,7 @@ public:
     {
         DGrowBuffer gb;
         gb.AddUInt32(1, true); // len
-        gb.AddUInt8(TCP_DEMO_CMD_INFO);
+        gb.AddUInt8(TCP_DEMO_CMD_GETINFO);
         DBuffer bufSend = gb.Finish();
         m_sock.Send(bufSend);
         return 0;
@@ -275,7 +271,7 @@ public:
         m_name.GetWindowText(strText);
         DUInt32 inputlen = strText.GetLength();
         gb.AddUInt32(1 + 4 + inputlen * 2, true); // len
-        gb.AddUInt8(TCP_DEMO_CMD_NAME);
+        gb.AddUInt8(TCP_DEMO_CMD_SETNAME);
         std::wstring wstr(strText);
         gb.AddString(wstr);
         DBuffer bufSend = gb.Finish();

@@ -38,14 +38,19 @@ DBool DTCPServer::Start(DUInt16 wPort, DUInt16 backlog)
 
     m_wPort = wPort;
     m_backlog = backlog;
+    
     m_clientsMutex.lock();
     m_vecClients.clear();
     m_clientsMutex.unlock();
-    m_serverthread.reset(new std::thread(&DTCPServer::ServerLoop, this));
-    m_nObjState = DTCPSERVER_STATE_STARTING;
 
+    // 创建 Server 监听线程
+    m_waitStart.Reset();
+    m_serverthread.reset(new std::thread(&DTCPServer::ServerLoop, this));
+    m_waitStart.Wait(300);
+    // 创建回复队列
     m_replyQueue = DMsgQueue::Create("ServerReply");
     DMsgQueue::AddHandler(m_replyQueue, ReplyHandler);
+    m_nObjState = DTCPSERVER_STATE_STARTING;
     return true;
 }
 
@@ -70,6 +75,8 @@ DBool DTCPServer::Stop()
 
 DVoid DTCPServer::ServerLoop()
 {
+    m_waitStart.Signal();
+
     if (!Create())
     {
         if (m_pRecvSink && m_pRecvSink->IsAlive()) {
@@ -234,7 +241,6 @@ DVoid DTCPServer::Process(DBuffer buf, DSocket client)
     if (cmd == 1) {
         std::wstring wstr = rbContent.ReadString();
         // 给房间内所有其他 socket 发送一条消息
-
 
         //DMsgQueue::PostQueueMsg(m_replyQueue, SERVER_REPLY_MSG_RECV, buf, (DVoid*)this);
     }
