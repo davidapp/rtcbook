@@ -46,10 +46,11 @@ public:
         ::PostMessage(g_NotifyWnd, WM_LOG, (WPARAM)NewStr(str), 0);
     }
 
-    virtual DVoid OnNewConn(DSocket sock, DTCPSocket newsock)
+    virtual DVoid OnNewConn(DSocket sock, DSocket newsock)
     {
+        DTCPSocket tcpsock(newsock);
         CString str;
-        str.Format(L"New connection is coming from %S", newsock.GetName().c_str());
+        str.Format(L"New connection is coming from %S", tcpsock.GetName().c_str());
         ::PostMessage(g_NotifyWnd, WM_LOG, (WPARAM)NewStr(str), 0);
     }
 
