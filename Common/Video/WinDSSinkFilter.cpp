@@ -100,12 +100,14 @@ STDMETHODIMP WinDSSinkFilter::EnumPins(IEnumPins** pins)
 {
     *pins = new WinDSEnumPins(m_input_pin);
     (*pins)->AddRef();
-    return S_OK;
+    return S_OK; // E_NOTIMPL
 }
 
 STDMETHODIMP WinDSSinkFilter::FindPin(LPCWSTR id, IPin** pin)
 {
-    return VFW_E_NOT_FOUND;
+    *pin = m_input_pin;
+    (*pin)->AddRef();
+    return S_OK;
 }
 
 STDMETHODIMP WinDSSinkFilter::QueryFilterInfo(FILTER_INFO* info)

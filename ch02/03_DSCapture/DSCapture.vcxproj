@@ -158,6 +158,7 @@
     <ClInclude Include="..\..\Common\File\DBmpFile.h" />
     <ClInclude Include="..\..\Common\Video\VideoDefines.h" />
     <ClInclude Include="..\..\Common\Video\WinDS.h" />
+    <ClInclude Include="..\..\Common\Video\WinDSCamera.h" />
     <ClInclude Include="..\..\Common\Video\WinDSCapturePin.h" />
     <ClInclude Include="..\..\Common\Video\WinDSSinkFilter.h" />
     <ClInclude Include="..\..\Common\Video\WinDSVideoCapture.h" />
@@ -174,6 +175,7 @@
     <ClCompile Include="..\..\Common\Base\DUtil.cpp" />
     <ClCompile Include="..\..\Common\File\DBmpFile.cpp" />
     <ClCompile Include="..\..\Common\Video\WinDS.cpp" />
+    <ClCompile Include="..\..\Common\Video\WinDSCamera.cpp" />
     <ClCompile Include="..\..\Common\Video\WinDSCapturePin.cpp" />
     <ClCompile Include="..\..\Common\Video\WinDSSinkFilter.cpp" />
     <ClCompile Include="..\..\Common\Video\WinDSVideoCapture.cpp" />

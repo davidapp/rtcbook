@@ -36,8 +36,8 @@ public:
 public:
     FILTER_STATE m_state = State_Stopped;
     FILTER_INFO m_info = {};
+    WinDSCaptureInputPin* m_input_pin;
 
 private:
-    WinDSCaptureInputPin* m_input_pin;
     DAtomInt32 m_refCount;
 };

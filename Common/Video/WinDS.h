@@ -21,7 +21,7 @@ class WinDS {
 public:
     static DVoid ResetMediaType(AM_MEDIA_TYPE* media_type);
     static HRESULT CopyMediaType(AM_MEDIA_TYPE* target, const AM_MEDIA_TYPE* source);
-    static DBool MediaType2DShowCapability(const AM_MEDIA_TYPE* media_type, DVideoFormat* capability);
+    //static DBool MediaType2DShowCapability(const AM_MEDIA_TYPE* media_type, DVideoFormat* capability);
     static DVoid GetSampleProperties(IMediaSample* sample, AM_SAMPLE2_PROPERTIES* props);
 
     static std::string MajorTypeName(GUID id);
@@ -41,6 +41,8 @@ public:
     static DVoid FreeMediaType(AM_MEDIA_TYPE& mt);
     static DUInt64 GetMaxOfFrameArray(DUInt64* maxFps, DUInt32 size);
 };
+
+
 
 
 class WinDSEnumPins : public IEnumPins

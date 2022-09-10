@@ -164,7 +164,7 @@ private:
     int index_;
 };*/
 
-
+/*
 DBool WinDS::MediaType2DShowCapability(const AM_MEDIA_TYPE* media_type, DVideoFormat* capability) 
 {
     if (!media_type || media_type->majortype != MEDIATYPE_Video || !media_type->pbFormat) {
@@ -215,7 +215,7 @@ DBool WinDS::MediaType2DShowCapability(const AM_MEDIA_TYPE* media_type, DVideoFo
 
     return true;
 }
-
+*/
 
 DVoid WinDS::ResetMediaType(AM_MEDIA_TYPE* media_type)
 {
@@ -315,7 +315,6 @@ DUInt64 WinDS::GetMaxOfFrameArray(DUInt64* maxFps, DUInt32 size)
     }
     return maxFPS;
 }
-
 
 std::string WinDS::MajorTypeName(GUID id)
 {

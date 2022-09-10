@@ -40,7 +40,7 @@ public:
     int OnCreate(LPCREATESTRUCT lpCreateStruct)
     {
         CenterWindow();
-        m_vcap.SetSink(this);
+        m_vcap.Init(this);
         return 0;
     }
 

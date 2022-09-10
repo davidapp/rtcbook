@@ -43,29 +43,15 @@ public:
     STDMETHOD(ReceiveMultiple)(IMediaSample** samples, long count, long* processed) override;
     STDMETHOD(ReceiveCanBlock)() override;
 
-
-
     DVoid OnFilterActivated();
     DVoid OnFilterDeactivated();
-    DVoid SetRequiredFormat(AM_MEDIA_TYPE* ptype);
 
 private:
     DVoid ClearAllocator(bool decommit);
     HRESULT CheckDirection(IPin* pin) const;
     DBool IsStopped() const;
 
-    DWORD capture_thread_id_ = 0;
     IMemAllocator* allocator_ = nullptr;
-
-    std::atomic_bool flushing_{ false };
-    std::atomic_bool runtime_error_{ false };
-    std::atomic_int frame_count_ = 0;
-
-
-    // requested
-    GUID req_subtype_;
-    VIDEOINFOHEADER req_vih_;
-
 
     DAtomInt32 m_refCount;
     PIN_INFO m_info = {};

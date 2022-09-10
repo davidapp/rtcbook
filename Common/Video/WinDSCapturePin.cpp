@@ -2,6 +2,7 @@
 #include "WinDS.h"
 #include "WinDSCapturePin.h"
 #include <dvdmedia.h>
+#include "VideoDefines.h"
 
 WinDSCaptureInputPin::WinDSCaptureInputPin(IBaseFilter* filter)
 {
@@ -71,9 +72,9 @@ STDMETHODIMP WinDSCaptureInputPin::ReceiveConnection(IPin* connector, const AM_M
         return hr;
     }
 
-    if (!WinDS::MediaType2DShowCapability(media_type, &m_final_fmt)) {
-        return VFW_E_TYPE_NOT_ACCEPTED;
-    }
+    //if (!WinDS::MediaType2DShowCapability(media_type, &m_final_fmt)) {
+    //    return VFW_E_TYPE_NOT_ACCEPTED;
+    //}
 
     m_connected_pin = connector;
     WinDS::ResetMediaType(&m_media_type);
@@ -146,7 +147,7 @@ STDMETHODIMP WinDSCaptureInputPin::QueryAccept(const AM_MEDIA_TYPE* media_type)
     }
 
     DVideoFormat capability(m_final_fmt);
-    return WinDS::MediaType2DShowCapability(media_type, &capability) ? S_FALSE : S_OK;
+    return true;// WinDS::MediaType2DShowCapability(media_type, &capability) ? S_FALSE : S_OK;
 }
 
 STDMETHODIMP WinDSCaptureInputPin::EnumMediaTypes(IEnumMediaTypes** types)
@@ -169,14 +170,11 @@ STDMETHODIMP WinDSCaptureInputPin::EndOfStream()
 
 STDMETHODIMP WinDSCaptureInputPin::BeginFlush()
 {
-    flushing_ = true;
     return S_OK;
 }
 
 STDMETHODIMP WinDSCaptureInputPin::EndFlush() 
 {
-    flushing_ = false;
-    runtime_error_ = false;
     return S_OK;
 }
 
@@ -184,7 +182,6 @@ STDMETHODIMP WinDSCaptureInputPin::NewSegment(REFERENCE_TIME start, REFERENCE_TI
 {
     return S_OK;
 }
-
 
 // IMemInputPin
 STDMETHODIMP WinDSCaptureInputPin::GetAllocator(IMemAllocator** allocator)
@@ -221,12 +218,6 @@ STDMETHODIMP WinDSCaptureInputPin::Receive(IMediaSample* media_sample)
         return S_FALSE;
     }
 
-    if (flushing_.load(std::memory_order_relaxed))
-        return S_FALSE;
-
-    if (runtime_error_.load(std::memory_order_relaxed))
-        return VFW_E_RUNTIME_ERROR;
-
     if (media_sample->IsPreroll() == S_OK) {
         return S_OK;
     }
@@ -234,39 +225,8 @@ STDMETHODIMP WinDSCaptureInputPin::Receive(IMediaSample* media_sample)
     AM_SAMPLE2_PROPERTIES sample_props = {};
     WinDS::GetSampleProperties(media_sample, &sample_props);
 
-    if (frame_count_.load() < 5) { // limit logs
-        if (sample_props.pbBuffer == NULL || sample_props.lActual == 0) {
-            return S_OK;
-        }
-        if (sample_props.dwSampleFlags & AM_SAMPLE_PREROLL) {
-            return S_OK;
-        }
-    }
-    frame_count_++;
+    //DVideoFrame frame((DByte*)sample_props.pbBuffer, sample_props.lActual, m_final_fmt.width, m_final_fmt.height, m_final_fmt.format);
 
-    if (sample_props.dwSampleFlags & AM_SAMPLE_TYPECHANGED) {
-        if (!WinDS::MediaType2DShowCapability(sample_props.pMediaType, &m_final_fmt))
-        {
-            // Raise a runtime error if we fail the media type
-            runtime_error_ = true;
-            EndOfStream();
-            //   Filter()->NotifyEvent(EC_ERRORABORT, VFW_E_TYPE_NOT_ACCEPTED, 0);
-            return VFW_E_INVALIDMEDIATYPE;
-        }
-    }
-
-    /*if (callback_) {
-        WINCapVideoFrame frame;
-        frame.fmt = m_final_fmt.format;
-        frame.width = m_final_fmt.width;
-        frame.height = m_final_fmt.height;
-        frame.data = (uint8_t*)sample_props.pbBuffer;
-        frame.data_size = sample_props.lActual;
-        frame.stride = WINCapDefaultStride(frame.width, frame.fmt);
-        frame.sample_type = ST_IMediaSample;
-        frame.sample_ptr = media_sample;
-        callback_->OnFrame(frame);
-    }*/
 
     return S_OK;
 }
@@ -293,7 +253,6 @@ STDMETHODIMP WinDSCaptureInputPin::ReceiveCanBlock()
 
 DBool WinDSCaptureInputPin::IsStopped() const 
 {
-    // 看对应 Filter 的 state
     FILTER_STATE sta = State_Running;
     m_info.pFilter->GetState(0, &sta);
     return (sta == State_Stopped);
@@ -301,13 +260,11 @@ DBool WinDSCaptureInputPin::IsStopped() const
 
 void WinDSCaptureInputPin::OnFilterActivated() 
 {
-    runtime_error_ = false;
-    flushing_ = false;
+
 }
 
 void WinDSCaptureInputPin::OnFilterDeactivated() 
 {
-    flushing_ = true;
     if (allocator_)
     {
         allocator_->Decommit();
@@ -315,31 +272,11 @@ void WinDSCaptureInputPin::OnFilterDeactivated()
     }
 }
 
-void WinDSCaptureInputPin::SetRequiredFormat(AM_MEDIA_TYPE* ptype) 
-{
-    ZeroMemory(&req_vih_, sizeof(VIDEOINFOHEADER));
-    if (ptype->formattype == FORMAT_VideoInfo2)
-    {
-        VIDEOINFOHEADER2* h = reinterpret_cast<VIDEOINFOHEADER2*>(ptype->pbFormat);
-        req_vih_.AvgTimePerFrame = h->AvgTimePerFrame;
-        req_vih_.bmiHeader = h->bmiHeader;
-        req_vih_.dwBitErrorRate = h->dwBitErrorRate;
-        req_vih_.dwBitRate = h->dwBitRate;
-        req_vih_.rcSource = h->rcSource;
-        req_vih_.rcTarget = h->rcTarget;
-    }
-    else 
-    {
-        VIDEOINFOHEADER* const h = reinterpret_cast<VIDEOINFOHEADER*>(ptype->pbFormat);
-        req_vih_ = *h;
-    }
-    req_subtype_ = ptype->subtype;
-}
-
 void WinDSCaptureInputPin::ClearAllocator(bool decommit)
 {
     if (!allocator_)
         return;
+
     if (decommit)
         allocator_->Decommit();
     allocator_->Release();
