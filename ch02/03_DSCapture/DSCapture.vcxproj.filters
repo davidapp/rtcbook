@@ -11,9 +11,6 @@
     <ClCompile Include="..\..\Common\Base\DUtil.cpp">
       <Filter>Common\Base</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Common\Video\WinDSCamera.cpp">
-      <Filter>Common\Video</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\Common\File\DBmpFile.cpp">
       <Filter>Common\File</Filter>
     </ClCompile>
@@ -27,6 +24,9 @@
       <Filter>Common\Video</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Common\Video\WinDS.cpp">
+      <Filter>Common\Video</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\Video\WinDSVideoCapture.cpp">
       <Filter>Common\Video</Filter>
     </ClCompile>
   </ItemGroup>
@@ -43,13 +43,7 @@
     <ClInclude Include="..\..\Common\Video\VideoDefines.h">
       <Filter>Common\Video</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Common\Video\WinDSCamera.h">
-      <Filter>Common\Video</Filter>
-    </ClInclude>
     <ClInclude Include="MainWindow.h">
-      <Filter>Window</Filter>
-    </ClInclude>
-    <ClInclude Include="SettingDlg.h">
       <Filter>Window</Filter>
     </ClInclude>
     <ClInclude Include="resource.h">
@@ -84,6 +78,9 @@
     </ClInclude>
     <ClInclude Include="..\..\Common\DTypes.h">
       <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\Video\WinDSVideoCapture.h">
+      <Filter>Common\Video</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

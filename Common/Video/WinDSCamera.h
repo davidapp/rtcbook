@@ -1,6 +1,7 @@
 ﻿#pragma once
 
 #include "DTypes.h"
+#include "VideoDefines.h"
 #include <dshow.h>
 #include <dvdmedia.h>
 #include <vector>
@@ -10,7 +11,7 @@ class DCameraInfo {
 public:
     std::string m_device_name;
     std::string m_device_path;
-    IBaseFilter* m_filter;
+    IBaseFilter* m_device_filter;
 };
 
 class DCameraCaps {
@@ -23,42 +24,15 @@ public:
     std::string m_frlist;
 };
 
-
 class WinDSCamera
 {
 public:
-    // 初始化COM，并创建 ICreateDevEnum 接口
     static DBool Init();
-    // 销毁 ICreateDevEnum 和 IEnumMoniker 接口
     static DVoid UnInit();
 
 public:
-    // 有哪些采集设备，每次重新创建一个 IEnumMoniker 接口来枚举
     static std::vector<DCameraInfo> GetDevices();
     static std::wstring GetInfoString(const DCameraInfo& info);
-
-    // 显示对应设备的设置窗口
     static DBool ShowSettingDialog(IBaseFilter* filter, DVoid* parentWindow, DUInt32 positionX, DUInt32 positionY);
-
-    // 指定的设备，有哪些采集能力
     static std::vector<DCameraCaps> GetDeviceCaps(IBaseFilter* pFilter);
-
-    static std::string MajorTypeName(GUID id);
-    static std::string SubTypeName(GUID id);
-    static std::string FormatTypeName(GUID id);
-
-    static std::string RECTToStr(RECT rc);
-    static std::string GUIDToStr(GUID id);
-    static std::string FRArrayToStr(void* p, DUInt32 len);
-    static std::string Dump_AM_MEDIA_TYPE(void* amt);
-    static std::string Dump_VIDEOINFOHEADER(void* vih);
-    static std::string Dump_VIDEOINFOHEADER2(void* vih2);
-
-private:
-    // Helper Functions
-    static IPin* GetInputPin(IBaseFilter* filter);
-    static IPin* GetOutputPin(IBaseFilter* filter, REFGUID Category);
-    static DBool PinMatchesCategory(IPin* pPin, REFGUID Category);
-    static DVoid FreeMediaType(AM_MEDIA_TYPE& mt);
-    static DUInt64 GetMaxOfFrameArray(DUInt64* maxFps, DUInt32 size);
 };

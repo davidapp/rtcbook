@@ -71,9 +71,9 @@ STDMETHODIMP WinDSCaptureInputPin::ReceiveConnection(IPin* connector, const AM_M
         return hr;
     }
 
-    //if (!MediaType2DShowCapability(media_type, &m_final_fmt)) {
-    //    return VFW_E_TYPE_NOT_ACCEPTED;
-    //}
+    if (!WinDS::MediaType2DShowCapability(media_type, &m_final_fmt)) {
+        return VFW_E_TYPE_NOT_ACCEPTED;
+    }
 
     m_connected_pin = connector;
     WinDS::ResetMediaType(&m_media_type);
@@ -153,7 +153,8 @@ STDMETHODIMP WinDSCaptureInputPin::EnumMediaTypes(IEnumMediaTypes** types)
 {
     //*types = new PinMediaTypeEnumerator(&req_vih_, req_subtype_);
     //(*types)->AddRef();
-    return S_OK;
+    //return S_OK;
+    return E_NOTIMPL;
 }
 
 STDMETHODIMP WinDSCaptureInputPin::QueryInternalConnections(IPin** pins, ULONG* count)

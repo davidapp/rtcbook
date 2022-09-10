@@ -150,8 +150,8 @@
     <ClInclude Include="..\..\Common\Base\DUtil.h" />
     <ClInclude Include="..\..\Common\File\DBmpFile.h" />
     <ClInclude Include="..\..\Common\Video\VideoDefines.h" />
+    <ClInclude Include="..\..\Common\Video\WinDS.h" />
     <ClInclude Include="..\..\Common\Video\WinDSCamera.h" />
-    <ClInclude Include="MainWindow.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="SettingDlg.h" />
   </ItemGroup>
@@ -164,6 +164,7 @@
     <ClCompile Include="..\..\Common\Base\DUTF8.cpp" />
     <ClCompile Include="..\..\Common\Base\DUtil.cpp" />
     <ClCompile Include="..\..\Common\File\DBmpFile.cpp" />
+    <ClCompile Include="..\..\Common\Video\WinDS.cpp" />
     <ClCompile Include="..\..\Common\Video\WinDSCamera.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>

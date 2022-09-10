@@ -2,8 +2,20 @@
 
 #include "DTypes.h"
 #include "Base/DAtomic.h"
+#include "Video/VideoDefines.h"
 #include <dshow.h>
-#include "VideoDefines.h"
+#include <string>
+#include <Initguid.h>
+
+#define SAFE_RELEASE(p) \
+    if (p) {            \
+        (p)->Release(); \
+        (p) = NULL;     \
+    }
+
+DEFINE_GUID(MEDIASUBTYPE_I420, 0x30323449, 0x0000, 0x0010, 0x80, 0x00, 0x00, 0xAA, 0x00, 0x38, 0x9B, 0x71);
+DEFINE_GUID(MEDIASUBTYPE_HDYC, 0x43594448, 0x0000, 0x0010, 0x80, 0x00, 0x00, 0xAA, 0x00, 0x38, 0x9B, 0x71);
+
 
 class WinDS {
 public:
@@ -11,6 +23,23 @@ public:
     static HRESULT CopyMediaType(AM_MEDIA_TYPE* target, const AM_MEDIA_TYPE* source);
     static DBool MediaType2DShowCapability(const AM_MEDIA_TYPE* media_type, DVideoFormat* capability);
     static DVoid GetSampleProperties(IMediaSample* sample, AM_SAMPLE2_PROPERTIES* props);
+
+    static std::string MajorTypeName(GUID id);
+    static std::string SubTypeName(GUID id);
+    static std::string FormatTypeName(GUID id);
+
+    static std::string RECTToStr(RECT rc);
+    static std::string GUIDToStr(GUID id);
+    static std::string FRArrayToStr(void* p, DUInt32 len);
+    static std::string Dump_AM_MEDIA_TYPE(void* amt);
+    static std::string Dump_VIDEOINFOHEADER(void* vih);
+    static std::string Dump_VIDEOINFOHEADER2(void* vih2);
+
+    static IPin* GetInputPin(IBaseFilter* filter);
+    static IPin* GetOutputPin(IBaseFilter* filter, REFGUID Category);
+    static DBool PinMatchesCategory(IPin* pPin, REFGUID Category);
+    static DVoid FreeMediaType(AM_MEDIA_TYPE& mt);
+    static DUInt64 GetMaxOfFrameArray(DUInt64* maxFps, DUInt32 size);
 };
 
 

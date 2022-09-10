@@ -7,11 +7,10 @@
 #include "atlmisc.h"
 #include "atlctrls.h"
 #include "atlgdi.h"
-#include "Base/DFile.h"
-#include "Base/DUtil.h"
-#include "SettingDlg.h"
+#include "Video/WinDSVideoCapture.h"
 
-class CMainWindow : public CWindowImpl<CMainWindow>
+
+class CMainWindow : public CWindowImpl<CMainWindow>, public WinDSVideoCaptureSink
 {
 public:
     DECLARE_WND_CLASS(L"RTCMainWin")
@@ -26,12 +25,22 @@ public:
     BEGIN_MSG_MAP(CMainWindow)
         MSG_WM_CREATE(OnCreate)
         MSG_WM_SIZE(OnSize)
-        COMMAND_ID_HANDLER(ID_DEVICE_SELECT, OnDeviceSelect)
+        COMMAND_ID_HANDLER(ID_CAMERA_START, OnCameraStart)
+        COMMAND_ID_HANDLER(ID_CAMERA_STOP, OnCameraStop)
     END_MSG_MAP()
+
+    virtual DVoid OnFrame(const DVideoFormat& frame) {
+        
+    }
+
+    virtual DVoid OnError(DUInt32 errorCode) {
+        
+    }
 
     int OnCreate(LPCREATESTRUCT lpCreateStruct)
     {
         CenterWindow();
+        m_vcap.SetSink(this);
         return 0;
     }
 
@@ -50,10 +59,15 @@ public:
         return 0;
     }
 
-    LRESULT OnDeviceSelect(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL& bHandled)
+    LRESULT OnCameraStart(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL& bHandled)
     {
-        CSettingDlg dlg;
-        dlg.DoModal();
+        m_vcap.Start();
+        return 0;
+    }
+
+    LRESULT OnCameraStop(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL& bHandled)
+    {
+        m_vcap.Stop();
         return 0;
     }
 
@@ -65,5 +79,6 @@ public:
 private:
     DInt32 m_Height;
     DInt32 m_Width;
+    WinDSVideoCapture m_vcap;
 };
 

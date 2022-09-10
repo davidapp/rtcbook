@@ -1,7 +1,7 @@
 ﻿#include "atl.h"
 #include "atldlgs.h"
 #include "resource.h"
-#include "MainWindow.h"
+#include "SettingDlg.h"
 #include "Video/WinDSCamera.h"
 
 CAppModule _Module;
@@ -11,17 +11,8 @@ int Run(LPTSTR /*lpCmdLine*/ = NULL, int nCmdShow = SW_SHOWDEFAULT)
     CMessageLoop theLoop;
     _Module.AddMessageLoop(&theLoop);
 
-    CMainWindow winMain;
-
-    if (winMain.Create(NULL, (LPRECT)CRect(0,0,800,600), L"Video Capture",
-        WS_VISIBLE | WS_OVERLAPPEDWINDOW, 0, ::LoadMenu(NULL, MAKEINTRESOURCE(IDR_MENU1))) == NULL)
-    {
-        ATLTRACE(_T("Main window creation failed!\n"));
-        return 0;
-    }
-
-    winMain.ShowWindow(nCmdShow);
-    winMain.UpdateWindow();
+    CSettingDlg dlg;
+    dlg.DoModal();
 
     int nRet = theLoop.Run();
 

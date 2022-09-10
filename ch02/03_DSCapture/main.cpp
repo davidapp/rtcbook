@@ -2,7 +2,7 @@
 #include "atldlgs.h"
 #include "resource.h"
 #include "MainWindow.h"
-#include "Video/WinDSCamera.h"
+#include "Video/WinDS.h"
 
 CAppModule _Module;
 
@@ -13,7 +13,7 @@ int Run(LPTSTR /*lpCmdLine*/ = NULL, int nCmdShow = SW_SHOWDEFAULT)
 
     CMainWindow winMain;
 
-    if (winMain.Create(NULL, (LPRECT)CRect(0,0,800,600), L"Video Capture",
+    if (winMain.Create(NULL, (LPRECT)CRect(0,0,800,600), L"DirectShow Video Capture",
         WS_VISIBLE | WS_OVERLAPPEDWINDOW, 0, ::LoadMenu(NULL, MAKEINTRESOURCE(IDR_MENU1))) == NULL)
     {
         ATLTRACE(_T("Main window creation failed!\n"));
@@ -34,11 +34,11 @@ int WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPTSTR lp
     ::InitCommonControls();
 
     _Module.Init(NULL, hInstance);
-    WinDSCamera::Init();
+    CoInitializeEx(NULL, COINIT_MULTITHREADED);
 
     int nRet = Run(lpCmdLine, nCmdShow);
 
-    WinDSCamera::UnInit();
+    CoUninitialize();
     _Module.Term();
 
     return nRet;

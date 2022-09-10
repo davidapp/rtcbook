@@ -60,6 +60,7 @@ public:
     {
         ::EndDialog(m_hWnd, wID);
         m_hWnd = NULL;
+        PostQuitMessage(0);
         return 0;
     }
 
@@ -79,7 +80,7 @@ public:
         std::vector<DCameraInfo> devs = WinDSCamera::GetDevices();
         DUInt32 index = m_devlist.GetCurSel();
         if (index < devs.size()) {
-            WinDSCamera::ShowSettingDialog(devs[index].m_filter, this->m_hWnd, 0, 0);
+            WinDSCamera::ShowSettingDialog(devs[index].m_device_filter, this->m_hWnd, 0, 0);
         }
         return 0;
     }
@@ -91,7 +92,7 @@ public:
         if (index < devs.size()) {
             m_capList.ResetContent();
 
-            std::vector<DCameraCaps> caps = WinDSCamera::GetDeviceCaps(devs[index].m_filter);
+            std::vector<DCameraCaps> caps = WinDSCamera::GetDeviceCaps(devs[index].m_device_filter);
             for (DUInt32 i = 0; i < caps.size(); i++)
             {
                 CString str;
@@ -107,7 +108,7 @@ public:
         std::vector<DCameraInfo> devs = WinDSCamera::GetDevices();
         DUInt32 index = m_devlist.GetCurSel();
         if (index < devs.size()) {
-            std::vector<DCameraCaps> caps = WinDSCamera::GetDeviceCaps(devs[index].m_filter);
+            std::vector<DCameraCaps> caps = WinDSCamera::GetDeviceCaps(devs[index].m_device_filter);
             DUInt32 indexcap = m_capList.GetCurSel();
             if (indexcap < caps.size()) {
                 std::wstring wstr = DUtil::s2ws(caps[indexcap].m_amt);

@@ -20,6 +20,9 @@
     <ClCompile Include="..\..\Common\File\DBmpFile.cpp">
       <Filter>File</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\Common\Video\WinDS.cpp">
+      <Filter>Common\Video</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Common\Base\DBuffer.h">
@@ -40,9 +43,6 @@
     <ClInclude Include="..\..\Common\Video\WinDSCamera.h">
       <Filter>Common\Video</Filter>
     </ClInclude>
-    <ClInclude Include="MainWindow.h">
-      <Filter>Window</Filter>
-    </ClInclude>
     <ClInclude Include="SettingDlg.h">
       <Filter>Window</Filter>
     </ClInclude>
@@ -51,6 +51,9 @@
     </ClInclude>
     <ClInclude Include="..\..\Common\File\DBmpFile.h">
       <Filter>File</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\Video\WinDS.h">
+      <Filter>Common\Video</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
