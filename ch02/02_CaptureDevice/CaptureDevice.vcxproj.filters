@@ -1,0 +1,81 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="Current" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="..\..\Common\Base\DBuffer.cpp">
+      <Filter>Common\Base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\Base\DFile.cpp">
+      <Filter>Common\Base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\Base\DUTF8.cpp">
+      <Filter>Common\Base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\Base\DUtil.cpp">
+      <Filter>Common\Base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\Video\WinDSCamera.cpp">
+      <Filter>Common\Video</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\File\DBmpFile.cpp">
+      <Filter>File</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\Common\Base\DBuffer.h">
+      <Filter>Common\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\Base\DFile.h">
+      <Filter>Common\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\Base\DUTF8.h">
+      <Filter>Common\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\Base\DUtil.h">
+      <Filter>Common\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\Video\VideoDefines.h">
+      <Filter>Common\Video</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\Video\WinDSCamera.h">
+      <Filter>Common\Video</Filter>
+    </ClInclude>
+    <ClInclude Include="MainWindow.h">
+      <Filter>Window</Filter>
+    </ClInclude>
+    <ClInclude Include="SettingDlg.h">
+      <Filter>Window</Filter>
+    </ClInclude>
+    <ClInclude Include="resource.h">
+      <Filter>Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\File\DBmpFile.h">
+      <Filter>File</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Common">
+      <UniqueIdentifier>{4bd355b0-92e2-416a-abe6-1fee05b62ffd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource">
+      <UniqueIdentifier>{5ca7e566-6a39-4eaf-b329-bfa894b88a09}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Window">
+      <UniqueIdentifier>{2d66bd89-4c3e-4d95-88e1-a694efb415a1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Common\Base">
+      <UniqueIdentifier>{589eed99-69fe-4a59-be3e-480ff3aa17e8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Common\Video">
+      <UniqueIdentifier>{43d457d5-4fa6-4ef1-8448-81775a7facf7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="File">
+      <UniqueIdentifier>{ff945b75-39f9-49fb-b004-11d5cb1c4ab5}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="CaptureDevice.rc">
+      <Filter>Resource</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+</Project>

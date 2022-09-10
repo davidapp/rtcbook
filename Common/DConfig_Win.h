@@ -59,6 +59,7 @@
 // Windows Related Headers
 #include <winsock2.h>
 #include <windows.h>
+#include <initguid.h>
 
 // Line
 #define D_LINE '\r''\n'
