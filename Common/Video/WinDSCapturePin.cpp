@@ -3,6 +3,9 @@
 #include "WinDSCapturePin.h"
 #include <dvdmedia.h>
 #include "VideoDefines.h"
+#include "atlbase.h"
+#include "atlapp.h"
+#include "atlmisc.h"
 
 WinDSCaptureInputPin::WinDSCaptureInputPin(IBaseFilter* filter)
 {
@@ -224,9 +227,17 @@ STDMETHODIMP WinDSCaptureInputPin::Receive(IMediaSample* media_sample)
 
     AM_SAMPLE2_PROPERTIES sample_props = {};
     WinDS::GetSampleProperties(media_sample, &sample_props);
+    WinDS::MediaType2DShowCapability(sample_props.pMediaType, &m_final_fmt);
 
     //DVideoFrame frame((DByte*)sample_props.pbBuffer, sample_props.lActual, m_final_fmt.width, m_final_fmt.height, m_final_fmt.format);
+    
+    
+    CString strLog;
+    strLog.Format(L"%d*%d size:%d\r\n", m_final_fmt.width, m_final_fmt.height, sample_props.lActual);
 
+    OutputDebugString(strLog);
+    
+    media_sample->Release();
 
     return S_OK;
 }
