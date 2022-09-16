@@ -68,12 +68,14 @@ public:
     {
         DVideoFrame* pFrame = (DVideoFrame*)wParam;
         BITMAPINFO* pHeader = (BITMAPINFO*)lParam;
+
         CClientDC dc(m_hWnd);
         dc.StretchDIBits(0, 0, pFrame->m_width, pFrame->m_height, 0, 0,
             pFrame->m_width, pFrame->m_height, pFrame->m_data.GetBuf(), 
             pHeader, DIB_RGB_COLORS, SRCCOPY);
 
         delete pFrame;
+        delete pHeader;
         return 0;
     }
 

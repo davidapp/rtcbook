@@ -260,7 +260,7 @@ std::vector<DCameraCaps> WinDSCamera::GetDeviceCaps(IBaseFilter* pFilter)
             {
                 mformat = DPixelFmt::Unknown;
             }
-            cap.m_pixel_format = (DUInt32)mformat;
+            cap.m_pixel_format = mformat;
 
             // 支持的帧率
             if (hrVC == S_OK)
