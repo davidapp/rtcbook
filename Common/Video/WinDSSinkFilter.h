@@ -7,7 +7,7 @@
 class WinDSSinkFilter : public IBaseFilter 
 {
 public:
-    WinDSSinkFilter();
+    WinDSSinkFilter(HWND hWnd);
     virtual ~WinDSSinkFilter();
 
     // IUnknown
@@ -37,6 +37,7 @@ public:
     FILTER_STATE m_state = State_Stopped;
     FILTER_INFO m_info = {};
     WinDSCaptureInputPin* m_input_pin;
+    HWND m_hWnd;
 
 private:
     DAtomInt32 m_refCount;

@@ -1,17 +1,18 @@
-
 #include "WinDS.h"
 #include "WinDSCapturePin.h"
 #include <dvdmedia.h>
 #include "VideoDefines.h"
+#include "DVideoFrame.h"
 #include "atlbase.h"
 #include "atlapp.h"
 #include "atlmisc.h"
 
-WinDSCaptureInputPin::WinDSCaptureInputPin(IBaseFilter* filter)
+WinDSCaptureInputPin::WinDSCaptureInputPin(IBaseFilter* filter, HWND hWnd)
 {
     m_info.pFilter = filter;
     m_info.dir = PINDIR_INPUT;
     m_refCount = 0;
+    m_hNotifyWnd = hWnd;
 }
 
 WinDSCaptureInputPin::~WinDSCaptureInputPin() 
@@ -75,9 +76,8 @@ STDMETHODIMP WinDSCaptureInputPin::ReceiveConnection(IPin* connector, const AM_M
         return hr;
     }
 
-    //if (!WinDS::MediaType2DShowCapability(media_type, &m_final_fmt)) {
-    //    return VFW_E_TYPE_NOT_ACCEPTED;
-    //}
+    // https://docs.microsoft.com/en-us/windows/win32/api/strmif/ns-strmif-am_media_type
+    // When two pins connect, they negotiate a media type, which is defined by an AM_MEDIA_TYPE structure.
 
     m_connected_pin = connector;
     WinDS::ResetMediaType(&m_media_type);
@@ -139,7 +139,10 @@ STDMETHODIMP WinDSCaptureInputPin::QueryId(LPWSTR* id)
 {
     size_t len = lstrlenW(m_info.achName);
     *id = reinterpret_cast<LPWSTR>(CoTaskMemAlloc((len + 1) * sizeof(wchar_t)));
-    lstrcpyW(*id, m_info.achName);
+    if (id == nullptr) return E_FAIL;
+    else {
+        lstrcpyW(*id, m_info.achName);
+    }
     return S_OK;
 }
 
@@ -149,15 +152,11 @@ STDMETHODIMP WinDSCaptureInputPin::QueryAccept(const AM_MEDIA_TYPE* media_type)
         return VFW_E_WRONG_STATE;
     }
 
-    DVideoFormat capability(m_final_fmt);
-    return true;// WinDS::MediaType2DShowCapability(media_type, &capability) ? S_FALSE : S_OK;
+    return S_OK;
 }
 
 STDMETHODIMP WinDSCaptureInputPin::EnumMediaTypes(IEnumMediaTypes** types)
 {
-    //*types = new PinMediaTypeEnumerator(&req_vih_, req_subtype_);
-    //(*types)->AddRef();
-    //return S_OK;
     return E_NOTIMPL;
 }
 
@@ -195,6 +194,7 @@ STDMETHODIMP WinDSCaptureInputPin::GetAllocator(IMemAllocator** allocator)
         if (FAILED(hr))
             return hr;
     }
+
     *allocator = allocator_;
     allocator_->AddRef();
     return S_OK;
@@ -204,9 +204,11 @@ STDMETHODIMP WinDSCaptureInputPin::NotifyAllocator(IMemAllocator* allocator, BOO
 {
     if (allocator_)
         allocator_->Release();
+
     allocator_ = allocator;
     if (allocator_)
         allocator_->AddRef();
+
     return S_OK;
 }
 
@@ -227,16 +229,22 @@ STDMETHODIMP WinDSCaptureInputPin::Receive(IMediaSample* media_sample)
 
     AM_SAMPLE2_PROPERTIES sample_props = {};
     WinDS::GetSampleProperties(media_sample, &sample_props);
-    WinDS::MediaType2DShowCapability(sample_props.pMediaType, &m_final_fmt);
+    if (sample_props.pMediaType) {
+        WinDS::MediaType2DShowCapability(sample_props.pMediaType, &m_final_fmt);
+    }
+    else {
+        WinDS::MediaType2DShowCapability(&m_media_type, &m_final_fmt);
+    }
 
-    //DVideoFrame frame((DByte*)sample_props.pbBuffer, sample_props.lActual, m_final_fmt.width, m_final_fmt.height, m_final_fmt.format);
-    
-    
     CString strLog;
     strLog.Format(L"%d*%d size:%d\r\n", m_final_fmt.width, m_final_fmt.height, sample_props.lActual);
-
     OutputDebugString(strLog);
     
+    DVideoFrame *frame = new DVideoFrame((DByte*)sample_props.pbBuffer, sample_props.lActual, m_final_fmt.width, m_final_fmt.height, m_final_fmt.format);
+    BITMAPINFOHEADER* header = new BITMAPINFOHEADER();
+    memcpy_s(header, sizeof(BITMAPINFOHEADER), &(m_final_fmt.bmp_header), sizeof(BITMAPINFOHEADER));
+    ::PostMessage(m_hNotifyWnd, WM_ONFRAME, (WPARAM)frame, (LPARAM)header);
+
     media_sample->Release();
 
     return S_OK;
@@ -290,6 +298,7 @@ void WinDSCaptureInputPin::ClearAllocator(bool decommit)
 
     if (decommit)
         allocator_->Decommit();
+
     allocator_->Release();
     allocator_ = nullptr;
 }
