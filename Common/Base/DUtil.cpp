@@ -15,10 +15,10 @@ std::string DUtil::ws2s(const std::wstring& ws)
     std::string curLocale = setlocale(LC_ALL, NULL);
     setlocale(LC_ALL, "chs");
     const wchar_t* _Source = ws.c_str();
-    size_t _Dsize = ws.size() + 1;
+    size_t _Dsize = ws.size() * 2 + 1;
     char* _Dest = new char[_Dsize];
     memset(_Dest, 0, _Dsize);
-    wcstombs_s(&convertedChars, _Dest, _Dsize, _Source, ws.size()*2);
+    wcstombs_s(&convertedChars, _Dest, _Dsize, _Source, ws.size() * 2);
     std::string result = _Dest;
     delete[]_Dest;
     setlocale(LC_ALL, curLocale.c_str());

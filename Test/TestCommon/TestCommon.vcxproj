@@ -143,6 +143,10 @@
     <ClInclude Include="..\..\Common\Base\DMsgQueue.h" />
     <ClInclude Include="..\..\Common\Base\DUTF8.h" />
     <ClInclude Include="..\..\Common\Base\DUtil.h" />
+    <ClInclude Include="..\..\Common\DConfig.h" />
+    <ClInclude Include="..\..\Common\DConfig_iOS.h" />
+    <ClInclude Include="..\..\Common\DConfig_Win.h" />
+    <ClInclude Include="..\..\Common\DTypes.h" />
     <ClInclude Include="..\Base\DTestMsgQueue.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

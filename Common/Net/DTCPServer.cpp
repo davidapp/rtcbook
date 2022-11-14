@@ -84,6 +84,7 @@ DVoid DTCPServer::ServerLoop()
             std::string strReason = DNet::GetLastNetErrorStr(errCode);
             m_pRecvSink->OnListenError(this->m_sock, errCode, strReason);
         }
+        m_nObjState = DTCPSERVER_STATE_STOPED;
         return;
     }
 
@@ -93,6 +94,8 @@ DVoid DTCPServer::ServerLoop()
             std::string strReason = DNet::GetLastNetErrorStr(errCode);
             m_pRecvSink->OnListenError(this->m_sock, errCode, strReason);
         }
+        m_nObjState = DTCPSERVER_STATE_STOPED;
+        return;
     }
     else {
         if (m_pRecvSink && m_pRecvSink->IsAlive()) {
@@ -111,8 +114,11 @@ DVoid DTCPServer::ServerLoop()
             std::string strReason = DNet::GetLastNetErrorStr(errCode);
             m_pRecvSink->OnListenError(this->m_sock, errCode, strReason);
         }
+        m_nObjState = DTCPSERVER_STATE_STOPED;
+        return;
     }
 
+    m_nObjState = DTCPSERVER_STATE_RUNNING;
     fd_set fdread;
     fd_set fdwrite;
     fd_set fdexp;

@@ -3,7 +3,7 @@
 #include "DTypes.h"
 #include "Base/DBuffer.h"
 #include "Base/DUtil.h"
-#include "DTCPClient.h"
+#include "DTCP.h"
 #include <string>
 #include <vector>
 #include <mutex>

@@ -193,8 +193,7 @@ public:
         {
             DFile file;
             file.OpenFileRead(DUtil::ws2s(dlg.m_szFileName).c_str());
-            // Max 100KB 
-            DUInt32 readsize = 100 * 1024;
+            DUInt32 readsize = 100 * 1024;  // Max 100KB 
             if (file.GetSize() < readsize) readsize = (DUInt32)file.GetSize();
             DBuffer buf = file.Read(readsize);
             std::string hexList = buf.ToHexList();
