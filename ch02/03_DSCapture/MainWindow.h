@@ -8,9 +8,9 @@
 #include "atlctrls.h"
 #include "atlgdi.h"
 #include "Video/WinDSVideoCapture.h"
+#include "Video/DVideoFrame.h"
 
-
-class CMainWindow : public CWindowImpl<CMainWindow>, public WinDSVideoCaptureSink
+class CMainWindow : public CWindowImpl<CMainWindow>
 {
 public:
     DECLARE_WND_CLASS(L"RTCMainWin")
@@ -27,20 +27,13 @@ public:
         MSG_WM_SIZE(OnSize)
         COMMAND_ID_HANDLER(ID_CAMERA_START, OnCameraStart)
         COMMAND_ID_HANDLER(ID_CAMERA_STOP, OnCameraStop)
+        MESSAGE_HANDLER(WM_ONFRAME, OnFrame)
     END_MSG_MAP()
-
-    virtual DVoid OnFrame(const DVideoFormat& frame) {
-        
-    }
-
-    virtual DVoid OnError(DUInt32 errorCode) {
-        
-    }
 
     int OnCreate(LPCREATESTRUCT lpCreateStruct)
     {
         CenterWindow();
-        m_vcap.Init(this);
+        m_vcap.Init(this->m_hWnd);
         return 0;
     }
 
@@ -68,6 +61,21 @@ public:
     LRESULT OnCameraStop(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL& bHandled)
     {
         m_vcap.Stop();
+        return 0;
+    }
+
+    LRESULT OnFrame(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
+    {
+        DVideoFrame* pFrame = (DVideoFrame*)wParam;
+        BITMAPINFO* pHeader = (BITMAPINFO*)lParam;
+
+        CClientDC dc(m_hWnd);
+        dc.StretchDIBits(0, 0, pFrame->m_width, pFrame->m_height, 0, 0,
+            pFrame->m_width, pFrame->m_height, pFrame->m_data.GetBuf(), 
+            pHeader, DIB_RGB_COLORS, SRCCOPY);
+
+        delete pFrame;
+        delete pHeader;
         return 0;
     }
 

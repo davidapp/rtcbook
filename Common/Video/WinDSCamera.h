@@ -19,7 +19,7 @@ public:
     DUInt32 m_width;
     DUInt32 m_height;
     DUInt32 m_frame_rate;
-    DUInt32 m_pixel_format;
+    DPixelFmt m_pixel_format;
     std::string m_amt;
     std::string m_frlist;
 };

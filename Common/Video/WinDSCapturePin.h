@@ -10,7 +10,7 @@
 class WinDSCaptureInputPin : public IMemInputPin, public IPin
 {
 public:
-    WinDSCaptureInputPin(IBaseFilter* filter);
+    WinDSCaptureInputPin(IBaseFilter* filter, HWND hwnd);
     virtual ~WinDSCaptureInputPin();
 
     // IUnknown
@@ -59,4 +59,6 @@ private:
 
     AM_MEDIA_TYPE m_media_type = {};
     DVideoFormat m_final_fmt;
+
+    HWND m_hNotifyWnd;
 };

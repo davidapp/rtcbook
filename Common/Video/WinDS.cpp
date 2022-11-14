@@ -256,6 +256,50 @@ HRESULT WinDS::CopyMediaType(AM_MEDIA_TYPE* target, const AM_MEDIA_TYPE* source)
     return S_OK;
 }
 
+bool WinDS::MediaType2DShowCapability(const AM_MEDIA_TYPE* media_type, struct tagDVideoFormat* capability) 
+{ 
+    if (!media_type || media_type->majortype != MEDIATYPE_Video || !media_type->pbFormat) {
+        return false;
+    }
+
+    const BITMAPINFOHEADER* bih = nullptr;
+    if (media_type->formattype == FORMAT_VideoInfo) {
+        bih = &reinterpret_cast<VIDEOINFOHEADER*>(media_type->pbFormat)->bmiHeader;
+    }
+    else if (media_type->formattype != FORMAT_VideoInfo2) {
+        bih = &reinterpret_cast<VIDEOINFOHEADER2*>(media_type->pbFormat)->bmiHeader;
+    }
+    else {
+        return false;
+    }
+
+    const GUID& sub_type = media_type->subtype;
+    if (sub_type == MEDIASUBTYPE_MJPG && bih->biCompression == MAKEFOURCC('M', 'J', 'P', 'G')) {
+        capability->format = DPixelFmt::MJPG;
+    }
+    else if (sub_type == MEDIASUBTYPE_I420 && bih->biCompression == MAKEFOURCC('I', '4', '2', '0')) {
+        capability->format = DPixelFmt::I420;
+    }
+    else if (sub_type == MEDIASUBTYPE_YUY2 && bih->biCompression == MAKEFOURCC('Y', 'U', 'Y', '2')) {
+        capability->format = DPixelFmt::YUY2;
+    }
+    else if (sub_type == MEDIASUBTYPE_RGB32) {
+        capability->format = DPixelFmt::BGRA;
+    }
+    else if (sub_type == MEDIASUBTYPE_RGB24 && bih->biCompression == BI_RGB) {
+        capability->format = DPixelFmt::RGB24;
+    }
+    else {
+        return false;
+    }
+
+    capability->width = bih->biWidth;
+    capability->height = bih->biHeight;
+    memcpy_s(&capability->bmp_header, sizeof(BITMAPINFOHEADER), bih, sizeof(BITMAPINFOHEADER));
+    
+    return true;
+}
+
 DVoid WinDS::GetSampleProperties(IMediaSample* sample, AM_SAMPLE2_PROPERTIES* props)
 {
     HRESULT hr = S_OK;
