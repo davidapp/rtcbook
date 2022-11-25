@@ -18,10 +18,10 @@ DVoid DTestUTF8::TestSimple()
     DUInt32 nCount = DUTF8::UTF8Length16((DUInt16*)strU, 14);
     DEXPECT_EQ(nCount, 15);
 
-    DString str(strU);
-    DStringA strA1 = str.ToUTF8();
-    DStringA strA2 = DUTF8::UCS2ToUTF8((DUInt16*)strU, 14);
-    DEXPECT_EQ_STRING(strA1.GetStr(), strA2.GetStr(), nCount);
+    std::wstring str((wchar_t*)strU);
+    std::string strA1 = str.ToUTF8();
+    std::string strA2 = DUTF8::UCS2ToUTF8((DUInt16*)strU, 14);
+    DEXPECT_EQ_STRING(strA1.GetStr(), strA2.c_str(), nCount);
 
     DBool bRes = false;
     bRes = DUTF8::isUTF8((DByte*)strA1.GetStr(), strA1.GetDataLength());
@@ -30,7 +30,7 @@ DVoid DTestUTF8::TestSimple()
     bRes = DUTF8::isUTF8((DByte*)strA2.GetStr(), strA2.GetDataLength());
     DEXPECT_TRUE(bRes);
 
-    DString str2 = DUTF8::UTF8ToUCS2((DByte*)strA2.GetStr(), strA2.GetDataLength());
+    std::wstring str2 = DUTF8::UTF8ToUCS2((DByte*)strA2.GetStr(), strA2.GetDataLength());
     DEXPECT_EQ_STRING(str2.GetStr(), strU, 14);
 
     ShowResult();
