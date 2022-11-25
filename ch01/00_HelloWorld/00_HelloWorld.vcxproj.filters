@@ -27,5 +27,17 @@
     <ClInclude Include="..\..\Common\Base\DBuffer.h">
       <Filter>Common\Base</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\Common\DConfig.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\DConfig_iOS.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\DConfig_Win.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\DTypes.h">
+      <Filter>Common</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

@@ -136,6 +136,10 @@
   <ItemGroup>
     <ClInclude Include="..\..\Common\Base\DBuffer.h" />
     <ClInclude Include="..\..\Common\Base\DUtil.h" />
+    <ClInclude Include="..\..\Common\DConfig.h" />
+    <ClInclude Include="..\..\Common\DConfig_iOS.h" />
+    <ClInclude Include="..\..\Common\DConfig_Win.h" />
+    <ClInclude Include="..\..\Common\DTypes.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
