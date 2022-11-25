@@ -1,4 +1,4 @@
-#include "DTestBuffer.h"
+ï»¿#include "DTestBuffer.h"
 #include "Base/DTest.h"
 #include "Base/DBuffer.h"
 
@@ -12,15 +12,15 @@ DVoid DTestBuffer::TestBasic()
 {
     ClearResult();
 
-    // DBuffer Ö»ÔÚÕ»ÉÏÎ¬»¤Ò»¸öÖ¸Õë
+    // DBuffer åªåœ¨æ ˆä¸Šç»´æŠ¤ä¸€ä¸ªæŒ‡é’ˆ
     DEXPECT_EQ_SIZE_T(DSizeOf(DBuffer), DSizeOf(DVoid*));
 
-    // ¿Õ Buffer
+    // ç©º Buffer
     DBuffer nullbuf(nullptr, 0);
     //DEXPECT_TRUE(nullbuf.GetBuf() == DBuffer::GetNullBuffer().GetBuf());
     //DEXPECT_EQ_INT(nullbuf.GetSize(), 0);
 
-    // ÆÕÍ¨¹¹Ôì
+    // æ™®é€šæ„é€ 
     DBuffer b(10);
     b.FillWithRandom();
     DEXPECT_TRUE(b.GetBuf() != nullptr);
@@ -31,12 +31,12 @@ DVoid DTestBuffer::TestBasic()
     DEXPECT_TRUE(b2.GetBuf() == b.GetBuf());
     DEXPECT_EQ_INT(b2.GetSize(), 10);
 
-    // ¿½±´¹¹Ôì
+    // æ‹·è´æ„é€ 
     //DBuffer b3(b2);
     //DEXPECT_TRUE(b3.GetBuf() == b2.GetBuf());
     //DEXPECT_EQ_INT(b3.GetSize(), 10);
 
-    // Ğ´Ê±¿½±´
+    // å†™æ—¶æ‹·è´
     //b3.SetAt(2, 255);
     //DEXPECT_TRUE(b3.GetBuf() != b2.GetBuf());
     //DEXPECT_EQ_INT(b3.GetAt(2), 255);
