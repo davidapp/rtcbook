@@ -133,7 +133,10 @@
     <ClCompile Include="..\..\Common\Base\DMsgQueue.cpp" />
     <ClCompile Include="..\..\Common\Base\DUTF8.cpp" />
     <ClCompile Include="..\..\Common\Base\DUtil.cpp" />
+    <ClCompile Include="..\..\Common\Base\DXP.cpp" />
+    <ClCompile Include="..\Base\DTestBuffer.cpp" />
     <ClCompile Include="..\Base\DTestMsgQueue.cpp" />
+    <ClCompile Include="..\Base\DTestUTF8.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -141,13 +144,17 @@
     <ClInclude Include="..\..\Common\Base\DBuffer.h" />
     <ClInclude Include="..\..\Common\Base\DFile.h" />
     <ClInclude Include="..\..\Common\Base\DMsgQueue.h" />
+    <ClInclude Include="..\..\Common\Base\DTest.h" />
     <ClInclude Include="..\..\Common\Base\DUTF8.h" />
     <ClInclude Include="..\..\Common\Base\DUtil.h" />
+    <ClInclude Include="..\..\Common\Base\DXP.h" />
     <ClInclude Include="..\..\Common\DConfig.h" />
     <ClInclude Include="..\..\Common\DConfig_iOS.h" />
     <ClInclude Include="..\..\Common\DConfig_Win.h" />
     <ClInclude Include="..\..\Common\DTypes.h" />
+    <ClInclude Include="..\Base\DTestBuffer.h" />
     <ClInclude Include="..\Base\DTestMsgQueue.h" />
+    <ClInclude Include="..\Base\DTestUTF8.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

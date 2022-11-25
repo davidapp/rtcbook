@@ -1,12 +1,12 @@
-// TestCommon.cpp : This file contains the 'main' function. Program execution begins and ends there.
-//
-
-#include <iostream>
+#include "Base/DTestBuffer.h"
+#include "Base/DTestUTF8.h"
 #include "Base/DTestMsgQueue.h"
 
 int main()
 {
+    DTestUTF8::Test();
     //DTestMsgQueue::Use_1q2t();
-    DTestMsgQueue::Use();
+    //DTestMsgQueue::Use();
+
     return 0;
 }

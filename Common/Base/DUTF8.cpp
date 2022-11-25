@@ -1,4 +1,4 @@
-#include "DUTF8.h"
+﻿#include "DUTF8.h"
 
 ////////////////////////////////////////////////////////////////////
 //
@@ -84,7 +84,7 @@ std::string DUTF8::UCS2ToUTF8(const std::wstring& wstr)
     return DUTF8::UCS2ToUTF8((DUInt16*)wstr.c_str(), (DUInt32)wstr.length() * 2);
 }
 */
-/*
+
 std::wstring DUTF8::UTF8ToUCS2(DByte* pUTF8Str, DUInt32 uBufSize)
 {
     std::wstring strRet;
@@ -110,7 +110,6 @@ std::wstring DUTF8::UTF8ToUCS2(const std::string& str)
 {
     return DUTF8::UTF8ToUCS2((DByte*)str.c_str(), (DUInt32)str.length());
 }
-*/
 
 std::string DUTF8::UCS4ToUTF8(DUInt32* pUnicode61, DUInt32 uBufSize)
 {
@@ -131,6 +130,25 @@ std::string DUTF8::UCS4ToUTF8(DUInt32* pUnicode61, DUInt32 uBufSize)
         }
     }
     return strRet;
+}
+
+DUInt32 DUTF8::UTF8ToUCS2(DByte* pUTF8Str, DUInt32 uBufSize, DWChar* pDest)
+{
+    DUInt32 nLen = DUTF8::GetUTF8CharCount(pUTF8Str, uBufSize);
+    DUInt32 nIndex = 0;
+    if (nLen > 0)
+    {
+        DByte* pStart = pUTF8Str;
+        while (*pStart)
+        {
+            DUInt16 c = 0;
+            DUInt32 nCharLen = UTF8Decode16(pStart, &c);
+            pDest[nIndex] = c;
+            nIndex++;
+            pStart += nCharLen;
+        }
+    }
+    return nIndex;
 }
 
 DUInt32 DUTF8::UTF8Encode16(DUInt16 c, DByte* pStr)
