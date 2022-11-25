@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 // Windows 下的子平台架构，目前有 X86 X64 IA64 三种架构
 #if defined(_M_IX86)

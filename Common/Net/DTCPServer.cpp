@@ -245,7 +245,7 @@ DVoid DTCPServer::Process(DBuffer buf, DSocket client)
     DUInt8 cmd = rbContent.ReadUInt8();
     // 看一下命令字
     if (cmd == 1) {
-        std::wstring wstr = rbContent.ReadString();
+        //std::wstring wstr = rbContent.ReadString();
         // 给房间内所有其他 socket 发送一条消息
 
         //DMsgQueue::PostQueueMsg(m_replyQueue, SERVER_REPLY_MSG_RECV, buf, (DVoid*)this);

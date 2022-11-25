@@ -4,7 +4,7 @@
 #include "atlmisc.h"
 #include "atlcrack.h"
 #include "resource.h"
-#include "Base/DUtil.h"
+#include "Base/DXP.h"
 #include "Net/DNet.h"
 #include "Net/DTCPClient.h"
 #include <string>
@@ -220,7 +220,7 @@ public:
         m_ip.GetWindowText(strIP);
         CString strPort;
         m_port.GetWindowText(strPort);
-        m_sock.Connect(DUtil::ws2s(std::wstring(strIP)), DUtil::Str16ToInt32(std::wstring(strPort)));
+        m_sock.Connect(DXP::ws2s(std::wstring(strIP)), DXP::Str16ToInt32(std::wstring(strPort)));
         return 0;
     }
 
@@ -249,7 +249,8 @@ public:
         gb.AddUInt32(1 + 4 + inputlen * 2, true); // len
         gb.AddUInt8(TCP_DEMO_CMD_SENDTEXT);
         std::wstring wstr(m_sendText);
-        gb.AddString(wstr);
+        std::string str = DXP::ws2s(wstr);
+        gb.AddStringA(str);
         DBuffer bufSend = gb.Finish();
         m_sock.Send(bufSend);
     }
@@ -273,7 +274,8 @@ public:
         gb.AddUInt32(1 + 4 + inputlen * 2, true); // len
         gb.AddUInt8(TCP_DEMO_CMD_SETNAME);
         std::wstring wstr(strText);
-        gb.AddString(wstr);
+        std::string str = DXP::ws2s(wstr);
+        gb.AddStringA(str);
         DBuffer bufSend = gb.Finish();
         m_sock.Send(bufSend);
         return 0;

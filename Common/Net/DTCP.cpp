@@ -1,6 +1,6 @@
 ﻿#include "DTCP.h"
 #include "DNet.h"
-#include "Base/DUtil.h"
+#include "Base/DXP.h"
 
 #if defined(BUILD_FOR_WINDOWS)
 #include <winsock2.h>
@@ -104,7 +104,7 @@ std::string DTCPSocket::GetName()
     inet_ntop(AF_INET, &sa.sin_addr.S_un.S_addr, ip, 100);
     std::string ret = ip;
     ret += ":";
-    ret += DUtil::UInt16ToStr(sa.sin_port);
+    ret += DXP::UInt16ToStr(sa.sin_port);
     return ret;
 }
 
@@ -194,7 +194,7 @@ DBool DTCPSocket::SyncConnect(DCStr strIP, DUInt16 wPort)
     memset(&addr, 0, sizeof(SOCKADDR_IN));
     addr.sin_family = AF_INET;
     addr.sin_addr.s_addr = DNet::IPStrToUint32(strIP);
-    addr.sin_port = DUtil::Swap16(wPort);
+    addr.sin_port = DXP::Swap16(wPort);
     if (connect(m_sock, (SOCKADDR*)&addr, sizeof(SOCKADDR_IN)) == SOCKET_ERROR)
     {
         DUInt32 errCode = DNet::GetLastNetError();

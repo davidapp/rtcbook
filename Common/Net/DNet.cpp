@@ -1,5 +1,5 @@
 ﻿#include "DNet.h"
-#include "Base/DUtil.h"
+#include "Base/DXP.h"
 #include "Base/DMsgQueue.h"
 
 #if defined(BUILD_FOR_WINDOWS)
@@ -76,7 +76,7 @@ std::string DNet::GetLastNetErrorStr(DUInt32 errCode)
         }
     }
 
-    return DUtil::ws2s(strRet);
+    return DXP::ws2s(strRet);
 #else
     std::string strRet;
     strRet = strerror(errCode);

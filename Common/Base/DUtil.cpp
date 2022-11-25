@@ -1,4 +1,4 @@
-#include "DUtil.h"
+﻿#include "DUtil.h"
 #include "DXP.h"
 #include "File/DBmpFile.h"
 #include "Base/DBuffer.h"
@@ -8,111 +8,6 @@
 #include <dshow.h>
 #include "Video/WinDSCamera.h"
 #endif
-
-std::string DUtil::BoolToStr(DBool b)
-{
-    if (b) return "true";
-    return "false";
-}
-
-std::string DUtil::UInt8ToStr(DUInt8 c)
-{
-    char buf[10] = {};
-#if defined(BUILD_FOR_WINDOWS)
-    sprintf_s(buf, 10, "%u", c);
-#else
-    sprintf(buf, "%u", c);
-#endif
-    std::string str = buf;
-    return str;
-}
-
-std::string DUtil::UInt16ToStr(DUInt16 c, DBool bLE)
-{
-    char buf[10] = {};
-    if (!bLE) {
-        c = DXP::Swap16(c);
-    }
-#if defined(BUILD_FOR_WINDOWS)
-    sprintf_s(buf, 10, "%u", c);
-#else
-    sprintf(buf, "%u", c);
-#endif
-    std::string str = buf;
-    return str;
-}
-
-std::string DUtil::UInt32ToStr(DUInt32 c, DBool bLE)
-{
-    char buf[20] = {};
-    if (!bLE) {
-        c = DXP::Swap32(c);
-    }
-#if defined(BUILD_FOR_WINDOWS)
-    sprintf_s(buf, 20, "%u", c);
-#else
-    sprintf(buf, "%u", c);
-#endif
-    std::string str = buf;
-    return str;
-}
-
-std::string DUtil::UInt64ToStr(DUInt64 c, DBool bLE)
-{
-    char buf[40] = {};
-    if (!bLE) {
-        c = DXP::Swap64(c);
-    }
-#if defined(BUILD_FOR_WINDOWS)
-    sprintf_s(buf, 40, "%llu", c);
-#else
-    sprintf(buf, "%llu", c);
-#endif
-    std::string str = buf;
-    return str;
-}
-
-std::string DUtil::UInt8ToStr16(DUInt8 c)
-{
-    char buf[10] = {};
-#if defined(BUILD_FOR_WINDOWS)
-    sprintf_s(buf, 10, "0x%02x", c);
-#else
-    sprintf(buf, "0x%02x", c);
-#endif
-    std::string str = buf;
-    return str;
-}
-
-std::string DUtil::UInt16ToStr16(DUInt16 c, DBool bLE)
-{
-    char buf[10] = {};
-    if (!bLE) {
-        c = DXP::Swap16(c);
-    }
-#if defined(BUILD_FOR_WINDOWS)
-    sprintf_s(buf, 10, "0x%02x %02x", c >> 8, c & 0x00FF);
-#else
-    sprintf(buf, "0x%02x %02x", c >> 8, c & 0x00FF);
-#endif
-    std::string str = buf;
-    return str;
-}
-
-std::string DUtil::UInt32ToStr16(DUInt32 c, DBool bLE)
-{
-    char buf[20] = {};
-    if (!bLE) {
-        c = DXP::Swap32(c);
-    }
-#if defined(BUILD_FOR_WINDOWS)
-    sprintf_s(buf, 20, "0x%02x %02x %02x %02x", c >> 24, (c >> 16) & 0x000000FF, (c >> 8) & 0x000000FF, c & 0x000000FF);
-#else
-    sprintf(buf, "0x%02x %02x %02x %02x", c >> 24, (c >> 16) & 0x000000FF, (c >> 8) & 0x000000FF, c & 0x000000FF);
-#endif
-    std::string str = buf;
-    return str;
-}
 
 std::string DUtil::UInt64ToStr16(DUInt64 c, DBool bLE)
 {
@@ -125,90 +20,11 @@ std::string DUtil::UInt64ToStr16(DUInt64 c, DBool bLE)
     return str;
 }
 
-std::string DUtil::Int8ToStr(DInt8 c)
-{
-    char buf[10] = {};
-#if defined(BUILD_FOR_WINDOWS)
-    sprintf_s(buf, 10, "%d", c);
-#else
-    sprintf(buf, "%d", c);
-#endif
-    std::string str = buf;
-    return str;
-}
-
-std::string DUtil::Int16ToStr(DInt16 c, DBool bLE)
-{
-    char buf[10] = {};
-    if (!bLE) {
-        c = DXP::Swap16(c);
-    }
-#if defined(BUILD_FOR_WINDOWS)
-    sprintf_s(buf, 10, "%d", c);
-#else
-    sprintf(buf, "%d", c);
-#endif
-    std::string str = buf;
-    return str;
-}
-
-std::string DUtil::Int32ToStr(DInt32 c, DBool bLE)
-{
-    char buf[20] = {};
-    if (!bLE) {
-        c = DXP::Swap32(c);
-    }
-#if defined(BUILD_FOR_WINDOWS)
-    sprintf_s(buf, 20, "%d", c);
-#else
-    sprintf(buf, "%d", c);
-#endif
-    std::string str = buf;
-    return str;
-}
-
-std::string DUtil::Int64ToStr(DInt64 c, DBool bLE)
-{
-    char buf[40] = {};
-    if (!bLE) {
-        c = DXP::Swap64(c);
-    }
-#if defined(BUILD_FOR_WINDOWS)
-    sprintf_s(buf, 40, "%lld", c);
-#else
-    sprintf(buf, "%lld", c);
-#endif
-    std::string str = buf;
-    return str;
-}
-
-std::string DUtil::AddrToStr(void* p)
-{
-    char buf[20] = {};
-#if defined(BUILD_FOR_WINDOWS)
-    sprintf_s(buf, 20, "0x%p", p);
-#else
-    sprintf(buf, "0x%p", p);
-#endif
-    std::string str = buf;
-    return str;
-}
-
 std::string DUtil::BuffToStr(void* p, DUInt32 len)
 {
     DBuffer buf(p, len);
     std::string ret = buf.ToHexString();
     return ret;
-}
-
-DInt32 DUtil::StrToInt32(std::string str)
-{
-    return atoi(str.c_str());
-}
-
-DInt32 DUtil::Str16ToInt32(std::wstring wstr)
-{
-    return atoi(DXP::ws2s(wstr).c_str());
 }
 
 
