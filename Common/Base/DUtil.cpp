@@ -1,5 +1,5 @@
 #include "DUtil.h"
-#include <locale>
+#include "DXP.h"
 #include "File/DBmpFile.h"
 #include "Base/DBuffer.h"
 #include "Video/VideoDefines.h"
@@ -31,7 +31,7 @@ std::string DUtil::UInt16ToStr(DUInt16 c, DBool bLE)
 {
     char buf[10] = {};
     if (!bLE) {
-        c = Swap16(c);
+        c = DXP::Swap16(c);
     }
 #if defined(BUILD_FOR_WINDOWS)
     sprintf_s(buf, 10, "%u", c);
@@ -46,7 +46,7 @@ std::string DUtil::UInt32ToStr(DUInt32 c, DBool bLE)
 {
     char buf[20] = {};
     if (!bLE) {
-        c = Swap32(c);
+        c = DXP::Swap32(c);
     }
 #if defined(BUILD_FOR_WINDOWS)
     sprintf_s(buf, 20, "%u", c);
@@ -61,7 +61,7 @@ std::string DUtil::UInt64ToStr(DUInt64 c, DBool bLE)
 {
     char buf[40] = {};
     if (!bLE) {
-        c = Swap64(c);
+        c = DXP::Swap64(c);
     }
 #if defined(BUILD_FOR_WINDOWS)
     sprintf_s(buf, 40, "%llu", c);
@@ -88,7 +88,7 @@ std::string DUtil::UInt16ToStr16(DUInt16 c, DBool bLE)
 {
     char buf[10] = {};
     if (!bLE) {
-        c = Swap16(c);
+        c = DXP::Swap16(c);
     }
 #if defined(BUILD_FOR_WINDOWS)
     sprintf_s(buf, 10, "0x%02x %02x", c >> 8, c & 0x00FF);
@@ -103,7 +103,7 @@ std::string DUtil::UInt32ToStr16(DUInt32 c, DBool bLE)
 {
     char buf[20] = {};
     if (!bLE) {
-        c = Swap32(c);
+        c = DXP::Swap32(c);
     }
 #if defined(BUILD_FOR_WINDOWS)
     sprintf_s(buf, 20, "0x%02x %02x %02x %02x", c >> 24, (c >> 16) & 0x000000FF, (c >> 8) & 0x000000FF, c & 0x000000FF);
@@ -118,7 +118,7 @@ std::string DUtil::UInt64ToStr16(DUInt64 c, DBool bLE)
 {
     char buf[40] = {};
     if (!bLE) {
-        c = Swap64(c);
+        c = DXP::Swap64(c);
     }
     DBuffer bufTemp(&c, 8);
     std::string str = bufTemp.ToHexString();
@@ -141,7 +141,7 @@ std::string DUtil::Int16ToStr(DInt16 c, DBool bLE)
 {
     char buf[10] = {};
     if (!bLE) {
-        c = Swap16(c);
+        c = DXP::Swap16(c);
     }
 #if defined(BUILD_FOR_WINDOWS)
     sprintf_s(buf, 10, "%d", c);
@@ -156,7 +156,7 @@ std::string DUtil::Int32ToStr(DInt32 c, DBool bLE)
 {
     char buf[20] = {};
     if (!bLE) {
-        c = Swap32(c);
+        c = DXP::Swap32(c);
     }
 #if defined(BUILD_FOR_WINDOWS)
     sprintf_s(buf, 20, "%d", c);
@@ -171,7 +171,7 @@ std::string DUtil::Int64ToStr(DInt64 c, DBool bLE)
 {
     char buf[40] = {};
     if (!bLE) {
-        c = Swap64(c);
+        c = DXP::Swap64(c);
     }
 #if defined(BUILD_FOR_WINDOWS)
     sprintf_s(buf, 40, "%lld", c);
@@ -208,7 +208,7 @@ DInt32 DUtil::StrToInt32(std::string str)
 
 DInt32 DUtil::Str16ToInt32(std::wstring wstr)
 {
-    return atoi(ws2s(wstr).c_str());
+    return atoi(DXP::ws2s(wstr).c_str());
 }
 
 

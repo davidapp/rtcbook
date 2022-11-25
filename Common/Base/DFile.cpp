@@ -1,5 +1,5 @@
 ﻿#include "DFile.h"
-#include "DUtil.h"
+#include "DXP.h"
 
 #if defined(BUILD_FOR_WINDOWS) && (BUILD_FOR_WINDOWS==1)
 // 把属性可选值都列在这里，要用的时候，就不需要看文档了
@@ -63,7 +63,7 @@ DBool DFile::OpenFileRead(DCStr strPath)
 {
 #if defined(BUILD_FOR_WINDOWS) && (BUILD_FOR_WINDOWS==1)
     std::string strPathA(strPath);
-    m_hFile = CreateFileW((LPCWSTR)DUtil::s2ws(strPathA).c_str(), GENERIC_READ, FILE_SHARE_READ | FILE_SHARE_WRITE, NULL, OPEN_EXISTING, FILE_FLAG_SEQUENTIAL_SCAN, NULL);
+    m_hFile = CreateFileW((LPCWSTR)DXP::s2ws(strPathA).c_str(), GENERIC_READ, FILE_SHARE_READ | FILE_SHARE_WRITE, NULL, OPEN_EXISTING, FILE_FLAG_SEQUENTIAL_SCAN, NULL);
 #else
     m_hFile = open(strPath, O_RDONLY);
 #endif
@@ -78,7 +78,7 @@ DBool DFile::OpenFileWrite(DCStr strPath, DOpenFileMode nFlag)
 {
 #if defined(BUILD_FOR_WINDOWS) && (BUILD_FOR_WINDOWS==1)
     std::string strPathA(strPath);
-    m_hFile = CreateFileW((LPCWSTR)DUtil::s2ws(strPathA).c_str(), GENERIC_WRITE, FILE_SHARE_READ, NULL, nFlag, FILE_FLAG_SEQUENTIAL_SCAN, NULL);
+    m_hFile = CreateFileW((LPCWSTR)DXP::s2ws(strPathA).c_str(), GENERIC_WRITE, FILE_SHARE_READ, NULL, nFlag, FILE_FLAG_SEQUENTIAL_SCAN, NULL);
 #else
     if (nFlag == DFILE_OPEN_ALWAYS)
     {
@@ -103,12 +103,12 @@ DBool DFile::OpenFileRW(DCStr strPath, DOpenFileMode nFlag)
     if (nFlag == DFILE_OPEN_ALWAYS)
     {
         //create if not exist
-        m_hFile = CreateFileW((LPCWSTR)DUtil::s2ws(strPathA).c_str(), GENERIC_READ | GENERIC_WRITE, FILE_SHARE_READ, NULL, OPEN_ALWAYS, FILE_FLAG_SEQUENTIAL_SCAN, NULL);
+        m_hFile = CreateFileW((LPCWSTR)DXP::s2ws(strPathA).c_str(), GENERIC_READ | GENERIC_WRITE, FILE_SHARE_READ, NULL, OPEN_ALWAYS, FILE_FLAG_SEQUENTIAL_SCAN, NULL);
     }
     else if (nFlag == DFILE_OPEN_EXISTING)
     {
         //failed if not exist
-        m_hFile = CreateFileW((LPCWSTR)DUtil::s2ws(strPathA).c_str(), GENERIC_READ | GENERIC_WRITE, FILE_SHARE_READ, NULL, OPEN_EXISTING, FILE_FLAG_SEQUENTIAL_SCAN, NULL);
+        m_hFile = CreateFileW((LPCWSTR)DXP::s2ws(strPathA).c_str(), GENERIC_READ | GENERIC_WRITE, FILE_SHARE_READ, NULL, OPEN_EXISTING, FILE_FLAG_SEQUENTIAL_SCAN, NULL);
     }
 #else
     if (nFlag == DFILE_OPEN_ALWAYS)

@@ -39,9 +39,6 @@
     <ClInclude Include="..\..\Common\Base\DBuffer.h">
       <Filter>Common\Base</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Common\Base\DUtil.h">
-      <Filter>Common\Base</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\Common\Base\DFile.h">
       <Filter>Common\Base</Filter>
     </ClInclude>
@@ -52,9 +49,6 @@
   <ItemGroup>
     <ClCompile Include="main.cpp" />
     <ClCompile Include="..\..\Common\Base\DBuffer.cpp">
-      <Filter>Common\Base</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Common\Base\DUtil.cpp">
       <Filter>Common\Base</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Common\Base\DFile.cpp">

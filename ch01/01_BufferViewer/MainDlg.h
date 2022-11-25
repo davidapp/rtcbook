@@ -7,7 +7,7 @@
 #include "resource.h"
 #include "Base/DBuffer.h"
 #include "Base/DFile.h"
-#include "Base/DUtil.h"
+#include "Base/DXP.h"
 #include "atldlgs.h"
 
 wchar_t err_reason[5][15] = {
@@ -55,7 +55,7 @@ public:
         DBuffer buf(100);
         buf.FillWithRandom();
         std::string hexList = buf.ToHexList();
-        m_hex.SetWindowText(DUtil::s2ws(hexList).c_str());
+        m_hex.SetWindowText(DXP::s2ws(hexList).c_str());
         return TRUE;
     }
 
@@ -71,7 +71,7 @@ public:
     {
         CString str;
         m_hex.GetWindowText(str);
-        std::string strA = DUtil::ws2s(std::wstring(str));
+        std::string strA = DXP::ws2s(std::wstring(str));
         DUInt32 reason = 0;
         DBool bOK = DBuffer::IsValidHexStr(strA.c_str(), &reason);
         if (!bOK)
@@ -94,7 +94,7 @@ public:
     {
         CString str;
         m_base.GetWindowText(str);
-        std::string strA = DUtil::ws2s(std::wstring(str));
+        std::string strA = DXP::ws2s(std::wstring(str));
         DUInt32 reason = 0;
         DBool bOK = DBuffer::IsValidBase64Str(strA.c_str(), &reason);
         if (!bOK)
@@ -115,7 +115,7 @@ public:
     {
         CString str;
         m_hex.GetWindowText(str);
-        std::string strA = DUtil::ws2s(std::wstring(str));
+        std::string strA = DXP::ws2s(std::wstring(str));
         DUInt32 reason = 0;
         DBool bOK = DBuffer::IsValidHexStr(strA.c_str(), &reason);
         if (!bOK)
@@ -128,7 +128,7 @@ public:
         DBuffer buf;
         buf.InitWithHexString(strA);
         std::string strHA = buf.ToHexString();
-        m_hex.SetWindowText(DUtil::s2ws(strHA).c_str());
+        m_hex.SetWindowText(DXP::s2ws(strHA).c_str());
         return 0;
     }
 
@@ -136,7 +136,7 @@ public:
     {
         CString str;
         m_hex.GetWindowText(str);
-        std::string strA = DUtil::ws2s(std::wstring(str));
+        std::string strA = DXP::ws2s(std::wstring(str));
         DUInt32 reason = 0;
         DBool bOK = DBuffer::IsValidHexStr(strA.c_str(), &reason);
         if (!bOK)
@@ -149,7 +149,7 @@ public:
         DBuffer buf;
         buf.InitWithHexString(strA);
         std::string strHA = buf.ToHexList();
-        m_hex.SetWindowText(DUtil::s2ws(strHA).c_str());
+        m_hex.SetWindowText(DXP::s2ws(strHA).c_str());
         return 0;
     }
 
@@ -157,7 +157,7 @@ public:
     {
         CString str;
         m_hex.GetWindowText(str);
-        std::string strA = DUtil::ws2s(std::wstring(str));
+        std::string strA = DXP::ws2s(std::wstring(str));
         DUInt32 reason = 0;
         DBool bOK = DBuffer::IsValidHexStr(strA.c_str(), &reason);
         if (!bOK)
@@ -170,7 +170,7 @@ public:
         DBuffer buf;
         buf.InitWithHexString(strA);
         std::string strBA = buf.ToBase64String();
-        m_base.SetWindowText(DUtil::s2ws(strBA).c_str());
+        m_base.SetWindowText(DXP::s2ws(strBA).c_str());
         return 0;
     }
 
@@ -179,10 +179,10 @@ public:
         CString str;
         m_base.GetWindowText(str);
         DBuffer buf;
-        std::string strA = DUtil::ws2s(std::wstring(str));
+        std::string strA = DXP::ws2s(std::wstring(str));
         buf.InitWithBase64String(strA);
         std::string strAList = buf.ToHexList();
-        m_hex.SetWindowText(DUtil::s2ws(strAList).c_str());
+        m_hex.SetWindowText(DXP::s2ws(strAList).c_str());
         return 0;
     }
 
@@ -192,12 +192,12 @@ public:
         if (dlg.DoModal() == IDOK)
         {
             DFile file;
-            file.OpenFileRead(DUtil::ws2s(dlg.m_szFileName).c_str());
+            file.OpenFileRead(DXP::ws2s(dlg.m_szFileName).c_str());
             DUInt32 readsize = 100 * 1024;  // Max 100KB 
             if (file.GetSize() < readsize) readsize = (DUInt32)file.GetSize();
             DBuffer buf = file.Read(readsize);
             std::string hexList = buf.ToHexList();
-            m_hex.SetWindowText(DUtil::s2ws(hexList).c_str());
+            m_hex.SetWindowText(DXP::s2ws(hexList).c_str());
         }
         return 0;
     }
@@ -207,7 +207,7 @@ public:
         DBuffer buf(100);
         buf.FillWithRandom();
         std::string hexList = buf.ToHexList();
-        m_hex.SetWindowText(DUtil::s2ws(hexList).c_str());
+        m_hex.SetWindowText(DXP::s2ws(hexList).c_str());
         return 0;
     }
 

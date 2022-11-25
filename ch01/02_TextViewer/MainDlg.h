@@ -5,8 +5,8 @@
 #include "atlmisc.h"
 #include "atlcrack.h"
 #include "resource.h"
+#include "Base/DXP.h"
 #include "Base/DBuffer.h"
-#include "Base/DUtil.h"
 #include "Base/DUTF8.h"
 
 class CMainDlg : public CDialogImpl<CMainDlg>, public CMessageFilter
@@ -60,19 +60,19 @@ public:
         CString str;
         m_text.GetWindowText(str);
 
-        std::string strA = DUtil::ws2s(str.GetString()).c_str();
+        std::string strA = DXP::ws2s(str.GetString()).c_str();
         DBuffer bufStrA((DByte*)strA.c_str(), (DUInt32)strA.length());
         std::string bufStrAHex = bufStrA.ToHexList(8);
-        m_ansibin.SetWindowText(DUtil::s2ws(bufStrAHex.c_str()).c_str());
+        m_ansibin.SetWindowText(DXP::s2ws(bufStrAHex.c_str()).c_str());
 
         DBuffer bufStr((DByte*)str.GetString(), str.GetLength()*2);
         std::string bufStrHex = bufStr.ToHexList(8);
-        m_unicodebin.SetWindowText(DUtil::s2ws(bufStrHex.c_str()).c_str());
+        m_unicodebin.SetWindowText(DXP::s2ws(bufStrHex.c_str()).c_str());
 
         std::string strU8A = DUTF8::UCS2ToUTF8((DUInt16*)str.GetString(), str.GetLength()*2);
         DBuffer bufU8A((DByte*)strU8A.c_str(), (DUInt32)strU8A.length());
         std::string strU8AHex = bufU8A.ToHexList(8);
-        m_utf8bin.SetWindowText(DUtil::s2ws(strU8AHex.c_str()).c_str());
+        m_utf8bin.SetWindowText(DXP::s2ws(strU8AHex.c_str()).c_str());
 
         return 0;
     }
@@ -82,9 +82,9 @@ public:
         CString str;
         m_ansibin.GetWindowText(str);
         DBuffer bufText;
-        bufText.InitWithHexString(DUtil::ws2s(str.GetString()).c_str());
+        bufText.InitWithHexString(DXP::ws2s(str.GetString()).c_str());
         std::string strAnsi((const DChar*)bufText.GetBuf(), bufText.GetSize());
-        std::wstring strShow = DUtil::s2ws(strAnsi);
+        std::wstring strShow = DXP::s2ws(strAnsi);
         m_text.SetWindowTextW(strShow.c_str());
         return 0;
     }
@@ -94,7 +94,7 @@ public:
         CString str;
         m_unicodebin.GetWindowText(str);
         DBuffer bufText;
-        bufText.InitWithHexString(DUtil::ws2s(str.GetString()).c_str());
+        bufText.InitWithHexString(DXP::ws2s(str.GetString()).c_str());
         std::wstring strShow((const DWChar*)bufText.GetBuf(), bufText.GetSize()/2);
         m_text.SetWindowTextW(strShow.c_str());
         return 0;
@@ -105,7 +105,7 @@ public:
         CString str;
         m_unicodebin.GetWindowText(str);
         DBuffer bufText;
-        bufText.InitWithHexString(DUtil::ws2s(str.GetString()).c_str());
+        bufText.InitWithHexString(DXP::ws2s(str.GetString()).c_str());
         std::string strAnsi((const DChar*)bufText.GetBuf(), bufText.GetSize());
         if (::IsTextUnicode(strAnsi.c_str(), (int)strAnsi.size(), NULL))
         {
@@ -123,7 +123,7 @@ public:
         CString str;
         m_utf8bin.GetWindowText(str);
         DBuffer bufText;
-        bufText.InitWithHexString(DUtil::ws2s(str.GetString()).c_str());
+        bufText.InitWithHexString(DXP::ws2s(str.GetString()).c_str());
         std::string strAnsi((const DChar*)bufText.GetBuf(), bufText.GetSize());
         std::wstring strShow = DUTF8::UTF8ToUCS2((DByte*)strAnsi.c_str(), (DUInt32)strAnsi.size());
         m_text.SetWindowTextW(strShow.c_str());
@@ -135,7 +135,7 @@ public:
         CString str;
         m_utf8bin.GetWindowText(str);
         DBuffer bufText;
-        bufText.InitWithHexString(DUtil::ws2s(str.GetString()).c_str());
+        bufText.InitWithHexString(DXP::ws2s(str.GetString()).c_str());
         std::string strAnsi((const DChar*)bufText.GetBuf(), bufText.GetSize());
         if (DUTF8::isUTF8((DByte*)strAnsi.c_str(), (DUInt32)strAnsi.length()))
         {
