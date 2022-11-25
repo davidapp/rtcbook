@@ -7,6 +7,9 @@
       <FileRef
          location = "group:ch01/00_HelloWorld/00_HelloWorld_mac.xcodeproj">
       </FileRef>
+      <FileRef
+         location = "group:ch01/01_BufferViewer_mac/01_BufferViewer_mac.xcodeproj">
+      </FileRef>
    </Group>
    <Group
       location = "container:"

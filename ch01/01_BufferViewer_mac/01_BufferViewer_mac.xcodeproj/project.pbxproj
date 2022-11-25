@@ -7,12 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		2B44BEFB2930B37900CC20EA /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2B44BEFA2930B37900CC20EA /* main.cpp */; };
-		2B44BF0B2930B8C200CC20EA /* DXP.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2B44BF0A2930B8C200CC20EA /* DXP.cpp */; };
+		2B44BF192930BBBF00CC20EA /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2B44BF182930BBBF00CC20EA /* main.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
-		2B44BEEE2930B1E200CC20EA /* CopyFiles */ = {
+		2B44BF132930BBBF00CC20EA /* CopyFiles */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = /usr/share/man/man1/;
@@ -24,18 +23,12 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		2B44BEF02930B1E200CC20EA /* 00_HelloWorld */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = 00_HelloWorld; sourceTree = BUILT_PRODUCTS_DIR; };
-		2B44BEFA2930B37900CC20EA /* main.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
-		2B44BEFE2930B41C00CC20EA /* DConfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DConfig.h; path = ../../Common/DConfig.h; sourceTree = "<group>"; };
-		2B44BEFF2930B41C00CC20EA /* DTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DTypes.h; path = ../../Common/DTypes.h; sourceTree = "<group>"; };
-		2B44BF002930B41C00CC20EA /* DConfig_Win.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DConfig_Win.h; path = ../../Common/DConfig_Win.h; sourceTree = "<group>"; };
-		2B44BF012930B41C00CC20EA /* DConfig_iOS.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DConfig_iOS.h; path = ../../Common/DConfig_iOS.h; sourceTree = "<group>"; };
-		2B44BF092930B8C200CC20EA /* DXP.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DXP.h; path = ../../Common/Base/DXP.h; sourceTree = "<group>"; };
-		2B44BF0A2930B8C200CC20EA /* DXP.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = DXP.cpp; path = ../../Common/Base/DXP.cpp; sourceTree = "<group>"; };
+		2B44BF152930BBBF00CC20EA /* 01_BufferViewer */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = 01_BufferViewer; sourceTree = BUILT_PRODUCTS_DIR; };
+		2B44BF182930BBBF00CC20EA /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		2B44BEED2930B1E200CC20EA /* Frameworks */ = {
+		2B44BF122930BBBF00CC20EA /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -45,79 +38,65 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		2B44BEE72930B1E200CC20EA = {
+		2B44BF0C2930BBBF00CC20EA = {
 			isa = PBXGroup;
 			children = (
-				2B44BEFC2930B38200CC20EA /* Common */,
-				2B44BEFA2930B37900CC20EA /* main.cpp */,
-				2B44BEF12930B1E200CC20EA /* Products */,
+				2B44BF172930BBBF00CC20EA /* 01_BufferViewer_mac */,
+				2B44BF162930BBBF00CC20EA /* Products */,
 			);
 			sourceTree = "<group>";
 		};
-		2B44BEF12930B1E200CC20EA /* Products */ = {
+		2B44BF162930BBBF00CC20EA /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				2B44BEF02930B1E200CC20EA /* 00_HelloWorld */,
+				2B44BF152930BBBF00CC20EA /* 01_BufferViewer */,
 			);
 			name = Products;
 			sourceTree = "<group>";
 		};
-		2B44BEFC2930B38200CC20EA /* Common */ = {
+		2B44BF172930BBBF00CC20EA /* 01_BufferViewer_mac */ = {
 			isa = PBXGroup;
 			children = (
-				2B44BEFD2930B38C00CC20EA /* Base */,
-				2B44BF012930B41C00CC20EA /* DConfig_iOS.h */,
-				2B44BF002930B41C00CC20EA /* DConfig_Win.h */,
-				2B44BEFE2930B41C00CC20EA /* DConfig.h */,
-				2B44BEFF2930B41C00CC20EA /* DTypes.h */,
+				2B44BF182930BBBF00CC20EA /* main.cpp */,
 			);
-			name = Common;
-			sourceTree = "<group>";
-		};
-		2B44BEFD2930B38C00CC20EA /* Base */ = {
-			isa = PBXGroup;
-			children = (
-				2B44BF0A2930B8C200CC20EA /* DXP.cpp */,
-				2B44BF092930B8C200CC20EA /* DXP.h */,
-			);
-			name = Base;
+			path = 01_BufferViewer_mac;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		2B44BEEF2930B1E200CC20EA /* 00_HelloWorld */ = {
+		2B44BF142930BBBF00CC20EA /* 01_BufferViewer */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 2B44BEF72930B1E200CC20EA /* Build configuration list for PBXNativeTarget "00_HelloWorld" */;
+			buildConfigurationList = 2B44BF1C2930BBBF00CC20EA /* Build configuration list for PBXNativeTarget "01_BufferViewer" */;
 			buildPhases = (
-				2B44BEEC2930B1E200CC20EA /* Sources */,
-				2B44BEED2930B1E200CC20EA /* Frameworks */,
-				2B44BEEE2930B1E200CC20EA /* CopyFiles */,
+				2B44BF112930BBBF00CC20EA /* Sources */,
+				2B44BF122930BBBF00CC20EA /* Frameworks */,
+				2B44BF132930BBBF00CC20EA /* CopyFiles */,
 			);
 			buildRules = (
 			);
 			dependencies = (
 			);
-			name = 00_HelloWorld;
-			productName = mac;
-			productReference = 2B44BEF02930B1E200CC20EA /* 00_HelloWorld */;
+			name = 01_BufferViewer;
+			productName = 01_BufferViewer_mac;
+			productReference = 2B44BF152930BBBF00CC20EA /* 01_BufferViewer */;
 			productType = "com.apple.product-type.tool";
 		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
-		2B44BEE82930B1E200CC20EA /* Project object */ = {
+		2B44BF0D2930BBBF00CC20EA /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
 				LastUpgradeCheck = 1340;
 				TargetAttributes = {
-					2B44BEEF2930B1E200CC20EA = {
+					2B44BF142930BBBF00CC20EA = {
 						CreatedOnToolsVersion = 13.4.1;
 					};
 				};
 			};
-			buildConfigurationList = 2B44BEEB2930B1E200CC20EA /* Build configuration list for PBXProject "00_HelloWorld_mac" */;
+			buildConfigurationList = 2B44BF102930BBBF00CC20EA /* Build configuration list for PBXProject "01_BufferViewer_mac" */;
 			compatibilityVersion = "Xcode 13.0";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -125,30 +104,29 @@
 				en,
 				Base,
 			);
-			mainGroup = 2B44BEE72930B1E200CC20EA;
-			productRefGroup = 2B44BEF12930B1E200CC20EA /* Products */;
+			mainGroup = 2B44BF0C2930BBBF00CC20EA;
+			productRefGroup = 2B44BF162930BBBF00CC20EA /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				2B44BEEF2930B1E200CC20EA /* 00_HelloWorld */,
+				2B44BF142930BBBF00CC20EA /* 01_BufferViewer */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXSourcesBuildPhase section */
-		2B44BEEC2930B1E200CC20EA /* Sources */ = {
+		2B44BF112930BBBF00CC20EA /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2B44BF0B2930B8C200CC20EA /* DXP.cpp in Sources */,
-				2B44BEFB2930B37900CC20EA /* main.cpp in Sources */,
+				2B44BF192930BBBF00CC20EA /* main.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin XCBuildConfiguration section */
-		2B44BEF52930B1E200CC20EA /* Debug */ = {
+		2B44BF1A2930BBBF00CC20EA /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -206,7 +184,7 @@
 			};
 			name = Debug;
 		};
-		2B44BEF62930B1E200CC20EA /* Release */ = {
+		2B44BF1B2930BBBF00CC20EA /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -257,24 +235,22 @@
 			};
 			name = Release;
 		};
-		2B44BEF82930B1E200CC20EA /* Debug */ = {
+		2B44BF1D2930BBBF00CC20EA /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = G4B7ZBVBTD;
 				ENABLE_HARDENED_RUNTIME = YES;
-				HEADER_SEARCH_PATHS = ../../Common;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
 		};
-		2B44BEF92930B1E200CC20EA /* Release */ = {
+		2B44BF1E2930BBBF00CC20EA /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = G4B7ZBVBTD;
 				ENABLE_HARDENED_RUNTIME = YES;
-				HEADER_SEARCH_PATHS = ../../Common;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
@@ -282,25 +258,25 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		2B44BEEB2930B1E200CC20EA /* Build configuration list for PBXProject "00_HelloWorld_mac" */ = {
+		2B44BF102930BBBF00CC20EA /* Build configuration list for PBXProject "01_BufferViewer_mac" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				2B44BEF52930B1E200CC20EA /* Debug */,
-				2B44BEF62930B1E200CC20EA /* Release */,
+				2B44BF1A2930BBBF00CC20EA /* Debug */,
+				2B44BF1B2930BBBF00CC20EA /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		2B44BEF72930B1E200CC20EA /* Build configuration list for PBXNativeTarget "00_HelloWorld" */ = {
+		2B44BF1C2930BBBF00CC20EA /* Build configuration list for PBXNativeTarget "01_BufferViewer" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				2B44BEF82930B1E200CC20EA /* Debug */,
-				2B44BEF92930B1E200CC20EA /* Release */,
+				2B44BF1D2930BBBF00CC20EA /* Debug */,
+				2B44BF1E2930BBBF00CC20EA /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
-	rootObject = 2B44BEE82930B1E200CC20EA /* Project object */;
+	rootObject = 2B44BF0D2930BBBF00CC20EA /* Project object */;
 }
