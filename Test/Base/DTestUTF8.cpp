@@ -1,4 +1,4 @@
-﻿#include "DTestUTF8.h"
+#include "DTestUTF8.h"
 #include "Base/DTest.h"
 #include "Base/DUTF8.h"
 
@@ -25,17 +25,17 @@ DVoid DTestUTF8::TestSimple()
     DEXPECT_EQ_STRING(strA1.c_str(), strA2.c_str(), nCount);
     
     DBool bRes = false;
-    bRes = DUTF8::isUTF8((DByte*)strA1.c_str(), strA1.size());
+    bRes = DUTF8::isUTF8((DByte*)strA1.c_str(), (DUInt32)strA1.size());
     DEXPECT_TRUE(bRes);
 
-    bRes = DUTF8::isUTF8((DByte*)strA2.c_str(), strA2.size());
+    bRes = DUTF8::isUTF8((DByte*)strA2.c_str(), (DUInt32)strA2.size());
     DEXPECT_TRUE(bRes);
 
-    DUInt32 nCharCount = DUTF8::GetUTF8CharCount((DByte*)strA2.c_str(), strA2.size());
+    DUInt32 nCharCount = DUTF8::GetUTF8CharCount((DByte*)strA2.c_str(), (DUInt32)strA2.size());
     DEXPECT_EQ(nCharCount, 7);
 
     DWChar* pStr16 = new DWChar[nCharCount + 1];
-    DUInt32 nCount16 = DUTF8::UTF8ToUCS2((DByte*)strA2.c_str(), strA2.size(), pStr16);
+    DUInt32 nCount16 = DUTF8::UTF8ToUCS2((DByte*)strA2.c_str(), (DUInt32)strA2.size(), pStr16);
     DEXPECT_EQ(nCount16, 7);
     DEXPECT_EQ_STRING(pStr16, strU, 14);
     delete[] pStr16;
@@ -103,7 +103,7 @@ DVoid DTestUTF8::TestConvAll()
     DEXPECT_EQ_INT(total3, 63488);  //3字节 UTF8字符
     // 测试结果将完全和 Windows的转换函数对齐
 #else
-    printf("can only run on Windows");
+    printf("DTestUTF8::TestConvAll() can only run on Windows\n");
 #endif
 
     ShowResult();
