@@ -10,27 +10,13 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\Common\Base\DUtil.cpp">
-      <Filter>Common\Base</Filter>
-    </ClCompile>
-    <ClCompile Include="main.cpp">
-      <Filter>Common</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Common\Base\DBuffer.cpp">
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="..\..\Common\Base\DXP.cpp">
       <Filter>Common\Base</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\Common\Base\DUtil.h">
-      <Filter>Common\Base</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Common\Base\DBuffer.h">
-      <Filter>Common\Base</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\Common\DConfig.h">
-      <Filter>Common</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Common\DConfig_iOS.h">
       <Filter>Common</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Common\DConfig_Win.h">
@@ -38,6 +24,9 @@
     </ClInclude>
     <ClInclude Include="..\..\Common\DTypes.h">
       <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\Base\DXP.h">
+      <Filter>Common\Base</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

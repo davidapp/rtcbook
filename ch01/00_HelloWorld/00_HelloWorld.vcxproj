@@ -129,15 +129,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\Common\Base\DBuffer.cpp" />
-    <ClCompile Include="..\..\Common\Base\DUtil.cpp" />
+    <ClCompile Include="..\..\Common\Base\DXP.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\Common\Base\DBuffer.h" />
-    <ClInclude Include="..\..\Common\Base\DUtil.h" />
+    <ClInclude Include="..\..\Common\Base\DXP.h" />
     <ClInclude Include="..\..\Common\DConfig.h" />
-    <ClInclude Include="..\..\Common\DConfig_iOS.h" />
     <ClInclude Include="..\..\Common\DConfig_Win.h" />
     <ClInclude Include="..\..\Common\DTypes.h" />
   </ItemGroup>
