@@ -1,7 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Workspace
    version = "1.0">
-   <FileRef
-      location = "group:ch01/00_HelloWorld/00_HelloWorld_mac.xcodeproj">
-   </FileRef>
+   <Group
+      location = "container:"
+      name = "Ch1">
+      <FileRef
+         location = "group:ch01/00_HelloWorld/00_HelloWorld_mac.xcodeproj">
+      </FileRef>
+   </Group>
+   <Group
+      location = "container:"
+      name = "Ch2">
+   </Group>
 </Workspace>
