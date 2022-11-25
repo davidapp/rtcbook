@@ -56,27 +56,27 @@
 #include <sys/select.h> //for fd_set
 #include <sys/syscall.h>
 
-//stdarg.h
+// stdarg.h
 #include <stdarg.h>
 typedef __builtin_va_list DVAList;
 #define D_VA_Start(ap, param) __builtin_va_start(ap, param)
 #define D_VA_End(ap)          __builtin_va_end(ap)
 #define D_VA_Arg(ap, type)    __builtin_va_arg(ap, type)
 
-//Line
+// Line
 #define D_LINE '\n'
 #define D_LINES "\n"
 
-//File
+// File
 typedef int DFileHandle;
 #define D_INVALID_FILE -1
 
-//Path
+// Path
 #define D_PATH_SLASH '\\'
 #define DW_PATH_SLASH L'\\'
 #define D_PATH_SLASHS "\\"
 #define DW_PATH_SLASHS L"\\"
 
-//Socket
+// Socket
 typedef int DSocket;
 

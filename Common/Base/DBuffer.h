@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "DTypes.h"
 #include "Base/DAtomic.h"
@@ -87,6 +87,10 @@ public:
     DByte* LockBuffer();
     DVoid  UnlockBuffer();
 
+public:
+    static DVoid DX86_STDCALL Release(DBufferData* pData);
+    static const DBuffer& DX86_STDCALL GetNullBuffer();
+    
 protected:
     DByte* m_pBuf;
     DBufferData* GetData() const;
@@ -96,10 +100,6 @@ protected:
     DVoid AssignCopy(DInt32 nSrcLen, DByte* lpszSrcData);
     DBool AllocBeforeWrite(DInt32 nLen);
     DVoid CopyBeforeWrite();
-
-private:
-    static DVoid DX86_STDCALL Release(DBufferData* pData);
-    const DBuffer& DX86_STDCALL GetNullBuffer();
 };
 
 
@@ -117,7 +117,6 @@ public:
     DVoid AddFloat(DFloat f);       // 4
     DVoid AddDouble(DDouble d);     // 8
     DVoid AddStringA(std::string& sa);  // len(4)+str
-    DVoid AddString(std::wstring& s);     // len(4)+str
     DVoid AddBuffer(DBuffer b);     // len(4)+buf
     DVoid AddFixBuffer(DBuffer b);  // buf
     DBuffer Finish();
@@ -151,8 +150,6 @@ public:
     DDouble ReadDouble();
     std::string ReadStringA();
     std::string ReadFixStringA(int nCount);
-    std::wstring ReadString();
-    std::wstring ReadFixString(int nWCharCount);
     DBuffer ReadBuffer();
     DBuffer ReadFixBuffer(int nCount);
     DBool   IsFinish();

@@ -28,10 +28,10 @@ DVoid* DXP::memcpy(DVoid* dest, const DVoid* src, DSizeT count)
 {
 #if defined(BUILD_FOR_WINDOWS)
     memcpy_s(dest, count, src, count);
-    return nullptr;
 #else
-    return memcpy(dest, src, count);
+    ::memcpy(dest, src, count);
 #endif
+    return nullptr;
 }
 
 std::string DXP::ws2s(const std::wstring& ws)
@@ -46,6 +46,7 @@ std::string DXP::ws2s(const std::wstring& ws)
 #if defined(BUILD_FOR_WINDOWS)
     wcstombs_s(&convertedChars, _Dest, _Dsize, _Source, ws.size() * 2);
 #else
+    D_UNUSED(convertedChars);
     wcstombs(_Dest, _Source, MB_CUR_MAX);
 #endif
     std::string result = _Dest;
@@ -65,6 +66,7 @@ std::wstring DXP::s2ws(const std::string& s)
 #if defined(BUILD_FOR_WINDOWS)
     mbstowcs_s(&convertedChars, dest, charNum, source, _TRUNCATE);
 #else
+    D_UNUSED(convertedChars);
     mbstowcs(dest, source, MB_CUR_MAX);
 #endif
     std::wstring result = dest;

@@ -1,4 +1,4 @@
-﻿#include "DBuffer.h"
+#include "DBuffer.h"
 #include <assert.h>
 #include <ctype.h>
 #include <stdlib.h>
@@ -741,7 +741,7 @@ DVoid DGrowBuffer::AddDouble(DDouble d)
 
 DVoid DGrowBuffer::AddStringA(std::string& sa)
 {
-    DInt32 strLen = sa.size();
+    DInt32 strLen = (DInt32)sa.size();
     if (m_cachepos + strLen + 4 > DGROWBUFFER_SIZE)
     {
         DBuffer buf(strLen + 4);
@@ -765,35 +765,6 @@ DVoid DGrowBuffer::AddStringA(std::string& sa)
 
     m_cache.SetSub(m_cachepos, (DByte*)&strLen, 4);
     m_cache.SetSub(m_cachepos + 4, (DByte*)sa.c_str(), strLen);
-    m_cachepos += strLen + 4;
-}
-
-DVoid DGrowBuffer::AddString(std::wstring& s)
-{
-    DInt32 strLen = s.size() * 2;
-    if (m_cachepos + strLen + 4 > DGROWBUFFER_SIZE)
-    {
-        DBuffer buf(strLen + 4);
-        buf.SetSub(0, (DByte*)&strLen, 4);
-        buf.SetSub(4, (DByte*)s.c_str(), strLen);
-        FlushCacheToList();
-        m_bufList.push_back(buf.GetBuf());
-        buf.AddRef();
-        m_totalsize += buf.GetSize();
-        return;
-    }
-
-    if (m_cachepos + strLen + 4 <= DGROWBUFFER_SIZE)
-    {
-        FlushCacheToList();
-        m_cache.SetSub(0, (DByte*)&strLen, 4);
-        m_cache.SetSub(4, (DByte*)s.c_str(), strLen);
-        m_cachepos += strLen + 4;
-        return;
-    }
-
-    m_cache.SetSub(m_cachepos, (DByte*)&strLen, 4);
-    m_cache.SetSub(m_cachepos + 4, (DByte*)s.c_str(), strLen);
     m_cachepos += strLen + 4;
 }
 
@@ -1054,33 +1025,6 @@ std::string DReadBuffer::ReadFixStringA(int nCount)
     return strA;
 }
 
-std::wstring DReadBuffer::ReadString()
-{
-    DUInt32 strLen = ReadUInt32();
-    if (strLen == 0)
-    {
-        return std::wstring();
-    }
-
-    DBuffer b = m_buf.GetSub(m_curPos, m_curPos + strLen);
-    std::wstring str((wchar_t*)(DWChar*)b.GetBuf(), (DUInt32)b.GetSize() / 2);
-    m_curPos += strLen;
-    return str;
-}
-
-std::wstring DReadBuffer::ReadFixString(int nWCharCount)
-{
-    if (m_curPos + nWCharCount * 2 > m_buf.GetSize())
-    {
-        return std::wstring();
-    }
-
-    DBuffer b = m_buf.GetSub(m_curPos, m_curPos + nWCharCount * 2);
-    m_curPos += nWCharCount * 2;
-    std::wstring str((wchar_t*)(DWChar*)b.GetBuf(), b.GetSize());
-    return str;
-}
-
 DBuffer DReadBuffer::ReadBuffer()
 {
     DUInt32 strLen = ReadUInt32();
@@ -1147,4 +1091,3 @@ DUInt32 DReadBuffer::GetRemainLength()
 {
     return m_buf.GetSize() - m_curPos;
 }
-

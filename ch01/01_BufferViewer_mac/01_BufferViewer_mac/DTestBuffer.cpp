@@ -1,11 +1,11 @@
-﻿#include "DTestBuffer.h"
+#include "DTestBuffer.h"
 #include "Base/DTest.h"
 #include "Base/DBuffer.h"
 
 DVoid DTestBuffer::Test()
 {
     DTestBuffer::TestBasic();
-    //DTestBuffer::TestConv();
+    DTestBuffer::TestConv();
 }
 
 DVoid DTestBuffer::TestBasic()
@@ -17,8 +17,8 @@ DVoid DTestBuffer::TestBasic()
 
     // 空 Buffer
     DBuffer nullbuf(nullptr, 0);
-    //DEXPECT_TRUE(nullbuf.GetBuf() == DBuffer::GetNullBuffer().GetBuf());
-    //DEXPECT_EQ_INT(nullbuf.GetSize(), 0);
+    DEXPECT_TRUE(nullbuf.GetBuf() == DBuffer::GetNullBuffer().GetBuf());
+    DEXPECT_EQ_INT(nullbuf.GetSize(), 0);
 
     // 普通构造
     DBuffer b(10);
@@ -32,16 +32,16 @@ DVoid DTestBuffer::TestBasic()
     DEXPECT_EQ_INT(b2.GetSize(), 10);
 
     // 拷贝构造
-    //DBuffer b3(b2);
-    //DEXPECT_TRUE(b3.GetBuf() == b2.GetBuf());
-    //DEXPECT_EQ_INT(b3.GetSize(), 10);
+    DBuffer b3(b2);
+    DEXPECT_TRUE(b3.GetBuf() == b2.GetBuf());
+    DEXPECT_EQ_INT(b3.GetSize(), 10);
 
     // 写时拷贝
-    //b3.SetAt(2, 255);
-    //DEXPECT_TRUE(b3.GetBuf() != b2.GetBuf());
-    //DEXPECT_EQ_INT(b3.GetAt(2), 255);
+    b3.SetAt(2, 255);
+    DEXPECT_TRUE(b3.GetBuf() != b2.GetBuf());
+    DEXPECT_EQ_INT(b3.GetAt(2), 255);
 
-    TestResult("DBuffer::TestBasic");
+    ShowResult();
 }
 
 DVoid DTestBuffer::TestConv()
@@ -63,7 +63,7 @@ DVoid DTestBuffer::TestConv()
     DEXPECT_TRUE(buf642.GetSize() == 10);
     DEXPECT_TRUE(str64 == str642);
 
-    TestResult("DBuffer::TestConv");
+    ShowResult();
 }
 
 
@@ -80,13 +80,11 @@ DVoid DTestGrowBuffer::Test()
     gb.AddDouble(6);
     std::string str1 = "12345";
     gb.AddStringA(str1);
-    //std::wstring str2(u"67890");
-    //gb.AddString(str2);
     DBuffer buf(10);
     buf.FillWithRandom();
     gb.AddBuffer(buf);
     DBuffer all = gb.Finish();
-    DEXPECT_TRUE(all.GetSize() == 1 + 2 + 4 + 8 + 4 + 8 + 4 + 5 + 4 + 10 + 4 + 10);
+    DEXPECT_TRUE(all.GetSize() == 1 + 2 + 4 + 8 + 4 + 8 + 4 + 5 + 4 + 10);
 
     DReadBuffer rb(all);
     DEXPECT_TRUE(rb.ReadUInt8() == 1);
@@ -95,14 +93,12 @@ DVoid DTestGrowBuffer::Test()
     DEXPECT_TRUE(rb.ReadUInt64() == 4);
     DEXPECT_TRUE(rb.ReadFloat() == 5);
     DEXPECT_TRUE(rb.ReadDouble() == 6);
-    //DEXPECT_TRUE(rb.ReadStringA() == "12345");
-    //DEXPECT_TRUE(rb.ReadString() == u"67890");
+    DEXPECT_TRUE(rb.ReadStringA() == "12345");
     DBuffer bufRet = rb.ReadBuffer();
     assert(buf == bufRet);
 
     TestResult("DGrowBuffer::Test");
 }
-
 
 
 DVoid DTestReadBuffer::Test()
@@ -116,13 +112,13 @@ DVoid DTestReadBuffer::Test()
     gb.AddUInt64(4);
     gb.AddFloat(5);
     gb.AddDouble(6);
-    //gb.AddStringA(DStringA("12345"));
-    //gb.AddString(DString(u"67890"));
+    std::string str1 = "12345";
+    gb.AddStringA(str1);
     DBuffer buf(10);
     buf.FillWithRandom();
     gb.AddBuffer(buf);
     DBuffer all = gb.Finish();
-    DEXPECT_TRUE(all.GetSize() == 1 + 2 + 4 + 8 + 4 + 8 + 4 + 5 + 4 + 10 + 4 + 10);
+    DEXPECT_TRUE(all.GetSize() == 1 + 2 + 4 + 8 + 4 + 8 + 4 + 5 + 4 + 10);
 
     DReadBuffer rb(all);
     DEXPECT_TRUE(rb.ReadUInt8() == 1);
@@ -131,8 +127,8 @@ DVoid DTestReadBuffer::Test()
     DEXPECT_TRUE(rb.ReadUInt64() == 4);
     DEXPECT_TRUE(rb.ReadFloat() == 5);
     DEXPECT_TRUE(rb.ReadDouble() == 6);
-    //DEXPECT_TRUE(rb.ReadStringA() == "12345");
-    //DEXPECT_TRUE(rb.ReadString() == u"67890");
+    DEXPECT_TRUE(rb.ReadStringA() == "12345");
+    
     DBuffer bufRet = rb.ReadBuffer();
     DEXPECT_TRUE(buf == bufRet);
 

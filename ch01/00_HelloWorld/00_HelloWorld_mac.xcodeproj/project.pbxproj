@@ -32,6 +32,7 @@
 		2B44BF012930B41C00CC20EA /* DConfig_iOS.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DConfig_iOS.h; path = ../../Common/DConfig_iOS.h; sourceTree = "<group>"; };
 		2B44BF092930B8C200CC20EA /* DXP.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DXP.h; path = ../../Common/Base/DXP.h; sourceTree = "<group>"; };
 		2B44BF0A2930B8C200CC20EA /* DXP.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = DXP.cpp; path = ../../Common/Base/DXP.cpp; sourceTree = "<group>"; };
+		2B49784629310B0200F2949B /* DConfig_Mac.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DConfig_Mac.h; path = ../../Common/DConfig_Mac.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -67,6 +68,7 @@
 			children = (
 				2B44BEFD2930B38C00CC20EA /* Base */,
 				2B44BF012930B41C00CC20EA /* DConfig_iOS.h */,
+				2B49784629310B0200F2949B /* DConfig_Mac.h */,
 				2B44BF002930B41C00CC20EA /* DConfig_Win.h */,
 				2B44BEFE2930B41C00CC20EA /* DConfig.h */,
 				2B44BEFF2930B41C00CC20EA /* DTypes.h */,
