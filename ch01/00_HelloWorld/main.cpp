@@ -2,7 +2,7 @@
 
 int main()
 {
-    std::string strHello = std::string("Hello ") + DXP::GetOSName();
+    std::string strHello = std::string("Hello ") + DXP::GetOSName() + D_LINES;
     DXP::Print(strHello);
     return 0;
 }
