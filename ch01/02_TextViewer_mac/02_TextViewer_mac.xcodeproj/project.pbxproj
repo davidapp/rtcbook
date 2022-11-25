@@ -53,7 +53,6 @@
 		2B4978472931149300F2949B = {
 			isa = PBXGroup;
 			children = (
-				2B49785D2931164800F2949B /* Common */,
 				2B4978522931149300F2949B /* 02_TextViewer_mac */,
 				2B4978512931149300F2949B /* Products */,
 			);
@@ -70,6 +69,7 @@
 		2B4978522931149300F2949B /* 02_TextViewer_mac */ = {
 			isa = PBXGroup;
 			children = (
+				2B49785D2931164800F2949B /* Common */,
 				2B49785A293115AF00F2949B /* DTestUTF8.cpp */,
 				2B49785B293115AF00F2949B /* DTestUTF8.h */,
 				2B4978532931149300F2949B /* main.cpp */,
@@ -86,6 +86,7 @@
 				2B4978612931167B00F2949B /* DTypes.h */,
 			);
 			name = Common;
+			path = ..;
 			sourceTree = "<group>";
 		};
 		2B49785E2931165100F2949B /* Base */ = {

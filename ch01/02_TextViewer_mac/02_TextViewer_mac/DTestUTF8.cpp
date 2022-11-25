@@ -1,4 +1,4 @@
-﻿#include "DTestUTF8.h"
+#include "DTestUTF8.h"
 #include "Base/DTest.h"
 #include "Base/DUTF8.h"
 
@@ -12,12 +12,13 @@ DVoid DTestUTF8::TestSimple()
 {
     ClearResult();
 
-    //DString str(L2W(L"哈哈你好123"));	//Using /utf-8 options for this on Windows VS2019
+    //u16 "哈哈你好123"
     //c8 54 c8 54 60 4f 7d 59 31 00 32 00 33 00 00 00
     DWChar strU[] = { 0x54c8, 0x54c8, 0x4f60, 0x597d, 0x0031, 0x0032, 0x0033, 0x0000 };
     DUInt32 nCount = DUTF8::UTF8Length16((DUInt16*)strU, 14);
     DEXPECT_EQ(nCount, 15);
 
+    /*
     std::wstring str((wchar_t*)strU);
     std::string strA1 = str.ToUTF8();
     std::string strA2 = DUTF8::UCS2ToUTF8((DUInt16*)strU, 14);
@@ -33,6 +34,8 @@ DVoid DTestUTF8::TestSimple()
     std::wstring str2 = DUTF8::UTF8ToUCS2((DByte*)strA2.GetStr(), strA2.GetDataLength());
     DEXPECT_EQ_STRING(str2.GetStr(), strU, 14);
 
+    */
+    
     ShowResult();
 }
 
