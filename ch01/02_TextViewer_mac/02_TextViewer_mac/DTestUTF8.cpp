@@ -1,4 +1,4 @@
-#include "DTestUTF8.h"
+ï»¿#include "DTestUTF8.h"
 #include "Base/DTest.h"
 #include "Base/DUTF8.h"
 
@@ -12,7 +12,7 @@ DVoid DTestUTF8::TestSimple()
 {
     ClearResult();
 
-    //DString str(L2W(L"¹þ¹þÄãºÃ123"));	//Using /utf-8 options for this on Windows VS2019
+    //DString str(L2W(L"å“ˆå“ˆä½ å¥½123"));	//Using /utf-8 options for this on Windows VS2019
     //c8 54 c8 54 60 4f 7d 59 31 00 32 00 33 00 00 00
     DWChar strU[] = { 0x54c8, 0x54c8, 0x4f60, 0x597d, 0x0031, 0x0032, 0x0033, 0x0000 };
     DUInt32 nCount = DUTF8::UTF8Length16((DUInt16*)strU, 14);
@@ -89,12 +89,12 @@ DVoid DTestUTF8::TestConvAll()
         }
     }
     DEXPECT_EQ_INT(wrong, 0);
-    DEXPECT_EQ_INT(total0 + total1 + total2 + total3, 65536);   //²âÊÔ×Ö·û×ÜÊý
-    DEXPECT_EQ_INT(total0, 0);      //Òì³£×Ö·û
-    DEXPECT_EQ_INT(total1, 128);    //1×Ö½Ú UTF8×Ö·û
-    DEXPECT_EQ_INT(total2, 1920);   //2×Ö½Ú UTF8×Ö·û
-    DEXPECT_EQ_INT(total3, 63488);  //3×Ö½Ú UTF8×Ö·û
-    // ²âÊÔ½á¹û½«ÍêÈ«ºÍ WindowsµÄ×ª»»º¯Êý¶ÔÆë
+    DEXPECT_EQ_INT(total0 + total1 + total2 + total3, 65536);   //æµ‹è¯•å­—ç¬¦æ€»æ•°
+    DEXPECT_EQ_INT(total0, 0);      //å¼‚å¸¸å­—ç¬¦
+    DEXPECT_EQ_INT(total1, 128);    //1å­—èŠ‚ UTF8å­—ç¬¦
+    DEXPECT_EQ_INT(total2, 1920);   //2å­—èŠ‚ UTF8å­—ç¬¦
+    DEXPECT_EQ_INT(total3, 63488);  //3å­—èŠ‚ UTF8å­—ç¬¦
+    // æµ‹è¯•ç»“æžœå°†å®Œå…¨å’Œ Windowsçš„è½¬æ¢å‡½æ•°å¯¹é½
 #else
 
 #endif
