@@ -46,7 +46,7 @@ std::string DXP::ws2s(const std::wstring& ws)
 #if defined(BUILD_FOR_WINDOWS)
     wcstombs_s(&convertedChars, _Dest, _Dsize, _Source, ws.size() * 2);
 #else
-
+    wcstombs(_Dest, _Source, MB_CUR_MAX);
 #endif
     std::string result = _Dest;
     delete[]_Dest;
@@ -65,7 +65,7 @@ std::wstring DXP::s2ws(const std::string& s)
 #if defined(BUILD_FOR_WINDOWS)
     mbstowcs_s(&convertedChars, dest, charNum, source, _TRUNCATE);
 #else
-    //mbstowcs(&convertedChars, dest, charNum, source, _TRUNCATE);
+    mbstowcs(dest, source, MB_CUR_MAX);
 #endif
     std::wstring result = dest;
     delete[] dest;
