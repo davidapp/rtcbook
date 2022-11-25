@@ -147,7 +147,7 @@ DUInt32 DUTF8::UTF8Encode16(DUInt16 c, DByte* pStr)
     else if (c >= 0xD800 && c <= 0xDFFF)	//UTF-16 Surrogate Codec
     {
         //对于替代区中的字符，Windows转换函数的UTF-8，将其编码成了固定的3个字节 0xEFBFBD(0xFFFD 特殊符号)
-        //Dream使用一样的策略，但是这里是可以改进的，正确的方式是识别出UTF32编码后，再转为UTF8
+        //我们使用一样的策略，但是这里是可以改进的，正确的方式是识别出UTF32编码后，再转为UTF8
         //1平面对应方式为0x00010000 <-> 0xD800:DC00
         //2平面对应方式为0x00020000 <-> 0xD840:DC00
         *pStr = 0xEF;

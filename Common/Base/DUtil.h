@@ -7,6 +7,10 @@
 class DUtil
 {
 public:
+    static DCStr GetOSName();
+    static DVoid Print(std::string str);
+
+public:
     static std::string ws2s(const std::wstring& ws);
     static std::wstring s2ws(const std::string& s);
     static std::string& replace_str(std::string& str, const std::string& to_replaced, const std::string& newchars);

@@ -9,6 +9,30 @@
 #include "Video/WinDSCamera.h"
 #endif
 
+DCStr DUtil::GetOSName()
+{
+#if defined(BUILD_FOR_WINDOWS)
+    return "Windows";
+#elif defined(BUILD_FOR_MAC)
+    return "MacOS";
+#elif defined(BUILD_FOR_IOS)
+    return "iOS";
+#elif defined(BUILD_FOR_ANDROID)
+    return "Android";
+#else
+    return "Linux";
+#endif
+}
+
+DVoid DUtil::Print(std::string str)
+{
+#if defined(BUILD_FOR_WINDOWS)
+    ::WriteFile(GetStdHandle(STD_OUTPUT_HANDLE), str.c_str(), str.size(), NULL, NULL);
+#else
+    write(STDOUT_FILENO, str.c_str(), str.size());
+#endif
+}
+
 std::string DUtil::ws2s(const std::wstring& ws)
 {
     size_t convertedChars = 0;
