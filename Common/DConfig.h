@@ -22,3 +22,8 @@
 #if defined(BUILD_FOR_IOS)
 #include "DConfig_iOS.h"
 #endif
+
+// Mac
+#if defined(BUILD_FOR_MAC)
+#include "DConfig_Mac.h"
+#endif
