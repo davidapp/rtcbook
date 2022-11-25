@@ -6,9 +6,12 @@
 //
 
 #include <iostream>
+#include "DTestBuffer.h"
 
 int main(int argc, const char * argv[]) {
-    // insert code here...
-    std::cout << "Hello, World!\n";
+    printf("Hello");
+    DTestBuffer::Test();
+    int a;
+    std::cin>>a;
     return 0;
 }

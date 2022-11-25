@@ -8,6 +8,9 @@
 
 /* Begin PBXBuildFile section */
 		2B44BF192930BBBF00CC20EA /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2B44BF182930BBBF00CC20EA /* main.cpp */; };
+		2B4978342930C80F00F2949B /* DTestBuffer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2B4978322930C80F00F2949B /* DTestBuffer.cpp */; };
+		2B4978402930C88B00F2949B /* DXP.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2B49783C2930C88B00F2949B /* DXP.cpp */; };
+		2B4978412930C88B00F2949B /* DBuffer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2B49783E2930C88B00F2949B /* DBuffer.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -25,6 +28,16 @@
 /* Begin PBXFileReference section */
 		2B44BF152930BBBF00CC20EA /* 01_BufferViewer */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = 01_BufferViewer; sourceTree = BUILT_PRODUCTS_DIR; };
 		2B44BF182930BBBF00CC20EA /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
+		2B4978322930C80F00F2949B /* DTestBuffer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DTestBuffer.cpp; sourceTree = "<group>"; };
+		2B4978332930C80F00F2949B /* DTestBuffer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DTestBuffer.h; sourceTree = "<group>"; };
+		2B4978382930C86100F2949B /* DConfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DConfig.h; path = ../../../Common/DConfig.h; sourceTree = "<group>"; };
+		2B4978392930C86100F2949B /* DConfig_Mac.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DConfig_Mac.h; path = ../../../Common/DConfig_Mac.h; sourceTree = "<group>"; };
+		2B49783A2930C86100F2949B /* DTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DTypes.h; path = ../../../Common/DTypes.h; sourceTree = "<group>"; };
+		2B49783C2930C88B00F2949B /* DXP.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = DXP.cpp; path = ../../../Common/Base/DXP.cpp; sourceTree = "<group>"; };
+		2B49783D2930C88B00F2949B /* DBuffer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DBuffer.h; path = ../../../Common/Base/DBuffer.h; sourceTree = "<group>"; };
+		2B49783E2930C88B00F2949B /* DBuffer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = DBuffer.cpp; path = ../../../Common/Base/DBuffer.cpp; sourceTree = "<group>"; };
+		2B49783F2930C88B00F2949B /* DXP.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DXP.h; path = ../../../Common/Base/DXP.h; sourceTree = "<group>"; };
+		2B4978422930CA0C00F2949B /* DTest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DTest.h; path = ../../../Common/Base/DTest.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -57,9 +70,35 @@
 		2B44BF172930BBBF00CC20EA /* 01_BufferViewer_mac */ = {
 			isa = PBXGroup;
 			children = (
+				2B4978372930C84D00F2949B /* Common */,
+				2B4978322930C80F00F2949B /* DTestBuffer.cpp */,
+				2B4978332930C80F00F2949B /* DTestBuffer.h */,
 				2B44BF182930BBBF00CC20EA /* main.cpp */,
 			);
 			path = 01_BufferViewer_mac;
+			sourceTree = "<group>";
+		};
+		2B4978372930C84D00F2949B /* Common */ = {
+			isa = PBXGroup;
+			children = (
+				2B49783B2930C86500F2949B /* Base */,
+				2B4978392930C86100F2949B /* DConfig_Mac.h */,
+				2B4978382930C86100F2949B /* DConfig.h */,
+				2B49783A2930C86100F2949B /* DTypes.h */,
+			);
+			name = Common;
+			sourceTree = "<group>";
+		};
+		2B49783B2930C86500F2949B /* Base */ = {
+			isa = PBXGroup;
+			children = (
+				2B4978422930CA0C00F2949B /* DTest.h */,
+				2B49783E2930C88B00F2949B /* DBuffer.cpp */,
+				2B49783D2930C88B00F2949B /* DBuffer.h */,
+				2B49783C2930C88B00F2949B /* DXP.cpp */,
+				2B49783F2930C88B00F2949B /* DXP.h */,
+			);
+			name = Base;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -119,6 +158,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2B4978402930C88B00F2949B /* DXP.cpp in Sources */,
+				2B4978342930C80F00F2949B /* DTestBuffer.cpp in Sources */,
+				2B4978412930C88B00F2949B /* DBuffer.cpp in Sources */,
 				2B44BF192930BBBF00CC20EA /* main.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -241,6 +283,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = G4B7ZBVBTD;
 				ENABLE_HARDENED_RUNTIME = YES;
+				HEADER_SEARCH_PATHS = ../../Common;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
@@ -251,6 +294,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = G4B7ZBVBTD;
 				ENABLE_HARDENED_RUNTIME = YES;
+				HEADER_SEARCH_PATHS = ../../Common;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;

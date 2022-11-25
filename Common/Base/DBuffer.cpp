@@ -1,4 +1,4 @@
-﻿#include "DBuffer.h"
+#include "DBuffer.h"
 #include <assert.h>
 #include <ctype.h>
 #include <stdlib.h>
@@ -124,11 +124,11 @@ DBool DBuffer::InitWithHexString(DCStr str)
 DBool DBuffer::InitWithHexString(std::string& str)
 {
     if (!DBuffer::IsValidHexStr(str.c_str())) return false;
-    str = DUtil::replace_str(str, " ", "");
-    str = DUtil::replace_str(str, "\r\n", "");
-    str = DUtil::replace_str(str, "\r", "");
-    str = DUtil::replace_str(str, "\n", "");
-    str = DUtil::replace_str(str, "\t", "");
+    str = DXP::replace_str(str, " ", "");
+    str = DXP::replace_str(str, "\r\n", "");
+    str = DXP::replace_str(str, "\r", "");
+    str = DXP::replace_str(str, "\n", "");
+    str = DXP::replace_str(str, "\t", "");
     return HexToBuffer(str.c_str());
 }
 
@@ -187,11 +187,11 @@ DBool DBuffer::HexToBuffer(DCStr hexStr)
         {
             c = c - '0';
         }
-        else if (DUtil::isAtoF(c))
+        else if (DXP::isAtoF(c))
         {
             c = c - 'A' + 10;
         }
-        else if (DUtil::isatof(c))
+        else if (DXP::isatof(c))
         {
             c = c - 'a' + 10;
         }
@@ -204,11 +204,11 @@ DBool DBuffer::HexToBuffer(DCStr hexStr)
         {
             d = d - '0';
         }
-        else if (DUtil::isAtoF(d))
+        else if (DXP::isAtoF(d))
         {
             d = d - 'A' + 10;
         }
-        else if (DUtil::isatof(d))
+        else if (DXP::isatof(d))
         {
             d = d - 'a' + 10;
         }
@@ -316,7 +316,7 @@ DBool DBuffer::InitWithBase64String(std::string& str)
     } while (len -= 4);
 
     AllocBuffer(out_len);
-    memcpy_s(m_pBuf, out_len, start, out_len);
+    DXP::memcpy(m_pBuf, start, out_len);
     free(start);
 
     return true;
@@ -685,7 +685,7 @@ DVoid DGrowBuffer::AddUInt16(DUInt16 s, DBool bNetOrder)
     }
     if (bNetOrder)
     {
-        s = DUtil::Swap16(s);
+        s = DXP::Swap16(s);
     }
     m_cache.SetSub(m_cachepos, (DByte*)&s, 2);
     m_cachepos += 2;
@@ -699,7 +699,7 @@ DVoid DGrowBuffer::AddUInt32(DUInt32 i, DBool bNetOrder)
     }
     if (bNetOrder)
     {
-        i = DUtil::Swap32(i);
+        i = DXP::Swap32(i);
     }
     m_cache.SetSub(m_cachepos, (DByte*)&i, 4);
     m_cachepos += 4;
@@ -713,7 +713,7 @@ DVoid DGrowBuffer::AddUInt64(DUInt64 l, DBool bNetOrder)
     }
     if (bNetOrder)
     {
-        l = DUtil::Swap64(l);
+        l = DXP::Swap64(l);
     }
     m_cache.SetSub(m_cachepos, (DByte*)&l, 8);
     m_cachepos += 8;
@@ -911,7 +911,7 @@ DUInt16 DReadBuffer::ReadUInt16(DBool bNetOrder)
 
     if (bNetOrder)
     {
-        s = DUtil::Swap16(s);
+        s = DXP::Swap16(s);
     }
 
     return s;
@@ -926,7 +926,7 @@ DUInt32 DReadBuffer::ReadUInt32(DBool bNetOrder)
 
     if (bNetOrder)
     {
-        i = DUtil::Swap32(i);
+        i = DXP::Swap32(i);
     }
 
     return i;
@@ -941,7 +941,7 @@ DUInt64 DReadBuffer::ReadUInt64(DBool bNetOrder)
 
     if (bNetOrder)
     {
-        i = DUtil::Swap64(i);
+        i = DXP::Swap64(i);
     }
 
     return i;
@@ -976,7 +976,7 @@ DUInt16 DReadBuffer::NextUInt16(DBool bNetOrder)
 
     if (bNetOrder)
     {
-        s = DUtil::Swap16(s);
+        s = DXP::Swap16(s);
     }
 
     return s;
@@ -990,7 +990,7 @@ DUInt32 DReadBuffer::NextUInt32(DBool bNetOrder)
 
     if (bNetOrder)
     {
-        i = DUtil::Swap32(i);
+        i = DXP::Swap32(i);
     }
 
     return i;
@@ -1004,7 +1004,7 @@ DUInt64 DReadBuffer::NextUInt64(DBool bNetOrder)
 
     if (bNetOrder)
     {
-        i = DUtil::Swap64(i);
+        i = DXP::Swap64(i);
     }
 
     return i;
@@ -1063,7 +1063,7 @@ std::wstring DReadBuffer::ReadString()
     }
 
     DBuffer b = m_buf.GetSub(m_curPos, m_curPos + strLen);
-    std::wstring str((DWChar*)b.GetBuf(), (DUInt32)b.GetSize() / 2);
+    std::wstring str((wchar_t*)(DWChar*)b.GetBuf(), (DUInt32)b.GetSize() / 2);
     m_curPos += strLen;
     return str;
 }
@@ -1077,7 +1077,7 @@ std::wstring DReadBuffer::ReadFixString(int nWCharCount)
 
     DBuffer b = m_buf.GetSub(m_curPos, m_curPos + nWCharCount * 2);
     m_curPos += nWCharCount * 2;
-    std::wstring str((DWChar*)b.GetBuf(), b.GetSize());
+    std::wstring str((wchar_t*)(DWChar*)b.GetBuf(), b.GetSize());
     return str;
 }
 

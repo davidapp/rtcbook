@@ -1,4 +1,4 @@
-﻿//
+//
 //  DTest.h
 //	Test Framework for Dream
 //
@@ -10,7 +10,7 @@
 
 #include "DConfig.h"
 #include "DTypes.h"
-#include "Base/DStdLib.h"
+#include "DXP.h"
 
 static DInt32 test_count = 0;   // 用例总数
 static DInt32 test_pass = 0;    // 用例通过数
@@ -27,8 +27,8 @@ static DBool  assert_mode = true;  // 是否打开 assert 模式
         if (equality)\
             test_pass++;\
         else {\
-            DStdLib::printf("%s:%d: expect: " format " actual: " format D_LINES, __FILE__, __LINE__, expect, actual);\
-            if (assert_mode) DAssert(0);\
+            printf("%s:%d: expect: " format " actual: " format D_LINES, __FILE__, __LINE__, expect, actual);\
+            if (assert_mode) assert(0);\
         }\
     } while(0)
 
@@ -48,11 +48,11 @@ static DBool  assert_mode = true;  // 是否打开 assert 模式
 
 //Test StringA
 #define DEXPECT_EQ_STRING(actual, expect, alength) \
-    DEXPECT_EQ_BASE(DStdLib::memcmp(expect, actual, alength) == 0, (DChar*)expect, (DChar*)actual, "%s")
+    DEXPECT_EQ_BASE(memcmp(expect, actual, alength) == 0, (DChar*)expect, (DChar*)actual, "%s")
 
 //Test Buffer
 #define DEXPECT_EQ_BUFFER(actual, expect, alength) \
-    DEXPECT_EQ_BASE(DStdLib::memcmp(expect, actual, alength) == 0, expect, actual, "%s")
+    DEXPECT_EQ_BASE(memcmp(expect, actual, alength) == 0, expect, actual, "%s")
 
 //Test SizeT
 #if defined(TARGET_64BIT) && (TARGET_64BIT==1)
@@ -90,9 +90,9 @@ static inline DVoid DCheckHelper(DCStr file, DInt32 line, DCStr source, DBool co
     test_count++;
     if (!condition)
     {
-        DStdLib::printf("%s:%d:\nEXPECT(%s) failed\n", file, line, source);
+        printf("%s:%d:\nEXPECT(%s) failed\n", file, line, source);
         if (assert_mode) {
-            DAssert(0);
+            assert(0);
         }
     }
     else
@@ -113,18 +113,18 @@ static inline DVoid DCheckEqualsHelper(DCStr file, DInt32 line,
 
     if ((expected == NULL && value != NULL) || (expected != NULL && value == NULL))
     {
-        DAssert(0);
+        assert(0);
     }
 
     // 直接用 strcmp 对比
-    if ((expected != NULL && value != NULL && DStdLib::strcmp(expected, value) != 0))
+    if ((expected != NULL && value != NULL && strcmp(expected, value) != 0))
     {
-        DStdLib::printf("%s:%d:\nEXPECT_EQ(%s, %s) failed\n"
+        printf("%s:%d:\nEXPECT_EQ(%s, %s) failed\n"
             "#  Expected: %s\n"
             "#  Found:    %s\n",
             file, line, expected_source, value_source, expected, value);
         if (assert_mode) {
-            DAssert(0);
+            assert(0);
         }
     }
     else
@@ -142,12 +142,12 @@ static inline DVoid DCheckEqualsHelper(DCStr file, DInt32 line,
 
     if (expected != value)
     {
-        DStdLib::printf("%s:%d:\nEXPECT_EQ(%s, %s) failed\n"
+        printf("%s:%d:\nEXPECT_EQ(%s, %s) failed\n"
             "#  Expected: %d\n"
             "#  Found:    %d\n",
             file, line, expected_source, value_source, expected, value);
         if (assert_mode) {
-            DAssert(0);
+            assert(0);
         }
     }
     else
@@ -165,12 +165,12 @@ static inline DVoid DCheckEqualsHelper(DCStr file, DInt32 line,
 
     if (expected != value)
     {
-        DStdLib::printf("%s:%d:\nEXPECT_EQ(%s, %s) failed\n"
+        printf("%s:%d:\nEXPECT_EQ(%s, %s) failed\n"
             "#  Expected: %lld\n"
             "#  Found:    %lld\n",
             file, line, expected_source, value_source, expected, value);
         if (assert_mode) {
-            DAssert(0);
+            assert(0);
         }
     }
     else
@@ -189,12 +189,12 @@ static inline DVoid DCheckEqualsHelper(DCStr file, DInt32 line,
     // If expected and value are NaNs then expected != value.
     if (expected != value && (expected == expected || value == value))
     {
-        DStdLib::printf("%s:%d:\nEXPECT_EQ(%s, %s) failed\n"
+        printf("%s:%d:\nEXPECT_EQ(%s, %s) failed\n"
             "#  Expected: %.30e\n"
             "#  Found:    %.30e\n",
             file, line, expected_source, value_source, expected, value);
         if (assert_mode) {
-            DAssert(0);
+            assert(0);
         }
     }
     else
@@ -204,5 +204,5 @@ static inline DVoid DCheckEqualsHelper(DCStr file, DInt32 line,
 }
 
 //Output Result
-#define TestResult(mod_name) DStdLib::printf("[%s] %d/%d (%3.2f%%) passed" D_LINES, mod_name, test_pass, test_count, (test_count!=0)? (double)(test_pass*100.0/test_count):0)
+#define TestResult(mod_name) printf("[%s] %d/%d (%3.2f%%) passed" D_LINES, mod_name, test_pass, test_count, (test_count!=0)? (double)(test_pass*100.0/test_count):0)
 #define ShowResult() TestResult(__FUNCTION__)

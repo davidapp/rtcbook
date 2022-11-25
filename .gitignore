@@ -38,3 +38,4 @@ Release
 *.app
 *.xcuserstate
 ch01/01_BufferViewer_mac/01_BufferViewer_mac.xcodeproj/xcuserdata/bytedance.xcuserdatad/xcschemes/xcschememanagement.plist
+rtcbook_mac.xcworkspace/xcuserdata/bytedance.xcuserdatad

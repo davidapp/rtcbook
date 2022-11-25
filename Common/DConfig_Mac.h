@@ -56,7 +56,6 @@
 #include <sys/select.h> //for fd_set
 #include <sys/syscall.h>
 
-
 //stdarg.h
 #include <stdarg.h>
 typedef __builtin_va_list DVAList;
