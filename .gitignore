@@ -36,3 +36,4 @@ Release
 *.exe
 *.out
 *.app
+*.xcuserstate
