@@ -3,6 +3,7 @@
 #include <ctype.h>
 #include <stdlib.h>
 #include <string.h>
+#include "DXP.h"
 #include "DUtil.h"
 
 ////////////////////////////////////////////////////////////////////////////////////
@@ -620,7 +621,7 @@ DVoid DBuffer::CopyBeforeWrite()
         Release();
         if (AllocBuffer(pData->nAllocLength))
         {
-            memcpy(m_pBuf, pData->buf(), pData->nAllocLength);
+            DXP::memcpy(m_pBuf, pData->buf(), pData->nAllocLength);
         }
     }
     assert(GetData()->nRefs <= 1);
@@ -935,7 +936,7 @@ DUInt64 DReadBuffer::ReadUInt64(DBool bNetOrder)
 {
     DUInt64 i;
     DBuffer b = m_buf.GetSub(m_curPos, m_curPos + 8);
-    memcpy(&i, b.GetBuf(), 8);
+    DXP::memcpy(&i, b.GetBuf(), 8);
     m_curPos += 8;
 
     if (bNetOrder)

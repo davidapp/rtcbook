@@ -42,15 +42,15 @@
     <ClCompile Include="..\..\Common\Net\DTCP.cpp">
       <Filter>Common\Net</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\Common\Base\DXP.cpp">
+      <Filter>Common\Base</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="resource.h">
       <Filter>Resource</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Common\DConfig.h">
-      <Filter>Common</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Common\DConfig_iOS.h">
       <Filter>Common</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Common\DConfig_Win.h">
@@ -85,6 +85,9 @@
     </ClInclude>
     <ClInclude Include="..\..\Common\Net\DTCP.h">
       <Filter>Common\Net</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\Base\DXP.h">
+      <Filter>Common\Base</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

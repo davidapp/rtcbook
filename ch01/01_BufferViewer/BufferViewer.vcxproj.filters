@@ -27,9 +27,6 @@
     <ClInclude Include="..\..\Common\DConfig.h">
       <Filter>Common</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Common\DConfig_iOS.h">
-      <Filter>Common</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\Common\DConfig_Win.h">
       <Filter>Common</Filter>
     </ClInclude>
@@ -48,6 +45,9 @@
     <ClInclude Include="..\..\Common\Base\DFile.h">
       <Filter>Common\Base</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\Common\Base\DXP.h">
+      <Filter>Common\Base</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
@@ -58,6 +58,9 @@
       <Filter>Common\Base</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Common\Base\DFile.cpp">
+      <Filter>Common\Base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\Base\DXP.cpp">
       <Filter>Common\Base</Filter>
     </ClCompile>
   </ItemGroup>

@@ -23,3 +23,13 @@ DVoid DXP::Print(std::string str)
     write(STDOUT_FILENO, str.c_str(), str.size());
 #endif
 }
+
+DVoid* DXP::memcpy(DVoid* dest, const DVoid* src, DSizeT count)
+{
+#if defined(BUILD_FOR_WINDOWS)
+    memcpy_s(dest, count, src, count);
+    return nullptr;
+#else
+    return memcpy(dest, src, count);
+#endif
+}

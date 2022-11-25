@@ -22,6 +22,7 @@
     <ClCompile Include="..\..\Common\Base\DBuffer.cpp" />
     <ClCompile Include="..\..\Common\Base\DMsgQueue.cpp" />
     <ClCompile Include="..\..\Common\Base\DUtil.cpp" />
+    <ClCompile Include="..\..\Common\Base\DXP.cpp" />
     <ClCompile Include="..\..\Common\Net\DNet.cpp" />
     <ClCompile Include="..\..\Common\Net\DTCP.cpp" />
     <ClCompile Include="..\..\Common\Net\DTCPClient.cpp" />
@@ -33,8 +34,8 @@
     <ClInclude Include="..\..\Common\Base\DBuffer.h" />
     <ClInclude Include="..\..\Common\Base\DMsgQueue.h" />
     <ClInclude Include="..\..\Common\Base\DUtil.h" />
+    <ClInclude Include="..\..\Common\Base\DXP.h" />
     <ClInclude Include="..\..\Common\DConfig.h" />
-    <ClInclude Include="..\..\Common\DConfig_iOS.h" />
     <ClInclude Include="..\..\Common\DConfig_Win.h" />
     <ClInclude Include="..\..\Common\DTypes.h" />
     <ClInclude Include="..\..\Common\Net\DNet.h" />
