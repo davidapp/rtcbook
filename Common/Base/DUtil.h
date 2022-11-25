@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "DTypes.h"
 #include "DAtomic.h"
@@ -42,6 +42,7 @@ public:
     D_DISALLOW_ALL_DEFAULT(DUtil)
 };
 
+
 class DEvent
 {
 public:
@@ -59,7 +60,7 @@ public:
     DVoid* handle;
 };
 
-
+#if defined(BUILD_FOR_WINDOWS)
 class DSPinLock
 {
 public:
@@ -93,7 +94,8 @@ private:
     DUInt32 m_now;
     DAtomInt32 m_flag;
 };
-
+#else
+#endif
 
 class DRWLock
 {
@@ -112,3 +114,4 @@ public:
     pthread_rwlock_t m_lock;
 #endif
 };
+
