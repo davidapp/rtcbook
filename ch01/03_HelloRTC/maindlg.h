@@ -3,15 +3,16 @@
 #include "atlctrls.h"
 #include "atlmisc.h"
 #include "atlcrack.h"
-#include "Base/DUtil.h"
+#include "Base/DXP.h"
 #include "Net/DNet.h"
 #include "Net/DTCPServer.h"
-#include <locale>
-#include <string>
+#include "DHelloServer.h"
 
-HWND g_NotifyWnd;
-DUInt32 g_serverState;
+#define WM_LOG WM_USER+1000
 #define WM_UPDATEUI WM_USER+1001
+#define WM_UPDATE_LIST WM_USER+1002
+
+#define DEFAULT_PORT L"1229"
 
 class CMainDlg : public CDialogImpl<CMainDlg>, public CMessageFilter , public DTCPServerSink
 {
@@ -27,23 +28,23 @@ public:
     {
         CString str;
         str.Format(L"Listening at port:%d", wPort);
-        ::PostMessage(g_NotifyWnd, WM_LOG, (WPARAM)NewStr(str), 0);
-        g_serverState = 1;
-        ::PostMessage(g_NotifyWnd, WM_UPDATEUI, 0, 0);
+        ::PostMessage(m_hWnd, WM_LOG, (WPARAM)NewStr(str), 0);
+
+        ::PostMessage(m_hWnd, WM_UPDATEUI, 0, 0);
     }
 
     virtual DVoid OnListenOK(DSocket sock, DUInt16 wPort)
     {
         CString str;
         str.Format(L"Listen OK at port:%d", wPort);
-        ::PostMessage(g_NotifyWnd, WM_LOG, (WPARAM)NewStr(str), 0);
+        ::PostMessage(m_hWnd, WM_LOG, (WPARAM)NewStr(str), 0);
     }
 
     virtual DVoid OnListenError(DSocket sock, DUInt32 code, std::string strReason)
     {
         CString str;
         str.Format(L"Listen Error code:%d reason:%S", code, strReason.c_str());
-        ::PostMessage(g_NotifyWnd, WM_LOG, (WPARAM)NewStr(str), 0);
+        ::PostMessage(m_hWnd, WM_LOG, (WPARAM)NewStr(str), 0);
     }
 
     virtual DVoid OnNewConn(DSocket sock, DSocket newsock)
@@ -51,49 +52,50 @@ public:
         DTCPSocket tcpsock(newsock);
         CString str;
         str.Format(L"New connection is coming from %S", tcpsock.GetName().c_str());
-        ::PostMessage(g_NotifyWnd, WM_LOG, (WPARAM)NewStr(str), 0);
+        ::PostMessage(m_hWnd, WM_LOG, (WPARAM)NewStr(str), 0);
+        ::PostMessage(m_hWnd, WM_UPDATE_LIST, 0, 0);
     }
 
     virtual DVoid OnError(DSocket sock, DUInt32 code, std::string strReason)
     {
         CString str;
         str.Format(L"Server Error code:%d reason:%S", code, strReason.c_str());
-        ::PostMessage(g_NotifyWnd, WM_LOG, (WPARAM)NewStr(str), 0);
+        ::PostMessage(m_hWnd, WM_LOG, (WPARAM)NewStr(str), 0);
     }
 
     virtual DVoid OnStop(DSocket sock)
     {
         CString str;
         str.Format(L"Server Stop");
-        ::PostMessage(g_NotifyWnd, WM_LOG, (WPARAM)NewStr(str), 0);
+        ::PostMessage(m_hWnd, WM_LOG, (WPARAM)NewStr(str), 0);
     }
 
     virtual DVoid OnPreSend(DSocket sock, DBuffer buffer)
     {
         CString str;
         str.Format(L"OnPreSend");
-        ::PostMessage(g_NotifyWnd, WM_LOG, (WPARAM)NewStr(str), 0);
+        ::PostMessage(m_hWnd, WM_LOG, (WPARAM)NewStr(str), 0);
     }
 
     virtual DVoid OnSendOK(DSocket sock)
     {
         CString str;
         str.Format(L"OnSendOK");
-        ::PostMessage(g_NotifyWnd, WM_LOG, (WPARAM)NewStr(str), 0);
+        ::PostMessage(m_hWnd, WM_LOG, (WPARAM)NewStr(str), 0);
     }
 
     virtual DVoid OnSendError(DSocket sock, DUInt32 code, std::string strReason)
     {
         CString str;
         str.Format(L"OnSendError");
-        ::PostMessage(g_NotifyWnd, WM_LOG, (WPARAM)NewStr(str), 0);
+        ::PostMessage(m_hWnd, WM_LOG, (WPARAM)NewStr(str), 0);
     }
 
     virtual DVoid OnSendTimeout(DSocket sock)
     {
         CString str;
         str.Format(L"OnSendTimeout");
-        ::PostMessage(g_NotifyWnd, WM_LOG, (WPARAM)NewStr(str), 0);
+        ::PostMessage(m_hWnd, WM_LOG, (WPARAM)NewStr(str), 0);
     }
 
     virtual DVoid OnRecvBuf(DSocket sock, DBuffer buf)
@@ -104,7 +106,10 @@ public:
         std::string clientname = client.GetName();
         std::string clientdata = buf.ToHexString();
         str.Format(L"OnRecvBuf from %S : %S", clientname.c_str(), clientdata.c_str());
-        ::PostMessage(g_NotifyWnd, WM_LOG, (WPARAM)NewStr(str), 0);
+        ::PostMessage(m_hWnd, WM_LOG, (WPARAM)NewStr(str), 0);
+
+        DHelloServer::Process(&(this->m_server), sock, buf);
+
         client.Detach();
     }
 
@@ -115,7 +120,9 @@ public:
         client.Attach(sock);
         std::string clientname = client.GetName();
         str.Format(L"OnClose from %S", clientname.c_str());
-        ::PostMessage(g_NotifyWnd, WM_LOG, (WPARAM)NewStr(str), 0);
+        ::PostMessage(m_hWnd, WM_LOG, (WPARAM)NewStr(str), 0);
+
+        ::PostMessage(m_hWnd, WM_UPDATE_LIST, 0, 0);
     }
 
     virtual DVoid OnBroken(DSocket sock, DUInt32 code, std::string strReason)
@@ -125,7 +132,9 @@ public:
         client.Attach(sock);
         std::string clientname = client.GetName();
         str.Format(L"OnBroken from %S", clientname.c_str());
-        ::PostMessage(g_NotifyWnd, WM_LOG, (WPARAM)NewStr(str), 0);
+        ::PostMessage(m_hWnd, WM_LOG, (WPARAM)NewStr(str), 0);
+
+        ::PostMessage(m_hWnd, WM_UPDATE_LIST, 0, 0);
     }
 
 
@@ -141,6 +150,7 @@ public:
         COMMAND_ID_HANDLER(IDC_STOP, OnStopServer)
         COMMAND_ID_HANDLER(IDC_INFO, OnInfo)
         MESSAGE_HANDLER(WM_LOG, OnLog)
+        MESSAGE_HANDLER(WM_UPDATE_LIST, OnUpdateList)
     END_MSG_MAP()
 
     LRESULT OnInitDialog(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/)
@@ -160,10 +170,10 @@ public:
         m_stop.EnableWindow(FALSE);
 
         m_port = GetDlgItem(IDC_PORT);
-        m_port.SetWindowText(L"1229");
+        m_port.SetWindowText(DEFAULT_PORT);
         m_log = GetDlgItem(IDC_LOG);
 
-        g_NotifyWnd = m_hWnd;
+        m_userlist = GetDlgItem(IDC_USERLIST);
 
         DNet::Init();
 
@@ -173,20 +183,26 @@ public:
     LRESULT OnLog(UINT /*uMsg*/, WPARAM wParam, LPARAM lParam, BOOL& /*bHandled*/)
     {
         CString strLog = (LPCWSTR)wParam;
-        AppendLog((wchar_t*)strLog.GetString());
+        AppendLog((DWChar*)strLog.GetString());
         DelStr((WCHAR*)wParam);
         return 0;
     }
 
-    WCHAR* NewStr(CString& str) {
-        WCHAR* poststr = new WCHAR[str.GetLength() + 1];
+    DWChar* NewStr(CString& str) {
+        DWChar* poststr = new DWChar[str.GetLength() + 1];
         memcpy_s(poststr, str.GetLength() * 2, str.GetString(), str.GetLength() * 2);
         poststr[str.GetLength()] = 0;
         return poststr;
     }
 
-    void DelStr(WCHAR* str) {
+    DVoid DelStr(DWChar* str) {
         delete[] str;
+    }
+
+    LRESULT OnUpdateList(UINT /*uMsg*/, WPARAM wParam, LPARAM lParam, BOOL& /*bHandled*/)
+    {
+        RefreshUserList();
+        return 0;
     }
 
     LRESULT OnStartServer(WORD /*wNotifyCode*/, WORD wID, HWND /*hWndCtl*/, BOOL& /*bHandled*/)
@@ -213,13 +229,13 @@ public:
 
     LRESULT OnInfo(WORD /*wNotifyCode*/, WORD wID, HWND /*hWndCtl*/, BOOL& /*bHandled*/)
     {
-        //std::string info = DSelectServer::GetInfo();
-        //std::wstring winfo = DUtil::s2ws(info);
-        //AppendLog((wchar_t*)winfo.c_str());
+        std::string info = m_server.GetServerInfo();
+        std::wstring winfo = DXP::s2ws(info);
+        AppendLog((DWChar*)winfo.c_str());
         return 0;
     }
 
-    void AppendLog(wchar_t* str)
+    DVoid AppendLog(DWChar* str)
     {
         CString strOld;
         m_log.GetWindowText(strOld);
@@ -228,6 +244,25 @@ public:
         strOld += strLog;
         m_log.SetWindowText(strOld);
         m_log.LineScroll(m_log.GetLineCount());
+    }
+
+    DVoid RefreshUserList()
+    {
+        DInt32 Count = m_userlist.GetCount();
+        for (DInt32 i = Count - 1; i >= 0; i--)
+        {
+            m_userlist.DeleteString(i);
+        }
+        DUInt32 nCount = m_server.GetClientCount();
+        for (DUInt32 i = 0; i < nCount; i++)
+        {
+            DClientData data = m_server.GetClient(i);
+            std::string item = data.m_name;
+            item += "(";
+            item += DXP::UInt32ToStr(data.m_id);
+            item += ")";
+            m_userlist.AddString(DXP::s2ws(item).c_str());
+        }
     }
 
     LRESULT OnCancel(WORD /*wNotifyCode*/, WORD wID, HWND /*hWndCtl*/, BOOL& /*bHandled*/)
@@ -243,6 +278,8 @@ public:
 
     CButton m_start;
     CButton m_stop;
+
+    CListBox m_userlist;
 
     DTCPServer m_server;
 };

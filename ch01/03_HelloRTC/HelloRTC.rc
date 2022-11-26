@@ -13,7 +13,7 @@
 #undef APSTUDIO_READONLY_SYMBOLS
 
 /////////////////////////////////////////////////////////////////////////////
-// Chinese (Simplified, PRC) resources
+// Chinese (Simplified, China) resources
 
 #if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_CHS)
 LANGUAGE LANG_CHINESE, SUBLANG_CHINESE_SIMPLIFIED
@@ -50,19 +50,21 @@ END
 // Dialog
 //
 
-IDD_MAINDIALOG DIALOGEX 0, 0, 308, 245
+IDD_MAINDIALOG DIALOGEX 0, 0, 394, 246
 STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_MINIMIZEBOX | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "HelloRTC Server"
 FONT 8, "MS Shell Dlg", 400, 0, 0x1
 BEGIN
     PUSHBUTTON      "Start",IDC_START,7,19,43,15
-    EDITTEXT        IDC_LOG,12,56,289,178,ES_MULTILINE | ES_AUTOVSCROLL | ES_AUTOHSCROLL | ES_READONLY | WS_VSCROLL
+    EDITTEXT        IDC_LOG,12,57,225,182,ES_MULTILINE | ES_AUTOVSCROLL | ES_AUTOHSCROLL | ES_READONLY | WS_VSCROLL
     EDITTEXT        IDC_PORT,183,20,54,14,ES_AUTOHSCROLL
     PUSHBUTTON      "Stop",IDC_STOP,55,19,43,15
-    GROUPBOX        "Server",IDC_STATIC,7,7,294,231
+    GROUPBOX        "Server",IDC_STATIC,7,7,380,232
     PUSHBUTTON      "Info",IDC_INFO,102,19,43,15
     LTEXT           "Port:",IDC_STATIC,159,22,16,8
     LTEXT           "Log:",IDC_STATIC,13,43,14,8
+    LISTBOX         IDC_USERLIST,241,57,146,182,LBS_NOINTEGRALHEIGHT | LBS_DISABLENOSCROLL | WS_VSCROLL | WS_HSCROLL | WS_TABSTOP
+    LTEXT           "Users:",IDC_STATIC,244,42,20,8
 END
 
 
@@ -77,9 +79,9 @@ BEGIN
     IDD_MAINDIALOG, DIALOG
     BEGIN
         LEFTMARGIN, 7
-        RIGHTMARGIN, 301
+        RIGHTMARGIN, 387
         TOPMARGIN, 7
-        BOTTOMMARGIN, 238
+        BOTTOMMARGIN, 239
     END
 END
 #endif    // APSTUDIO_INVOKED
@@ -105,7 +107,7 @@ END
 // remains consistent on all systems.
 IDI_ICON1               ICON                    "res\\HelloRTC.ico"
 
-#endif    // Chinese (Simplified, PRC) resources
+#endif    // Chinese (Simplified, China) resources
 /////////////////////////////////////////////////////////////////////////////
 
 

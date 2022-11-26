@@ -1,9 +1,9 @@
 ﻿#include "DTCPServer.h"
-#include "Base/DUtil.h"
+#include "Base/DXP.h"
 #include "Base/DMsgQueue.h"
 #include "Net/DNet.h"
-#include <assert.h>
 
+#define SERVER_REPLY_MSG_RECVONE 10000
 DVoid* DX86_STDCALL ReplyHandler(DUInt32 msg, DVoid* para1, DVoid* para2);
 
 
@@ -64,7 +64,9 @@ DBool DTCPServer::Stop()
         m_waitFinish.Reset();
         Close();
         DInt32 res = m_waitFinish.Wait(200);
-        assert(res > 0);
+        if (res > 0) {
+            return false;
+        }
     }
 
     DMsgQueue::PostQuitMsg(m_replyQueue);
@@ -169,6 +171,7 @@ DVoid DTCPServer::ServerLoop()
                 DClientData cdata;
                 cdata.m_sock = client.m_sock;
                 cdata.m_name = client.GetName();
+                cdata.m_id = m_gCounter++;
                 cdata.m_bQuit = false;
                 m_clientsMutex.lock();
                 m_vecClients.push_back(cdata);
@@ -240,25 +243,52 @@ DVoid DTCPServer::Process(DBuffer buf, DSocket client)
     if (m_pSendSink && m_pSendSink->IsAlive()) {
         m_pSendSink->OnRecvBuf(client, buf);
     }
-
-    DReadBuffer rbContent(buf);
-    DUInt8 cmd = rbContent.ReadUInt8();
-    // 看一下命令字
-    if (cmd == 1) {
-        //std::wstring wstr = rbContent.ReadString();
-        // 给房间内所有其他 socket 发送一条消息
-
-        //DMsgQueue::PostQueueMsg(m_replyQueue, SERVER_REPLY_MSG_RECV, buf, (DVoid*)this);
-    }
-    else if (cmd == 2) {
-
-    }
 }
 
 DVoid DTCPServer::SetSink(DTCPServerSink* pSink)
 {
     m_pRecvSink = pSink;
     m_pSendSink = pSink;
+}
+
+std::string DTCPServer::GetServerInfo()
+{
+    std::string strRet;
+    strRet += "Server State: ";
+    strRet += DXP::UInt32ToStr(m_nObjState);
+    strRet += D_LINES;
+
+    strRet += "Server Port: ";
+    strRet += DXP::UInt16ToStr(m_wPort);
+    strRet += D_LINES;
+
+    DUInt32 nCount = GetClientCount();
+    strRet += "Server Users: ";
+    strRet += DXP::UInt32ToStr(nCount);
+    strRet += D_LINES;
+
+    for (DUInt32 i = 0; i < nCount; i++)
+    {
+        DClientData data = GetClient(i);
+        strRet += "ID: ";
+        strRet += DXP::UInt32ToStr(data.m_id);
+        strRet += "  Name: ";
+        strRet += data.m_name;
+        strRet += D_LINES;
+    }
+
+    return strRet;
+}
+
+DVoid DTCPServer::ReplyOne(DSocket sock, DBuffer buf)
+{
+    DMsgQueue::PostQueueMsg(m_replyQueue, SERVER_REPLY_MSG_RECVONE, buf.GetBuf(), (DVoid*)sock);
+    buf.Detach();
+}
+
+DVoid DTCPServer::ReplyAll(DSocket sock, DBuffer buf)
+{
+
 }
 
 DUInt32 DTCPServer::GetClientCount()
@@ -269,7 +299,7 @@ DUInt32 DTCPServer::GetClientCount()
     return cSize;
 }
 
-DClientData DTCPServer::GetClient(DInt32 index)
+DClientData DTCPServer::GetClient(DUInt32 index)
 {
     m_clientsMutex.lock();
     DClientData cData = m_vecClients[index];
@@ -292,6 +322,13 @@ DVoid DTCPServer::RemoveClient(DSocket client)
 
 DVoid* DX86_STDCALL ReplyHandler(DUInt32 msg, DVoid* para1, DVoid* para2)
 {
-
+    if (msg == SERVER_REPLY_MSG_RECVONE)
+    {
+        DBuffer buf;
+        buf.Attach((DByte*)para1);
+        DSocket sock = (DSocket)para2;
+        DTCPSocket ts(sock);
+        ts.SyncSend(buf);
+    }
     return nullptr;
 }

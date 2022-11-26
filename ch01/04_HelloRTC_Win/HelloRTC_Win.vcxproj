@@ -147,17 +147,21 @@
     <ClInclude Include="..\..\Common\Base\DAtomic.h" />
     <ClInclude Include="..\..\Common\Base\DBuffer.h" />
     <ClInclude Include="..\..\Common\Base\DMsgQueue.h" />
+    <ClInclude Include="..\..\Common\Base\DUTF8.h" />
     <ClInclude Include="..\..\Common\Base\DUtil.h" />
     <ClInclude Include="..\..\Common\Base\DXP.h" />
     <ClInclude Include="..\..\Common\Net\DNet.h" />
     <ClInclude Include="..\..\Common\Net\DTCP.h" />
     <ClInclude Include="..\..\Common\Net\DTCPClient.h" />
+    <ClInclude Include="..\..\Common\Protocol\DHelloProtocol.h" />
+    <ClInclude Include="DHelloClient.h" />
     <ClInclude Include="MainDlg.h" />
     <ClInclude Include="resource.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\Common\Base\DBuffer.cpp" />
     <ClCompile Include="..\..\Common\Base\DMsgQueue.cpp" />
+    <ClCompile Include="..\..\Common\Base\DUTF8.cpp" />
     <ClCompile Include="..\..\Common\Base\DUtil.cpp" />
     <ClCompile Include="..\..\Common\Base\DXP.cpp" />
     <ClCompile Include="..\..\Common\Net\DNet.cpp" />

@@ -92,5 +92,3 @@ private: \
     TypeName(const TypeName&) = delete;  \
     TypeName& operator=(const TypeName&) = delete;
 #endif
-
-#define WM_LOG WM_USER+1000

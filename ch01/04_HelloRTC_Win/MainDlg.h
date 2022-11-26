@@ -5,12 +5,14 @@
 #include "atlcrack.h"
 #include "resource.h"
 #include "Base/DXP.h"
+#include "Base/DUTF8.h"
 #include "Net/DNet.h"
 #include "Net/DTCPClient.h"
-#include <string>
+#include "DHelloClient.h"
 
-HWND g_NotifyWnd;
+#define WM_LOG WM_USER+1000
 #define WM_UPDATEUI WM_USER+1001
+#define WM_PROCESS WM_USER+1002
 
 
 class CMainDlg : public CDialogImpl<CMainDlg>, public CMessageFilter, DTCPClientSink
@@ -33,6 +35,7 @@ public:
         COMMAND_ID_HANDLER(IDCANCEL, OnCancel)
         MESSAGE_HANDLER(WM_LOG, OnLog)
         MESSAGE_HANDLER(WM_UPDATEUI, OnUpdateUI)
+        MESSAGE_HANDLER(WM_PROCESS, OnProcess)
         COMMAND_ID_HANDLER(IDC_CONNECT, OnConnect)
         COMMAND_ID_HANDLER(IDC_DISCONNECT, OnDisConnect)
         COMMAND_ID_HANDLER(IDC_SEND, OnSend)
@@ -60,12 +63,10 @@ public:
 
         DNet::Init();
 
-        g_NotifyWnd = m_hWnd;
+        m_client.Init();
+        m_client.SetSink(this);
 
-        m_sock.Init();
-        m_sock.SetSink(this);
-
-        SendMessage(g_NotifyWnd, WM_UPDATEUI, 0, 0);
+        SendMessage(m_hWnd, WM_UPDATEUI, 0, 0);
         return TRUE;
     }
 
@@ -74,24 +75,24 @@ public:
     {
         CString str;
         str.Format(L"Connecting to %S:%d", strIP.c_str(), wPort);
-        ::PostMessage(g_NotifyWnd, WM_LOG, (WPARAM)NewStr(str), 0);
-        ::PostMessage(g_NotifyWnd, WM_UPDATEUI, 0, 0);
+        ::PostMessage(m_hWnd, WM_LOG, (WPARAM)NewStr(str), 0);
+        ::PostMessage(m_hWnd, WM_UPDATEUI, 0, 0);
     }
 
     virtual DVoid OnConnectOK(DSocket sock)
     {
         CString str;
         str.Format(L"Connected OK");
-        ::PostMessage(g_NotifyWnd, WM_LOG, (WPARAM)NewStr(str), 0);
-        ::PostMessage(g_NotifyWnd, WM_UPDATEUI, 0, 0);
+        ::PostMessage(m_hWnd, WM_LOG, (WPARAM)NewStr(str), 0);
+        ::PostMessage(m_hWnd, WM_UPDATEUI, 0, 0);
     }
 
     virtual DVoid OnConnectError(DSocket sock, DUInt32 code, std::string strReason)
     {
         CString str;
         str.Format(L"Connect Error.code:%d reason:%S", code, strReason.c_str());
-        ::PostMessage(g_NotifyWnd, WM_LOG, (WPARAM)NewStr(str), 0);
-        ::PostMessage(g_NotifyWnd, WM_UPDATEUI, 0, 0);
+        ::PostMessage(m_hWnd, WM_LOG, (WPARAM)NewStr(str), 0);
+        ::PostMessage(m_hWnd, WM_UPDATEUI, 0, 0);
     }
 
     // DTCPDataSink
@@ -99,56 +100,59 @@ public:
     {
         CString str;
         str.Format(L"OnPreSend size:%d data:%S", buffer.GetSize(), buffer.ToHexString().c_str());
-        ::PostMessage(g_NotifyWnd, WM_LOG, (WPARAM)NewStr(str), 0);
+        ::PostMessage(m_hWnd, WM_LOG, (WPARAM)NewStr(str), 0);
     }
 
     virtual DVoid OnSendOK(DSocket sock)
     {
         CString str;
         str.Format(L"OnSendOK");
-        ::PostMessage(g_NotifyWnd, WM_LOG, (WPARAM)NewStr(str), 0);
+        ::PostMessage(m_hWnd, WM_LOG, (WPARAM)NewStr(str), 0);
     }
 
     virtual DVoid OnSendError(DSocket sock, DUInt32 code, std::string strReason)
     {
         CString str;
         str.Format(L"OnSendError code:%d reason:%S", code, strReason.c_str());
-        ::PostMessage(g_NotifyWnd, WM_LOG, (WPARAM)NewStr(str), 0);
+        ::PostMessage(m_hWnd, WM_LOG, (WPARAM)NewStr(str), 0);
     }
 
     virtual DVoid OnSendTimeout(DSocket sock)
     {
         CString str;
         str.Format(L"OnSendTimeout");
-        ::PostMessage(g_NotifyWnd, WM_LOG, (WPARAM)NewStr(str), 0);
+        ::PostMessage(m_hWnd, WM_LOG, (WPARAM)NewStr(str), 0);
     }
 
     virtual DVoid OnRecvBuf(DSocket sock, DBuffer buf)
     {
         CString str;
         str.Format(L"OnRecvBuf size:%d data:%S", buf.GetSize(), buf.ToHexString().c_str());
-        ::PostMessage(g_NotifyWnd, WM_LOG, (WPARAM)NewStr(str), 0);
+        ::PostMessage(m_hWnd, WM_LOG, (WPARAM)NewStr(str), 0);
+
+        ::PostMessage(m_hWnd, WM_PROCESS, (WPARAM)sock, (LPARAM)buf.GetBuf());
+        buf.Detach();
     }
 
     virtual DVoid OnClose(DSocket sock)
     {
         CString str;
         str.Format(L"OnClose");
-        ::PostMessage(g_NotifyWnd, WM_LOG, (WPARAM)NewStr(str), 0);
-        ::PostMessage(g_NotifyWnd, WM_UPDATEUI, 0, 0);
+        ::PostMessage(m_hWnd, WM_LOG, (WPARAM)NewStr(str), 0);
+        ::PostMessage(m_hWnd, WM_UPDATEUI, 0, 0);
     }
 
     virtual DVoid OnBroken(DSocket sock, DUInt32 code, std::string strReason)
     {
         CString str;
         str.Format(L"OnBroken");
-        ::PostMessage(g_NotifyWnd, WM_LOG, (WPARAM)NewStr(str), 0);
-        ::PostMessage(g_NotifyWnd, WM_UPDATEUI, 0, 0);
+        ::PostMessage(m_hWnd, WM_LOG, (WPARAM)NewStr(str), 0);
+        ::PostMessage(m_hWnd, WM_UPDATEUI, 0, 0);
     }
 
     LRESULT OnUpdateUI(UINT /*uMsg*/, WPARAM wParam, LPARAM lParam, BOOL& /*bHandled*/)
     {
-        if (m_sock.GetState() == DTCPCLIENT_STATE_DISCONNECT) {
+        if (m_client.GetState() == DTCPCLIENT_STATE_DISCONNECT) {
             m_connect.EnableWindow();
             m_disconnect.EnableWindow(FALSE);
             m_setname.EnableWindow(FALSE);
@@ -159,7 +163,7 @@ public:
             m_ip.EnableWindow();
             m_port.EnableWindow();
         }
-        else if (m_sock.GetState() == DTCPCLIENT_STATE_CONNECTING) {
+        else if (m_client.GetState() == DTCPCLIENT_STATE_CONNECTING) {
             m_connect.EnableWindow(FALSE);
             m_disconnect.EnableWindow();
             m_setname.EnableWindow(FALSE);
@@ -170,7 +174,7 @@ public:
             m_ip.EnableWindow(FALSE);
             m_port.EnableWindow(FALSE);
         }
-        else if (m_sock.GetState() == DTCPCLIENT_STATE_CONNECTED) {
+        else if (m_client.GetState() == DTCPCLIENT_STATE_CONNECTED) {
             m_connect.EnableWindow(FALSE);
             m_disconnect.EnableWindow();
             m_setname.EnableWindow();
@@ -184,26 +188,35 @@ public:
         return 0;
     }
 
-    WCHAR* NewStr(CString& str) {
-        WCHAR* poststr = new WCHAR[str.GetLength() + 1];
+    LRESULT OnProcess(UINT /*uMsg*/, WPARAM wParam, LPARAM lParam, BOOL& /*bHandled*/)
+    {
+        DBuffer bufRecv;
+        bufRecv.Attach((DByte*)lParam);
+        DSocket sock = (DSocket)wParam;
+        DHelloClient::HandleRecvBuffer(m_hWnd, sock, bufRecv);
+        return 0;
+    }
+
+    DWChar* NewStr(CString& str) {
+        DWChar* poststr = new DWChar[str.GetLength() + 1];
         memcpy_s(poststr, str.GetLength()*2, str.GetString(), str.GetLength()*2);
         poststr[str.GetLength()] = 0;
         return poststr;
     }
 
-    void DelStr(WCHAR* str) {
+    DVoid DelStr(DWChar* str) {
         delete[] str;
     }
 
     LRESULT OnLog(UINT /*uMsg*/, WPARAM wParam, LPARAM lParam, BOOL& /*bHandled*/)
     {
         CString strLog = (LPCWSTR)wParam;
-        AppendLog((wchar_t*)strLog.GetString());
-        DelStr((WCHAR*)wParam);
+        AppendLog((DWChar*)strLog.GetString());
+        DelStr((DWChar*)wParam);
         return 0;
     }
 
-    void AppendLog(wchar_t* str)
+    DVoid AppendLog(DWChar* str)
     {
         CString strOld;
         m_chat.GetWindowText(strOld);
@@ -220,13 +233,13 @@ public:
         m_ip.GetWindowText(strIP);
         CString strPort;
         m_port.GetWindowText(strPort);
-        m_sock.Connect(DXP::ws2s(std::wstring(strIP)), DXP::Str16ToInt32(std::wstring(strPort)));
+        m_client.Connect(DXP::ws2s(std::wstring(strIP)), DXP::Str16ToInt32(std::wstring(strPort)));
         return 0;
     }
 
     LRESULT OnDisConnect(WORD /*wNotifyCode*/, WORD wID, HWND /*hWndCtl*/, BOOL& /*bHandled*/)
     {
-        m_sock.DisConnect();
+        m_client.DisConnect();
         return 0;
     }
 
@@ -238,30 +251,20 @@ public:
         if (inputlen != 0) {
             m_sendText = strText;
             m_input.SetWindowText(L"");
-            SendText();
+            DUInt32 inputlen = m_sendText.GetLength();
+            std::string strU8 = DUTF8::UCS2ToUTF8((DUInt16*)strText.GetString(), strText.GetLength());
+            DHelloClient::SendIDText(&m_client, 1, strU8);
         }
         return 0;
-    }
-
-    void SendText() {
-        DGrowBuffer gb;
-        DUInt32 inputlen = m_sendText.GetLength();
-        gb.AddUInt32(1 + 4 + inputlen * 2, true); // len
-        gb.AddUInt8(TCP_DEMO_CMD_SENDTEXT);
-        std::wstring wstr(m_sendText);
-        std::string str = DXP::ws2s(wstr);
-        gb.AddStringA(str);
-        DBuffer bufSend = gb.Finish();
-        m_sock.Send(bufSend);
     }
 
     LRESULT OnInfo(WORD /*wNotifyCode*/, WORD wID, HWND /*hWndCtl*/, BOOL& /*bHandled*/)
     {
         DGrowBuffer gb;
         gb.AddUInt32(1, true); // len
-        gb.AddUInt8(TCP_DEMO_CMD_GETINFO);
+        gb.AddUInt8(HELLO_CS_CMD_GETINFO);
         DBuffer bufSend = gb.Finish();
-        m_sock.Send(bufSend);
+        m_client.Send(bufSend);
         return 0;
     }
 
@@ -272,18 +275,18 @@ public:
         m_name.GetWindowText(strText);
         DUInt32 inputlen = strText.GetLength();
         gb.AddUInt32(1 + 4 + inputlen * 2, true); // len
-        gb.AddUInt8(TCP_DEMO_CMD_SETNAME);
+        gb.AddUInt8(HELLO_CS_CMD_SETNAME);
         std::wstring wstr(strText);
         std::string str = DXP::ws2s(wstr);
         gb.AddStringA(str);
         DBuffer bufSend = gb.Finish();
-        m_sock.Send(bufSend);
+        m_client.Send(bufSend);
         return 0;
     }
 
     LRESULT OnCancel(WORD /*wNotifyCode*/, WORD wID, HWND /*hWndCtl*/, BOOL& /*bHandled*/)
     {
-        m_sock.UnInit();
+        m_client.UnInit();
         DestroyWindow();
         ::PostQuitMessage(0);
         DNet::UnInit();
@@ -303,5 +306,5 @@ public:
     CButton m_info;
 
     CString m_sendText;
-    DTCPClient m_sock;
+    DTCPClient m_client;
 };

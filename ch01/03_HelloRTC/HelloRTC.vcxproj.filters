@@ -15,7 +15,10 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="Dialog">
+    <Filter Include="Common\Protocol">
+      <UniqueIdentifier>{e4a88622-9110-4a6b-97df-5af67642bdf1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="App">
       <UniqueIdentifier>{2f4a787d-a11a-4742-a418-7309900e9174}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -29,9 +32,6 @@
     </ClCompile>
     <ClCompile Include="..\..\Common\Base\DUtil.cpp">
       <Filter>Common\Base</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Common\Net\DTCPClient.cpp">
-      <Filter>Common\Net</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Common\Base\DMsgQueue.cpp">
       <Filter>Common\Base</Filter>
@@ -69,13 +69,10 @@
       <Filter>Common\Base</Filter>
     </ClInclude>
     <ClInclude Include="MainDlg.h">
-      <Filter>Dialog</Filter>
+      <Filter>App</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Common\Base\DUtil.h">
       <Filter>Common\Base</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Common\Net\DTCPClient.h">
-      <Filter>Common\Net</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Common\Base\DMsgQueue.h">
       <Filter>Common\Base</Filter>
@@ -88,6 +85,12 @@
     </ClInclude>
     <ClInclude Include="..\..\Common\Base\DXP.h">
       <Filter>Common\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\Protocol\DHelloProtocol.h">
+      <Filter>Common\Protocol</Filter>
+    </ClInclude>
+    <ClInclude Include="DHelloServer.h">
+      <Filter>App</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

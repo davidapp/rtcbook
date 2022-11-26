@@ -45,6 +45,7 @@ private:
 
 typedef struct tagDClientData {
     DSocket m_sock;
+    DUInt32 m_id;
     std::string m_name;
     DBool m_bQuit;
 } DClientData;
@@ -64,6 +65,7 @@ public:
 
     inline DUInt32 GetState() { return m_nObjState; }
     DAtomInt32 m_nObjState;
+    std::string GetServerInfo();
 
 public:
     DVoid SetSink(DTCPServerSink* pSink);
@@ -72,20 +74,23 @@ public:
     DRWLock m_SinkLock;
 
 public:
+    DVoid ReplyOne(DSocket sock, DBuffer buf);
+    DVoid ReplyAll(DSocket sock, DBuffer buf);
+    DUInt32 m_replyQueue;
+
+public:
     DUInt32     GetClientCount();
-    DClientData GetClient(DInt32 index);
+    DClientData GetClient(DUInt32 index);
     DVoid       RemoveClient(DSocket client);
     std::vector<DClientData> m_vecClients;
     std::mutex m_clientsMutex;
+    DUInt32 m_gCounter;
 
 protected:
     DVoid ServerLoop();
     std::shared_ptr<std::thread> m_serverthread;
     DSPinLock m_waitStart;
     DSPinLock m_waitFinish;
-
-    DUInt32 m_replyQueue;
-
-private:
     DVoid Process(DBuffer buf, DSocket client);
+
 };

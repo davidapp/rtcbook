@@ -25,7 +25,6 @@
     <ClCompile Include="..\..\Common\Base\DXP.cpp" />
     <ClCompile Include="..\..\Common\Net\DNet.cpp" />
     <ClCompile Include="..\..\Common\Net\DTCP.cpp" />
-    <ClCompile Include="..\..\Common\Net\DTCPClient.cpp" />
     <ClCompile Include="..\..\Common\Net\DTCPServer.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
@@ -40,8 +39,9 @@
     <ClInclude Include="..\..\Common\DTypes.h" />
     <ClInclude Include="..\..\Common\Net\DNet.h" />
     <ClInclude Include="..\..\Common\Net\DTCP.h" />
-    <ClInclude Include="..\..\Common\Net\DTCPClient.h" />
     <ClInclude Include="..\..\Common\Net\DTCPServer.h" />
+    <ClInclude Include="..\..\Common\Protocol\DHelloProtocol.h" />
+    <ClInclude Include="DHelloServer.h" />
     <ClInclude Include="MainDlg.h" />
     <ClInclude Include="resource.h" />
   </ItemGroup>
