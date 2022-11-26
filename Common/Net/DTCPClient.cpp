@@ -175,7 +175,7 @@ DVoid DTCPClient::UnInit()
             m_waitRecvFinish.Reset();
             Close();
             DInt32 res = m_waitRecvFinish.Wait(200);
-            assert(res > 0);
+            assert(res >= 0);
         }
         DMsgQueue::RemoveQueue(m_workqueue);
         m_nObjState = DTCPCLIENT_STATE_UNINIT;

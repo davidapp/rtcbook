@@ -4,7 +4,6 @@
 std::mutex g_id2qMutex;
 std::map<DHandle, DMsgQueue*> g_id2q;
 DHandle g_qid = 1;
-
 #define DM_QUITMSG 1000
 
 DVoid* DThreadForQueue(DVoid* pvParam)
@@ -138,14 +137,24 @@ DUInt32 DMsgQueue::PostQueueMsg(DHandle qid, DUInt32 msg, DVoid* para1, DVoid* p
     return 0;
 }
 
-DUInt32 DMsgQueue::SendQueueMsg(DHandle qid, DUInt32 msg, DVoid* para1, DVoid* para2)
-{
-    return 0;
-}
-
-DVoid DMsgQueue::PostQuitMsg(DHandle qid)
+DUInt32 DMsgQueue::PostQuitMsg(DHandle qid)
 {
     PostQueueMsg(qid, DM_QUITMSG, 0, 0);
+}
+
+DVoid DMsgQueue::Quit(DHandle qid)
+{
+    // 先清理掉所有的 Handler
+    RemoveAllHandler(qid);
+
+    // 再清理掉所有的排队 Msg
+    ClearAllMsg(qid);
+
+    // 发一个退出消息
+    PostQueueMsg(qid, DM_QUITMSG, 0, 0);
+
+    // 等待线程结束
+    RemoveQueue(qid);
 }
 
 DBool DMsgQueue::IsInQueue(DHandle qid)
@@ -244,4 +253,17 @@ DVoid DMsgQueue::RemoveAllHandler(DHandle qid)
     if (pq == NULL) return;
 
     pq->m_msgfunc.clear();
+}
+
+DVoid DMsgQueue::ClearAllMsg(DHandle qid)
+{
+    auto pNodeQueue = g_id2q.find(qid);
+    if (pNodeQueue == g_id2q.end()) return;
+
+    DMsgQueue* pq = (DMsgQueue*)pNodeQueue->second;
+    if (pq == NULL) return;
+
+    pq->m_queueMutex.lock();
+    pq->m_queue.clear();
+    pq->m_queueMutex.unlock();
 }

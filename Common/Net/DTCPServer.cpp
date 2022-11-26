@@ -69,8 +69,7 @@ DBool DTCPServer::Stop()
         }
     }
 
-    DMsgQueue::PostQuitMsg(m_replyQueue);
-    DMsgQueue::RemoveQueue(m_replyQueue);
+    DMsgQueue::Quit(m_replyQueue);
     m_nObjState = DTCPSERVER_STATE_STOPED;
     return true;
 }
