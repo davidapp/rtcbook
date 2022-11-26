@@ -26,7 +26,7 @@ public:
     static DVoid   RemoveQueue(DHandle qid);
 
     static DUInt32 PostQueueMsg(DHandle qid, DUInt32 msg, DVoid* para1, DVoid* para2);
-    static DUInt32 PostQuitMsg(DHandle qid);
+    static DVoid   PostQuitMsg(DHandle qid);
 
     static DVoid   Quit(DHandle qid);
     static DVoid*  GetThreadHandle(DHandle qid);

@@ -279,6 +279,36 @@ std::string DTCPServer::GetServerInfo()
     return strRet;
 }
 
+DSocket DTCPServer::FindSockByID(DUInt32 id)
+{
+    DUInt32 nCount = GetClientCount();
+    DSocket sockRet = 0;
+    for (DUInt32 i = 0; i < nCount; i++)
+    {
+        DClientData data = GetClient(i);
+        if (data.m_id == id) {
+            sockRet = data.m_sock;
+            break;
+        }
+    }
+    return sockRet;
+}
+
+DUInt32 DTCPServer::FindIDBySock(DSocket sk)
+{
+    DUInt32 nCount = GetClientCount();
+    DUInt32 IDRet = 0;
+    for (DUInt32 i = 0; i < nCount; i++)
+    {
+        DClientData data = GetClient(i);
+        if (data.m_sock == sk) {
+            IDRet = data.m_id;
+            break;
+        }
+    }
+    return IDRet;
+}
+
 DVoid DTCPServer::ReplyOne(DSocket sock, DBuffer buf)
 {
     DMsgQueue::PostQueueMsg(m_replyQueue, SERVER_REPLY_MSG_RECVONE, buf.GetBuf(), (DVoid*)sock);

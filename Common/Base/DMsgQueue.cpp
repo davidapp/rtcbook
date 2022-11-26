@@ -137,7 +137,7 @@ DUInt32 DMsgQueue::PostQueueMsg(DHandle qid, DUInt32 msg, DVoid* para1, DVoid* p
     return 0;
 }
 
-DUInt32 DMsgQueue::PostQuitMsg(DHandle qid)
+DVoid DMsgQueue::PostQuitMsg(DHandle qid)
 {
     PostQueueMsg(qid, DM_QUITMSG, 0, 0);
 }

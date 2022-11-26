@@ -38,9 +38,22 @@ public:
             pServer->ReplyOne(sockRecv, buf);
         }
         else if (nCmd == HELLO_CS_CMD_SENDTEXT) {
-            //std::wstring wstr = rbContent.ReadString();
-            // 给房间内所有其他 socket 发送一条消息
-            //std::DBuffer bufText = rbContent.ReadStringA();
+            DUInt32 toID = rbContent.ReadUInt32();
+            std::string strText = rbContent.ReadStringA();
+            DUInt32 fromID = pServer->FindIDBySock(sockRecv);
+            DGrowBuffer bufData;
+            bufData.AddUInt8(HELLO_CS_CMD_GETINFO);
+            DSocket toSock = pServer->FindSockByID(toID);
+            if (toSock != 0)
+            {
+                bufData.AddUInt8(HELLO_RESULT_SUCCESS);
+                SendSCPMsg(toSock, fromID, strText);
+            }
+            else {
+                bufData.AddUInt8(HELLO_RESULT_FAIL);
+            }
+            DBuffer buf = bufData.Finish();
+            pServer->ReplyOne(sockRecv, buf);
         }
         else if (nCmd == HELLO_CS_CMD_SETNAME) {
 
@@ -51,5 +64,25 @@ public:
         else if (nCmd == HELLO_CS_CMD_PUSH) {
 
         }
+    }
+
+    static DBool SendSCEnter(DSocket toSock, DUInt32 fromID, std::string fromName)
+    {
+        return true;
+    }
+
+    static DBool SendSCLeave(DSocket toSock, DUInt32 fromID, std::string fromName)
+    {
+        return true;
+    }
+
+    static DBool SendSCPMsg(DSocket toSock, DUInt32 fromID, std::string text)
+    {
+        return true;
+    }
+
+    static DBool SendSCGMsg(DSocket toSock, DUInt32 fromID, std::string text)
+    {
+        return true;
     }
 };

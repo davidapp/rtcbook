@@ -66,6 +66,8 @@ public:
     inline DUInt32 GetState() { return m_nObjState; }
     DAtomInt32 m_nObjState;
     std::string GetServerInfo();
+    DSocket FindSockByID(DUInt32 id);
+    DUInt32 FindIDBySock(DSocket sk);
 
 public:
     DVoid SetSink(DTCPServerSink* pSink);
