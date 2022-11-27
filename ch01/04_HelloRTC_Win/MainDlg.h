@@ -39,6 +39,7 @@ public:
         COMMAND_ID_HANDLER(IDC_CONNECT, OnConnect)
         COMMAND_ID_HANDLER(IDC_DISCONNECT, OnDisConnect)
         COMMAND_ID_HANDLER(IDC_SEND, OnSend)
+        COMMAND_ID_HANDLER(IDC_SENDALL, OnSendAll)
         COMMAND_ID_HANDLER(IDC_INFO, OnInfo)
         COMMAND_ID_HANDLER(IDC_SETNAME, OnSetName)
     END_MSG_MAP()
@@ -194,8 +195,12 @@ public:
         DBuffer bufRecv;
         bufRecv.Attach((DByte*)lParam);
         DSocket sock = (DSocket)wParam;
-        DHelloClient::HandleRecvBuffer(m_hWnd, sock, bufRecv, users);
+        std::string strRet = DHelloClient::HandleRecvBuffer(m_hWnd, sock, bufRecv, users);
         RefreshUserList();
+        if (strRet.size() != 0) {
+            std::wstring str = DXP::s2ws(strRet);
+            AppendLog((DWChar*)str.c_str());
+        }
         return 0;
     }
 
@@ -273,29 +278,34 @@ public:
         return 0;
     }
 
+    LRESULT OnSendAll(WORD /*wNotifyCode*/, WORD wID, HWND /*hWndCtl*/, BOOL& /*bHandled*/)
+    {
+        CString strText;
+        m_input.GetWindowText(strText);
+        DUInt32 inputlen = strText.GetLength();
+        if (inputlen != 0) {
+            m_sendText = strText;
+            m_input.SetWindowText(L"");
+            DUInt32 inputlen = m_sendText.GetLength();
+            std::string strU8 = DUTF8::UCS2ToUTF8((DUInt16*)strText.GetString(), strText.GetLength());
+            DHelloClient::SendAll(&m_client, strU8);
+        }
+        return 0;
+    }
+
     LRESULT OnInfo(WORD /*wNotifyCode*/, WORD wID, HWND /*hWndCtl*/, BOOL& /*bHandled*/)
     {
-        DGrowBuffer gb;
-        gb.AddUInt32(1, true); // len
-        gb.AddUInt8(HELLO_CS_CMD_GETINFO);
-        DBuffer bufSend = gb.Finish();
-        m_client.Send(bufSend);
+        DHelloClient::SendGetInfo(&m_client);
         return 0;
     }
 
     LRESULT OnSetName(WORD /*wNotifyCode*/, WORD wID, HWND /*hWndCtl*/, BOOL& /*bHandled*/)
     {
-        DGrowBuffer gb;
         CString strText;
         m_name.GetWindowText(strText);
-        DUInt32 inputlen = strText.GetLength();
-        gb.AddUInt32(1 + 4 + inputlen * 2, true); // len
-        gb.AddUInt8(HELLO_CS_CMD_SETNAME);
         std::wstring wstr(strText);
         std::string str = DXP::ws2s(wstr);
-        gb.AddStringA(str);
-        DBuffer bufSend = gb.Finish();
-        m_client.Send(bufSend);
+        DHelloClient::SendSetName(&m_client, str);
         return 0;
     }
 

@@ -28,7 +28,7 @@ public:
     static DVoid SendIDText(DTCPClient* pClient, DUInt32 id, std::string text)
     {
         DGrowBuffer gb;
-        gb.AddUInt32(1, true);
+        gb.AddUInt32(1 + 4 + text.size(), true);
         gb.AddUInt8(HELLO_CS_CMD_SENDTEXT);
         gb.AddUInt32(id, true);
         gb.AddStringA(text);
@@ -39,7 +39,7 @@ public:
     static DVoid SendSetName(DTCPClient* pClient, std::string name)
     {
         DGrowBuffer gb;
-        gb.AddUInt32(1, true);
+        gb.AddUInt32(1 + 2 + name.size(), true);
         gb.AddUInt8(HELLO_CS_CMD_SETNAME);
         gb.AddUInt16((DUInt16)name.size(), true);
         DBuffer bufname((DByte*)name.c_str(), name.size());
@@ -48,8 +48,19 @@ public:
         pClient->Send(buf);
     }
 
-    static DVoid HandleRecvBuffer(HWND hWnd, DSocket sock, DBuffer recvBuf, std::map<std::string, DUInt32>& data)
+    static DVoid SendAll(DTCPClient* pClient, std::string text)
     {
+        DGrowBuffer gb;
+        gb.AddUInt32(1 + 4 + text.size(), true);
+        gb.AddUInt8(HELLO_CS_CMD_BROADCAST);
+        gb.AddStringA(text);
+        DBuffer buf = gb.Finish();
+        pClient->Send(buf);
+    }
+
+    static std::string HandleRecvBuffer(HWND hWnd, DSocket sock, DBuffer recvBuf, std::map<std::string, DUInt32>& data)
+    {
+        std::string strRet;
         DReadBuffer rb(recvBuf);
         DUInt8 cmd = rb.ReadUInt8();
         if (cmd == HELLO_CS_CMD_HEARTBEAT)
@@ -85,5 +96,23 @@ public:
         {
             //IGNORED
         }
+        // Server 主动下推的消息
+        else if (cmd == HELLO_SC_CMD_ENTER)
+        {
+            strRet = "someone enter room";
+        }
+        else if (cmd == HELLO_SC_CMD_LEAVE)
+        {
+            strRet = "someone leave room";
+        }
+        else if (cmd == HELLO_SC_CMD_PMSG)
+        {
+            strRet = "someone send you msg";
+        }
+        else if (cmd == HELLO_SC_CMD_GMSG)
+        {
+            strRet = "someone send all";
+        }
+        return strRet;
     }
 };

@@ -107,10 +107,10 @@ public:
         std::string clientdata = buf.ToHexString();
         str.Format(L"OnRecvBuf from %S : %S", clientname.c_str(), clientdata.c_str());
         ::PostMessage(m_hWnd, WM_LOG, (WPARAM)NewStr(str), 0);
+        client.Detach();
 
         DHelloServer::Process(&(this->m_server), sock, buf);
-
-        client.Detach();
+        ::PostMessage(m_hWnd, WM_UPDATE_LIST, 0, 0);
     }
 
     virtual DVoid OnClose(DSocket sock)
@@ -121,6 +121,7 @@ public:
         std::string clientname = client.GetName();
         str.Format(L"OnClose from %S", clientname.c_str());
         ::PostMessage(m_hWnd, WM_LOG, (WPARAM)NewStr(str), 0);
+        client.Detach();
 
         ::PostMessage(m_hWnd, WM_UPDATE_LIST, 0, 0);
     }
@@ -133,6 +134,7 @@ public:
         std::string clientname = client.GetName();
         str.Format(L"OnBroken from %S", clientname.c_str());
         ::PostMessage(m_hWnd, WM_LOG, (WPARAM)NewStr(str), 0);
+        client.Detach();
 
         ::PostMessage(m_hWnd, WM_UPDATE_LIST, 0, 0);
     }

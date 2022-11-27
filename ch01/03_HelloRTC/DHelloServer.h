@@ -46,7 +46,7 @@ public:
             }
         }
         else if (nCmd == HELLO_CS_CMD_SETNAME) {
-            DUInt16 nameLen = rbContent.ReadUInt16();
+            DUInt16 nameLen = rbContent.ReadUInt16(true);
             DBuffer nameBuf = rbContent.ReadFixBuffer(nameLen);
             std::string name((DChar*)nameBuf.GetBuf(), nameBuf.GetSize());
             DUInt32 fromID = pServer->FindIDBySock(sockRecv);
