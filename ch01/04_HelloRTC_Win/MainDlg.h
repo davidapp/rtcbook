@@ -12,7 +12,8 @@
 
 #define WM_LOG WM_USER+1000
 #define WM_UPDATEUI WM_USER+1001
-#define WM_PROCESS WM_USER+1002
+#define WM_LOGINOK WM_USER+1002
+#define WM_PROCESS WM_USER+1003
 
 
 class CMainDlg : public CDialogImpl<CMainDlg>, public CMessageFilter, DTCPClientSink
@@ -35,6 +36,7 @@ public:
         COMMAND_ID_HANDLER(IDCANCEL, OnCancel)
         MESSAGE_HANDLER(WM_LOG, OnLog)
         MESSAGE_HANDLER(WM_UPDATEUI, OnUpdateUI)
+        MESSAGE_HANDLER(WM_LOGINOK, OnLoginOK)
         MESSAGE_HANDLER(WM_PROCESS, OnProcess)
         COMMAND_ID_HANDLER(IDC_CONNECT, OnConnect)
         COMMAND_ID_HANDLER(IDC_DISCONNECT, OnDisConnect)
@@ -87,6 +89,7 @@ public:
         str.Format(L"Connected OK");
         ::PostMessage(m_hWnd, WM_LOG, (WPARAM)NewStr(str), 0);
         ::PostMessage(m_hWnd, WM_UPDATEUI, 0, 0);
+        ::PostMessage(m_hWnd, WM_LOGINOK, 0, 0);
     }
 
     virtual DVoid OnConnectError(DSocket sock, DUInt32 code, std::string strReason)
@@ -158,7 +161,7 @@ public:
             m_connect.EnableWindow();
             m_disconnect.EnableWindow(FALSE);
             m_setname.EnableWindow(FALSE);
-            m_name.EnableWindow(FALSE);
+            m_name.EnableWindow(TRUE);
             m_send.EnableWindow(FALSE);
             m_input.EnableWindow(FALSE);
             m_info.EnableWindow(FALSE);
@@ -169,7 +172,7 @@ public:
             m_connect.EnableWindow(FALSE);
             m_disconnect.EnableWindow();
             m_setname.EnableWindow(FALSE);
-            m_name.EnableWindow(FALSE);
+            m_name.EnableWindow(TRUE);
             m_send.EnableWindow(FALSE);
             m_input.EnableWindow(FALSE);
             m_info.EnableWindow();
@@ -187,6 +190,14 @@ public:
             m_ip.EnableWindow(FALSE);
             m_port.EnableWindow(FALSE);
         }
+        return 0;
+    }
+
+    LRESULT OnLoginOK(UINT /*uMsg*/, WPARAM wParam, LPARAM lParam, BOOL& /*bHandled*/)
+    {
+        BOOL bOK;
+        OnSetName(0, 0, 0, bOK);
+        OnInfo(0, 0, 0, bOK);
         return 0;
     }
 

@@ -337,7 +337,11 @@ DVoid DTCPServer::ReplyOne(DSocket sock, DBuffer buf)
 
 DVoid DTCPServer::ReplyAll(DSocket sock, DBuffer buf)
 {
-
+    for (DUInt32 i = 0; i < m_vecClients.size(); i++)
+    {
+        DMsgQueue::PostQueueMsg(m_replyQueue, SERVER_REPLY_MSG_RECVONE, buf.GetBuf(), (DVoid*)m_vecClients[i].m_sock);
+    }
+    buf.Detach();
 }
 
 DUInt32 DTCPServer::GetClientCount()
