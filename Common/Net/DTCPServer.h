@@ -68,6 +68,7 @@ public:
     std::string GetServerInfo();
     DSocket FindSockByID(DUInt32 id);
     DUInt32 FindIDBySock(DSocket sk);
+    DBool SetIDName(DUInt32 id, std::string name);
 
 public:
     DVoid SetSink(DTCPServerSink* pSink);

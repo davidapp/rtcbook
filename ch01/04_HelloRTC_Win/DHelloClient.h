@@ -48,44 +48,42 @@ public:
         pClient->Send(buf);
     }
 
-    static DVoid HandleRecvBuffer(HWND hWnd, DSocket sock, DBuffer recvBuf)
+    static DVoid HandleRecvBuffer(HWND hWnd, DSocket sock, DBuffer recvBuf, std::map<std::string, DUInt32>& data)
     {
         DReadBuffer rb(recvBuf);
         DUInt8 cmd = rb.ReadUInt8();
         if (cmd == HELLO_CS_CMD_HEARTBEAT)
         {
-
+            //IGNORED
         }
         else if (cmd == HELLO_CS_CMD_GETINFO)
         {
-
+            DUInt8 res = rb.ReadUInt8();
+            if (res == HELLO_RESULT_SUCCESS)
+            {
+                data.clear();
+                DUInt16 nCount = rb.ReadUInt16(true);
+                for (DUInt16 i = 0; i < nCount; i++)
+                {
+                    DUInt32 nID = rb.ReadUInt32(true);
+                    DUInt16 nNameSize = rb.ReadUInt16(true);
+                    DBuffer bufName = rb.ReadFixBuffer(nNameSize);
+                    std::string strName((DChar*)bufName.GetBuf(), bufName.GetSize());
+                    data.insert(std::make_pair(strName, nID));
+                }
+            }
         }
         else if (cmd == HELLO_CS_CMD_SENDTEXT)
         {
-
+            //IGNORED
         }
         else if (cmd == HELLO_CS_CMD_SETNAME)
         {
-
+            //IGNORED
         }
         else if (cmd == HELLO_CS_CMD_BROADCAST)
         {
-
-        }
-        else if (cmd == HELLO_CS_CMD_PUSH)
-        {
-
+            //IGNORED
         }
     }
-
-    static DInt32 FindIDByName(std::string name)
-    {
-        if (users.find(name) != users.end())
-        {
-            return users[name];
-        }
-        return -1;
-    }
-
-    static std::map<std::string, DUInt32> users;
 };

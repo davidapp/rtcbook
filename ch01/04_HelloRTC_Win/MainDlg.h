@@ -56,6 +56,7 @@ public:
         m_input = GetDlgItem(IDC_INPUT);
         m_send = GetDlgItem(IDC_SEND);
         m_info = GetDlgItem(IDC_INFO);
+        m_userlist = GetDlgItem(IDC_USERLIST);
 
         m_ip.SetWindowText(L"127.0.0.1");
         m_port.SetWindowText(L"1229");
@@ -193,8 +194,22 @@ public:
         DBuffer bufRecv;
         bufRecv.Attach((DByte*)lParam);
         DSocket sock = (DSocket)wParam;
-        DHelloClient::HandleRecvBuffer(m_hWnd, sock, bufRecv);
+        DHelloClient::HandleRecvBuffer(m_hWnd, sock, bufRecv, users);
+        RefreshUserList();
         return 0;
+    }
+
+    DVoid RefreshUserList()
+    {
+        DInt32 Count = m_userlist.GetCount();
+        for (DInt32 i = Count - 1; i >= 0; i--)
+        {
+            m_userlist.DeleteString(i);
+        }
+        for (auto i = users.begin(); i != users.end(); i++)
+        {
+            m_userlist.AddString(DXP::s2ws((*i).first).c_str());
+        }
     }
 
     DWChar* NewStr(CString& str) {
@@ -307,4 +322,16 @@ public:
 
     CString m_sendText;
     DTCPClient m_client;
+
+    CListBox m_userlist;
+
+    std::map<std::string, DUInt32> users;
+    DInt32 FindIDByName(std::string name)
+    {
+        if (users.find(name) != users.end())
+        {
+            return users[name];
+        }
+        return -1;
+    }
 };

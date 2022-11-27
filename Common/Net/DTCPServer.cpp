@@ -309,6 +309,26 @@ DUInt32 DTCPServer::FindIDBySock(DSocket sk)
     return IDRet;
 }
 
+DBool DTCPServer::SetIDName(DUInt32 id, std::string name)
+{
+    DUInt32 nCount = GetClientCount();
+    DBool bFind = false;
+    for (DUInt32 i = 0; i < nCount; i++)
+    {
+        DClientData data = GetClient(i);
+        if (data.m_id == id) {
+            m_clientsMutex.lock();
+            m_vecClients[i].m_name = name;
+            m_clientsMutex.unlock();
+            bFind = true;
+            break;
+        }
+    }
+    if (bFind) return true;
+    return false;
+}
+
+
 DVoid DTCPServer::ReplyOne(DSocket sock, DBuffer buf)
 {
     DMsgQueue::PostQueueMsg(m_replyQueue, SERVER_REPLY_MSG_RECVONE, buf.GetBuf(), (DVoid*)sock);
