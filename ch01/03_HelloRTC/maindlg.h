@@ -4,6 +4,7 @@
 #include "atlmisc.h"
 #include "atlcrack.h"
 #include "Base/DXP.h"
+#include "Base/DUTF8.h"
 #include "Net/DNet.h"
 #include "Net/DTCPServer.h"
 #include "DHelloServer.h"
@@ -195,7 +196,7 @@ public:
     LRESULT OnInfo(WORD /*wNotifyCode*/, WORD wID, HWND /*hWndCtl*/, BOOL& /*bHandled*/)
     {
         std::string info = m_server.GetServerInfo();
-        std::wstring winfo = DXP::s2ws(info);
+        std::wstring winfo = DUTF8::UTF8ToUCS2(info);
         AppendLog((DWChar*)winfo.c_str());
         return 0;
     }
@@ -226,7 +227,8 @@ public:
             item += "(";
             item += DXP::UInt32ToStr(data.m_id);
             item += ")";
-            m_userlist.AddString(DXP::s2ws(item).c_str());
+            std::wstring wstr = DUTF8::UTF8ToUCS2(item);
+            m_userlist.AddString(wstr.c_str());
         }
     }
 

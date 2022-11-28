@@ -202,7 +202,7 @@ public:
         std::string strRet = DHelloClient::HandleRecvBuffer(m_hWnd, sock, bufRecv, users);
         RefreshUserList();
         if (strRet.size() != 0) {
-            std::wstring str = DXP::s2ws(strRet);
+            std::wstring str = DUTF8::UTF8ToUCS2(strRet);
             AppendLog((DWChar*)str.c_str());
         }
         return 0;
@@ -223,7 +223,8 @@ public:
         }
         for (auto i = users.begin(); i != users.end(); i++)
         {
-            m_userlist.AddString(DXP::s2ws(i->second).c_str());
+            std::wstring wstr = DUTF8::UTF8ToUCS2(i->second);
+            m_userlist.AddString(wstr.c_str());
         }
     }
 
@@ -284,7 +285,7 @@ public:
         CString strName;
         m_userlist.GetText(index, strName.GetBuffer());
         strName.ReleaseBuffer();
-        std::string name = DXP::ws2s(strName.GetString());
+        std::string name = DUTF8::UCS2ToUTF8((DUInt16*)strName.GetString(), strName.GetLength()*2);
         CString strText;
         m_input.GetWindowText(strText);
         DUInt32 inputlen = strText.GetLength();
@@ -324,8 +325,7 @@ public:
     {
         CString strText;
         m_name.GetWindowText(strText);
-        std::wstring wstr(strText);
-        std::string str = DXP::ws2s(wstr);
+        std::string str = DUTF8::UCS2ToUTF8((DUInt16*)strText.GetString(), strText.GetLength() * 2);
         DHelloClient::SendSetName(&m_client, str);
         return 0;
     }
