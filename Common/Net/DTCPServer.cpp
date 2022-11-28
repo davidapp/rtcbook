@@ -345,16 +345,13 @@ DVoid DTCPServer::AsyncSend(DSocket sock, DBuffer buf)
     buf.Detach();
 }
 
-DVoid DTCPServer::NotifyOtherNameChange(DSocket fromSock, std::string newName)
+DVoid DTCPServer::NotifyNameChange(DSocket fromSock, std::string newName)
 {
     DUInt32 fromID = FindIDBySock(fromSock);
     m_clientsMutex.lock();
     for (DUInt32 i = 0; i < m_vecClients.size(); i++)
     {
-        if (m_vecClients[i].m_sock != fromSock)
-        {
-            SendOneCNameMsg(m_vecClients[i].m_sock, fromID, newName);
-        }
+        SendOneCNameMsg(m_vecClients[i].m_sock, fromID, newName);
     }
     m_clientsMutex.unlock();
 }

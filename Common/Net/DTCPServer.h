@@ -65,7 +65,7 @@ public:
     DSocket FindSockByID(DUInt32 id);
     DUInt32 FindIDBySock(DSocket sk);
     DBool SetIDName(DUInt32 id, std::string name);
-    DVoid NotifyOtherNameChange(DSocket fromSock, std::string newName);
+    DVoid NotifyNameChange(DSocket fromSock, std::string newName);
     DVoid SendGroupMsg(DSocket fromSock, std::string text);
     DVoid SendOneMsg(DSocket toSock, DUInt32 fromID, std::string text);
 

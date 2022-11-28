@@ -28,7 +28,7 @@ public:
     static DVoid SendIDText(DTCPClient* pClient, DUInt32 id, std::string text)
     {
         DGrowBuffer gb;
-        gb.AddUInt32(1 + 4 + text.size(), true);
+        gb.AddUInt32(1 + 4 + 4 + text.size(), true);
         gb.AddUInt8(HELLO_CS_CMD_SENDTEXT);
         gb.AddUInt32(id, true);
         gb.AddStringA(text);
@@ -58,7 +58,7 @@ public:
         pClient->Send(buf);
     }
 
-    static std::string HandleRecvBuffer(HWND hWnd, DSocket sock, DBuffer recvBuf, std::map<std::string, DUInt32>& data)
+    static std::string HandleRecvBuffer(HWND hWnd, DSocket sock, DBuffer recvBuf, std::map<DUInt32, std::string>& data)
     {
         std::string strRet;
         DReadBuffer rb(recvBuf);
@@ -84,7 +84,7 @@ public:
                     DUInt16 nNameSize = rb.ReadUInt16(true);
                     DBuffer bufName = rb.ReadFixBuffer(nNameSize);
                     std::string strName((DChar*)bufName.GetBuf(), bufName.GetSize());
-                    data.insert(std::make_pair(strName, nID));
+                    data.insert(std::make_pair(nID, strName));
                 }
             }
         }
@@ -100,25 +100,80 @@ public:
         else if (cmd == HELLO_SC_CMD_CNAME)
         {
             DUInt32 userID = rb.ReadUInt32(true);
+            DBool bFind = false;
+            std::string oldname;
+            for (auto i = data.begin(); i != data.end(); i++)
+            {
+                if ((*i).first == userID)
+                {
+                    bFind = true;
+                    oldname = i->second;
+                }
+            }
             DUInt16 nameLen = rb.ReadUInt16(true);
             DBuffer nameBuf = rb.ReadFixBuffer(nameLen);
             std::string strName((DChar*)nameBuf.GetBuf(), nameBuf.GetSize());
-            strRet = strName + " has entered the room.";
+            if (bFind) {
+                strRet = oldname + " has changed name to " + strName;
+            }
+            else {
+                strRet = strName + " has entered the room.";
+            }
             ::PostMessage(hWnd, WM_USER + 1004, 0, 0);
         }
         else if (cmd == HELLO_SC_CMD_LEAVE)
         {
             DUInt32 userID = rb.ReadUInt32(true);
-            strRet = "xx has left the room.";
+            DBool bFind = false;
+            std::string name;
+            for (auto i = data.begin(); i != data.end(); i++)
+            {
+                if ((*i).first == userID)
+                {
+                    bFind = true;
+                    name = i->first;
+                }
+            }
+            if (bFind) {
+                strRet = name + " has left the room.";
+            }
             ::PostMessage(hWnd, WM_USER + 1004, 0, 0);
         }
         else if (cmd == HELLO_SC_CMD_PMSG)
         {
-            strRet = "someone send you msg";
+            DUInt32 userID = rb.ReadUInt32(true);
+            std::string text = rb.ReadStringA();
+            DBool bFind = false;
+            std::string name;
+            for (auto i = data.begin(); i != data.end(); i++)
+            {
+                if ((*i).first == userID)
+                {
+                    bFind = true;
+                    name = i->second;
+                }
+            }
+            if (bFind) {
+                strRet = name + " sent to you: " + text;
+            }
         }
         else if (cmd == HELLO_SC_CMD_GMSG)
         {
-            strRet = "someone send all";
+            DUInt32 userID = rb.ReadUInt32(true);
+            std::string text = rb.ReadStringA();
+            DBool bFind = false;
+            std::string name;
+            for (auto i = data.begin(); i != data.end(); i++)
+            {
+                if ((*i).first == userID)
+                {
+                    bFind = true;
+                    name = i->second;
+                }
+            }
+            if (bFind) {
+                strRet = name + " sent to all: " + text;
+            }
         }
         return strRet;
     }

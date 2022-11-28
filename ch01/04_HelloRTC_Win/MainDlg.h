@@ -223,7 +223,7 @@ public:
         }
         for (auto i = users.begin(); i != users.end(); i++)
         {
-            m_userlist.AddString(DXP::s2ws((*i).first).c_str());
+            m_userlist.AddString(DXP::s2ws(i->second).c_str());
         }
     }
 
@@ -275,6 +275,16 @@ public:
 
     LRESULT OnSend(WORD /*wNotifyCode*/, WORD wID, HWND /*hWndCtl*/, BOOL& /*bHandled*/)
     {
+        DInt32 index = m_userlist.GetCurSel();
+        if (index == -1) {
+            MessageBox(L"Please select a person in the list.");
+            return 0;
+        }
+        m_oldSelIndex = index;
+        CString strName;
+        m_userlist.GetText(index, strName.GetBuffer());
+        strName.ReleaseBuffer();
+        std::string name = DXP::ws2s(strName.GetString());
         CString strText;
         m_input.GetWindowText(strText);
         DUInt32 inputlen = strText.GetLength();
@@ -282,9 +292,10 @@ public:
             m_sendText = strText;
             m_input.SetWindowText(L"");
             DUInt32 inputlen = m_sendText.GetLength();
-            std::string strU8 = DUTF8::UCS2ToUTF8((DUInt16*)strText.GetString(), strText.GetLength());
-            DHelloClient::SendIDText(&m_client, 1, strU8);
+            std::string strU8 = DUTF8::UCS2ToUTF8((DUInt16*)strText.GetString(), strText.GetLength()*2);
+            DHelloClient::SendIDText(&m_client, FindIDByName(name), strU8);
         }
+        m_userlist.SetCurSel(m_oldSelIndex);
         return 0;
     }
 
@@ -297,7 +308,7 @@ public:
             m_sendText = strText;
             m_input.SetWindowText(L"");
             DUInt32 inputlen = m_sendText.GetLength();
-            std::string strU8 = DUTF8::UCS2ToUTF8((DUInt16*)strText.GetString(), strText.GetLength());
+            std::string strU8 = DUTF8::UCS2ToUTF8((DUInt16*)strText.GetString(), strText.GetLength()*2);
             DHelloClient::SendAll(&m_client, strU8);
         }
         return 0;
@@ -345,13 +356,16 @@ public:
     DTCPClient m_client;
 
     CListBox m_userlist;
+    DInt32 m_oldSelIndex;
 
-    std::map<std::string, DUInt32> users;
+    std::map<DUInt32, std::string> users;
     DInt32 FindIDByName(std::string name)
     {
-        if (users.find(name) != users.end())
+        for (auto i = users.begin(); i != users.end(); i++)
         {
-            return users[name];
+            if (i->second == name) {
+                return i->first;
+            }
         }
         return -1;
     }

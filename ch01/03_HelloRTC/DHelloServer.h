@@ -21,7 +21,7 @@ public:
             DBool bOK = pServer->SetIDName(fromID, name);
             if (bOK) {
                 ReplyOK(pServer, sockRecv, nCmd);
-                pServer->NotifyOtherNameChange(sockRecv, name);
+                pServer->NotifyNameChange(sockRecv, name);
             }
             else {
                 ReplyFail(pServer, sockRecv, nCmd);
@@ -50,7 +50,7 @@ public:
             pServer->AsyncSend(sockRecv, bufSend);
         }
         else if (nCmd == HELLO_CS_CMD_SENDTEXT) {
-            DUInt32 toID = rbContent.ReadUInt32();
+            DUInt32 toID = rbContent.ReadUInt32(true);
             std::string strText = rbContent.ReadStringA();
             DUInt32 fromID = pServer->FindIDBySock(sockRecv);
             DSocket toSock = pServer->FindSockByID(toID);
