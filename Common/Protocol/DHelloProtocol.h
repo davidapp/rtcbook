@@ -33,8 +33,8 @@
 
 // Server->Client
 
-#define HELLO_SC_CMD_RENAME   101  // 有人改名字了
-//[1字节命令字 + 4字节ID]
+#define HELLO_SC_CMD_CNAME   101  // 有人改名字了
+//[1字节命令字 + 4字节ID + 2字节名字长度 + 2字节名字]
 
 #define HELLO_SC_CMD_LEAVE    102  // 有人退出了 
 //[1字节命令字 + 4字节ID]

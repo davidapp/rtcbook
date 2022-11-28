@@ -18,7 +18,7 @@
     <Filter Include="Common\Protocol">
       <UniqueIdentifier>{417fafea-509f-4dd6-888e-f5a97480958f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="App">
+    <Filter Include="Dialog">
       <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
       <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
     </Filter>
@@ -40,7 +40,7 @@
       <Filter>Resource</Filter>
     </ClInclude>
     <ClInclude Include="MainDlg.h">
-      <Filter>App</Filter>
+      <Filter>Dialog</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Common\Net\DTCPClient.h">
       <Filter>Common\Net</Filter>
@@ -58,7 +58,7 @@
       <Filter>Common\Protocol</Filter>
     </ClInclude>
     <ClInclude Include="DHelloClient.h">
-      <Filter>App</Filter>
+      <Filter>Dialog</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Common\Base\DUTF8.h">
       <Filter>Common\Base</Filter>

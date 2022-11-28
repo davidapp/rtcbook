@@ -23,11 +23,6 @@ public:
     virtual DVoid OnClose(DSocket sock) {};
     virtual DVoid OnBroken(DSocket sock, DUInt32 code, std::string strReason) {};
 
-    virtual DVoid OnPreSend(DSocket sock, DBuffer buffer) {};
-    virtual DVoid OnSendOK(DSocket sock) {};
-    virtual DVoid OnSendError(DSocket sock, DUInt32 code, std::string strReason) {};
-    virtual DVoid OnSendTimeout(DSocket sock) {};
-
     virtual DVoid OnRecvBuf(DSocket sock, DBuffer buf) {};
 
 public:
@@ -65,10 +60,14 @@ public:
 
     inline DUInt32 GetState() { return m_nObjState; }
     DAtomInt32 m_nObjState;
+
     std::string GetServerInfo();
     DSocket FindSockByID(DUInt32 id);
     DUInt32 FindIDBySock(DSocket sk);
     DBool SetIDName(DUInt32 id, std::string name);
+    DVoid NotifyOtherNameChange(DSocket fromSock, std::string newName);
+    DVoid SendGroupMsg(DSocket fromSock, std::string text);
+    DVoid SendOneMsg(DSocket toSock, DUInt32 fromID, std::string text);
 
 public:
     DVoid SetSink(DTCPServerSink* pSink);
@@ -77,10 +76,8 @@ public:
     DRWLock m_SinkLock;
 
 public:
-    DVoid ReplyOne(DSocket sock, DBuffer buf);
-    DVoid ReplyAll(DSocket sock, DBuffer buf);
-    DUInt32 m_replyQueue;
-    DVoid NotifyOtherNameChange(DSocket fromSock);
+    DVoid AsyncSend(DSocket sock, DBuffer buf);
+    DUInt32 m_sendQueue;
 
 public:
     DUInt32     GetClientCount();
@@ -98,8 +95,6 @@ protected:
     DVoid Process(DBuffer buf, DSocket client);
 
 private:
-    DVoid SendOneEnterMsg(DSocket toSock, DUInt32 userID);
-    DVoid SendOneLeaveMsg(DSocket toSock, DUInt32 userID);
-    DVoid SendOnePeerMsg(DSocket toSock, DUInt32 fromID, std::string text);
-    DVoid SendOneGroupMsg(DSocket toSock, std::string text);
+    DVoid SendOneCNameMsg(DSocket toSock, DUInt32 userID, std::string name);
+    DVoid SendOneLeaveMsg(DUInt32 userID);
 };

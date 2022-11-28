@@ -18,7 +18,7 @@
     <Filter Include="Common\Protocol">
       <UniqueIdentifier>{e4a88622-9110-4a6b-97df-5af67642bdf1}</UniqueIdentifier>
     </Filter>
-    <Filter Include="App">
+    <Filter Include="Dialog">
       <UniqueIdentifier>{2f4a787d-a11a-4742-a418-7309900e9174}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -69,7 +69,7 @@
       <Filter>Common\Base</Filter>
     </ClInclude>
     <ClInclude Include="MainDlg.h">
-      <Filter>App</Filter>
+      <Filter>Dialog</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Common\Base\DUtil.h">
       <Filter>Common\Base</Filter>
@@ -90,7 +90,7 @@
       <Filter>Common\Protocol</Filter>
     </ClInclude>
     <ClInclude Include="DHelloServer.h">
-      <Filter>App</Filter>
+      <Filter>Dialog</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

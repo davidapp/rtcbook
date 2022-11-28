@@ -70,45 +70,8 @@ public:
         ::PostMessage(m_hWnd, WM_LOG, (WPARAM)NewStr(str), 0);
     }
 
-    virtual DVoid OnPreSend(DSocket sock, DBuffer buffer)
-    {
-        CString str;
-        str.Format(L"OnPreSend");
-        ::PostMessage(m_hWnd, WM_LOG, (WPARAM)NewStr(str), 0);
-    }
-
-    virtual DVoid OnSendOK(DSocket sock)
-    {
-        CString str;
-        str.Format(L"OnSendOK");
-        ::PostMessage(m_hWnd, WM_LOG, (WPARAM)NewStr(str), 0);
-    }
-
-    virtual DVoid OnSendError(DSocket sock, DUInt32 code, std::string strReason)
-    {
-        CString str;
-        str.Format(L"OnSendError");
-        ::PostMessage(m_hWnd, WM_LOG, (WPARAM)NewStr(str), 0);
-    }
-
-    virtual DVoid OnSendTimeout(DSocket sock)
-    {
-        CString str;
-        str.Format(L"OnSendTimeout");
-        ::PostMessage(m_hWnd, WM_LOG, (WPARAM)NewStr(str), 0);
-    }
-
     virtual DVoid OnRecvBuf(DSocket sock, DBuffer buf)
     {
-        CString str;
-        DTCPSocket client;
-        client.Attach(sock);
-        std::string clientname = client.GetName();
-        std::string clientdata = buf.ToHexString();
-        str.Format(L"OnRecvBuf from %S : %S", clientname.c_str(), clientdata.c_str());
-        ::PostMessage(m_hWnd, WM_LOG, (WPARAM)NewStr(str), 0);
-        client.Detach();
-
         DHelloServer::Process(&(this->m_server), sock, buf);
         ::PostMessage(m_hWnd, WM_UPDATE_LIST, 0, 0);
     }

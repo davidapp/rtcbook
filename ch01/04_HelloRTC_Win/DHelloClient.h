@@ -67,6 +67,10 @@ public:
         {
             //IGNORED
         }
+        else if (cmd == HELLO_CS_CMD_SETNAME)
+        {
+            //IGNORED
+        }
         else if (cmd == HELLO_CS_CMD_GETINFO)
         {
             DUInt8 res = rb.ReadUInt8();
@@ -88,22 +92,25 @@ public:
         {
             //IGNORED
         }
-        else if (cmd == HELLO_CS_CMD_SETNAME)
-        {
-            //IGNORED
-        }
         else if (cmd == HELLO_CS_CMD_BROADCAST)
         {
             //IGNORED
         }
         // Server 主动下推的消息
-        else if (cmd == HELLO_SC_CMD_ENTER)
+        else if (cmd == HELLO_SC_CMD_CNAME)
         {
-            strRet = "someone enter room";
+            DUInt32 userID = rb.ReadUInt32(true);
+            DUInt16 nameLen = rb.ReadUInt16(true);
+            DBuffer nameBuf = rb.ReadFixBuffer(nameLen);
+            std::string strName((DChar*)nameBuf.GetBuf(), nameBuf.GetSize());
+            strRet = strName + " has entered the room.";
+            ::PostMessage(hWnd, WM_USER + 1004, 0, 0);
         }
         else if (cmd == HELLO_SC_CMD_LEAVE)
         {
-            strRet = "someone leave room";
+            DUInt32 userID = rb.ReadUInt32(true);
+            strRet = "xx has left the room.";
+            ::PostMessage(hWnd, WM_USER + 1004, 0, 0);
         }
         else if (cmd == HELLO_SC_CMD_PMSG)
         {

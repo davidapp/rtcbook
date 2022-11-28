@@ -14,6 +14,7 @@
 #define WM_UPDATEUI WM_USER+1001
 #define WM_LOGINOK WM_USER+1002
 #define WM_PROCESS WM_USER+1003
+#define WM_UPDATELIST WM_USER+1004
 
 
 class CMainDlg : public CDialogImpl<CMainDlg>, public CMessageFilter, DTCPClientSink
@@ -38,6 +39,7 @@ public:
         MESSAGE_HANDLER(WM_UPDATEUI, OnUpdateUI)
         MESSAGE_HANDLER(WM_LOGINOK, OnLoginOK)
         MESSAGE_HANDLER(WM_PROCESS, OnProcess)
+        MESSAGE_HANDLER(WM_UPDATELIST, OnUpdateList)
         COMMAND_ID_HANDLER(IDC_CONNECT, OnConnect)
         COMMAND_ID_HANDLER(IDC_DISCONNECT, OnDisConnect)
         COMMAND_ID_HANDLER(IDC_SEND, OnSend)
@@ -58,6 +60,7 @@ public:
         m_setname = GetDlgItem(IDC_SETNAME);
         m_input = GetDlgItem(IDC_INPUT);
         m_send = GetDlgItem(IDC_SEND);
+        m_sendall = GetDlgItem(IDC_SENDALL);
         m_info = GetDlgItem(IDC_INFO);
         m_userlist = GetDlgItem(IDC_USERLIST);
 
@@ -103,16 +106,14 @@ public:
     // DTCPDataSink
     virtual DVoid OnPreSend(DSocket sock, DBuffer buffer)
     {
-        CString str;
-        str.Format(L"OnPreSend size:%d data:%S", buffer.GetSize(), buffer.ToHexString().c_str());
-        ::PostMessage(m_hWnd, WM_LOG, (WPARAM)NewStr(str), 0);
+
     }
 
     virtual DVoid OnSendOK(DSocket sock)
     {
-        CString str;
-        str.Format(L"OnSendOK");
-        ::PostMessage(m_hWnd, WM_LOG, (WPARAM)NewStr(str), 0);
+        //CString str;
+        //str.Format(L"OnSendOK");
+        //::PostMessage(m_hWnd, WM_LOG, (WPARAM)NewStr(str), 0);
     }
 
     virtual DVoid OnSendError(DSocket sock, DUInt32 code, std::string strReason)
@@ -122,19 +123,8 @@ public:
         ::PostMessage(m_hWnd, WM_LOG, (WPARAM)NewStr(str), 0);
     }
 
-    virtual DVoid OnSendTimeout(DSocket sock)
-    {
-        CString str;
-        str.Format(L"OnSendTimeout");
-        ::PostMessage(m_hWnd, WM_LOG, (WPARAM)NewStr(str), 0);
-    }
-
     virtual DVoid OnRecvBuf(DSocket sock, DBuffer buf)
     {
-        CString str;
-        str.Format(L"OnRecvBuf size:%d data:%S", buf.GetSize(), buf.ToHexString().c_str());
-        ::PostMessage(m_hWnd, WM_LOG, (WPARAM)NewStr(str), 0);
-
         ::PostMessage(m_hWnd, WM_PROCESS, (WPARAM)sock, (LPARAM)buf.GetBuf());
         buf.Detach();
     }
@@ -163,6 +153,7 @@ public:
             m_setname.EnableWindow(FALSE);
             m_name.EnableWindow(TRUE);
             m_send.EnableWindow(FALSE);
+            m_sendall.EnableWindow(FALSE);
             m_input.EnableWindow(FALSE);
             m_info.EnableWindow(FALSE);
             m_ip.EnableWindow();
@@ -174,6 +165,7 @@ public:
             m_setname.EnableWindow(FALSE);
             m_name.EnableWindow(TRUE);
             m_send.EnableWindow(FALSE);
+            m_sendall.EnableWindow(FALSE);
             m_input.EnableWindow(FALSE);
             m_info.EnableWindow();
             m_ip.EnableWindow(FALSE);
@@ -185,6 +177,7 @@ public:
             m_setname.EnableWindow();
             m_name.EnableWindow();
             m_send.EnableWindow();
+            m_sendall.EnableWindow();
             m_input.EnableWindow();
             m_info.EnableWindow();
             m_ip.EnableWindow(FALSE);
@@ -197,7 +190,7 @@ public:
     {
         BOOL bOK;
         OnSetName(0, 0, 0, bOK);
-        OnInfo(0, 0, 0, bOK);
+        DHelloClient::SendGetInfo(&m_client);
         return 0;
     }
 
@@ -212,6 +205,12 @@ public:
             std::wstring str = DXP::s2ws(strRet);
             AppendLog((DWChar*)str.c_str());
         }
+        return 0;
+    }
+
+    LRESULT OnUpdateList(UINT /*uMsg*/, WPARAM wParam, LPARAM lParam, BOOL& /*bHandled*/)
+    {
+        DHelloClient::SendGetInfo(&m_client);
         return 0;
     }
 
@@ -339,6 +338,7 @@ public:
     CButton m_disconnect;
     CButton m_setname;
     CButton m_send;
+    CButton m_sendall;
     CButton m_info;
 
     CString m_sendText;

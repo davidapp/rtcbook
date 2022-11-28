@@ -13,6 +13,20 @@ public:
         if (nCmd == HELLO_CS_CMD_HEARTBEAT) {
             ReplyOK(pServer, sockRecv, nCmd);
         }
+        else if (nCmd == HELLO_CS_CMD_SETNAME) {
+            DUInt16 nameLen = rbContent.ReadUInt16(true);
+            DBuffer nameBuf = rbContent.ReadFixBuffer(nameLen);
+            std::string name((DChar*)nameBuf.GetBuf(), nameBuf.GetSize());
+            DUInt32 fromID = pServer->FindIDBySock(sockRecv);
+            DBool bOK = pServer->SetIDName(fromID, name);
+            if (bOK) {
+                ReplyOK(pServer, sockRecv, nCmd);
+                pServer->NotifyOtherNameChange(sockRecv, name);
+            }
+            else {
+                ReplyFail(pServer, sockRecv, nCmd);
+            }
+        }
         else if (nCmd == HELLO_CS_CMD_GETINFO) {
             DGrowBuffer bufData;
             bufData.AddUInt8(HELLO_CS_CMD_GETINFO);
@@ -29,7 +43,11 @@ public:
                 bufData.AddFixBuffer(name_buf);
             }
             DBuffer buf = bufData.Finish();
-            pServer->ReplyOne(sockRecv, buf);
+            DGrowBuffer bufAll;
+            bufAll.AddUInt32(buf.GetSize(), true);
+            bufAll.AddFixBuffer(buf);
+            DBuffer bufSend = bufAll.Finish();
+            pServer->AsyncSend(sockRecv, bufSend);
         }
         else if (nCmd == HELLO_CS_CMD_SENDTEXT) {
             DUInt32 toID = rbContent.ReadUInt32();
@@ -38,22 +56,8 @@ public:
             DSocket toSock = pServer->FindSockByID(toID);
             if (toSock != 0)
             {
-                SendSCPMsg(toSock, fromID, strText);
+                pServer->SendOneMsg(toSock, fromID, strText);
                 ReplyOK(pServer, sockRecv, nCmd);
-            }
-            else {
-                ReplyFail(pServer, sockRecv, nCmd);
-            }
-        }
-        else if (nCmd == HELLO_CS_CMD_SETNAME) {
-            DUInt16 nameLen = rbContent.ReadUInt16(true);
-            DBuffer nameBuf = rbContent.ReadFixBuffer(nameLen);
-            std::string name((DChar*)nameBuf.GetBuf(), nameBuf.GetSize());
-            DUInt32 fromID = pServer->FindIDBySock(sockRecv);
-            DBool bOK = pServer->SetIDName(fromID, name);
-            if (bOK) {
-                ReplyOK(pServer, sockRecv, nCmd);
-                pServer->NotifyOtherNameChange(sockRecv);
             }
             else {
                 ReplyFail(pServer, sockRecv, nCmd);
@@ -61,8 +65,7 @@ public:
         }
         else if (nCmd == HELLO_CS_CMD_BROADCAST) {
             std::string text = rbContent.ReadStringA();
-            DBuffer bufText((DByte*)text.c_str(), text.size());
-            pServer->ReplyAll(sockRecv, bufText);
+            pServer->SendGroupMsg(sockRecv, text);
             ReplyOK(pServer, sockRecv, nCmd);
         }
     }
@@ -74,7 +77,7 @@ public:
         bufReply.AddUInt8(cmd);
         bufReply.AddUInt8(HELLO_RESULT_SUCCESS);
         DBuffer buf = bufReply.Finish();
-        pServer->ReplyOne(sock, buf);
+        pServer->AsyncSend(sock, buf);
     }
 
     static DVoid ReplyFail(DTCPServer* pServer, DSocket sock, DUInt32 cmd)
@@ -84,63 +87,6 @@ public:
         bufReply.AddUInt8(cmd);
         bufReply.AddUInt8(HELLO_RESULT_FAIL);
         DBuffer buf = bufReply.Finish();
-        pServer->ReplyOne(sock, buf);
-    }
-
-
-    static DBool SendSCEnter(DSocket toSock, DUInt32 fromID, std::string fromName)
-    {
-        DTCPSocket sock(toSock);
-        DGrowBuffer gb;
-        gb.AddUInt32(1 + 4 + 2 + fromName.size(), true);
-        gb.AddUInt8(HELLO_SC_CMD_ENTER);
-        gb.AddUInt32(fromID, true);
-        gb.AddUInt16((DUInt16)fromName.size(), true);
-        DBuffer bufName((DByte*)fromName.c_str(), (DUInt16)fromName.size());
-        gb.AddFixBuffer(bufName);
-        DBuffer bufSend = gb.Finish();
-        sock.SyncSend(bufSend);
-        return true;
-    }
-
-    static DBool SendSCLeave(DSocket toSock, DUInt32 fromID, std::string fromName)
-    {
-        DTCPSocket sock(toSock);
-        DGrowBuffer gb;
-        gb.AddUInt32(1 + 4 + 2 + fromName.size(), true);
-        gb.AddUInt8(HELLO_SC_CMD_LEAVE);
-        gb.AddUInt32(fromID, true);
-        gb.AddUInt16((DUInt16)fromName.size(), true);
-        DBuffer bufName((DByte*)fromName.c_str(), (DUInt16)fromName.size());
-        gb.AddFixBuffer(bufName);
-        DBuffer bufSend = gb.Finish();
-        sock.SyncSend(bufSend);
-        return true;
-    }
-
-    static DBool SendSCPMsg(DSocket toSock, DUInt32 fromID, std::string text)
-    {
-        DTCPSocket sock(toSock);
-        DGrowBuffer gb;
-        gb.AddUInt32(1 + 4 + 4 + text.size(), true);
-        gb.AddUInt8(HELLO_SC_CMD_PMSG);
-        gb.AddUInt32(fromID, true);
-        gb.AddStringA(text);
-        DBuffer bufSend = gb.Finish();
-        sock.SyncSend(bufSend);
-        return true;
-    }
-
-    static DBool SendSCGMsg(DSocket toSock, DUInt32 fromID, std::string text)
-    {
-        DTCPSocket sock(toSock);
-        DGrowBuffer gb;
-        gb.AddUInt32(1 + 4 + 4 + text.size(), true);
-        gb.AddUInt8(HELLO_SC_CMD_GMSG);
-        gb.AddUInt32(fromID, true);
-        gb.AddStringA(text);
-        DBuffer bufSend = gb.Finish();
-        sock.SyncSend(bufSend);
-        return true;
+        pServer->AsyncSend(sock, buf);
     }
 };

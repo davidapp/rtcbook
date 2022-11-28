@@ -260,7 +260,7 @@ DVoid DTCPClient::RecvLoop()
     DByte tempbuf[4096]; //max for 4K
     while (1)
     {
-        ret = (DInt32)recv(m_sock, (char*)tempbuf, 4096, 0); //MSG_DONTROUTE MSG_OOB
+        ret = (DInt32)recv(m_sock, (char*)tempbuf, 4, 0); //MSG_DONTROUTE MSG_OOB
         if (ret == DSockError)
         {
             m_nObjState = DTCPCLIENT_STATE_DISCONNECT;
@@ -286,11 +286,15 @@ DVoid DTCPClient::RecvLoop()
             break;
         }
         else {
-            DBuffer buf(tempbuf, ret);
+            DBuffer buf(tempbuf, 4);
+            DReadBuffer rb(buf);
+            DUInt32 nSize = rb.ReadUInt32(true);
+            DTCPSocket sock(m_sock);
+            DBuffer bufContent = sock.SyncRecv(nSize, &ret);
             m_SinkLock.LockRead();
             if (m_pRecvSink && m_pRecvSink->IsAlive())
             {
-                m_pRecvSink->OnRecvBuf(m_sock, buf);
+                m_pRecvSink->OnRecvBuf(m_sock, bufContent);
             }
             m_SinkLock.UnlockRead();
         }
