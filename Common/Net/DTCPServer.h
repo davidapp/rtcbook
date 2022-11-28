@@ -80,6 +80,7 @@ public:
     DVoid ReplyOne(DSocket sock, DBuffer buf);
     DVoid ReplyAll(DSocket sock, DBuffer buf);
     DUInt32 m_replyQueue;
+    DVoid NotifyOtherNameChange(DSocket fromSock);
 
 public:
     DUInt32     GetClientCount();
@@ -96,4 +97,9 @@ protected:
     DSPinLock m_waitFinish;
     DVoid Process(DBuffer buf, DSocket client);
 
+private:
+    DVoid SendOneEnterMsg(DSocket toSock, DUInt32 userID);
+    DVoid SendOneLeaveMsg(DSocket toSock, DUInt32 userID);
+    DVoid SendOnePeerMsg(DSocket toSock, DUInt32 fromID, std::string text);
+    DVoid SendOneGroupMsg(DSocket toSock, std::string text);
 };

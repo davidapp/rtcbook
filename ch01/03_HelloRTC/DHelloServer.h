@@ -53,6 +53,7 @@ public:
             DBool bOK = pServer->SetIDName(fromID, name);
             if (bOK) {
                 ReplyOK(pServer, sockRecv, nCmd);
+                pServer->NotifyOtherNameChange(sockRecv);
             }
             else {
                 ReplyFail(pServer, sockRecv, nCmd);

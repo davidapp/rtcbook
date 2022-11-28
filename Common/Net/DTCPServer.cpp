@@ -6,6 +6,11 @@
 #define SERVER_REPLY_MSG_RECVONE 10000
 DVoid* DX86_STDCALL ReplyHandler(DUInt32 msg, DVoid* para1, DVoid* para2);
 
+#define HELLO_SC_CMD_ENTER  101
+#define HELLO_SC_CMD_LEAVE  102
+#define HELLO_SC_CMD_PMSG   103
+#define HELLO_SC_CMD_GMSG   104
+
 
 DTCPServer::DTCPServer()
 {
@@ -187,6 +192,7 @@ DVoid DTCPServer::ServerLoop()
                     {
                         DTCPSocket client;
                         client.Attach((*item).m_sock);
+                        // 读取 4 字节包头长度
                         DInt32 res = 0;
                         DBuffer buf = client.SyncRecv(4, &res);
                         if (res == 0) {
@@ -194,7 +200,16 @@ DVoid DTCPServer::ServerLoop()
                             if (m_pRecvSink && m_pRecvSink->IsAlive()) {
                                 m_pRecvSink->OnClose((*item).m_sock);
                             }
-                            // TODO 广播一下退出消息
+                            // 广播退出消息
+                            m_clientsMutex.lock();
+                            for (DUInt32 i = 0; i < m_vecClients.size(); i++) 
+                            {
+                                if (m_vecClients[i].m_sock != (*item).m_sock)
+                                {
+                                    SendOneLeaveMsg(m_vecClients[i].m_sock, FindIDBySock((*item).m_sock));
+                                }
+                            }
+                            m_clientsMutex.unlock();
                             (*item).m_bQuit = true;
                             client.Shutdown(SD_BOTH);
                             client.Close();
@@ -215,13 +230,23 @@ DVoid DTCPServer::ServerLoop()
                                 std::string strReason = DNet::GetLastNetErrorStr(errCode);
                                 m_pRecvSink->OnBroken((*item).m_sock, errCode, strReason);
                             }
-                            // TODO 广播一下异常消息
+                            // 广播退出消息
+                            m_clientsMutex.lock();
+                            for (DUInt32 i = 0; i < m_vecClients.size(); i++)
+                            {
+                                if (m_vecClients[i].m_sock != (*item).m_sock)
+                                {
+                                    SendOneLeaveMsg(m_vecClients[i].m_sock, FindIDBySock((*item).m_sock));
+                                }
+                            }
+                            m_clientsMutex.unlock();
                             (*item).m_bQuit = true;
                             client.Close();
                         }
                         client.Detach();
                     }
                 }
+                // 清理掉退出的 ClientData 
                 int last = m_vecClients.size() - 1;
                 for (int i = last; i >= 0; i--)
                 {
@@ -344,6 +369,20 @@ DVoid DTCPServer::ReplyAll(DSocket sock, DBuffer buf)
     buf.Detach();
 }
 
+DVoid DTCPServer::NotifyOtherNameChange(DSocket fromSock)
+{
+    DUInt32 fromID = FindIDBySock(fromSock);
+    m_clientsMutex.lock();
+    for (DUInt32 i = 0; i < m_vecClients.size(); i++)
+    {
+        if (m_vecClients[i].m_sock != fromSock)
+        {
+            SendOneEnterMsg(m_vecClients[i].m_sock, fromID);
+        }
+    }
+    m_clientsMutex.unlock();
+}
+
 DUInt32 DTCPServer::GetClientCount()
 {
     m_clientsMutex.lock();
@@ -384,4 +423,54 @@ DVoid* DX86_STDCALL ReplyHandler(DUInt32 msg, DVoid* para1, DVoid* para2)
         ts.SyncSend(buf);
     }
     return nullptr;
+}
+
+DVoid DTCPServer::SendOneEnterMsg(DSocket toSock, DUInt32 userID)
+{
+    DTCPSocket sock(toSock);
+    DGrowBuffer gb;
+    gb.AddUInt32(1+4, true);
+    gb.AddUInt8(HELLO_SC_CMD_ENTER);
+    gb.AddUInt32(userID, true);
+    DBuffer bufSend = gb.Finish();
+    sock.SyncSend(bufSend);
+    sock.Detach();
+}
+
+DVoid DTCPServer::SendOneLeaveMsg(DSocket toSock, DUInt32 userID)
+{
+    DTCPSocket sock(toSock);
+    DGrowBuffer gb;
+    gb.AddUInt32(1 + 4, true);
+    gb.AddUInt8(HELLO_SC_CMD_LEAVE);
+    gb.AddUInt32(userID, true);
+    DBuffer bufSend = gb.Finish();
+    sock.SyncSend(bufSend);
+    sock.Detach();
+}
+
+DVoid DTCPServer::SendOnePeerMsg(DSocket toSock, DUInt32 fromID, std::string text)
+{
+    DTCPSocket sock(toSock);
+    DGrowBuffer gb;
+    gb.AddUInt32(1 + 4 + 4 + text.size(), true);
+    gb.AddUInt8(HELLO_SC_CMD_PMSG);
+    gb.AddUInt32(fromID, true);
+    gb.AddStringA(text);
+    DBuffer bufSend = gb.Finish();
+    sock.SyncSend(bufSend);
+    sock.Detach();
+}
+
+DVoid SendOneGroupMsg(DSocket toSock, DUInt32 fromID, std::string text)
+{
+    DTCPSocket sock(toSock);
+    DGrowBuffer gb;
+    gb.AddUInt32(1 + 4 + 4 + text.size(), true);
+    gb.AddUInt8(HELLO_SC_CMD_GMSG);
+    gb.AddUInt32(fromID, true);
+    gb.AddStringA(text);
+    DBuffer bufSend = gb.Finish();
+    sock.SyncSend(bufSend);
+    sock.Detach();
 }
