@@ -257,7 +257,7 @@ DBool DTCPClient::StartRecv()
 DVoid DTCPClient::RecvLoop()
 {
     DInt32 ret = 0;
-    DByte tempbuf[4096]; //max for 4K
+    DByte tempbuf[16]; //max for 4K
     while (1)
     {
         ret = (DInt32)recv(m_sock, (char*)tempbuf, 4, 0); //MSG_DONTROUTE MSG_OOB

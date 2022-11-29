@@ -131,7 +131,7 @@ public:
                 if ((*i).first == userID)
                 {
                     bFind = true;
-                    name = i->first;
+                    name = i->second;
                 }
             }
             if (bFind) {
