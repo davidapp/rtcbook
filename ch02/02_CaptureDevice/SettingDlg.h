@@ -6,7 +6,7 @@
 #include "atlmisc.h"
 #include "atlcrack.h"
 #include "resource.h"
-#include "Base/DUtil.h"
+#include "Base/DXP.h"
 #include "Base/DUTF8.h"
 #include "Video/WinDSCamera.h"
 
@@ -111,7 +111,7 @@ public:
             std::vector<DCameraCaps> caps = WinDSCamera::GetDeviceCaps(devs[index].m_device_filter);
             DUInt32 indexcap = m_capList.GetCurSel();
             if (indexcap < caps.size()) {
-                std::wstring wstr = DUtil::s2ws(caps[indexcap].m_amt);
+                std::wstring wstr = DXP::s2ws(caps[indexcap].m_amt);
                 m_info.SetWindowText(wstr.c_str());
             }
         }

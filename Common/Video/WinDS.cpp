@@ -1,6 +1,6 @@
 
 #include "WinDS.h"
-#include "Base/DUtil.h"
+#include "Base/DXP.h"
 #include "File/DBmpFile.h"
 #include <dvdmedia.h>
 
@@ -421,7 +421,7 @@ std::string WinDS::GUIDToStr(GUID id)
     WCHAR strGuid[39];
     int res = ::StringFromGUID2(id, strGuid, 39);
     std::wstring wstr = strGuid;
-    std::string str = DUtil::ws2s(wstr);
+    std::string str = DXP::ws2s(wstr);
     return str;
 }
 
@@ -431,7 +431,7 @@ std::string WinDS::FRArrayToStr(void* p, DUInt32 len)
     std::string ret;
     ret += "[";
     for (DUInt32 i = 0; i < len; i++) {
-        ret += DUtil::UInt32ToStr((DUInt32)(10000000 / ptr[i]));
+        ret += DXP::UInt32ToStr((DUInt32)(10000000 / ptr[i]));
         if (i != len - 1) {
             ret += ", ";
         }
@@ -473,20 +473,20 @@ std::string WinDS::Dump_AM_MEDIA_TYPE(void* amt)
     // BOOL is int on Windows
     temp = "bFixedSizeSamples(4 byte): ";
     ret += temp;
-    temp = DUtil::UInt32ToStr(p->bFixedSizeSamples);
+    temp = DXP::UInt32ToStr(p->bFixedSizeSamples);
     ret += temp;
     ret += "\r\n";
 
     temp = "bTemporalCompression(4 byte): ";
     ret += temp;
 
-    temp = DUtil::UInt32ToStr(p->bTemporalCompression);
+    temp = DXP::UInt32ToStr(p->bTemporalCompression);
     ret += temp;
     ret += "\r\n";
 
     temp = "lSampleSize(4 bytes): ";
     ret += temp;
-    temp = DUtil::UInt32ToStr(p->lSampleSize);
+    temp = DXP::UInt32ToStr(p->lSampleSize);
     ret += temp;
     ret += "\r\n";
 
@@ -500,19 +500,19 @@ std::string WinDS::Dump_AM_MEDIA_TYPE(void* amt)
 
     temp = "pUnk(4/8 bytes): ";
     ret += temp;
-    temp = DUtil::AddrToStr(p->pUnk);
+    temp = DXP::AddrToStr(p->pUnk);
     ret += temp;
     ret += "\r\n";
 
     temp = "cbFormat(4 bytes): ";
     ret += temp;
-    temp = DUtil::UInt32ToStr(p->cbFormat);
+    temp = DXP::UInt32ToStr(p->cbFormat);
     ret += temp;
     ret += "\r\n";
 
     temp = "pbFormat(4/8 bytes): ";
     ret += temp;
-    temp = DUtil::AddrToStr(p->pbFormat);
+    temp = DXP::AddrToStr(p->pbFormat);
     ret += temp;
     ret += "\r\n";
 
@@ -546,17 +546,17 @@ std::string WinDS::Dump_VIDEOINFOHEADER(void* vih)
 
     temp = "dwBitRate(4 bytes):";
     ret += temp;
-    ret += DUtil::UInt32ToStr(h->dwBitRate); // biSizeImage * MaxFRS * 8
+    ret += DXP::UInt32ToStr(h->dwBitRate); // biSizeImage * MaxFRS * 8
     ret += "\r\n";
 
     temp = "dwBitErrorRate(4 bytes):";
     ret += temp;
-    ret += DUtil::UInt32ToStr(h->dwBitErrorRate);
+    ret += DXP::UInt32ToStr(h->dwBitErrorRate);
     ret += "\r\n";
 
     temp = "AvgTimePerFrame(8 bytes):";
     ret += temp;
-    ret += DUtil::Int64ToStr(h->AvgTimePerFrame);
+    ret += DXP::Int64ToStr(h->AvgTimePerFrame);
     ret += "\r\n";
 
     temp = "bmiHeader(40 bytes):\r\n";
@@ -590,47 +590,47 @@ std::string WinDS::Dump_VIDEOINFOHEADER2(void* vih2)
 
     temp = "dwBitRate(4 bytes):";
     ret += temp;
-    ret += DUtil::UInt32ToStr(h->dwBitRate);
+    ret += DXP::UInt32ToStr(h->dwBitRate);
     ret += "\r\n";
 
     temp = "dwBitErrorRate(4 bytes):";
     ret += temp;
-    ret += DUtil::UInt32ToStr(h->dwBitErrorRate);
+    ret += DXP::UInt32ToStr(h->dwBitErrorRate);
     ret += "\r\n";
 
     temp = "AvgTimePerFrame(8 bytes):";
     ret += temp;
-    ret += DUtil::Int64ToStr(h->AvgTimePerFrame);
+    ret += DXP::Int64ToStr(h->AvgTimePerFrame);
     ret += "\r\n";
 
     temp = "dwInterlaceFlags(4 bytes):";
     ret += temp;
-    ret += DUtil::UInt32ToStr(h->dwInterlaceFlags);
+    ret += DXP::UInt32ToStr(h->dwInterlaceFlags);
     ret += "\r\n";
 
     temp = "dwCopyProtectFlags(4 bytes):";
     ret += temp;
-    ret += DUtil::UInt32ToStr(h->dwCopyProtectFlags);
+    ret += DXP::UInt32ToStr(h->dwCopyProtectFlags);
     ret += "\r\n";
 
     temp = "dwPictAspectRatioX(4 bytes):";
     ret += temp;
-    ret += DUtil::UInt32ToStr(h->dwPictAspectRatioX);
+    ret += DXP::UInt32ToStr(h->dwPictAspectRatioX);
     ret += "\r\n";
 
     temp = "dwPictAspectRatioY(4 bytes):";
     ret += temp;
-    ret += DUtil::UInt32ToStr(h->dwPictAspectRatioY);
+    ret += DXP::UInt32ToStr(h->dwPictAspectRatioY);
     ret += "\r\n";
 
     temp = "dwControlFlags(4 bytes):";
     ret += temp;
-    ret += DUtil::UInt32ToStr(h->dwControlFlags);
+    ret += DXP::UInt32ToStr(h->dwControlFlags);
     ret += "\r\n";
 
     temp = "dwReserved2(4 bytes):";
     ret += temp;
-    ret += DUtil::UInt32ToStr(h->dwReserved2);
+    ret += DXP::UInt32ToStr(h->dwReserved2);
     ret += "\r\n";
 
     temp = "bmiHeader(40 bytes):\r\n";

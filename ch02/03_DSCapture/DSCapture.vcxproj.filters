@@ -8,9 +8,6 @@
     <ClCompile Include="..\..\Common\Base\DUTF8.cpp">
       <Filter>Common\Base</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Common\Base\DUtil.cpp">
-      <Filter>Common\Base</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\Common\File\DBmpFile.cpp">
       <Filter>Common\File</Filter>
     </ClCompile>
@@ -35,15 +32,15 @@
     <ClCompile Include="..\..\Common\Video\DVideoFrame.cpp">
       <Filter>Common\Video</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\Common\Base\DXP.cpp">
+      <Filter>Common\Base</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Common\Base\DBuffer.h">
       <Filter>Common\Base</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Common\Base\DUTF8.h">
-      <Filter>Common\Base</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Common\Base\DUtil.h">
       <Filter>Common\Base</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Common\Video\VideoDefines.h">
@@ -93,6 +90,9 @@
     </ClInclude>
     <ClInclude Include="..\..\Common\Video\DVideoFrame.h">
       <Filter>Common\Video</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\Base\DXP.h">
+      <Filter>Common\Base</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -1,6 +1,6 @@
 ﻿#include "DBmpFile.h"
 #include "Base/DFile.h"
-#include "Base/DUtil.h"
+#include "Base/DXP.h"
 
 // DBITMAPFILEHEADER(14) + DBITMAPINFOHEADER(40) + 可选PALETTE + RGB_Data
 // RGB_Data 部分要注意：1）每一行会按4字节对齐 2）最开始的一行是左下角的
@@ -150,27 +150,27 @@ std::string DBmpFile::DumpBitmapFileHeader(void* pFileHeader)
 
     temp = "bfType(2 bytes): ";
     ret += temp;
-    ret += DUtil::UInt16ToStr16(p->bfType, false);
+    ret += DXP::UInt16ToStr16(p->bfType, false);
     ret += "\r\n";
 
     temp = "bfSize(4 bytes): ";
     ret += temp;
-    ret += DUtil::UInt32ToStr(p->bfType);
+    ret += DXP::UInt32ToStr(p->bfType);
     ret += "\r\n";
 
     temp = "bfReserved1(2 bytes): ";
     ret += temp;
-    ret += DUtil::UInt16ToStr16(p->bfReserved1);
+    ret += DXP::UInt16ToStr16(p->bfReserved1);
     ret += "\r\n";
 
     temp = "bfReserved2(2 bytes): ";
     ret += temp;
-    ret += DUtil::UInt16ToStr16(p->bfReserved2);
+    ret += DXP::UInt16ToStr16(p->bfReserved2);
     ret += "\r\n";
 
     temp = "bfOffBits(4 bytes): ";
     ret += temp;
-    ret += DUtil::UInt32ToStr(p->bfOffBits);
+    ret += DXP::UInt32ToStr(p->bfOffBits);
     ret += "\r\n";
 
     return ret;
@@ -188,27 +188,27 @@ std::string DBmpFile::DumpBitmapInfoHeader(void* pFileHeader)
 
     temp = "biSize(4 bytes): ";
     ret += temp;
-    ret += DUtil::UInt32ToStr(p->biSize);
+    ret += DXP::UInt32ToStr(p->biSize);
     ret += "\r\n";
 
     temp = "biWidth(4 bytes): ";
     ret += temp;
-    ret += DUtil::UInt32ToStr(p->biWidth);
+    ret += DXP::UInt32ToStr(p->biWidth);
     ret += "\r\n";
 
     temp = "biHeight(4 bytes): ";
     ret += temp;
-    ret += DUtil::UInt32ToStr(p->biHeight);
+    ret += DXP::UInt32ToStr(p->biHeight);
     ret += "\r\n";
 
     temp = "biPlanes(2 bytes): ";
     ret += temp;
-    ret += DUtil::UInt16ToStr(p->biPlanes);
+    ret += DXP::UInt16ToStr(p->biPlanes);
     ret += "\r\n";
 
     temp = "biBitCount(2 bytes): ";
     ret += temp;
-    ret += DUtil::UInt16ToStr(p->biBitCount);
+    ret += DXP::UInt16ToStr(p->biBitCount);
     ret += "\r\n";
 
     temp = "biCompression(4 bytes): ";
@@ -218,27 +218,27 @@ std::string DBmpFile::DumpBitmapInfoHeader(void* pFileHeader)
 
     temp = "biSizeImage(4 bytes): ";
     ret += temp;
-    ret += DUtil::UInt32ToStr(p->biSizeImage);
+    ret += DXP::UInt32ToStr(p->biSizeImage);
     ret += "\r\n";
 
     temp = "biXPelsPerMeter(4 bytes): ";
     ret += temp;
-    ret += DUtil::UInt32ToStr(p->biXPelsPerMeter);
+    ret += DXP::UInt32ToStr(p->biXPelsPerMeter);
     ret += "\r\n";
 
     temp = "biYPelsPerMeter(4 bytes): ";
     ret += temp;
-    ret += DUtil::UInt32ToStr(p->biYPelsPerMeter);
+    ret += DXP::UInt32ToStr(p->biYPelsPerMeter);
     ret += "\r\n";
 
     temp = "biClrUsed(4 bytes): ";
     ret += temp;
-    ret += DUtil::UInt32ToStr(p->biClrUsed);
+    ret += DXP::UInt32ToStr(p->biClrUsed);
     ret += "\r\n";
 
     temp = "biClrImportant(4 bytes): ";
     ret += temp;
-    ret += DUtil::UInt32ToStr(p->biClrImportant);
+    ret += DXP::UInt32ToStr(p->biClrImportant);
     ret += "\r\n";
 
     return ret;

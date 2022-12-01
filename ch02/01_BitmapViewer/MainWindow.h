@@ -9,7 +9,7 @@
 #include "atlgdi.h"
 #include "File/DBmpFile.h"
 #include "Base/DFile.h"
-#include "Base/DUtil.h"
+#include "Base/DXP.h"
 
 class CMainWindow : public CWindowImpl<CMainWindow>
 {
@@ -62,7 +62,7 @@ public:
         if (dlg.DoModal() == IDOK)
         {
             DBmpInfo info = {};
-            DBool bOK = DBmpFile::Load(DUtil::ws2s(dlg.m_szFileName).c_str(), &info);
+            DBool bOK = DBmpFile::Load(DXP::ws2s(dlg.m_szFileName).c_str(), &info);
             if (!bOK) return 0;
 
             CClientDC dc(m_hWnd);
@@ -89,7 +89,7 @@ public:
         if (dlg.DoModal() == IDOK)
         {
             DBmpInfo info = {};
-            DBool bOK = DBmpFile::Load(DUtil::ws2s(dlg.m_szFileName).c_str(), &info);
+            DBool bOK = DBmpFile::Load(DXP::ws2s(dlg.m_szFileName).c_str(), &info);
             if (!bOK) return 0;
 
             CClientDC dc(m_hWnd);
@@ -108,7 +108,7 @@ public:
     LRESULT OnFileHeader(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL& bHandled)
     {
         std::string str = DBmpFile::DumpBitmapFileHeader(m_info.fileHead);
-        std::wstring strMsg = DUtil::s2ws(str);
+        std::wstring strMsg = DXP::s2ws(str);
         MessageBox(strMsg.c_str(), L"BITMAPFILEHEADER");
         return 0;
     }
@@ -116,7 +116,7 @@ public:
     LRESULT OnInfoHeader(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL& bHandled)
     {
         std::string str = DBmpFile::DumpBitmapInfoHeader(m_info.infoHead);
-        std::wstring strMsg = DUtil::s2ws(str);
+        std::wstring strMsg = DXP::s2ws(str);
         MessageBox(strMsg.c_str(), L"BITMAPINFOHEADER");
         return 0;
     }

@@ -25,11 +25,11 @@
     <ClCompile Include="..\..\Common\Base\DFile.cpp">
       <Filter>Common\Base</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Common\Base\DUtil.cpp">
-      <Filter>Common\Base</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\Common\File\DBmpFile.cpp">
       <Filter>Common\File</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\Base\DXP.cpp">
+      <Filter>Common\Base</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -60,11 +60,11 @@
     <ClInclude Include="..\..\Common\Base\DFile.h">
       <Filter>Common\Base</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Common\Base\DUtil.h">
-      <Filter>Common\Base</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\Common\File\DBmpFile.h">
       <Filter>Common\File</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\Base\DXP.h">
+      <Filter>Common\Base</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
