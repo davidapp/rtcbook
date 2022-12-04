@@ -23,6 +23,7 @@
     <ClCompile Include="..\..\Common\Base\DFile.cpp" />
     <ClCompile Include="..\..\Common\Base\DXP.cpp" />
     <ClCompile Include="..\..\Common\File\DBmpFile.cpp" />
+    <ClCompile Include="..\..\Common\Video\DYUV.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -35,6 +36,7 @@
     <ClInclude Include="..\..\Common\DConfig_Win.h" />
     <ClInclude Include="..\..\Common\DTypes.h" />
     <ClInclude Include="..\..\Common\File\DBmpFile.h" />
+    <ClInclude Include="..\..\Common\Video\DYUV.h" />
     <ClInclude Include="MainWindow.h" />
     <ClInclude Include="resource.h" />
   </ItemGroup>
