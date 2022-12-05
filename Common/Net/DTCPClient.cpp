@@ -153,11 +153,22 @@ DVoid* DX86_STDCALL WorkHandler(DUInt32 msg, DVoid* para1, DVoid* para2)
     return NULL;
 }
 
+DVoid* DX86_STDCALL WorkCleaner(DUInt32 msg, DVoid* para1, DVoid* para2)
+{
+    if (msg == DM_NET_SEND)
+    {
+        DBuffer buf;
+        buf.Attach((DByte*)para2);
+    }
+    return NULL;
+}
+
 DVoid DTCPClient::Init()
 {
     if (m_nObjState == DTCPCLIENT_STATE_UNINIT) {
         m_workqueue = DMsgQueue::Create("WorkQueue", 100);
         DMsgQueue::AddHandler(m_workqueue, WorkHandler);
+        DMsgQueue::SetCleaner(m_workqueue, WorkCleaner);
         m_nObjState = DTCPCLIENT_STATE_DISCONNECT;
     }
 }

@@ -67,11 +67,11 @@ public:
     DSPinLock m_waitConnFinish;
 
 public:
-    // async data methods
-    DBool Send(DBuffer buf);
-    DBool StartRecv();
+    DBool Send(DBuffer buf);     // async data methods
     DHandle m_workqueue;
 
+public:
+    DBool StartRecv();
 private:
     DVoid RecvLoop();
     std::shared_ptr<std::thread> m_recvthread;

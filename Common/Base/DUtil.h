@@ -26,8 +26,8 @@ class DSPinLock
 {
 public:
     DSPinLock();
-    inline DVoid Reset();
-    inline DVoid Signal();
+    DVoid Reset();
+    DVoid Signal();
     DUInt32 Wait(DUInt32 need_ms);
 private:
     DUInt32 m_start;

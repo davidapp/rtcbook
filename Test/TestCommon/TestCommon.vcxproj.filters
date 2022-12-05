@@ -15,6 +15,15 @@
     <Filter Include="Test\Base">
       <UniqueIdentifier>{94247668-4218-4bdb-86e7-ba908aaffec2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Test\Net">
+      <UniqueIdentifier>{b274baa6-85a2-44ee-af36-e6de4e3d5dde}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Common\Test">
+      <UniqueIdentifier>{f0544540-0575-4219-9a9a-a0c8252fc07b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Common\Protocol">
+      <UniqueIdentifier>{f922e743-9bd4-40a4-8a0b-1fc87ea46d84}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
@@ -42,11 +51,23 @@
     <ClCompile Include="..\Base\DTestUTF8.cpp">
       <Filter>Test\Base</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Common\Base\DXP.cpp">
-      <Filter>Test\Base</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\Common\Base\DTime.cpp">
       <Filter>Common\Base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\Base\DXP.cpp">
+      <Filter>Common\Base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Net\DTestTCPClient.cpp">
+      <Filter>Test\Net</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\Net\DTCP.cpp">
+      <Filter>Common\Test</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\Net\DTCPClient.cpp">
+      <Filter>Common\Test</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\Net\DNet.cpp">
+      <Filter>Common\Test</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -92,11 +113,29 @@
     <ClInclude Include="..\..\Common\Base\DTest.h">
       <Filter>Common\Base</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Common\Base\DXP.h">
-      <Filter>Test\Base</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\Common\Base\DTime.h">
       <Filter>Common\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\Base\DXP.h">
+      <Filter>Common\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Net\DTestTCPClient.h">
+      <Filter>Test\Net</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\Net\DTCP.h">
+      <Filter>Common\Test</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\Net\DTCPClient.h">
+      <Filter>Common\Test</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\Net\DNet.h">
+      <Filter>Common\Test</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\Protocol\DHelloClient.h">
+      <Filter>Common\Protocol</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\Protocol\DHelloProtocol.h">
+      <Filter>Common\Protocol</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

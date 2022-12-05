@@ -6,6 +6,7 @@
 #define SERVER_SEND_MSG 10000
 #define SERVER_SENDALL_MSG 10001
 DVoid* DX86_STDCALL SendHandler(DUInt32 msg, DVoid* para1, DVoid* para2);
+DVoid* DX86_STDCALL SendCleaner(DUInt32 msg, DVoid* para1, DVoid* para2);
 
 #define HELLO_SC_CMD_CNAME  101
 #define HELLO_SC_CMD_LEAVE  102
@@ -56,6 +57,7 @@ DBool DTCPServer::Start(DUInt16 wPort, DUInt16 backlog)
     // 创建发送队列
     m_sendQueue = DMsgQueue::Create("ServerSend");
     DMsgQueue::AddHandler(m_sendQueue, SendHandler);
+    DMsgQueue::SetCleaner(m_sendQueue, SendCleaner);
     m_nObjState = DTCPSERVER_STATE_STARTING;
     return true;
 }
@@ -394,6 +396,16 @@ DVoid* DX86_STDCALL SendHandler(DUInt32 msg, DVoid* para1, DVoid* para2)
         DSocket sock = (DSocket)para2;
         DTCPSocket ts(sock);
         ts.SyncSend(buf);
+    }
+    return nullptr;
+}
+
+DVoid* DX86_STDCALL SendCleaner(DUInt32 msg, DVoid* para1, DVoid* para2)
+{
+    if (msg == SERVER_SEND_MSG)
+    {
+        DBuffer buf;
+        buf.Attach((DByte*)para1);
     }
     return nullptr;
 }

@@ -135,9 +135,13 @@
     <ClCompile Include="..\..\Common\Base\DUTF8.cpp" />
     <ClCompile Include="..\..\Common\Base\DUtil.cpp" />
     <ClCompile Include="..\..\Common\Base\DXP.cpp" />
+    <ClCompile Include="..\..\Common\Net\DNet.cpp" />
+    <ClCompile Include="..\..\Common\Net\DTCP.cpp" />
+    <ClCompile Include="..\..\Common\Net\DTCPClient.cpp" />
     <ClCompile Include="..\Base\DTestBuffer.cpp" />
     <ClCompile Include="..\Base\DTestMsgQueue.cpp" />
     <ClCompile Include="..\Base\DTestUTF8.cpp" />
+    <ClCompile Include="..\Net\DTestTCPClient.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -154,9 +158,15 @@
     <ClInclude Include="..\..\Common\DConfig_iOS.h" />
     <ClInclude Include="..\..\Common\DConfig_Win.h" />
     <ClInclude Include="..\..\Common\DTypes.h" />
+    <ClInclude Include="..\..\Common\Net\DNet.h" />
+    <ClInclude Include="..\..\Common\Net\DTCP.h" />
+    <ClInclude Include="..\..\Common\Net\DTCPClient.h" />
+    <ClInclude Include="..\..\Common\Protocol\DHelloClient.h" />
+    <ClInclude Include="..\..\Common\Protocol\DHelloProtocol.h" />
     <ClInclude Include="..\Base\DTestBuffer.h" />
     <ClInclude Include="..\Base\DTestMsgQueue.h" />
     <ClInclude Include="..\Base\DTestUTF8.h" />
+    <ClInclude Include="..\Net\DTestTCPClient.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

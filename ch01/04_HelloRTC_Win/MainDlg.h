@@ -8,7 +8,7 @@
 #include "Base/DUTF8.h"
 #include "Net/DNet.h"
 #include "Net/DTCPClient.h"
-#include "DHelloClient.h"
+#include "Protocol/DHelloClient.h"
 
 #define WM_LOG WM_USER+1000
 #define WM_UPDATEUI WM_USER+1001

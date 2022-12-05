@@ -1,6 +1,6 @@
 ﻿#include "DUtil.h"
 #include "DXP.h"
-#include "DTime.h"
+
 
 ///////////////////////////////////////////////////////////////////////////////
 // DEvent
@@ -138,25 +138,25 @@ DSPinLock::DSPinLock()
     m_flag = 0;
 }
 
-inline DVoid DSPinLock::Reset() 
+DVoid DSPinLock::Reset() 
 { 
     m_flag = 0; 
 }
 
-inline DVoid DSPinLock::Signal()
+DVoid DSPinLock::Signal()
 { 
     m_flag = 1; 
 }
 
 DUInt32 DSPinLock::Wait(DUInt32 need_ms) 
 {
-    m_start = DTime::GetTickCount32();
+    m_start = DXP::GetTickCount32();
     while (m_flag != 1) 
     {
-        m_now = DTime::GetTickCount32();
+        m_now = DXP::GetTickCount32();
         if (m_now - m_start < need_ms) 
         {
-            DTime::SleepSec(0);
+            DXP::SleepSec(0);
         }
         else {
             break;

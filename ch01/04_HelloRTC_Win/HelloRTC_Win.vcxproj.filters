@@ -57,11 +57,11 @@
     <ClInclude Include="..\..\Common\Protocol\DHelloProtocol.h">
       <Filter>Common\Protocol</Filter>
     </ClInclude>
-    <ClInclude Include="DHelloClient.h">
-      <Filter>Dialog</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\Common\Base\DUTF8.h">
       <Filter>Common\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\Protocol\DHelloClient.h">
+      <Filter>Common\Protocol</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

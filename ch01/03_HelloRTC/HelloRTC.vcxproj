@@ -43,7 +43,7 @@
     <ClInclude Include="..\..\Common\Net\DTCP.h" />
     <ClInclude Include="..\..\Common\Net\DTCPServer.h" />
     <ClInclude Include="..\..\Common\Protocol\DHelloProtocol.h" />
-    <ClInclude Include="DHelloServer.h" />
+    <ClInclude Include="..\..\Common\Protocol\DHelloServer.h" />
     <ClInclude Include="MainDlg.h" />
     <ClInclude Include="resource.h" />
   </ItemGroup>

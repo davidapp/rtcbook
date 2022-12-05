@@ -153,8 +153,8 @@
     <ClInclude Include="..\..\Common\Net\DNet.h" />
     <ClInclude Include="..\..\Common\Net\DTCP.h" />
     <ClInclude Include="..\..\Common\Net\DTCPClient.h" />
+    <ClInclude Include="..\..\Common\Protocol\DHelloClient.h" />
     <ClInclude Include="..\..\Common\Protocol\DHelloProtocol.h" />
-    <ClInclude Include="DHelloClient.h" />
     <ClInclude Include="MainDlg.h" />
     <ClInclude Include="resource.h" />
   </ItemGroup>

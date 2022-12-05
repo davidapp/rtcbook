@@ -7,7 +7,7 @@
 #include "Base/DUTF8.h"
 #include "Net/DNet.h"
 #include "Net/DTCPServer.h"
-#include "DHelloServer.h"
+#include "Protocol/DHelloServer.h"
 
 #define WM_LOG WM_USER+1000
 #define WM_UPDATEUI WM_USER+1001
