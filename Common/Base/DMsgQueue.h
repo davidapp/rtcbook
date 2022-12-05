@@ -36,19 +36,26 @@ public:
     static DCStr   GetCurQueueName();
     static DUInt32 GetCoreCount();
 
-    //Msg Handler
+    // Msg Handler
     static DVoid AddHandler(DHandle qid, DMsgFunc handler);
     static DVoid RemoveHandler(DHandle qid, DMsgFunc handler);
     static DVoid RemoveAllHandler(DHandle qid);
 
+    // Msg Cleaner
+    static DVoid SetCleaner(DHandle qid, DMsgFunc handler);
     static DVoid ClearAllMsg(DHandle qid);
 
 public:
     DMsgQueue(DCStr queueName, DUInt32 maxSize);
     ~DMsgQueue() = default;
+
     std::list<DQMsg> m_queue;
-    std::list<DMsgFunc> m_msgfunc;
     std::mutex m_queueMutex;
+
+    std::list<DMsgFunc> m_msgfunc;
+    std::mutex m_msgfuncMutex;
+    DMsgFunc m_msgcleaner;
+
     std::shared_ptr<std::thread> m_t;
     std::string m_name;
     DEvent m_wait;

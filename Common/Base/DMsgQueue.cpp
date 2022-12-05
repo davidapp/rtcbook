@@ -29,8 +29,10 @@ DVoid* DThreadForQueue(DVoid* pvParam)
 
         pq->m_queueMutex.lock();
         DQMsg msgNode = pq->m_queue.front();
+        pq->m_queue.pop_front();
         pq->m_queueMutex.unlock();
 
+        pq->m_msgfuncMutex.lock();
         auto pFunc = pq->m_msgfunc.begin();
         while (pFunc != pq->m_msgfunc.end())
         {
@@ -45,10 +47,7 @@ DVoid* DThreadForQueue(DVoid* pvParam)
 
             pFunc++;
         }
-
-        pq->m_queueMutex.lock();
-        pq->m_queue.pop_front();
-        pq->m_queueMutex.unlock();
+        pq->m_msgfuncMutex.unlock();
 
         if (bQuit)
         {
@@ -221,16 +220,17 @@ DVoid DMsgQueue::AddHandler(DHandle qid, DMsgFunc handler)
     DMsgQueue* pq = (DMsgQueue*)pNodeQueue->second;
     if (pq == NULL) return;
 
+    pq->m_msgfuncMutex.lock();
     DBool bFind = false;
     for (auto pNode = pq->m_msgfunc.begin(); pNode != pq->m_msgfunc.end(); pNode++) {
         if (*pNode == handler) {
             bFind = true;
         }
     }
-
     if (!bFind) {
         pq->m_msgfunc.push_back(handler);
     }
+    pq->m_msgfuncMutex.unlock();
 }
 
 DVoid DMsgQueue::RemoveHandler(DHandle qid, DMsgFunc handler)
@@ -241,7 +241,9 @@ DVoid DMsgQueue::RemoveHandler(DHandle qid, DMsgFunc handler)
     DMsgQueue* pq = (DMsgQueue*)pNodeQueue->second;
     if (pq == NULL) return;
 
+    pq->m_msgfuncMutex.lock();
     pq->m_msgfunc.remove(handler);
+    pq->m_msgfuncMutex.unlock();
 }
 
 DVoid DMsgQueue::RemoveAllHandler(DHandle qid)
@@ -252,7 +254,20 @@ DVoid DMsgQueue::RemoveAllHandler(DHandle qid)
     DMsgQueue* pq = (DMsgQueue*)pNodeQueue->second;
     if (pq == NULL) return;
 
+    pq->m_msgfuncMutex.lock();
     pq->m_msgfunc.clear();
+    pq->m_msgfuncMutex.unlock();
+}
+
+DVoid DMsgQueue::SetCleaner(DHandle qid, DMsgFunc handler)
+{
+    auto pNodeQueue = g_id2q.find(qid);
+    if (pNodeQueue == g_id2q.end()) return;
+
+    DMsgQueue* pq = (DMsgQueue*)pNodeQueue->second;
+    if (pq == NULL) return;
+    
+    pq->m_msgcleaner = handler;
 }
 
 DVoid DMsgQueue::ClearAllMsg(DHandle qid)
@@ -264,6 +279,11 @@ DVoid DMsgQueue::ClearAllMsg(DHandle qid)
     if (pq == NULL) return;
 
     pq->m_queueMutex.lock();
+    auto msg = pq->m_queue.begin();
+    while (msg != pq->m_queue.end()) {
+        pq->m_msgcleaner(msg->msg, msg->para1, msg->para2);
+        msg++;
+    }
     pq->m_queue.clear();
     pq->m_queueMutex.unlock();
 }

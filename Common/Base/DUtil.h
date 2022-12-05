@@ -1,16 +1,6 @@
 ﻿#pragma once
 
 #include "DTypes.h"
-#include "DAtomic.h"
-#include <string>
-
-class DUtil
-{
-    static std::string UInt64ToStr16(DUInt64 c, DBool bLE = true);
-    static std::string BuffToStr(void* p, DUInt32 len);
-    D_DISALLOW_ALL_DEFAULT(DUtil)
-};
-
 
 class DEvent
 {
