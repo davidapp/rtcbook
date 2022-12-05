@@ -45,6 +45,9 @@
     <ClCompile Include="..\..\Common\Base\DXP.cpp">
       <Filter>Test\Base</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\Common\Base\DTime.cpp">
+      <Filter>Common\Base</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Common\Base\DAtomic.h">
@@ -91,6 +94,9 @@
     </ClInclude>
     <ClInclude Include="..\..\Common\Base\DXP.h">
       <Filter>Test\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\Base\DTime.h">
+      <Filter>Common\Base</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

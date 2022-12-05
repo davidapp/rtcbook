@@ -1,25 +1,6 @@
-#include "DUtil.h"
+﻿#include "DUtil.h"
 #include "DXP.h"
-
-
-std::string DUtil::UInt64ToStr16(DUInt64 c, DBool bLE)
-{
-    char buf[40] = {};
-    if (!bLE) {
-        c = DXP::Swap64(c);
-    }
-    DBuffer bufTemp(&c, 8);
-    std::string str = bufTemp.ToHexString();
-    return str;
-}
-
-std::string DUtil::BuffToStr(void* p, DUInt32 len)
-{
-    DBuffer buf(p, len);
-    std::string ret = buf.ToHexString();
-    return ret;
-}
-
+#include "DTime.h"
 
 ///////////////////////////////////////////////////////////////////////////////
 // DEvent
@@ -147,6 +128,52 @@ DVoid DEvent::WaitEvent(DEvent& ev, DUInt32 timeinms)
 
 }
 
+
+///////////////////////////////////////////////////////////////////////////////
+// DSPinLock
+
+DSPinLock::DSPinLock() 
+{
+    m_start = 0;
+    m_flag = 0;
+}
+
+inline DVoid DSPinLock::Reset() 
+{ 
+    m_flag = 0; 
+}
+
+inline DVoid DSPinLock::Signal()
+{ 
+    m_flag = 1; 
+}
+
+DUInt32 DSPinLock::Wait(DUInt32 need_ms) 
+{
+    m_start = DTime::GetTickCount32();
+    while (m_flag != 1) 
+    {
+        m_now = DTime::GetTickCount32();
+        if (m_now - m_start < need_ms) 
+        {
+            DTime::SleepSec(0);
+        }
+        else {
+            break;
+        }
+    }
+    DUInt32 diff = m_now - m_start;
+    if (diff < need_ms) {
+        return diff + 1;
+    }
+    else {
+        return 0;
+    }
+}
+
+
+///////////////////////////////////////////////////////////////////////////////
+// DRWLock
 
 DRWLock::DRWLock()
 {

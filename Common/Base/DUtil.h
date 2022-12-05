@@ -1,6 +1,8 @@
 ﻿#pragma once
 
 #include "DTypes.h"
+#include "DAtomic.h"
+
 
 class DEvent
 {
@@ -23,31 +25,10 @@ public:
 class DSPinLock
 {
 public:
-    DSPinLock() {
-        m_start = 0;
-        m_flag = 0;
-    }
-    inline DVoid Reset() { m_flag = 0; }
-    inline DVoid Signal() { m_flag = 1; }
-    DUInt32 Wait(DUInt32 need_ms) {
-        m_start = GetTickCount();
-        while (m_flag != 1) {
-            m_now = GetTickCount();
-            if (m_now - m_start < need_ms) {
-                ::SwitchToThread();
-            }
-            else {
-                break;
-            }
-        }
-        DUInt32 diff = m_now - m_start;
-        if (diff < need_ms) {
-            return diff + 1;
-        }
-        else {
-            return 0;
-        }
-    }
+    DSPinLock();
+    inline DVoid Reset();
+    inline DVoid Signal();
+    DUInt32 Wait(DUInt32 need_ms);
 private:
     DUInt32 m_start;
     DUInt32 m_now;
