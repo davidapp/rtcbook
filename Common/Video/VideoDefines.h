@@ -13,10 +13,12 @@ enum class DPixelFmt {
     ARGB,
     BGRA,
     RGB565,
-    I420,
-    IYUV,
+    I420, // [Y,U,V]
+    IYUV, 
     YUY2, // [Y0,U0,Y1,V0]
-    MJPG
+    MJPG, 
+    NV12, // [Y,U0,V0,U1,V1]
+    NV21, // [Y,V0,U0,V1,U1]
 };
 
 struct tagDVideoFormat {

@@ -13,7 +13,7 @@ public:
     WinDSVideoCapture();
     ~WinDSVideoCapture();
 
-    DBool Init(HWND hWnd);
+    DBool Init(DUInt32 nIndex, DVoid* pCallback, DVoid* pUserData);
     DVoid UnInit();
     DBool Start();
     DBool Stop();

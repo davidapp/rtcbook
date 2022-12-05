@@ -37,6 +37,9 @@
     <ClCompile Include="..\..\Common\Video\DYUV.cpp">
       <Filter>Common\Video</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\Common\Video\DVideoFrame.cpp">
+      <Filter>Common\Video</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="MainWindow.h">
@@ -73,6 +76,12 @@
       <Filter>Common\Base</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Common\Video\DYUV.h">
+      <Filter>Common\Video</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\Video\DVideoFrame.h">
+      <Filter>Common\Video</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\Video\VideoDefines.h">
       <Filter>Common\Video</Filter>
     </ClInclude>
   </ItemGroup>

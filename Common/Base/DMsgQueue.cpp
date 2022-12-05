@@ -1,4 +1,4 @@
-#include "DMsgQueue.h"
+﻿#include "DMsgQueue.h"
 #include <map>
 
 std::mutex g_id2qMutex;

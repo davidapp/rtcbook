@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "Net/DTCPClient.h"
 #include "Protocol/DHelloProtocol.h"
@@ -120,7 +120,7 @@ public:
                 strRet = strName + " has entered the room.";
             }
             #if defined(BUILD_FOR_WINDOWS)
-            ::PostMessage(hWnd, WM_USER + 1004, 0, 0);
+            ::PostMessage((HWND)hWnd, WM_USER + 1004, 0, 0);
             #endif
         }
         else if (cmd == HELLO_SC_CMD_LEAVE)
@@ -140,7 +140,7 @@ public:
                 strRet = name + " has left the room.";
             }
             #if defined(BUILD_FOR_WINDOWS)
-            ::PostMessage(hWnd, WM_USER + 1004, 0, 0);
+            ::PostMessage((HWND)hWnd, WM_USER + 1004, 0, 0);
             #endif
         }
         else if (cmd == HELLO_SC_CMD_PMSG)

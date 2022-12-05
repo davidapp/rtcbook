@@ -82,13 +82,17 @@
 #define ID_BITMAP_LOADANDBLT            40088
 #define ID_BITMAP_FILEHEADER            40089
 #define ID_BITMAP_INFOHEADER            40090
+#define ID_YUV_SAVEASI420               40091
+#define ID_YUV_OPENI420FILE             40094
+#define ID_YUV_SAVEASGRAY               40095
+#define ID_YUV_SAVEASNV21               40096
 
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        104
-#define _APS_NEXT_COMMAND_VALUE         40091
+#define _APS_NEXT_COMMAND_VALUE         40097
 #define _APS_NEXT_CONTROL_VALUE         1005
 #define _APS_NEXT_SYMED_VALUE           101
 #endif

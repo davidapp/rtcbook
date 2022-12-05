@@ -123,86 +123,11 @@ DVoid DYUV::ARGBGrayRow(const DUInt8* src_argb, DUInt8* dst_argb, DInt32 width)
 }
 
 
-// BT.601 YUV to RGB reference
-//  R = (Y - 16) * 1.164              - V * -1.596
-//  G = (Y - 16) * 1.164 - U *  0.391 - V *  0.813
-//  B = (Y - 16) * 1.164 - U * -2.018
-
-// Y contribution to R,G,B.  Scale and bias.
-#define YG 18997  /* round(1.164 * 64 * 256 * 256 / 257) */
-#define YGB -1160 /* 1.164 * 64 * -16 + 64 / 2 */
-
-// U and V contributions to R,G,B.
-#define UB -128 /* max(-128, round(-2.018 * 64)) */
-#define UG 25   /* round(0.391 * 64) */
-#define VG 52   /* round(0.813 * 64) */
-#define VR -102 /* round(-1.596 * 64) */
-
-// Bias values to subtract 16 from Y and 128 from U and V.
-#define BB (UB * 128 + YGB)
-#define BG (UG * 128 + VG * 128 + YGB)
-#define BR (VR * 128 + YGB)
-
-struct YuvConstants {
-    int8_t kUVToB[32];
-    int8_t kUVToG[32];
-    int8_t kUVToR[32];
-    int16_t kUVBiasB[16];
-    int16_t kUVBiasG[16];
-    int16_t kUVBiasR[16];
-    int16_t kYToRgb[16];
-    int16_t kYBiasToRgb[16];
-};
-
-const struct YuvConstants kYuvI601Constants = {
-    {UB, 0, UB, 0, UB, 0, UB, 0, UB, 0, UB, 0, UB, 0, UB, 0,
-     UB, 0, UB, 0, UB, 0, UB, 0, UB, 0, UB, 0, UB, 0, UB, 0},
-    {UG, VG, UG, VG, UG, VG, UG, VG, UG, VG, UG, VG, UG, VG, UG, VG,
-     UG, VG, UG, VG, UG, VG, UG, VG, UG, VG, UG, VG, UG, VG, UG, VG},
-    {0, VR, 0, VR, 0, VR, 0, VR, 0, VR, 0, VR, 0, VR, 0, VR,
-     0, VR, 0, VR, 0, VR, 0, VR, 0, VR, 0, VR, 0, VR, 0, VR},
-    {BB, BB, BB, BB, BB, BB, BB, BB, BB, BB, BB, BB, BB, BB, BB, BB},
-    {BG, BG, BG, BG, BG, BG, BG, BG, BG, BG, BG, BG, BG, BG, BG, BG},
-    {BR, BR, BR, BR, BR, BR, BR, BR, BR, BR, BR, BR, BR, BR, BR, BR},
-    {YG, YG, YG, YG, YG, YG, YG, YG, YG, YG, YG, YG, YG, YG, YG, YG},
-    {YGB, YGB, YGB, YGB, YGB, YGB, YGB, YGB, YGB, YGB, YGB, YGB, YGB, YGB, YGB,
-     YGB} };
-
-DVoid DYUV::YuvPixel(DUInt8 y, DUInt8 u, DUInt8 v, DUInt8* b, DUInt8* g, DUInt8* r)
+DVoid DYUV::YUV2RGB(DUInt8* out, DInt32 Y, DInt32 U, DInt32 V)
 {
-    int ub = kYuvI601Constants.kUVToB[0];
-    int ug = kYuvI601Constants.kUVToG[0];
-    int vg = kYuvI601Constants.kUVToG[1];
-    int vr = kYuvI601Constants.kUVToR[1];
-    int bb = kYuvI601Constants.kUVBiasB[0];
-    int bg = kYuvI601Constants.kUVBiasG[0];
-    int br = kYuvI601Constants.kUVBiasR[0];
-    int yg = kYuvI601Constants.kYToRgb[0];
-
-    DUInt32 y1 = (DUInt32)(y * 0x0101 * yg) >> 16;
-    *b = Clamp((DInt32)(-(u * ub) + y1 + bb) >> 6);
-    *g = Clamp((DInt32)(-(u * ug + v * vg) + y1 + bg) >> 6);
-    *r = Clamp((DInt32)(-(v * vr) + y1 + br) >> 6);
-}
-
-DVoid DYUV::I420ToARGBRow(const DUInt8* src_y, const DUInt8* src_u, const DUInt8* src_v, DUInt8* rgb_buf, DInt32 width)
-{
-    for (DInt32 x = 0; x < width - 1; x += 2) 
-    {
-        YuvPixel(src_y[0], src_u[0], src_v[0], rgb_buf + 0, rgb_buf + 1, rgb_buf + 2);
-        rgb_buf[3] = 255;
-        YuvPixel(src_y[1], src_u[0], src_v[0], rgb_buf + 4, rgb_buf + 5, rgb_buf + 6);
-        rgb_buf[7] = 255;
-        src_y += 2;
-        src_u += 1;
-        src_v += 1;
-        rgb_buf += 8;  // Advance 2 pixels.
-    }
-    if (width & 1) 
-    {
-        YuvPixel(src_y[0], src_u[0], src_v[0], rgb_buf + 0, rgb_buf + 1, rgb_buf + 2);
-        rgb_buf[3] = 255;
-    }
+    out[2] = Clamp(Y + (91881 * V + 32768 >> 16));
+    out[1] = Clamp(Y + (- 22554 * U - 46802 * V + 32768 >> 16));
+    out[0] = Clamp(Y + (116130 * U + 32768 >> 16));
 }
 
 DInt32 DYUV::Clamp0(DInt32 v)

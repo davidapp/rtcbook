@@ -31,6 +31,8 @@ public:
         COMMAND_ID_HANDLER(ID_BITMAP_LOADANDBLT, OnLoadBitmapAndBlt)
         COMMAND_ID_HANDLER(ID_BITMAP_FILEHEADER, OnFileHeader)
         COMMAND_ID_HANDLER(ID_BITMAP_INFOHEADER, OnInfoHeader)
+        COMMAND_ID_HANDLER(ID_YUV_SAVEASI420, OnSaveI420)
+        COMMAND_ID_HANDLER(ID_YUV_OPENI420FILE, OnOpenI420File)
     END_MSG_MAP()
 
     //Create
@@ -118,6 +120,26 @@ public:
         std::string str = DBmpFile::DumpBitmapInfoHeader(m_info.infoHead);
         std::wstring strMsg = DXP::s2ws(str);
         MessageBox(strMsg.c_str(), L"BITMAPINFOHEADER");
+        return 0;
+    }
+
+    LRESULT OnSaveI420(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL& bHandled)
+    {
+        CFileDialog dlg(FALSE, NULL, NULL, OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT, L"YUV Files(*.yuv)\0*.yuv\0", m_hWnd);
+        if (dlg.DoModal() == IDOK)
+        {
+
+        }
+        return 0;
+    }
+
+    LRESULT OnOpenI420File(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL& bHandled)
+    {
+        CFileDialog dlg(TRUE, NULL, NULL, OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT, L"YUV Files(*.yuv)\0*.yuv\0", m_hWnd);
+        if (dlg.DoModal() == IDOK)
+        {
+
+        }
         return 0;
     }
 

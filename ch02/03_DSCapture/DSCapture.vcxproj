@@ -156,7 +156,9 @@
     <ClInclude Include="..\..\Common\DConfig_Win.h" />
     <ClInclude Include="..\..\Common\DTypes.h" />
     <ClInclude Include="..\..\Common\File\DBmpFile.h" />
+    <ClInclude Include="..\..\Common\Video\DVideoCapture.h" />
     <ClInclude Include="..\..\Common\Video\DVideoFrame.h" />
+    <ClInclude Include="..\..\Common\Video\DYUV.h" />
     <ClInclude Include="..\..\Common\Video\VideoDefines.h" />
     <ClInclude Include="..\..\Common\Video\WinDS.h" />
     <ClInclude Include="..\..\Common\Video\WinDSCamera.h" />
@@ -175,7 +177,9 @@
     <ClCompile Include="..\..\Common\Base\DUTF8.cpp" />
     <ClCompile Include="..\..\Common\Base\DXP.cpp" />
     <ClCompile Include="..\..\Common\File\DBmpFile.cpp" />
+    <ClCompile Include="..\..\Common\Video\DVideoCapture.cpp" />
     <ClCompile Include="..\..\Common\Video\DVideoFrame.cpp" />
+    <ClCompile Include="..\..\Common\Video\DYUV.cpp" />
     <ClCompile Include="..\..\Common\Video\WinDS.cpp" />
     <ClCompile Include="..\..\Common\Video\WinDSCamera.cpp" />
     <ClCompile Include="..\..\Common\Video\WinDSCapturePin.cpp" />

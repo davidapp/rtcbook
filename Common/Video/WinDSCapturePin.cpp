@@ -7,12 +7,13 @@
 #include "atlapp.h"
 #include "atlmisc.h"
 
-WinDSCaptureInputPin::WinDSCaptureInputPin(IBaseFilter* filter, HWND hWnd)
+WinDSCaptureInputPin::WinDSCaptureInputPin(IBaseFilter* filter, DVoid* pCallback, DVoid* pUserData)
 {
     m_info.pFilter = filter;
     m_info.dir = PINDIR_INPUT;
     m_refCount = 0;
-    m_hNotifyWnd = hWnd;
+    m_pCallback = pCallback;
+    m_pUserData = pUserData;
 }
 
 WinDSCaptureInputPin::~WinDSCaptureInputPin() 
@@ -243,7 +244,11 @@ STDMETHODIMP WinDSCaptureInputPin::Receive(IMediaSample* media_sample)
     DVideoFrame *frame = new DVideoFrame((DByte*)sample_props.pbBuffer, sample_props.lActual, m_final_fmt.width, m_final_fmt.height, m_final_fmt.format);
     BITMAPINFOHEADER* header = new BITMAPINFOHEADER();
     memcpy_s(header, sizeof(BITMAPINFOHEADER), &(m_final_fmt.bmp_header), sizeof(BITMAPINFOHEADER));
-    ::PostMessage(m_hNotifyWnd, WM_ONFRAME, (WPARAM)frame, (LPARAM)header);
+    
+    if (m_pCallback) {
+        VideoCallback pFunc = (VideoCallback)m_pCallback;
+        pFunc(frame, header, m_pUserData);
+    }
 
     media_sample->Release();
 

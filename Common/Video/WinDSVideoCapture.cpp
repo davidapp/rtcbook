@@ -12,16 +12,16 @@ WinDSVideoCapture::~WinDSVideoCapture()
 
 }
 
-DBool WinDSVideoCapture::Init(HWND hWnd)
+DBool WinDSVideoCapture::Init(DUInt32 nIndex, DVoid* pCallback, DVoid* pUserData)
 {
     WinDSCamera::Init();
     std::vector<DCameraInfo> info = WinDSCamera::GetDevices();
     if (info.size() == 0) return false;
 
-    m_capture_filter = info[0].m_device_filter;
+    m_capture_filter = info[nIndex].m_device_filter;
     m_capture_output_pin = WinDS::GetOutputPin(m_capture_filter, GUID_NULL);
 
-    m_sink_filter = new WinDSSinkFilter(hWnd);
+    m_sink_filter = new WinDSSinkFilter(pCallback, pUserData);
     m_sink_input_pin = m_sink_filter->m_input_pin;
 
     HRESULT hr = CoCreateInstance(CLSID_FilterGraph, NULL, CLSCTX_INPROC_SERVER, IID_IGraphBuilder, (void**)&m_graph_builder);
@@ -37,14 +37,19 @@ DBool WinDSVideoCapture::Init(HWND hWnd)
 
     // Select RGB24 with 640*480 mode
     std::vector<DCameraCaps> config = WinDSCamera::GetDeviceCaps(m_capture_filter);
-    DUInt32 selectIndex = 0;
+    DInt32 selectIndex = -1;
     DUInt32 configsize = config.size();
     for (DUInt32 i = 0; i < configsize; i++) {
-        if (config[i].m_width == 640 && config[i].m_pixel_format == DPixelFmt::RGB24)
+        if (config[i].m_width == 640 && 
+               (config[i].m_pixel_format == DPixelFmt::RGB24) 
+            || (config[i].m_pixel_format == DPixelFmt::YUY2))
         {
             selectIndex = i;
             break;
         }
+    }
+    if (selectIndex == -1) {
+        return false;
     }
 
     streamConfig->GetStreamCaps(selectIndex, &pmt, reinterpret_cast<BYTE*>(&caps));

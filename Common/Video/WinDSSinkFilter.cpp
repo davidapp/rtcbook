@@ -5,9 +5,9 @@
 DEFINE_GUID(CLSID_WINDS_SINKFILTER, 0xac18ed31, 0x601c, 0x4518, 0x8c, 0x2b, 0x41, 0x78, 0x78, 0x70, 0x54, 0x53);
 
 
-WinDSSinkFilter::WinDSSinkFilter(HWND hWnd)
+WinDSSinkFilter::WinDSSinkFilter(DVoid* pCallback, DVoid* pUserData)
 {
-    m_input_pin = new WinDSCaptureInputPin(this, hWnd);
+    m_input_pin = new WinDSCaptureInputPin(this, pCallback, pUserData);
     m_input_pin->AddRef();
 }
 

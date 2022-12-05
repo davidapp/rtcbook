@@ -3,6 +3,8 @@
 #include "DTypes.h"
 #include "VideoDefines.h"
 
+typedef DVoid* (*VideoCallback)(DVoid* pFrame, DVoid* pFrameData, DVoid* pUserData);
+
 class DVideoFrame
 {
 public:
