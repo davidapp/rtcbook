@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "DTypes.h"
 #include "DAtomic.h"
@@ -9,7 +9,7 @@ class DEvent
 public:
     DEvent();
     ~DEvent();
-    DVoid Create(DCWStr wName, DBool bAuto = false);
+    DVoid Create(DCStr wName, DBool bAuto = false);
     DVoid Close();
     DBool Set();
     DBool Reset();
@@ -21,7 +21,7 @@ public:
     DVoid* handle;
 };
 
-#if defined(BUILD_FOR_WINDOWS)
+
 class DSPinLock
 {
 public:
@@ -34,8 +34,7 @@ private:
     DUInt32 m_now;
     DAtomInt32 m_flag;
 };
-#else
-#endif
+
 
 class DRWLock
 {

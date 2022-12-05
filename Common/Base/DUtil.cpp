@@ -1,4 +1,4 @@
-﻿#include "DUtil.h"
+#include "DUtil.h"
 #include "DXP.h"
 
 
@@ -13,7 +13,7 @@ typedef struct tagDEventData
     pthread_mutex_t mutex;
     pthread_cond_t cond;
     DBool flag;
-    DWCStr name;
+    DCStr name;
 }DEventData;
 #endif
 
@@ -27,7 +27,7 @@ DEvent::~DEvent()
     Close();
 }
 
-DVoid DEvent::Create(DCWStr wName, DBool bAuto)
+DVoid DEvent::Create(DCStr wName, DBool bAuto)
 {
 #if defined(BUILD_FOR_WINDOWS)
     handle = CreateEvent(NULL, !bAuto, 0, (LPCWSTR)wName);
@@ -111,17 +111,17 @@ DVoid DEvent::WaitEvent(DEvent& ev, DUInt32 timeinms)
 {
 #if defined(BUILD_FOR_WINDOWS)
     ::WaitForSingleObject((HANDLE)ev, timeinms);
-#else
+#elif defined(BUILD_FOR_MAC) or defined(BUILD_FOR_IOS)
     DEventData* event = (DEventData*)ev.handle;
     struct timespec t;
-    t.tv_usec = timeinms * 1000; // ms：毫秒；μs：微秒  1ms = 1000μs
+    t.tv_nsec = timeinms * 1000 * 1000; // ms：毫秒；μs：微秒  1ms = 1000μs
     // 1s  = 1000ms
     // 1ms = 1000us
     // 1us = 1000ns
     pthread_mutex_lock(&event->mutex);
     while (!event->flag) {
         // 由于存在虚假唤醒，须使用 while 循环来检查
-        pthread_cond_timewait(&event->cond, &event->mutex, &t);
+        pthread_cond_timedwait(&event->cond, &event->mutex, &t);
     }
     pthread_mutex_unlock(&event->mutex);
 #endif
