@@ -1,4 +1,4 @@
-﻿#include "DTCPClient.h"
+#include "DTCPClient.h"
 #include "Base/DUtil.h"
 #include "Base/DMsgQueue.h"
 #include "Net/DNet.h"
@@ -216,7 +216,7 @@ DBool DTCPClient::Connect(std::string ip, DUInt16 wPort, DUInt32 timeout_ms)
     m_strRemoteIP = ip;
     m_wRemotePort = wPort;
 
-    DMsgQueue::PostQueueMsg(m_workqueue, DM_NET_CONN, this, (DVoid*)timeout_ms);
+    DMsgQueue::PostQueueMsg(m_workqueue, DM_NET_CONN, this, (DVoid*)(DUInt64)timeout_ms);
     return true;
 }
 
@@ -234,7 +234,11 @@ DVoid DTCPClient::DisConnect()
     else if (m_nObjState == DTCPCLIENT_STATE_CONNECTED) {
         m_nObjState = DTCPCLIENT_STATE_DISCONNECT;
         m_waitRecvFinish.Reset();
+#if defined(BUILD_FOR_WINDOWS)
         Shutdown(SD_SEND); // 优雅的关闭
+#else
+        Shutdown(SHUT_WR); // 优雅的关闭
+#endif
         DUInt32 res = m_waitRecvFinish.Wait(200);
         if (res == 0) {
             // 如果 Server 长时间不响应，我们也不傻等了，线程必须退出

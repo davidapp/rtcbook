@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "Net/DTCPClient.h"
 #include "Protocol/DHelloProtocol.h"
@@ -28,7 +28,7 @@ public:
     static DVoid SendIDText(DTCPClient* pClient, DUInt32 id, std::string text)
     {
         DGrowBuffer gb;
-        gb.AddUInt32(1 + 4 + 4 + text.size(), true);
+        gb.AddUInt32(1 + 4 + 4 + (DUInt32)text.size(), true);
         gb.AddUInt8(HELLO_CS_CMD_SENDTEXT);
         gb.AddUInt32(id, true);
         gb.AddStringA(text);
@@ -39,10 +39,10 @@ public:
     static DVoid SendSetName(DTCPClient* pClient, std::string name)
     {
         DGrowBuffer gb;
-        gb.AddUInt32(1 + 2 + name.size(), true);
+        gb.AddUInt32(1 + 2 + (DUInt32)name.size(), true);
         gb.AddUInt8(HELLO_CS_CMD_SETNAME);
         gb.AddUInt16((DUInt16)name.size(), true);
-        DBuffer bufname((DByte*)name.c_str(), name.size());
+        DBuffer bufname((DByte*)name.c_str(), (DUInt32)name.size());
         gb.AddFixBuffer(bufname);
         DBuffer buf = gb.Finish();
         pClient->Send(buf);
@@ -51,14 +51,14 @@ public:
     static DVoid SendAll(DTCPClient* pClient, std::string text)
     {
         DGrowBuffer gb;
-        gb.AddUInt32(1 + 4 + text.size(), true);
+        gb.AddUInt32(1 + 4 + (DUInt32)text.size(), true);
         gb.AddUInt8(HELLO_CS_CMD_BROADCAST);
         gb.AddStringA(text);
         DBuffer buf = gb.Finish();
         pClient->Send(buf);
     }
 
-    static std::string HandleRecvBuffer(HWND hWnd, DSocket sock, DBuffer recvBuf, std::map<DUInt32, std::string>& data)
+    static std::string HandleRecvBuffer(DVoid* hWnd, DSocket sock, DBuffer recvBuf, std::map<DUInt32, std::string>& data)
     {
         std::string strRet;
         DReadBuffer rb(recvBuf);
@@ -119,7 +119,9 @@ public:
             else {
                 strRet = strName + " has entered the room.";
             }
+            #if defined(BUILD_FOR_WINDOWS)
             ::PostMessage(hWnd, WM_USER + 1004, 0, 0);
+            #endif
         }
         else if (cmd == HELLO_SC_CMD_LEAVE)
         {
@@ -137,7 +139,9 @@ public:
             if (bFind) {
                 strRet = name + " has left the room.";
             }
+            #if defined(BUILD_FOR_WINDOWS)
             ::PostMessage(hWnd, WM_USER + 1004, 0, 0);
+            #endif
         }
         else if (cmd == HELLO_SC_CMD_PMSG)
         {

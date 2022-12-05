@@ -82,7 +82,8 @@ DVoid DTestTCPClient::Test()
         if (cmd == "q") break;
         else if (cmd == "c") {
             //Connect
-            m_client.Connect("127.0.0.1", 1229);
+            //m_client.Connect("127.0.0.1", 1229);
+            m_client.Connect("192.168.1.18", 1229);
         }
         else if (cmd == "d") {
             //Disconnect

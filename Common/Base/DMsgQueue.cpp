@@ -1,4 +1,4 @@
-﻿#include "DMsgQueue.h"
+#include "DMsgQueue.h"
 #include <map>
 
 std::mutex g_id2qMutex;
@@ -24,7 +24,7 @@ DVoid* DThreadForQueue(DVoid* pvParam)
         if (pq->m_queue.size() == 0)
         {
             pq->m_wait.Reset();
-            DEvent::WaitEvent(pq->m_wait, D_INFINITE);
+            DEvent::WaitEvent(pq->m_wait, 5000);
         }
 
         pq->m_queueMutex.lock();
@@ -181,7 +181,7 @@ DUInt32 DMsgQueue::GetQueueSize(DHandle qid)
     if (pq == NULL) return 0;
 
     pq->m_queueMutex.lock();
-    DUInt32 nSize = pq->m_queue.size();
+    DUInt32 nSize = (DUInt32)pq->m_queue.size();
     pq->m_queueMutex.unlock();
 
     return nSize;
@@ -281,7 +281,7 @@ DUInt32 DMsgQueue::GetHandlerSize(DHandle qid)
     if (pq == NULL) return 0;
 
     pq->m_msgfuncMutex.lock();
-    DUInt32 nSize = pq->m_msgfunc.size();
+    DUInt32 nSize = (DUInt32)pq->m_msgfunc.size();
     pq->m_msgfuncMutex.unlock();
 
     return nSize;
