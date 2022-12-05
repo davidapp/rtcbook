@@ -1,0 +1,388 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 55;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		2B39D381293D788100D6FC8D /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2B39D380293D788100D6FC8D /* main.cpp */; };
+		2B39D38E293D7A5400D6FC8D /* DTestTCPClient.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2B39D38D293D7A5400D6FC8D /* DTestTCPClient.cpp */; };
+		2B39D39B293D7C8800D6FC8D /* DXP.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2B39D391293D7C8800D6FC8D /* DXP.cpp */; };
+		2B39D39C293D7C8800D6FC8D /* DUtil.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2B39D393293D7C8800D6FC8D /* DUtil.cpp */; };
+		2B39D39D293D7C8800D6FC8D /* DBuffer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2B39D394293D7C8800D6FC8D /* DBuffer.cpp */; };
+		2B39D39E293D7C8800D6FC8D /* DUTF8.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2B39D397293D7C8800D6FC8D /* DUTF8.cpp */; };
+		2B39D39F293D7C8800D6FC8D /* DMsgQueue.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2B39D399293D7C8800D6FC8D /* DMsgQueue.cpp */; };
+		2B39D3A6293D7CAD00D6FC8D /* DTCP.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2B39D3A1293D7CAD00D6FC8D /* DTCP.cpp */; };
+		2B39D3A7293D7CAD00D6FC8D /* DNet.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2B39D3A4293D7CAD00D6FC8D /* DNet.cpp */; };
+		2B39D3A8293D7CAD00D6FC8D /* DTCPClient.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2B39D3A5293D7CAD00D6FC8D /* DTCPClient.cpp */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		2B39D37B293D788100D6FC8D /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = /usr/share/man/man1/;
+			dstSubfolderSpec = 0;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 1;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		2B39D37D293D788100D6FC8D /* 03_HelloRTC_mac */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = 03_HelloRTC_mac; sourceTree = BUILT_PRODUCTS_DIR; };
+		2B39D380293D788100D6FC8D /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
+		2B39D38C293D7A5400D6FC8D /* DTestTCPClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DTestTCPClient.h; path = ../../../Test/Net/DTestTCPClient.h; sourceTree = "<group>"; };
+		2B39D38D293D7A5400D6FC8D /* DTestTCPClient.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = DTestTCPClient.cpp; path = ../../../Test/Net/DTestTCPClient.cpp; sourceTree = "<group>"; };
+		2B39D38F293D7C8800D6FC8D /* DBuffer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DBuffer.h; path = ../../../Common/Base/DBuffer.h; sourceTree = "<group>"; };
+		2B39D390293D7C8800D6FC8D /* DMsgQueue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DMsgQueue.h; path = ../../../Common/Base/DMsgQueue.h; sourceTree = "<group>"; };
+		2B39D391293D7C8800D6FC8D /* DXP.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = DXP.cpp; path = ../../../Common/Base/DXP.cpp; sourceTree = "<group>"; };
+		2B39D392293D7C8800D6FC8D /* DXP.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DXP.h; path = ../../../Common/Base/DXP.h; sourceTree = "<group>"; };
+		2B39D393293D7C8800D6FC8D /* DUtil.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = DUtil.cpp; path = ../../../Common/Base/DUtil.cpp; sourceTree = "<group>"; };
+		2B39D394293D7C8800D6FC8D /* DBuffer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = DBuffer.cpp; path = ../../../Common/Base/DBuffer.cpp; sourceTree = "<group>"; };
+		2B39D395293D7C8800D6FC8D /* DTest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DTest.h; path = ../../../Common/Base/DTest.h; sourceTree = "<group>"; };
+		2B39D396293D7C8800D6FC8D /* DAtomic.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DAtomic.h; path = ../../../Common/Base/DAtomic.h; sourceTree = "<group>"; };
+		2B39D397293D7C8800D6FC8D /* DUTF8.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = DUTF8.cpp; path = ../../../Common/Base/DUTF8.cpp; sourceTree = "<group>"; };
+		2B39D398293D7C8800D6FC8D /* DUTF8.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DUTF8.h; path = ../../../Common/Base/DUTF8.h; sourceTree = "<group>"; };
+		2B39D399293D7C8800D6FC8D /* DMsgQueue.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = DMsgQueue.cpp; path = ../../../Common/Base/DMsgQueue.cpp; sourceTree = "<group>"; };
+		2B39D39A293D7C8800D6FC8D /* DUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DUtil.h; path = ../../../Common/Base/DUtil.h; sourceTree = "<group>"; };
+		2B39D3A0293D7CAD00D6FC8D /* DNet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DNet.h; path = ../../../Common/Net/DNet.h; sourceTree = "<group>"; };
+		2B39D3A1293D7CAD00D6FC8D /* DTCP.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = DTCP.cpp; path = ../../../Common/Net/DTCP.cpp; sourceTree = "<group>"; };
+		2B39D3A2293D7CAD00D6FC8D /* DTCPClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DTCPClient.h; path = ../../../Common/Net/DTCPClient.h; sourceTree = "<group>"; };
+		2B39D3A3293D7CAD00D6FC8D /* DTCP.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DTCP.h; path = ../../../Common/Net/DTCP.h; sourceTree = "<group>"; };
+		2B39D3A4293D7CAD00D6FC8D /* DNet.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = DNet.cpp; path = ../../../Common/Net/DNet.cpp; sourceTree = "<group>"; };
+		2B39D3A5293D7CAD00D6FC8D /* DTCPClient.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = DTCPClient.cpp; path = ../../../Common/Net/DTCPClient.cpp; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		2B39D37A293D788100D6FC8D /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		2B39D374293D788100D6FC8D = {
+			isa = PBXGroup;
+			children = (
+				2B39D37F293D788100D6FC8D /* 03_HelloRTC_mac */,
+				2B39D37E293D788100D6FC8D /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		2B39D37E293D788100D6FC8D /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				2B39D37D293D788100D6FC8D /* 03_HelloRTC_mac */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		2B39D37F293D788100D6FC8D /* 03_HelloRTC_mac */ = {
+			isa = PBXGroup;
+			children = (
+				2B39D388293D795700D6FC8D /* Test */,
+				2B39D387293D794E00D6FC8D /* Common */,
+				2B39D380293D788100D6FC8D /* main.cpp */,
+			);
+			path = 03_HelloRTC_mac;
+			sourceTree = "<group>";
+		};
+		2B39D387293D794E00D6FC8D /* Common */ = {
+			isa = PBXGroup;
+			children = (
+				2B39D38A293D796B00D6FC8D /* Net */,
+				2B39D389293D796300D6FC8D /* Base */,
+			);
+			name = Common;
+			sourceTree = "<group>";
+		};
+		2B39D388293D795700D6FC8D /* Test */ = {
+			isa = PBXGroup;
+			children = (
+				2B39D38B293D7A3000D6FC8D /* Net */,
+			);
+			name = Test;
+			sourceTree = "<group>";
+		};
+		2B39D389293D796300D6FC8D /* Base */ = {
+			isa = PBXGroup;
+			children = (
+				2B39D396293D7C8800D6FC8D /* DAtomic.h */,
+				2B39D394293D7C8800D6FC8D /* DBuffer.cpp */,
+				2B39D38F293D7C8800D6FC8D /* DBuffer.h */,
+				2B39D399293D7C8800D6FC8D /* DMsgQueue.cpp */,
+				2B39D390293D7C8800D6FC8D /* DMsgQueue.h */,
+				2B39D395293D7C8800D6FC8D /* DTest.h */,
+				2B39D397293D7C8800D6FC8D /* DUTF8.cpp */,
+				2B39D398293D7C8800D6FC8D /* DUTF8.h */,
+				2B39D393293D7C8800D6FC8D /* DUtil.cpp */,
+				2B39D39A293D7C8800D6FC8D /* DUtil.h */,
+				2B39D391293D7C8800D6FC8D /* DXP.cpp */,
+				2B39D392293D7C8800D6FC8D /* DXP.h */,
+			);
+			name = Base;
+			sourceTree = "<group>";
+		};
+		2B39D38A293D796B00D6FC8D /* Net */ = {
+			isa = PBXGroup;
+			children = (
+				2B39D3A4293D7CAD00D6FC8D /* DNet.cpp */,
+				2B39D3A0293D7CAD00D6FC8D /* DNet.h */,
+				2B39D3A1293D7CAD00D6FC8D /* DTCP.cpp */,
+				2B39D3A3293D7CAD00D6FC8D /* DTCP.h */,
+				2B39D3A5293D7CAD00D6FC8D /* DTCPClient.cpp */,
+				2B39D3A2293D7CAD00D6FC8D /* DTCPClient.h */,
+			);
+			name = Net;
+			sourceTree = "<group>";
+		};
+		2B39D38B293D7A3000D6FC8D /* Net */ = {
+			isa = PBXGroup;
+			children = (
+				2B39D38D293D7A5400D6FC8D /* DTestTCPClient.cpp */,
+				2B39D38C293D7A5400D6FC8D /* DTestTCPClient.h */,
+			);
+			name = Net;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		2B39D37C293D788100D6FC8D /* 03_HelloRTC_mac */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 2B39D384293D788100D6FC8D /* Build configuration list for PBXNativeTarget "03_HelloRTC_mac" */;
+			buildPhases = (
+				2B39D379293D788100D6FC8D /* Sources */,
+				2B39D37A293D788100D6FC8D /* Frameworks */,
+				2B39D37B293D788100D6FC8D /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = 03_HelloRTC_mac;
+			productName = 03_HelloRTC_mac;
+			productReference = 2B39D37D293D788100D6FC8D /* 03_HelloRTC_mac */;
+			productType = "com.apple.product-type.tool";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		2B39D375293D788100D6FC8D /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastUpgradeCheck = 1340;
+				TargetAttributes = {
+					2B39D37C293D788100D6FC8D = {
+						CreatedOnToolsVersion = 13.4.1;
+					};
+				};
+			};
+			buildConfigurationList = 2B39D378293D788100D6FC8D /* Build configuration list for PBXProject "03_HelloRTC_mac" */;
+			compatibilityVersion = "Xcode 13.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 2B39D374293D788100D6FC8D;
+			productRefGroup = 2B39D37E293D788100D6FC8D /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				2B39D37C293D788100D6FC8D /* 03_HelloRTC_mac */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		2B39D379293D788100D6FC8D /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2B39D3A7293D7CAD00D6FC8D /* DNet.cpp in Sources */,
+				2B39D39F293D7C8800D6FC8D /* DMsgQueue.cpp in Sources */,
+				2B39D39C293D7C8800D6FC8D /* DUtil.cpp in Sources */,
+				2B39D39B293D7C8800D6FC8D /* DXP.cpp in Sources */,
+				2B39D381293D788100D6FC8D /* main.cpp in Sources */,
+				2B39D3A6293D7CAD00D6FC8D /* DTCP.cpp in Sources */,
+				2B39D39E293D7C8800D6FC8D /* DUTF8.cpp in Sources */,
+				2B39D3A8293D7CAD00D6FC8D /* DTCPClient.cpp in Sources */,
+				2B39D39D293D7C8800D6FC8D /* DBuffer.cpp in Sources */,
+				2B39D38E293D7A5400D6FC8D /* DTestTCPClient.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		2B39D382293D788100D6FC8D /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 12.3;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		2B39D383293D788100D6FC8D /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 12.3;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		2B39D385293D788100D6FC8D /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = G4B7ZBVBTD;
+				ENABLE_HARDENED_RUNTIME = YES;
+				HEADER_SEARCH_PATHS = (
+					../../Common,
+					../../Test,
+				);
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		2B39D386293D788100D6FC8D /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = G4B7ZBVBTD;
+				ENABLE_HARDENED_RUNTIME = YES;
+				HEADER_SEARCH_PATHS = (
+					../../Common,
+					../../Test,
+				);
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		2B39D378293D788100D6FC8D /* Build configuration list for PBXProject "03_HelloRTC_mac" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2B39D382293D788100D6FC8D /* Debug */,
+				2B39D383293D788100D6FC8D /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		2B39D384293D788100D6FC8D /* Build configuration list for PBXNativeTarget "03_HelloRTC_mac" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2B39D385293D788100D6FC8D /* Debug */,
+				2B39D386293D788100D6FC8D /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 2B39D375293D788100D6FC8D /* Project object */;
+}
