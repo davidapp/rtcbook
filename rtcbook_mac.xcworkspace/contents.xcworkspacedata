@@ -13,6 +13,9 @@
       <FileRef
          location = "group:ch01/02_TextViewer_mac/02_TextViewer_mac.xcodeproj">
       </FileRef>
+      <FileRef
+         location = "group:ch01/03_HelloRTC_mac/03_HelloRTC_mac.xcodeproj">
+      </FileRef>
    </Group>
    <Group
       location = "container:"

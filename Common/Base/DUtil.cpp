@@ -1,13 +1,6 @@
-﻿#include "DUtil.h"
+#include "DUtil.h"
 #include "DXP.h"
-#include "File/DBmpFile.h"
-#include "Base/DBuffer.h"
-#include "Video/VideoDefines.h"
 
-#if defined(BUILD_FOR_WINDOWS)
-#include <dshow.h>
-#include "Video/WinDSCamera.h"
-#endif
 
 std::string DUtil::UInt64ToStr16(DUInt64 c, DBool bLE)
 {
@@ -58,7 +51,7 @@ DVoid DEvent::Create(DCWStr wName, DBool bAuto)
 #if defined(BUILD_FOR_WINDOWS)
     handle = CreateEvent(NULL, !bAuto, 0, (LPCWSTR)wName);
 #else
-    DEventData* event = (DEventData*)DALLOC(DSizeOf(DEventData));
+    DEventData* event = (DEventData*)malloc(DSizeOf(DEventData));
     event->flag = false;
     pthread_mutex_init(&event->mutex, 0);
     pthread_cond_init(&event->cond, 0);
@@ -79,7 +72,7 @@ DVoid DEvent::Close()
     if (handle)
     {
         pthread_mutex_destroy(&((DEventData*)handle)->mutex);
-        DFREE(handle);
+        free(handle);
         handle = NULL;
     }
 #endif
