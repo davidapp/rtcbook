@@ -4,8 +4,8 @@
 
 int main()
 {
-    DTestUTF8::Test();
-    //DTestMsgQueue::Use_1q2t();
+    //DTestUTF8::Test();
+    DTestMsgQueue::Use_1q2t();
     //DTestMsgQueue::Use();
 
     return 0;

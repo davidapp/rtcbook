@@ -32,6 +32,8 @@ public:
     static DVoid*  GetThreadHandle(DHandle qid);
 
     static DBool   IsInQueue(DHandle qid);
+    static DUInt32 GetQueueSize(DHandle qid);
+    static DUInt32 GetQueueMaxSize(DHandle qid);
     static DHandle GetCurQueueID();
     static DCStr   GetCurQueueName();
     static DUInt32 GetCoreCount();
@@ -39,6 +41,8 @@ public:
     // Msg Handler
     static DVoid AddHandler(DHandle qid, DMsgFunc handler);
     static DVoid RemoveHandler(DHandle qid, DMsgFunc handler);
+    static DUInt32 GetHandlerSize(DHandle qid);
+    static DMsgFunc GetHandler(DHandle qid, DUInt32 nIndex);
     static DVoid RemoveAllHandler(DHandle qid);
 
     // Msg Cleaner

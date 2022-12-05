@@ -1,36 +1,42 @@
 ﻿#include "DTestMsgQueue.h"
 #include "Base/DMsgQueue.h"
 #include <iostream>
+#include "Base/DAtomic.h"
+
+#define WM_MYPRINT 1
+
+DAtomInt32 g_counter;
 
 DVoid* DX86_STDCALL DPrint1(DUInt32 msg, DVoid* para1, DVoid* para2)
 {
-    if (DMsgQueue::IsInQueue(1)) {
-        printf("[queue1][print1] %u %d %p\n", msg, (DUInt32)para1, para2);
-    }
-    else if (DMsgQueue::IsInQueue(2)) {
-        printf("[queue2][print1] %u %d %p\n", msg, (DUInt32)para1, para2);
+    if (msg == WM_MYPRINT) {
+        DInt32 tid = (DInt32)para2;
+        if (tid == 1) {
+            //printf("%d's %p\n", tid, para1);
+            g_counter++;
+        }
+        else if (tid == 2)
+        {
+            //printf("%d's %p\n", tid, para1);
+            g_counter+=1000;
+        }
+
+        if (g_counter == 1001000) {
+            printf("Testing Finished OK!\n");
+            printf("Queue's size=%d\n", DMsgQueue::GetQueueSize(1));
+        }
     }
     return nullptr;
 }
 
-DVoid* DX86_STDCALL DPrint2(DUInt32 msg, DVoid* para1, DVoid* para2)
+void test_thread(DUInt32 q1, DInt32 tid) 
 {
-    if (DMsgQueue::IsInQueue(1)) {
-        printf("[queue1][print2] %u %d %p\n", msg, (DUInt32)para1, para2);
-    }
-    else if (DMsgQueue::IsInQueue(2)) {
-        printf("[queue2][print2] %u %d %p\n", msg, (DUInt32)para1, para2);
-    }
-    return nullptr;
-}
-
-void test_thread(DUInt32 q1, DUInt32 q2) 
-{
-    printf("filling q1\n");
+    printf("%d is filling queue\n", tid);
     for (DUInt32 i = 0; i < 1000;) {
-        DBool bOK = DMsgQueue::PostQueueMsg(q1, 1, (DVoid*)i, 0);
-        if (!bOK) {
-            printf("q1 is full, i=%u\n", i);
+        DUInt32 nRes = DMsgQueue::PostQueueMsg(q1, WM_MYPRINT, (DVoid*)i, (DVoid*)tid);
+        if (nRes == 2) {
+            printf("Queue is full, i=%u, tid=%d\n", i, tid);
+            printf("Queue's size=%d\n", DMsgQueue::GetQueueSize(1));
             Sleep(10);
         }
         else {
@@ -39,20 +45,15 @@ void test_thread(DUInt32 q1, DUInt32 q2)
     }
 }
 
-// 1个队列 2个线程 压力测试
+// 1个队列长度100 2个线程Post1000 压力测试
 DVoid DTestMsgQueue::Use_1q2t()
 {
     DUInt32 q1 = DMsgQueue::Create("queue1", 100);
     DMsgQueue::AddHandler(q1, DPrint1);
-    DMsgQueue::AddHandler(q1, DPrint2);
 
-    DUInt32 q2 = DMsgQueue::Create("queue2", 50);
-    DMsgQueue::AddHandler(q2, DPrint1);
-    DMsgQueue::AddHandler(q2, DPrint2);
-
-    std::thread t = std::thread(test_thread, q1, q2);
+    std::thread t = std::thread(test_thread, q1, 1);
     t.detach();
-    std::thread t2 = std::thread(test_thread, q1, q2);
+    std::thread t2 = std::thread(test_thread, q1, 2);
     t2.detach();
 
     int a;
@@ -62,4 +63,10 @@ DVoid DTestMsgQueue::Use_1q2t()
 DVoid DTestMsgQueue::Use()
 {
     std::cout << DMsgQueue::GetCoreCount() << std::endl;
+}
+
+
+DVoid DTestMsgQueue::Test()
+{
+
 }

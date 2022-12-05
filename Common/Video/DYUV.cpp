@@ -110,7 +110,6 @@ DVoid DYUV::BGR24ToUVJRow(const DUInt8* src_rgb0, DInt32 src_stride_rgb, DUInt8*
 }
 
 
-
 DVoid DYUV::ARGBGrayRow(const DUInt8* src_argb, DUInt8* dst_argb, DInt32 width)
 {
     for (DInt32 x = 0; x < width; ++x) 
@@ -169,155 +168,71 @@ const struct YuvConstants kYuvI601Constants = {
     {YGB, YGB, YGB, YGB, YGB, YGB, YGB, YGB, YGB, YGB, YGB, YGB, YGB, YGB, YGB,
      YGB} };
 
-
-// JPEG YUV to RGB reference
-// *  R = Y                - V * -1.40200
-// *  G = Y - U *  0.34414 - V *  0.71414
-// *  B = Y - U * -1.77200
-
-// Y contribution to R,G,B.  Scale and bias.
-#define YG 16320 /* round(1.000 * 64 * 256 * 256 / 257) */
-#define YGB 32   /* 64 / 2 */
-
-// U and V contributions to R,G,B.
-#define UB -113 /* round(-1.77200 * 64) */
-#define UG 22   /* round(0.34414 * 64) */
-#define VG 46   /* round(0.71414  * 64) */
-#define VR -90  /* round(-1.40200 * 64) */
-
-// Bias values to round, and subtract 128 from U and V.
-#define BB (UB * 128 + YGB)
-#define BG (UG * 128 + VG * 128 + YGB)
-#define BR (VR * 128 + YGB)
-
-const struct YuvConstants kYuvJPEGConstants = {
-    {UB, 0, UB, 0, UB, 0, UB, 0, UB, 0, UB, 0, UB, 0, UB, 0,
-     UB, 0, UB, 0, UB, 0, UB, 0, UB, 0, UB, 0, UB, 0, UB, 0},
-    {UG, VG, UG, VG, UG, VG, UG, VG, UG, VG, UG, VG, UG, VG, UG, VG,
-     UG, VG, UG, VG, UG, VG, UG, VG, UG, VG, UG, VG, UG, VG, UG, VG},
-    {0, VR, 0, VR, 0, VR, 0, VR, 0, VR, 0, VR, 0, VR, 0, VR,
-     0, VR, 0, VR, 0, VR, 0, VR, 0, VR, 0, VR, 0, VR, 0, VR},
-    {BB, BB, BB, BB, BB, BB, BB, BB, BB, BB, BB, BB, BB, BB, BB, BB},
-    {BG, BG, BG, BG, BG, BG, BG, BG, BG, BG, BG, BG, BG, BG, BG, BG},
-    {BR, BR, BR, BR, BR, BR, BR, BR, BR, BR, BR, BR, BR, BR, BR, BR},
-    {YG, YG, YG, YG, YG, YG, YG, YG, YG, YG, YG, YG, YG, YG, YG, YG},
-    {YGB, YGB, YGB, YGB, YGB, YGB, YGB, YGB, YGB, YGB, YGB, YGB, YGB, YGB, YGB,
-     YGB} };
-
-
-// BT.709 YUV to RGB reference
-//  R = (Y - 16) * 1.164              - V * -1.793
-//  G = (Y - 16) * 1.164 - U *  0.213 - V *  0.533
-//  B = (Y - 16) * 1.164 - U * -2.112
-
-// Y contribution to R,G,B.  Scale and bias.
-#define YG 18997  /* round(1.164 * 64 * 256 * 256 / 257) */
-#define YGB -1160 /* 1.164 * 64 * -16 + 64 / 2 */
-
-// TODO(fbarchard): Find way to express 2.112 instead of 2.0.
-// U and V contributions to R,G,B.
-#define UB -128 /* max(-128, round(-2.112 * 64)) */
-#define UG 14   /* round(0.213 * 64) */
-#define VG 34   /* round(0.533  * 64) */
-#define VR -115 /* round(-1.793 * 64) */
-
-// Bias values to round, and subtract 128 from U and V.
-#define BB (UB * 128 + YGB)
-#define BG (UG * 128 + VG * 128 + YGB)
-#define BR (VR * 128 + YGB)
-
-const struct YuvConstants kYuvH709Constants = {
-    {UB, 0, UB, 0, UB, 0, UB, 0, UB, 0, UB, 0, UB, 0, UB, 0,
-     UB, 0, UB, 0, UB, 0, UB, 0, UB, 0, UB, 0, UB, 0, UB, 0},
-    {UG, VG, UG, VG, UG, VG, UG, VG, UG, VG, UG, VG, UG, VG, UG, VG,
-     UG, VG, UG, VG, UG, VG, UG, VG, UG, VG, UG, VG, UG, VG, UG, VG},
-    {0, VR, 0, VR, 0, VR, 0, VR, 0, VR, 0, VR, 0, VR, 0, VR,
-     0, VR, 0, VR, 0, VR, 0, VR, 0, VR, 0, VR, 0, VR, 0, VR},
-    {BB, BB, BB, BB, BB, BB, BB, BB, BB, BB, BB, BB, BB, BB, BB, BB},
-    {BG, BG, BG, BG, BG, BG, BG, BG, BG, BG, BG, BG, BG, BG, BG, BG},
-    {BR, BR, BR, BR, BR, BR, BR, BR, BR, BR, BR, BR, BR, BR, BR, BR},
-    {YG, YG, YG, YG, YG, YG, YG, YG, YG, YG, YG, YG, YG, YG, YG, YG},
-    {YGB, YGB, YGB, YGB, YGB, YGB, YGB, YGB, YGB, YGB, YGB, YGB, YGB, YGB, YGB,
-     YGB} };
-
-
-// BT.2020 YUV to RGB reference
-//  R = (Y - 16) * 1.164384                - V * -1.67867
-//  G = (Y - 16) * 1.164384 - U * 0.187326 - V * -0.65042
-//  B = (Y - 16) * 1.164384 - U * -2.14177
-
-// Y contribution to R,G,B.  Scale and bias.
-#define YG 19003  /* round(1.164384 * 64 * 256 * 256 / 257) */
-#define YGB -1160 /* 1.164384 * 64 * -16 + 64 / 2 */
-
-// TODO(fbarchard): Improve accuracy; the B channel is off by 7%.
-#define UB -128 /* max(-128, round(-2.142 * 64)) */
-#define UG 12   /* round(0.187326 * 64) */
-#define VG 42   /* round(0.65042 * 64) */
-#define VR -107 /* round(-1.67867 * 64) */
-
-// Bias values to round, and subtract 128 from U and V.
-#define BB (UB * 128 + YGB)
-#define BG (UG * 128 + VG * 128 + YGB)
-#define BR (VR * 128 + YGB)
-
-const struct YuvConstants kYuv2020Constants = {
-    {UB, 0, UB, 0, UB, 0, UB, 0, UB, 0, UB, 0, UB, 0, UB, 0,
-     UB, 0, UB, 0, UB, 0, UB, 0, UB, 0, UB, 0, UB, 0, UB, 0},
-    {UG, VG, UG, VG, UG, VG, UG, VG, UG, VG, UG, VG, UG, VG, UG, VG,
-     UG, VG, UG, VG, UG, VG, UG, VG, UG, VG, UG, VG, UG, VG, UG, VG},
-    {0, VR, 0, VR, 0, VR, 0, VR, 0, VR, 0, VR, 0, VR, 0, VR,
-     0, VR, 0, VR, 0, VR, 0, VR, 0, VR, 0, VR, 0, VR, 0, VR},
-    {BB, BB, BB, BB, BB, BB, BB, BB, BB, BB, BB, BB, BB, BB, BB, BB},
-    {BG, BG, BG, BG, BG, BG, BG, BG, BG, BG, BG, BG, BG, BG, BG, BG},
-    {BR, BR, BR, BR, BR, BR, BR, BR, BR, BR, BR, BR, BR, BR, BR, BR},
-    {YG, YG, YG, YG, YG, YG, YG, YG, YG, YG, YG, YG, YG, YG, YG, YG},
-    {YGB, YGB, YGB, YGB, YGB, YGB, YGB, YGB, YGB, YGB, YGB, YGB, YGB, YGB, YGB,
-     YGB} };
-
-
-
-static __inline void YuvPixel(uint8_t y, uint8_t u, uint8_t v,
-    uint8_t* b, uint8_t* g, uint8_t* r, const struct YuvConstants* yuvconstants) 
+DVoid DYUV::YuvPixel(DUInt8 y, DUInt8 u, DUInt8 v, DUInt8* b, DUInt8* g, DUInt8* r)
 {
-    int ub = yuvconstants->kUVToB[0];
-    int ug = yuvconstants->kUVToG[0];
-    int vg = yuvconstants->kUVToG[1];
-    int vr = yuvconstants->kUVToR[1];
-    int bb = yuvconstants->kUVBiasB[0];
-    int bg = yuvconstants->kUVBiasG[0];
-    int br = yuvconstants->kUVBiasR[0];
-    int yg = yuvconstants->kYToRgb[0];
+    int ub = kYuvI601Constants.kUVToB[0];
+    int ug = kYuvI601Constants.kUVToG[0];
+    int vg = kYuvI601Constants.kUVToG[1];
+    int vr = kYuvI601Constants.kUVToR[1];
+    int bb = kYuvI601Constants.kUVBiasB[0];
+    int bg = kYuvI601Constants.kUVBiasG[0];
+    int br = kYuvI601Constants.kUVBiasR[0];
+    int yg = kYuvI601Constants.kYToRgb[0];
 
-    uint32_t y1 = (uint32_t)(y * 0x0101 * yg) >> 16;
-    *b = Clamp((int32_t)(-(u * ub) + y1 + bb) >> 6);
-    *g = Clamp((int32_t)(-(u * ug + v * vg) + y1 + bg) >> 6);
-    *r = Clamp((int32_t)(-(v * vr) + y1 + br) >> 6);
+    DUInt32 y1 = (DUInt32)(y * 0x0101 * yg) >> 16;
+    *b = Clamp((DInt32)(-(u * ub) + y1 + bb) >> 6);
+    *g = Clamp((DInt32)(-(u * ug + v * vg) + y1 + bg) >> 6);
+    *r = Clamp((DInt32)(-(v * vr) + y1 + br) >> 6);
 }
 
-// Also used for 420
-void I422ToARGBRow_C(const uint8_t* src_y,
-    const uint8_t* src_u,
-    const uint8_t* src_v,
-    uint8_t* rgb_buf,
-    const struct YuvConstants* yuvconstants,
-    int width) {
-    int x;
-    for (x = 0; x < width - 1; x += 2) {
-        YuvPixel(src_y[0], src_u[0], src_v[0], rgb_buf + 0, rgb_buf + 1,
-            rgb_buf + 2, yuvconstants);
+DVoid DYUV::I420ToARGBRow(const DUInt8* src_y, const DUInt8* src_u, const DUInt8* src_v, DUInt8* rgb_buf, DInt32 width)
+{
+    for (DInt32 x = 0; x < width - 1; x += 2) 
+    {
+        YuvPixel(src_y[0], src_u[0], src_v[0], rgb_buf + 0, rgb_buf + 1, rgb_buf + 2);
         rgb_buf[3] = 255;
-        YuvPixel(src_y[1], src_u[0], src_v[0], rgb_buf + 4, rgb_buf + 5,
-            rgb_buf + 6, yuvconstants);
+        YuvPixel(src_y[1], src_u[0], src_v[0], rgb_buf + 4, rgb_buf + 5, rgb_buf + 6);
         rgb_buf[7] = 255;
         src_y += 2;
         src_u += 1;
         src_v += 1;
         rgb_buf += 8;  // Advance 2 pixels.
     }
-    if (width & 1) {
-        YuvPixel(src_y[0], src_u[0], src_v[0], rgb_buf + 0, rgb_buf + 1,
-            rgb_buf + 2, yuvconstants);
+    if (width & 1) 
+    {
+        YuvPixel(src_y[0], src_u[0], src_v[0], rgb_buf + 0, rgb_buf + 1, rgb_buf + 2);
         rgb_buf[3] = 255;
     }
+}
+
+DInt32 DYUV::Clamp0(DInt32 v)
+{
+    // return (v < 0) ? 0 : v;
+    return ((-(v) >> 31) & (v));
+}
+
+DInt32 DYUV::Clamp255(DInt32 v)
+{
+    // return (v > 255) ? 255 : v;
+    return (((255 - (v)) >> 31) | (v)) & 255;
+}
+
+DInt32 DYUV::Clamp1023(DInt32 v)
+{
+    //return (v > 1023) ? 1023 : v;
+    return (((1023 - (v)) >> 31) | (v)) & 1023;
+}
+
+DUInt32 DYUV::Clamp(DInt32 v)
+{
+    // make 0<=v<=255
+    DInt32 val = Clamp0(v);
+    return (DUInt32)(Clamp255(val));
+}
+
+DUInt32 DYUV::Clamp10(DInt32 v)
+{
+    // make 0<=v<=1023
+    DInt32 val = Clamp0(v);
+    return (DUInt32)(Clamp1023(val));
 }

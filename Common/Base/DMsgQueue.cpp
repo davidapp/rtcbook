@@ -172,6 +172,32 @@ DBool DMsgQueue::IsInQueue(DHandle qid)
     return false;
 }
 
+DUInt32 DMsgQueue::GetQueueSize(DHandle qid)
+{
+    auto pNodeQueue = g_id2q.find(qid);
+    if (pNodeQueue == g_id2q.end()) return 0;
+
+    DMsgQueue* pq = (DMsgQueue*)pNodeQueue->second;
+    if (pq == NULL) return 0;
+
+    pq->m_queueMutex.lock();
+    DUInt32 nSize = pq->m_queue.size();
+    pq->m_queueMutex.unlock();
+
+    return nSize;
+}
+
+DUInt32 DMsgQueue::GetQueueMaxSize(DHandle qid)
+{
+    auto pNodeQueue = g_id2q.find(qid);
+    if (pNodeQueue == g_id2q.end()) return 0;
+
+    DMsgQueue* pq = (DMsgQueue*)pNodeQueue->second;
+    if (pq == NULL) return 0;
+
+    return pq->m_maxSize;
+}
+
 DHandle DMsgQueue::GetCurQueueID()
 {
     for (auto pNodeQueue = g_id2q.begin(); pNodeQueue != g_id2q.end(); pNodeQueue++) {
@@ -244,6 +270,42 @@ DVoid DMsgQueue::RemoveHandler(DHandle qid, DMsgFunc handler)
     pq->m_msgfuncMutex.lock();
     pq->m_msgfunc.remove(handler);
     pq->m_msgfuncMutex.unlock();
+}
+
+DUInt32 DMsgQueue::GetHandlerSize(DHandle qid)
+{
+    auto pNodeQueue = g_id2q.find(qid);
+    if (pNodeQueue == g_id2q.end()) return 0;
+
+    DMsgQueue* pq = (DMsgQueue*)pNodeQueue->second;
+    if (pq == NULL) return 0;
+
+    pq->m_msgfuncMutex.lock();
+    DUInt32 nSize = pq->m_msgfunc.size();
+    pq->m_msgfuncMutex.unlock();
+
+    return nSize;
+}
+
+DMsgFunc DMsgQueue::GetHandler(DHandle qid, DUInt32 nIndex)
+{
+    auto pNodeQueue = g_id2q.find(qid);
+    if (pNodeQueue == g_id2q.end()) return 0;
+
+    DMsgQueue* pq = (DMsgQueue*)pNodeQueue->second;
+    if (pq == NULL) return 0;
+
+    pq->m_msgfuncMutex.lock();
+    auto msgfunc = pq->m_msgfunc.begin();
+    DUInt32 i = 0;
+    while (msgfunc != pq->m_msgfunc.end()) {
+        if (i++ == nIndex) {
+            break;
+        }
+        msgfunc++;
+    }
+    pq->m_msgfuncMutex.unlock();
+    return *msgfunc;
 }
 
 DVoid DMsgQueue::RemoveAllHandler(DHandle qid)
