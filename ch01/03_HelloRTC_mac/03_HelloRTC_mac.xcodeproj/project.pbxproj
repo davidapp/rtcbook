@@ -54,6 +54,11 @@
 		2B39D3A3293D7CAD00D6FC8D /* DTCP.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DTCP.h; path = ../../../Common/Net/DTCP.h; sourceTree = "<group>"; };
 		2B39D3A4293D7CAD00D6FC8D /* DNet.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = DNet.cpp; path = ../../../Common/Net/DNet.cpp; sourceTree = "<group>"; };
 		2B39D3A5293D7CAD00D6FC8D /* DTCPClient.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = DTCPClient.cpp; path = ../../../Common/Net/DTCPClient.cpp; sourceTree = "<group>"; };
+		2B39D3A9293DC47B00D6FC8D /* DTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DTypes.h; path = ../../../Common/DTypes.h; sourceTree = "<group>"; };
+		2B39D3AA293DC47B00D6FC8D /* DConfig_Mac.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DConfig_Mac.h; path = ../../../Common/DConfig_Mac.h; sourceTree = "<group>"; };
+		2B39D3AB293DC47B00D6FC8D /* DConfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DConfig.h; path = ../../../Common/DConfig.h; sourceTree = "<group>"; };
+		2B39D3AC293DC49B00D6FC8D /* DConfig_Win.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DConfig_Win.h; path = ../../../Common/DConfig_Win.h; sourceTree = "<group>"; };
+		2B39D3AD293DC49B00D6FC8D /* DConfig_iOS.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DConfig_iOS.h; path = ../../../Common/DConfig_iOS.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -96,6 +101,11 @@
 		2B39D387293D794E00D6FC8D /* Common */ = {
 			isa = PBXGroup;
 			children = (
+				2B39D3AD293DC49B00D6FC8D /* DConfig_iOS.h */,
+				2B39D3AC293DC49B00D6FC8D /* DConfig_Win.h */,
+				2B39D3AA293DC47B00D6FC8D /* DConfig_Mac.h */,
+				2B39D3AB293DC47B00D6FC8D /* DConfig.h */,
+				2B39D3A9293DC47B00D6FC8D /* DTypes.h */,
 				2B39D38A293D796B00D6FC8D /* Net */,
 				2B39D389293D796300D6FC8D /* Base */,
 			);

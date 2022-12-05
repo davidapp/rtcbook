@@ -326,8 +326,8 @@ DUInt32 DXP::GetTickCount32()
     D_WARNING_SUPPRESS(28159)
         return ::GetTickCount();
     D_WARNING_UNSUPPRESS()
-#elif defined(BUILD_FOR_IOS) && (BUILD_FOR_IOS==1)
-    static mach_timebase_info_data_t sTimebaseInfo;
+#elif defined(BUILD_FOR_IOS) || defined(BUILD_FOR_MAC)
+    static mach_time_base_info_data_t sTimebaseInfo;
     uint64_t machTime = mach_absolute_time();
     if (sTimebaseInfo.denom == 0)
     {
@@ -336,7 +336,7 @@ DUInt32 DXP::GetTickCount32()
     // Convert the mach time to mili seconds
     DUInt32 millis = (DUInt32)((machTime / 1000000) * sTimebaseInfo.numer) / sTimebaseInfo.denom;
     return millis;
-#elif defined(BUILD_FOR_ANDROID) && (BUILD_FOR_ANDROID == 1)
+#elif defined(BUILD_FOR_ANDROID)
     //TODO
     //SystemClock.uptimeMillis()
     return 0;
