@@ -19,6 +19,7 @@ enum class DPixelFmt {
     MJPG, 
     NV12, // [Y,U0,V0,U1,V1]
     NV21, // [Y,V0,U0,V1,U1]
+    RAW   // [(R,G,B),(R,G,B)...]
 };
 
 struct tagDVideoFormat {

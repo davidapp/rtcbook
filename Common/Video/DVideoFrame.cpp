@@ -1,4 +1,5 @@
 ﻿#include "DVideoFrame.h"
+#include "DYUV.h"
 
 DVideoFrame::DVideoFrame(DByte* data, DUInt32 data_size, DInt32 w, DInt32 h, DPixelFmt fmt) : m_data(data, data_size) 
 {
@@ -35,4 +36,25 @@ DInt32 DVideoFrame::DefaultStride(DInt32 width, DPixelFmt fmt)
     default:
         return 0;
     }
+}
+
+DVideoFrame* DVideoFrame::YUY2ToRAW(const DVideoFrame* pFrame)
+{
+    DBuffer bufRGB(pFrame->m_width * pFrame->m_height * 3);
+    DByte* pSRC = pFrame->m_data.GetBuf();
+    DByte* pEnd = pSRC + pFrame->m_data.GetSize();
+    DByte* pDst = bufRGB.GetBuf();
+    while (pSRC != pEnd)
+    {
+        DYUV::YUV2RGB((DUInt8*)pDst, pSRC[0], pSRC[1] - 128, pSRC[3] - 128);
+        pDst += 3;
+        DYUV::YUV2RGB((DUInt8*)pDst, pSRC[2], pSRC[1] - 128, pSRC[3] - 128);
+        pDst += 3;
+        pSRC += 4;
+    }
+    DVideoFrame* pFrameRet = new DVideoFrame(*pFrame);
+    pFrameRet->m_data = bufRGB;
+    pFrameRet->m_fmt = DPixelFmt::RAW;
+    pFrameRet->m_stride = 3;
+    return pFrameRet;
 }

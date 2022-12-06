@@ -125,9 +125,9 @@ DVoid DYUV::ARGBGrayRow(const DUInt8* src_argb, DUInt8* dst_argb, DInt32 width)
 
 DVoid DYUV::YUV2RGB(DUInt8* out, DInt32 Y, DInt32 U, DInt32 V)
 {
-    out[2] = Clamp(Y + (91881 * V + 32768 >> 16));
-    out[1] = Clamp(Y + (- 22554 * U - 46802 * V + 32768 >> 16));
-    out[0] = Clamp(Y + (116130 * U + 32768 >> 16));
+    out[2] = Clamp(Y + ((91881 * V + 32768) >> 16));
+    out[1] = Clamp(Y + ((-22554 * U - 46802 * V + 32768) >> 16));
+    out[0] = Clamp(Y + ((116130 * U + 32768) >> 16));
 }
 
 DInt32 DYUV::Clamp0(DInt32 v)

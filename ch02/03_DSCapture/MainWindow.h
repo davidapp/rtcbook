@@ -19,32 +19,28 @@ DVoid* OnFrame(DVoid* pVFrame, DVoid* pFrameData, DVoid* pUserData)
     DVideoFrame* pFrame = (DVideoFrame*)pVFrame;
     BITMAPINFO* pHeader = (BITMAPINFO*)pFrameData;
 
-    DBuffer bufRGB(pFrame->m_width * pFrame->m_height * 3);
-    DByte* pSRC = pFrame->m_data.GetBuf();
-    DByte* pEnd = pSRC + pFrame->m_data.GetSize();
-    DByte* pDst = bufRGB.GetBuf();
-    while (pSRC != pEnd)
+    if (pFrame->m_fmt == DPixelFmt::YUY2)
     {
-        DYUV::YUV2RGB((DUInt8*)pDst, pSRC[0], pSRC[1] - 128, pSRC[3] - 128);
-        pDst += 3;
-        DYUV::YUV2RGB((DUInt8*)pDst, pSRC[2], pSRC[1] - 128, pSRC[3] - 128);
-        pDst += 3;
-        pSRC += 4;
+        DVideoFrame* pFrame24 = DVideoFrame::YUY2ToRAW(pFrame);
+        delete pFrame;
+        pHeader->bmiHeader.biBitCount = 24;
+        pHeader->bmiHeader.biCompression = BI_RGB;
+        pHeader->bmiHeader.biSizeImage = pFrame24->m_data.GetSize();
+
+        //delete pHeader;
+        //DBuffer bufFile = DBmpFile::Make24BitBitmap(pFrame24->m_width, pFrame24->m_height, pFrame24->m_data);
+        //DFile file;
+        //file.OpenFileRW("C:\\Users\\david_ms09i0l\\1.bmp", DFILE_OPEN_ALWAYS);
+        //file.Write(bufFile);
+        //file.Close();
+
+        ::PostMessage(hWnd, WM_ONFRAME, (WPARAM)pFrame24, (LPARAM)pHeader);
     }
-    pHeader->bmiHeader.biBitCount = 3;
-    pHeader->bmiHeader.biCompression = BI_RGB;
-    pFrame->m_data = bufRGB;
-    pFrame->m_fmt = DPixelFmt::RGB24;
-    pFrame->m_stride = 3;
-    pHeader->bmiHeader.biSizeImage = bufRGB.GetSize();
+    else if (pFrame->m_fmt == DPixelFmt::RGB24)
+    {
+        ::PostMessage(hWnd, WM_ONFRAME, (WPARAM)pFrame, (LPARAM)pHeader);
+    }
 
-    DBuffer bufFile = DBmpFile::Make24BitBitmap(pFrame->m_width, pFrame->m_height, bufRGB);
-    DFile file;
-    file.OpenFileRW("C:\\Users\\david_ms09i0l\\1.bmp", DFILE_OPEN_ALWAYS);
-    file.Write(bufFile);
-    file.Close();
-
-    ::PostMessage(hWnd, WM_ONFRAME, (WPARAM)pFrame, (LPARAM)pFrameData);
     return nullptr;
 }
 
@@ -116,26 +112,10 @@ public:
                 pFrame->m_width, pFrame->m_height, pFrame->m_data.GetBuf(),
                 pHeader, DIB_RGB_COLORS, SRCCOPY);
         }
-        else if (pFrame->m_fmt == DPixelFmt::YUY2) 
+        else if (pFrame->m_fmt == DPixelFmt::RAW) 
         {
-            DBuffer bufRGB(pFrame->m_width * pFrame->m_height * 3);
-            DByte* pSRC = pFrame->m_data.GetBuf();
-            DByte* pEnd = pSRC + pFrame->m_data.GetSize();
-            DByte* pDst = bufRGB.GetBuf();
-            while (pSRC != pEnd)
-            {
-                DYUV::YUV2RGB((DUInt8*)pDst, pSRC[0], pSRC[1]-128, pSRC[3]-128);
-                pDst += 3;
-                DYUV::YUV2RGB((DUInt8*)pDst, pSRC[2], pSRC[1]-128, pSRC[3]-128);
-                pDst += 3;
-                pSRC += 4;
-            }
-            pHeader->bmiHeader.biBitCount = 3;
-            pHeader->bmiHeader.biCompression = BI_RGB;
-            pHeader->bmiHeader.biSizeImage = bufRGB.GetSize();
-
-            dc.StretchDIBits(0, 0, pFrame->m_width, pFrame->m_height, 0, 0,
-                pFrame->m_width, pFrame->m_height, bufRGB.GetBuf(),
+            dc.StretchDIBits(0, 0, pFrame->m_width, pFrame->m_height, 0, pFrame->m_height,
+                pFrame->m_width, - pFrame->m_height, pFrame->m_data.GetBuf(),
                 pHeader, DIB_RGB_COLORS, SRCCOPY);
         }
         delete pFrame;

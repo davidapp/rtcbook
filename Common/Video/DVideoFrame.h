@@ -16,4 +16,11 @@ public:
     DPixelFmt m_fmt;
     DInt32 m_stride;
     DBuffer m_data;
+    DUInt64 m_cts;
+    DUInt64 m_dts;
+    DUInt64 m_pts;
+
+public:
+    static DVideoFrame* YUY2ToRAW(const DVideoFrame* buf);
+
 };
