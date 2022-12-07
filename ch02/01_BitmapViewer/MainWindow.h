@@ -202,7 +202,7 @@ public:
             DColor RGB = 0;
             DUInt8* pRGB = (DUInt8*)&RGB;
             CClientDC dc(m_hWnd);
-            DUInt32 x = 0, y = 0;
+            DUInt32 x = 0, y = height + 10;
             for (DUInt32 i = 0; i < width * height / 4; i++) {
                 DInt32 U = *pU - 128;
                 DInt32 V = *pV - 128;
