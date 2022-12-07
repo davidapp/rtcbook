@@ -1,0 +1,2 @@
+ffplay -f rawvideo -video_size 518x292 -pixel_format yuv420p I420_fromBMP.yuv
+ffplay -f rawvideo -video_size 518x292 -pixel_format yuv420p I420_518_292.yuv

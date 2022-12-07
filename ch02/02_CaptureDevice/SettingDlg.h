@@ -38,6 +38,8 @@ public:
     {
         CenterWindow(GetParent());
 
+
+
         m_devlist = GetDlgItem(IDC_COMBO1);
         m_info = GetDlgItem(IDC_EDIT1);
         m_capList = GetDlgItem(IDC_CAPLIST);

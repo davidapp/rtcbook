@@ -99,16 +99,15 @@ DBool DFile::OpenFileWrite(DCStr strPath, DOpenFileMode nFlag)
 DBool DFile::OpenFileRW(DCStr strPath, DOpenFileMode nFlag)
 {
 #if defined(BUILD_FOR_WINDOWS) && (BUILD_FOR_WINDOWS==1)
-    std::string strPathA(strPath);
     if (nFlag == DFILE_OPEN_ALWAYS)
     {
         //create if not exist
-        m_hFile = CreateFileW((LPCWSTR)DXP::s2ws(strPathA).c_str(), GENERIC_READ | GENERIC_WRITE, FILE_SHARE_READ, NULL, OPEN_ALWAYS, FILE_FLAG_SEQUENTIAL_SCAN, NULL);
+        m_hFile = CreateFileA(strPath, GENERIC_READ | GENERIC_WRITE, FILE_SHARE_READ, NULL, OPEN_ALWAYS, FILE_FLAG_SEQUENTIAL_SCAN, NULL);
     }
     else if (nFlag == DFILE_OPEN_EXISTING)
     {
         //failed if not exist
-        m_hFile = CreateFileW((LPCWSTR)DXP::s2ws(strPathA).c_str(), GENERIC_READ | GENERIC_WRITE, FILE_SHARE_READ, NULL, OPEN_EXISTING, FILE_FLAG_SEQUENTIAL_SCAN, NULL);
+        m_hFile = CreateFileA(strPath, GENERIC_READ | GENERIC_WRITE, FILE_SHARE_READ, NULL, OPEN_EXISTING, FILE_FLAG_SEQUENTIAL_SCAN, NULL);
     }
 #else
     if (nFlag == DFILE_OPEN_ALWAYS)
@@ -188,8 +187,14 @@ DBool DFile::Write(DBuffer buf, DInt32* result)
     if (m_hFile != INVALID_HANDLE_VALUE)
     {
         DUInt32 dwWrite = 0;
-        bOK = WriteFile(m_hFile, buf.GetBuf(), buf.GetSize(), (LPDWORD)&dwWrite, NULL) ? true : false;
-        bOK = (dwWrite == buf.GetSize());
+        DUInt32 size = buf.GetSize();
+        DUInt32 nWritten = 0;
+        while (nWritten < size) {
+            DUInt32 remain = size - nWritten;
+            bOK = WriteFile(m_hFile, buf.GetBuf() + nWritten, remain>4096?4096:remain, (LPDWORD)&dwWrite, NULL) ? true : false;
+            nWritten += dwWrite;
+        }
+        bOK = (nWritten == buf.GetSize());
     }
 #else
     if (m_hFile != -1)
