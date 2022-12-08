@@ -1,7 +1,7 @@
-#import "DMacCamera.h"
+#import "DIOSCamera.h"
 #import <AVFoundation/AVFoundation.h>
 
-DVoid DMacCamera::PrintAll()
+DVoid DIOSCamera::PrintAll()
 {
     NSArray<AVCaptureDevice *> *devices = [AVCaptureDevice devicesWithMediaType:AVMediaTypeVideo];
     DUInt32 nCount = (DUInt32)[devices count];

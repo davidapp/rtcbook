@@ -1,6 +1,6 @@
 #include "DTypes.h"
 
-class DMacCamera {
+class DIOSCamera {
 public:
     static DVoid PrintAll();
 };

@@ -21,6 +21,9 @@
       location = "container:"
       name = "Ch2">
       <FileRef
+         location = "group:ch02/02_CaptureDevice_ios/02_CaptureDevice_ios.xcodeproj">
+      </FileRef>
+      <FileRef
          location = "group:ch02/02_CaptureDevice_mac/02_CaptureDevice_mac.xcodeproj">
       </FileRef>
    </Group>

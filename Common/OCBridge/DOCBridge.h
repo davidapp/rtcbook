@@ -4,4 +4,4 @@ class DOCBridge {
 public:
 
 
-}
+};
