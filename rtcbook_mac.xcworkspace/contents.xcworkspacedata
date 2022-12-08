@@ -20,5 +20,8 @@
    <Group
       location = "container:"
       name = "Ch2">
+      <FileRef
+         location = "group:ch02/02_CaptureDevice_mac/02_CaptureDevice_mac.xcodeproj">
+      </FileRef>
    </Group>
 </Workspace>
