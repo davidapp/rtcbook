@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		2BF2FB93294184E300CF9AB3 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2BF2FB92294184E300CF9AB3 /* main.cpp */; };
-		2BF2FBA2294185F400CF9AB3 /* DOCBridge.mm in Sources */ = {isa = PBXBuildFile; fileRef = 2BF2FBA0294185F400CF9AB3 /* DOCBridge.mm */; };
 		2BF2FBA62941C4DD00CF9AB3 /* DMacCamera.mm in Sources */ = {isa = PBXBuildFile; fileRef = 2BF2FBA52941C4DD00CF9AB3 /* DMacCamera.mm */; };
 		2BF2FBA9294219C300CF9AB3 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2BF2FBA8294219C300CF9AB3 /* AVFoundation.framework */; };
 /* End PBXBuildFile section */
@@ -31,8 +30,6 @@
 		2BF2FB9C2941858F00CF9AB3 /* DConfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DConfig.h; path = ../../../Common/DConfig.h; sourceTree = "<group>"; };
 		2BF2FB9D2941858F00CF9AB3 /* DConfig_Mac.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DConfig_Mac.h; path = ../../../Common/DConfig_Mac.h; sourceTree = "<group>"; };
 		2BF2FB9E2941858F00CF9AB3 /* DTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DTypes.h; path = ../../../Common/DTypes.h; sourceTree = "<group>"; };
-		2BF2FBA0294185F400CF9AB3 /* DOCBridge.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = DOCBridge.mm; path = ../../../Common/OCBridge/DOCBridge.mm; sourceTree = "<group>"; };
-		2BF2FBA1294185F400CF9AB3 /* DOCBridge.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DOCBridge.h; path = ../../../Common/OCBridge/DOCBridge.h; sourceTree = "<group>"; };
 		2BF2FBA42941C4DD00CF9AB3 /* DMacCamera.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DMacCamera.h; path = ../../../Common/OCBridge/DMacCamera.h; sourceTree = "<group>"; };
 		2BF2FBA52941C4DD00CF9AB3 /* DMacCamera.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = DMacCamera.mm; path = ../../../Common/OCBridge/DMacCamera.mm; sourceTree = "<group>"; };
 		2BF2FBA8294219C300CF9AB3 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
@@ -79,9 +76,7 @@
 		2BF2FB992941855300CF9AB3 /* Common */ = {
 			isa = PBXGroup;
 			children = (
-				2BF2FB9A2941856400CF9AB3 /* Base */,
 				2BF2FB9F294185AE00CF9AB3 /* OCBridge */,
-				2BF2FB9B2941856A00CF9AB3 /* Video */,
 				2BF2FB9D2941858F00CF9AB3 /* DConfig_Mac.h */,
 				2BF2FB9C2941858F00CF9AB3 /* DConfig.h */,
 				2BF2FB9E2941858F00CF9AB3 /* DTypes.h */,
@@ -89,27 +84,11 @@
 			name = Common;
 			sourceTree = "<group>";
 		};
-		2BF2FB9A2941856400CF9AB3 /* Base */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			name = Base;
-			sourceTree = "<group>";
-		};
-		2BF2FB9B2941856A00CF9AB3 /* Video */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			name = Video;
-			sourceTree = "<group>";
-		};
 		2BF2FB9F294185AE00CF9AB3 /* OCBridge */ = {
 			isa = PBXGroup;
 			children = (
 				2BF2FBA42941C4DD00CF9AB3 /* DMacCamera.h */,
 				2BF2FBA52941C4DD00CF9AB3 /* DMacCamera.mm */,
-				2BF2FBA1294185F400CF9AB3 /* DOCBridge.h */,
-				2BF2FBA0294185F400CF9AB3 /* DOCBridge.mm */,
 			);
 			name = OCBridge;
 			sourceTree = "<group>";
@@ -181,7 +160,6 @@
 			files = (
 				2BF2FBA62941C4DD00CF9AB3 /* DMacCamera.mm in Sources */,
 				2BF2FB93294184E300CF9AB3 /* main.cpp in Sources */,
-				2BF2FBA2294185F400CF9AB3 /* DOCBridge.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
