@@ -91,8 +91,8 @@
 		2B39D37F293D788100D6FC8D /* 03_HelloRTC_mac */ = {
 			isa = PBXGroup;
 			children = (
-				2B39D388293D795700D6FC8D /* Test */,
 				2B39D387293D794E00D6FC8D /* Common */,
+				2B39D388293D795700D6FC8D /* Test */,
 				2B39D380293D788100D6FC8D /* main.cpp */,
 			);
 			path = 03_HelloRTC_mac;

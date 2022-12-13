@@ -1,0 +1,330 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 55;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		2BF2FB93294184E300CF9AB3 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2BF2FB92294184E300CF9AB3 /* main.cpp */; };
+		2BF2FBA62941C4DD00CF9AB3 /* DMacCamera.mm in Sources */ = {isa = PBXBuildFile; fileRef = 2BF2FBA52941C4DD00CF9AB3 /* DMacCamera.mm */; };
+		2BF2FBA9294219C300CF9AB3 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2BF2FBA8294219C300CF9AB3 /* AVFoundation.framework */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		2BF2FB8D294184E300CF9AB3 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = /usr/share/man/man1/;
+			dstSubfolderSpec = 0;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 1;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		2BF2FB8F294184E300CF9AB3 /* 02_CaptureDevice_mac */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = 02_CaptureDevice_mac; sourceTree = BUILT_PRODUCTS_DIR; };
+		2BF2FB92294184E300CF9AB3 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
+		2BF2FB9C2941858F00CF9AB3 /* DConfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DConfig.h; path = ../../../Common/DConfig.h; sourceTree = "<group>"; };
+		2BF2FB9D2941858F00CF9AB3 /* DConfig_Mac.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DConfig_Mac.h; path = ../../../Common/DConfig_Mac.h; sourceTree = "<group>"; };
+		2BF2FB9E2941858F00CF9AB3 /* DTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DTypes.h; path = ../../../Common/DTypes.h; sourceTree = "<group>"; };
+		2BF2FBA42941C4DD00CF9AB3 /* DMacCamera.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DMacCamera.h; path = ../../../Common/OCBridge/DMacCamera.h; sourceTree = "<group>"; };
+		2BF2FBA52941C4DD00CF9AB3 /* DMacCamera.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = DMacCamera.mm; path = ../../../Common/OCBridge/DMacCamera.mm; sourceTree = "<group>"; };
+		2BF2FBA8294219C300CF9AB3 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		2BF2FB8C294184E300CF9AB3 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2BF2FBA9294219C300CF9AB3 /* AVFoundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		2BF2FB86294184E300CF9AB3 = {
+			isa = PBXGroup;
+			children = (
+				2BF2FB91294184E300CF9AB3 /* 02_CaptureDevice_mac */,
+				2BF2FB90294184E300CF9AB3 /* Products */,
+				2BF2FBA7294219C200CF9AB3 /* Frameworks */,
+			);
+			sourceTree = "<group>";
+		};
+		2BF2FB90294184E300CF9AB3 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				2BF2FB8F294184E300CF9AB3 /* 02_CaptureDevice_mac */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		2BF2FB91294184E300CF9AB3 /* 02_CaptureDevice_mac */ = {
+			isa = PBXGroup;
+			children = (
+				2BF2FB992941855300CF9AB3 /* Common */,
+				2BF2FB92294184E300CF9AB3 /* main.cpp */,
+			);
+			path = 02_CaptureDevice_mac;
+			sourceTree = "<group>";
+		};
+		2BF2FB992941855300CF9AB3 /* Common */ = {
+			isa = PBXGroup;
+			children = (
+				2BF2FB9F294185AE00CF9AB3 /* OCBridge */,
+				2BF2FB9D2941858F00CF9AB3 /* DConfig_Mac.h */,
+				2BF2FB9C2941858F00CF9AB3 /* DConfig.h */,
+				2BF2FB9E2941858F00CF9AB3 /* DTypes.h */,
+			);
+			name = Common;
+			sourceTree = "<group>";
+		};
+		2BF2FB9F294185AE00CF9AB3 /* OCBridge */ = {
+			isa = PBXGroup;
+			children = (
+				2BF2FBA42941C4DD00CF9AB3 /* DMacCamera.h */,
+				2BF2FBA52941C4DD00CF9AB3 /* DMacCamera.mm */,
+			);
+			name = OCBridge;
+			sourceTree = "<group>";
+		};
+		2BF2FBA7294219C200CF9AB3 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				2BF2FBA8294219C300CF9AB3 /* AVFoundation.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		2BF2FB8E294184E300CF9AB3 /* 02_CaptureDevice_mac */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 2BF2FB96294184E300CF9AB3 /* Build configuration list for PBXNativeTarget "02_CaptureDevice_mac" */;
+			buildPhases = (
+				2BF2FB8B294184E300CF9AB3 /* Sources */,
+				2BF2FB8C294184E300CF9AB3 /* Frameworks */,
+				2BF2FB8D294184E300CF9AB3 /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = 02_CaptureDevice_mac;
+			productName = 02_CaptureDevice_mac;
+			productReference = 2BF2FB8F294184E300CF9AB3 /* 02_CaptureDevice_mac */;
+			productType = "com.apple.product-type.tool";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		2BF2FB87294184E300CF9AB3 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastUpgradeCheck = 1340;
+				TargetAttributes = {
+					2BF2FB8E294184E300CF9AB3 = {
+						CreatedOnToolsVersion = 13.4.1;
+					};
+				};
+			};
+			buildConfigurationList = 2BF2FB8A294184E300CF9AB3 /* Build configuration list for PBXProject "02_CaptureDevice_mac" */;
+			compatibilityVersion = "Xcode 13.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 2BF2FB86294184E300CF9AB3;
+			productRefGroup = 2BF2FB90294184E300CF9AB3 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				2BF2FB8E294184E300CF9AB3 /* 02_CaptureDevice_mac */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		2BF2FB8B294184E300CF9AB3 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2BF2FBA62941C4DD00CF9AB3 /* DMacCamera.mm in Sources */,
+				2BF2FB93294184E300CF9AB3 /* main.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		2BF2FB94294184E300CF9AB3 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 12.3;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		2BF2FB95294184E300CF9AB3 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 12.3;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		2BF2FB97294184E300CF9AB3 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = G4B7ZBVBTD;
+				ENABLE_HARDENED_RUNTIME = YES;
+				HEADER_SEARCH_PATHS = (
+					../../Test,
+					../../Common,
+				);
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		2BF2FB98294184E300CF9AB3 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = G4B7ZBVBTD;
+				ENABLE_HARDENED_RUNTIME = YES;
+				HEADER_SEARCH_PATHS = (
+					../../Test,
+					../../Common,
+				);
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		2BF2FB8A294184E300CF9AB3 /* Build configuration list for PBXProject "02_CaptureDevice_mac" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2BF2FB94294184E300CF9AB3 /* Debug */,
+				2BF2FB95294184E300CF9AB3 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		2BF2FB96294184E300CF9AB3 /* Build configuration list for PBXNativeTarget "02_CaptureDevice_mac" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2BF2FB97294184E300CF9AB3 /* Debug */,
+				2BF2FB98294184E300CF9AB3 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 2BF2FB87294184E300CF9AB3 /* Project object */;
+}
