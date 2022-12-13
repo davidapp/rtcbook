@@ -349,9 +349,9 @@ DVoid WinDS::FreeMediaType(AM_MEDIA_TYPE& mt)
     }
 }
 
-DUInt64 WinDS::GetMaxOfFrameArray(DUInt64* maxFps, DUInt32 size)
+DUInt64 WinDS::GetMaxOfFrameArray(DInt64* maxFps, DUInt32 size)
 {
-    DUInt64 maxFPS = maxFps[0];
+    DInt64 maxFPS = maxFps[0];
     for (DUInt32 i = 0; i < size; i++)
     {
         if (maxFPS > maxFps[i])

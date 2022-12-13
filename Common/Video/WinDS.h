@@ -39,7 +39,7 @@ public:
     static IPin* GetOutputPin(IBaseFilter* filter, REFGUID Category);
     static DBool PinMatchesCategory(IPin* pPin, REFGUID Category);
     static DVoid FreeMediaType(AM_MEDIA_TYPE& mt);
-    static DUInt64 GetMaxOfFrameArray(DUInt64* maxFps, DUInt32 size);
+    static DUInt64 GetMaxOfFrameArray(DInt64* maxFps, DUInt32 size);
 };
 
 
