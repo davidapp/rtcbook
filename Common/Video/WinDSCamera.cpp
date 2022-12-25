@@ -265,15 +265,15 @@ std::vector<DCameraCaps> WinDSCamera::GetDeviceCaps(IBaseFilter* pFilter)
             // 支持的帧率
             if (hrVC == S_OK)
             {
-                DUInt64* frameDurationList;
+                DInt64* frameDurationList;
                 DUInt64 max_fps;
-                DUInt32 listSize;
+                long listSize;
                 SIZE size;
                 size.cx = cap.m_width;
                 size.cy = cap.m_height;
 
                 // https://docs.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-iamvideocontrol-getframeratelist
-                hrVC = videoControlConfig->GetFrameRateList(outputCapturePin, tmp, size, (long*)&listSize, (LONGLONG**)&frameDurationList);
+                hrVC = videoControlConfig->GetFrameRateList(outputCapturePin, tmp, size, &listSize, &frameDurationList);
                 if (hrVC == S_OK && listSize > 0 && 0 != (max_fps = WinDS::GetMaxOfFrameArray(frameDurationList, listSize)))
                 {
                     cap.m_frame_rate = (DUInt32)(10000000 / max_fps);
