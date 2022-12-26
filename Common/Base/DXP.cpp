@@ -1,7 +1,11 @@
 #include "DXP.h"
 #if defined(BUILD_FOR_WINDOWS)
+#elif defined(BUILD_FOR_ANDROID)
+#include <android/log.h>
+#include <unistd.h> // for sleep and STDOUT_FILENO
 #else
 #include <sys/time.h>
+#include <unistd.h>
 #endif
 
 DCStr DXP::GetOSName()
@@ -23,6 +27,8 @@ DVoid DXP::Print(std::string str)
 {
 #if defined(BUILD_FOR_WINDOWS)
     ::WriteFile(GetStdHandle(STD_OUTPUT_HANDLE), str.c_str(), str.size(), NULL, NULL);
+#elif defined(BUILD_FOR_ANDROID)
+    __android_log_print(ANDROID_LOG_INFO, "JNI", "%s", str.c_str());
 #else
     write(STDOUT_FILENO, str.c_str(), str.size());
 #endif

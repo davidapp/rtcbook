@@ -1,0 +1,117 @@
+﻿//
+//  DConfig_Linux.h
+//
+//  Created by Dai Wei(bmw.dai@gmail.com) on 06/12/2017 for Dream.
+//  Copyright 2017. All rights reserved.
+//
+
+#pragma once
+
+//Platform
+//#define BUILD_FOR_ARM    0
+//#define BUILD_FOR_ARM64  0
+//#define BUILD_FOR_MIPS   0
+//#define BUILD_FOR_MIPS64 0
+//#define BUILD_FOR_X86    0
+#define BUILD_FOR_X64	   1
+
+#define TARGET_64BIT 1
+
+//Call Conventions
+#define DX86_STDCALL 
+#define DX86_CCALL 
+#define DCALL_NAKED 
+
+//Export
+#define DAPI
+
+//Attribute
+#ifndef D_NO_RETURN
+#define D_NO_RETURN __attribute__((noreturn))
+#endif
+
+#ifdef __has_attribute
+#   define D_HAS_ATTRIBUTE(x) __has_attribute(x)
+#else
+#   define D_HAS_ATTRIBUTE(x) 0
+#endif
+
+#ifndef D_UNUSED_ATTR
+#if D_HAS_ATTRIBUTE(unused)
+#define D_UNUSED_ATTR __attribute__((unused))
+#else
+#define D_UNUSED_ATTR
+#endif
+#endif
+
+//Linux Versions
+
+
+//File API
+#include <sys/types.h>	//some systems still require this
+#include <sys/stat.h>	
+#include <sys/termios.h>	//for winsize
+#if defined(MACOS) || !defined(TIOCGWINSZ)
+#include <sys/ioctl.h>
+#endif
+
+#include <fcntl.h>
+#include <unistd.h>	//for read and write
+#include <poll.h>	//for poll and ppoll
+#include <sys/epoll.h>	//for epoll API
+#include <sys/mman.h>	//for mmap API
+#include <sys/select.h> //for fd_set
+#include <sys/syscall.h>
+
+//Headers
+#include <stdio.h>		// for convenience
+#include <stdlib.h>		// for convenience
+#include <stddef.h>		// for offsetof
+#include <string.h>		// for convenience
+#include <unistd.h>		// for convenience
+#include <signal.h>		// for SIG_ERR
+
+
+#define _POSIX_C_SOURCE 200809L
+
+#if defined(SOLARIS)		// Solaris 10
+#define _XOPEN_SOURCE 600
+#else
+#define _XOPEN_SOURCE 700
+#endif
+
+#define	D_MAXLINE	4096	// max line length
+
+//Default file access permissions for new files.
+#define	FILE_MODE	(S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH)
+
+ //Default permissions for new directories.
+#define	DIR_MODE	(FILE_MODE | S_IXUSR | S_IXGRP | S_IXOTH)
+typedef	void	Sigfunc(int);	// for signal handlers
+
+//Thread
+#include <pthread.h>	//for pthread_t
+
+//stdarg
+#include <stdarg.h>
+typedef va_list DVAList;
+#define D_VA_Start va_start
+#define D_VA_Arg va_arg
+#define D_VA_End va_end
+
+//Line
+#define D_LINE '\n'
+#define D_LINES "\n"
+
+//File
+typedef int DFileHandle;
+#define D_INVALID_FILE -1
+
+//Path
+#define D_PATH_SLASH '/'
+#define DW_PATH_SLASH L'/'
+#define D_PATH_SLASHS "/"
+#define DW_PATH_SLASHS L"/"
+
+//Socket
+typedef int DSocket;

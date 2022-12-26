@@ -27,3 +27,13 @@
 #if defined(BUILD_FOR_MAC)
 #include "DConfig_Mac.h"
 #endif
+
+// Android
+#if defined(BUILD_FOR_ANDROID)
+#include "DConfig_Android.h"
+#endif
+
+// Linux
+#if defined(BUILD_FOR_LINUX)
+#include "DConfig_Linux.h"
+#endif
