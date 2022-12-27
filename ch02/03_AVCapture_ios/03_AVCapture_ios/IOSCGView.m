@@ -1,18 +1,18 @@
-#import "MacCGView.h"
+#import "IOSCGView.h"
 
-@interface MacCGView()
+@interface IOSCGView()
 
 @property(strong)CIImage* pFrame;
 
 @end
 
-@implementation MacCGView
+@implementation IOSCGView
 
-- (void)drawRect:(NSRect)dirtyRect
+- (void)drawRect:(CGRect)dirtyRect
 {
     [super drawRect:dirtyRect];
     
-    CGContextRef context = [[NSGraphicsContext currentContext] CGContext];
+    CGContextRef context = UIGraphicsGetCurrentContext();
     if (_pFrame.CGImage) {
         CGContextDrawImage(context, self.bounds, _pFrame.CGImage);
         CGImageRelease(_pFrame.CGImage);
@@ -22,7 +22,7 @@
 - (void)drawFrame:(CIImage*)pFrame
 {
     _pFrame = pFrame;
-    [self setNeedsDisplay:YES];
+    [self setNeedsDisplay];
 }
 
 @end
