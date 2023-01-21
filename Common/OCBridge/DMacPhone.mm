@@ -2,6 +2,18 @@
 #import <CoreAudio/CoreAudio.h>
 #import <CoreFoundation/CoreFoundation.h>
 
+BOOL DeviceHasBuffersInScope(AudioObjectID deviceID, AudioObjectPropertyScope scope)
+{
+    AudioObjectPropertyAddress propertyAddress = {kAudioDevicePropertyStreamConfiguration, scope, kAudioObjectPropertyElementWildcard};
+    UInt32 dataSize = 0;
+    AudioObjectGetPropertyDataSize(deviceID, &propertyAddress, 0, NULL, &dataSize);
+    AudioBufferList *bufferList = (AudioBufferList *)malloc(dataSize);
+    AudioObjectGetPropertyData(deviceID, &propertyAddress, 0, NULL, &dataSize, bufferList);
+    BOOL supportsScope = bufferList->mNumberBuffers > 0;
+    free(bufferList);
+    return supportsScope;
+}
+
 DVoid DMacPhone::PrintDefault()
 {
     AudioDeviceID defaultDeviceID = GetDefaultDeviceID();
@@ -14,7 +26,10 @@ DVoid DMacPhone::PrintAll()
 {
     std::vector<DUInt32> ids = DMacPhone::GetAllDeviceIDs();
     for (UInt32 i = 0;i < ids.size();i++) {
-        printf("devicesID[%d] = %d, %s[%s]\n", i, ids[i], GetDeviceName(ids[i]).c_str(),GetTypeString(GetDeviceType(ids[i])).c_str());
+        printf("devicesID[%d] = %d, %s[%s:%d][%s]\n", i, ids[i], GetDeviceName(ids[i]).c_str(),
+            GetTypeString(GetDeviceType(ids[i])).c_str(),
+            GetDeviceID(GetDeviceName(ids[i])),
+            DeviceHasBuffersInScope(ids[i], kAudioObjectPropertyScopeInput)?"input":"output");
     }
 }
 
@@ -72,6 +87,24 @@ std::string DMacPhone::GetDeviceName(DUInt32 deviceID)
     return device_name;
 }
 
+DUInt32 DMacPhone::GetDeviceID(std::string deviceName)
+{
+    AudioDeviceID deviceID = kAudioDeviceUnknown;
+    CFStringRef inUID = CFStringCreateWithCString(kCFAllocatorDefault, deviceName.c_str(), kCFStringEncodingUTF8);
+
+    AudioValueTranslation translation;
+    translation.mInputData = &inUID;
+    translation.mInputDataSize = sizeof(CFStringRef);
+    translation.mOutputData = &deviceID;
+    translation.mOutputDataSize = sizeof(AudioDeviceID);
+    UInt32 size = sizeof(translation);
+    AudioObjectPropertyAddress property_address = {kAudioHardwarePropertyDeviceForUID,  kAudioObjectPropertyScopeGlobal, kAudioObjectPropertyElementMain};
+    AudioObjectGetPropertyData(kAudioObjectSystemObject, &property_address, 0, nullptr, &size, &translation);
+    
+    CFRelease(inUID);
+    return deviceID;
+}
+
 DUInt32 DMacPhone::GetDeviceType(DUInt32 deviceID)
 {
     DUInt32 transportType = kAudioDeviceTransportTypeUnknown;
@@ -104,3 +137,5 @@ std::string DMacPhone::GetTypeString(DUInt32 deviceID)
     }
     return "Unknown";
 }
+
+
