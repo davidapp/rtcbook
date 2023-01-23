@@ -37,10 +37,6 @@ Release
 *.out
 *.app
 *.xcuserstate
-ch01/01_BufferViewer_mac/01_BufferViewer_mac.xcodeproj/xcuserdata/bytedance.xcuserdatad/xcschemes/xcschememanagement.plist
-rtcbook_mac.xcworkspace/xcuserdata/bytedance.xcuserdatad
-ch01/02_TextViewer_mac/02_TextViewer_mac.xcodeproj/xcuserdata/bytedance.xcuserdatad
-ch01/02_TextViewer_mac/02_TextViewer_mac.xcodeproj/xcuserdata/bytedance.xcuserdatad/xcschemes/xcschememanagement.plist
-/Data/Image/*.yuv
+*.yuv
 *.xcuserdatad
-ch02/02_CaptureDevice_android/.idea
+.idea
