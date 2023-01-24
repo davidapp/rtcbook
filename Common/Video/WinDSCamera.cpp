@@ -240,13 +240,9 @@ std::vector<DCameraCaps> WinDSCamera::GetDeviceCaps(IBaseFilter* pFilter)
             {
                 mformat = DPixelFmt::RGB24;
             }
-            else if (pmt->subtype == MEDIASUBTYPE_I420)
+            else if (pmt->subtype == MEDIASUBTYPE_I420 || pmt->subtype == MEDIASUBTYPE_IYUV)
             {
                 mformat = DPixelFmt::I420;
-            }
-            else if (pmt->subtype == MEDIASUBTYPE_IYUV)
-            {
-                mformat = DPixelFmt::IYUV;
             }
             else if (pmt->subtype == MEDIASUBTYPE_YUY2)
             {

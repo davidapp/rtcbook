@@ -23,7 +23,6 @@ DInt32 DVideoFrame::DefaultStride(DInt32 width, DPixelFmt fmt)
     switch (fmt)
     {
     case DPixelFmt::I420:
-    case DPixelFmt::IYUV:
         return width;
     case DPixelFmt::RGB565:
     case DPixelFmt::YUY2:

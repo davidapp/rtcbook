@@ -9,17 +9,17 @@
 
 enum class DPixelFmt {
     Unknown,
-    RGB24,
-    ARGB,
-    BGRA,
-    RGB565,
-    I420, // [Y,U,V]
-    IYUV, 
-    YUY2, // [Y0,U0,Y1,V0]
-    MJPG, 
-    NV12, // [Y,U0,V0,U1,V1]
-    NV21, // [Y,V0,U0,V1,U1]
-    RAW   // [(R,G,B),(R,G,B)...]
+    RGB24,// [(B,G,R),(B,G,R)...]
+    RAW,   // [(B,G,R),(B,G,R)...] 第一行是最后一行
+    ARGB, // [(A,R,G,B),...]
+    BGRA, // [(B,G,R,A),...]
+    RGB565, // 16 bit
+    I420, // [Y,U,V] or called IYUV
+    YV12, // [Y,V,U] 
+    NV12, // [Y,U0,V0,U1,V1...]
+    NV21, // [Y,V0,U0,V1,U1...]
+    YUY2, // [Y0,U0,Y1,V0...] YUV422
+    MJPG  // 压缩格式
 };
 
 struct tagDVideoFormat {

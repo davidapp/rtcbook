@@ -35,7 +35,7 @@ DBool WinDSVideoCapture::Init(DUInt32 nIndex, DVoid* pCallback, DVoid* pUserData
     VIDEO_STREAM_CONFIG_CAPS caps;
     m_capture_output_pin->QueryInterface(IID_IAMStreamConfig, (void**)&streamConfig);
 
-    // Select RGB24 with 640*480 mode
+    // Select RGB24 or YUY2 with 640*480 mode
     std::vector<DCameraCaps> config = WinDSCamera::GetDeviceCaps(m_capture_filter);
     DInt32 selectIndex = -1;
     DUInt32 configsize = config.size();
