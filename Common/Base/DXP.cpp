@@ -13,7 +13,7 @@ DCStr DXP::GetOSName()
 #if defined(BUILD_FOR_WINDOWS)
     return "Windows";
 #elif defined(BUILD_FOR_MAC)
-    return "MacOS";
+    return "Mac";
 #elif defined(BUILD_FOR_IOS)
     return "iOS";
 #elif defined(BUILD_FOR_ANDROID)
