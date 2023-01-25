@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2BD1644F29813DEA00CEADAD /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2BD1644E29813DEA00CEADAD /* CoreMedia.framework */; };
 		2BF2FB93294184E300CF9AB3 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2BF2FB92294184E300CF9AB3 /* main.cpp */; };
 		2BF2FBA62941C4DD00CF9AB3 /* DMacCamera.mm in Sources */ = {isa = PBXBuildFile; fileRef = 2BF2FBA52941C4DD00CF9AB3 /* DMacCamera.mm */; };
 		2BF2FBA9294219C300CF9AB3 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2BF2FBA8294219C300CF9AB3 /* AVFoundation.framework */; };
@@ -25,6 +26,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		2BD1644E29813DEA00CEADAD /* CoreMedia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMedia.framework; path = System/Library/Frameworks/CoreMedia.framework; sourceTree = SDKROOT; };
 		2BF2FB8F294184E300CF9AB3 /* 02_CaptureDevice_mac */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = 02_CaptureDevice_mac; sourceTree = BUILT_PRODUCTS_DIR; };
 		2BF2FB92294184E300CF9AB3 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		2BF2FB9C2941858F00CF9AB3 /* DConfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DConfig.h; path = ../../../Common/DConfig.h; sourceTree = "<group>"; };
@@ -40,6 +42,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2BD1644F29813DEA00CEADAD /* CoreMedia.framework in Frameworks */,
 				2BF2FBA9294219C300CF9AB3 /* AVFoundation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -96,6 +99,7 @@
 		2BF2FBA7294219C200CF9AB3 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				2BD1644E29813DEA00CEADAD /* CoreMedia.framework */,
 				2BF2FBA8294219C300CF9AB3 /* AVFoundation.framework */,
 			);
 			name = Frameworks;
