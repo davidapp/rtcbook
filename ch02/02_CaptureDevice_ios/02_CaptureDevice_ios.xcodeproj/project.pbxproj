@@ -7,7 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		2BF2FBB829421B1700CF9AB3 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 2BF2FBB729421B1700CF9AB3 /* AppDelegate.m */; };
+		2BD1645129813F6800CEADAD /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2BD1645029813F6800CEADAD /* CoreMedia.framework */; };
+		2BF2FBB829421B1700CF9AB3 /* AppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 2BF2FBB729421B1700CF9AB3 /* AppDelegate.mm */; };
 		2BF2FBBB29421B1700CF9AB3 /* SceneDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 2BF2FBBA29421B1700CF9AB3 /* SceneDelegate.m */; };
 		2BF2FBBE29421B1700CF9AB3 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2BF2FBBD29421B1700CF9AB3 /* ViewController.m */; };
 		2BF2FBC129421B1700CF9AB3 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2BF2FBBF29421B1700CF9AB3 /* Main.storyboard */; };
@@ -16,13 +17,13 @@
 		2BF2FBC929421B1A00CF9AB3 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 2BF2FBC829421B1A00CF9AB3 /* main.m */; };
 		2BF2FBD329421BB000CF9AB3 /* DIOSCamera.mm in Sources */ = {isa = PBXBuildFile; fileRef = 2BF2FBD129421BB000CF9AB3 /* DIOSCamera.mm */; };
 		2BF2FBD629421C5F00CF9AB3 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2BF2FBD529421C5F00CF9AB3 /* AVFoundation.framework */; };
-		2BF2FBD929422B3900CF9AB3 /* DIOSWrapper.mm in Sources */ = {isa = PBXBuildFile; fileRef = 2BF2FBD729422B3900CF9AB3 /* DIOSWrapper.mm */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		2BD1645029813F6800CEADAD /* CoreMedia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMedia.framework; path = System/Library/Frameworks/CoreMedia.framework; sourceTree = SDKROOT; };
 		2BF2FBB329421B1700CF9AB3 /* 02_CaptureDevice_ios.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = 02_CaptureDevice_ios.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2BF2FBB629421B1700CF9AB3 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
-		2BF2FBB729421B1700CF9AB3 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		2BF2FBB729421B1700CF9AB3 /* AppDelegate.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = AppDelegate.mm; sourceTree = "<group>"; };
 		2BF2FBB929421B1700CF9AB3 /* SceneDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SceneDelegate.h; sourceTree = "<group>"; };
 		2BF2FBBA29421B1700CF9AB3 /* SceneDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SceneDelegate.m; sourceTree = "<group>"; };
 		2BF2FBBC29421B1700CF9AB3 /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
@@ -35,8 +36,6 @@
 		2BF2FBD129421BB000CF9AB3 /* DIOSCamera.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = DIOSCamera.mm; path = ../../../Common/OCBridge/DIOSCamera.mm; sourceTree = "<group>"; };
 		2BF2FBD229421BB000CF9AB3 /* DIOSCamera.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DIOSCamera.h; path = ../../../Common/OCBridge/DIOSCamera.h; sourceTree = "<group>"; };
 		2BF2FBD529421C5F00CF9AB3 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
-		2BF2FBD729422B3900CF9AB3 /* DIOSWrapper.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = DIOSWrapper.mm; path = ../../../Common/OCBridge/DIOSWrapper.mm; sourceTree = "<group>"; };
-		2BF2FBD829422B3900CF9AB3 /* DIOSWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DIOSWrapper.h; path = ../../../Common/OCBridge/DIOSWrapper.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -44,6 +43,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2BD1645129813F6800CEADAD /* CoreMedia.framework in Frameworks */,
 				2BF2FBD629421C5F00CF9AB3 /* AVFoundation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -73,7 +73,7 @@
 			children = (
 				2BF2FBCF29421B4800CF9AB3 /* Common */,
 				2BF2FBB629421B1700CF9AB3 /* AppDelegate.h */,
-				2BF2FBB729421B1700CF9AB3 /* AppDelegate.m */,
+				2BF2FBB729421B1700CF9AB3 /* AppDelegate.mm */,
 				2BF2FBB929421B1700CF9AB3 /* SceneDelegate.h */,
 				2BF2FBBA29421B1700CF9AB3 /* SceneDelegate.m */,
 				2BF2FBBC29421B1700CF9AB3 /* ViewController.h */,
@@ -98,8 +98,6 @@
 		2BF2FBD029421B4F00CF9AB3 /* OCBridge */ = {
 			isa = PBXGroup;
 			children = (
-				2BF2FBD829422B3900CF9AB3 /* DIOSWrapper.h */,
-				2BF2FBD729422B3900CF9AB3 /* DIOSWrapper.mm */,
 				2BF2FBD229421BB000CF9AB3 /* DIOSCamera.h */,
 				2BF2FBD129421BB000CF9AB3 /* DIOSCamera.mm */,
 			);
@@ -109,6 +107,7 @@
 		2BF2FBD429421C5F00CF9AB3 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				2BD1645029813F6800CEADAD /* CoreMedia.framework */,
 				2BF2FBD529421C5F00CF9AB3 /* AVFoundation.framework */,
 			);
 			name = Frameworks;
@@ -185,10 +184,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				2BF2FBBE29421B1700CF9AB3 /* ViewController.m in Sources */,
-				2BF2FBB829421B1700CF9AB3 /* AppDelegate.m in Sources */,
+				2BF2FBB829421B1700CF9AB3 /* AppDelegate.mm in Sources */,
 				2BF2FBC929421B1A00CF9AB3 /* main.m in Sources */,
 				2BF2FBD329421BB000CF9AB3 /* DIOSCamera.mm in Sources */,
-				2BF2FBD929422B3900CF9AB3 /* DIOSWrapper.mm in Sources */,
 				2BF2FBBB29421B1700CF9AB3 /* SceneDelegate.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

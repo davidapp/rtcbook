@@ -6,7 +6,7 @@
 //
 
 #import "AppDelegate.h"
-#import "OCBridge/DIOSWrapper.h"
+#import "OCBridge/DIOSCamera.h"
 
 @interface AppDelegate ()
 
@@ -16,7 +16,7 @@
 
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
-    [DIOSWrapper printAllVideoDevice];
+    DIOSCamera::PrintAll();
     return YES;
 }
 
