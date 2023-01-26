@@ -12,6 +12,8 @@
 #include "File/DBmpFile.h"
 #include "Base/DFile.h"
 #include "Video/DYUV.h"
+#include "Base/DTimer.h"
+
 
 DVoid* OnFrame(DVoid* pVFrame, DVoid* pFrameData, DVoid* pUserData)
 {
@@ -70,6 +72,7 @@ public:
         if (!m_vcap.Init(0, (DVoid*)OnFrame, m_hWnd)) {
             MessageBox(L"没有输出 640*480 的 RGB24 或 YUY2 格式的选项");
         }
+        DTimer::Init();
         return 0;
     }
 
@@ -90,6 +93,7 @@ public:
 
     LRESULT OnCameraStart(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL& bHandled)
     {
+        DTimer::Start(0);
         m_vcap.Start();
         return 0;
     }

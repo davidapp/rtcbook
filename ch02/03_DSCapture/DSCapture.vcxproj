@@ -147,6 +147,7 @@
     <ClInclude Include="..\..\Common\Base\DAtomic.h" />
     <ClInclude Include="..\..\Common\Base\DBuffer.h" />
     <ClInclude Include="..\..\Common\Base\DFile.h" />
+    <ClInclude Include="..\..\Common\Base\DTimer.h" />
     <ClInclude Include="..\..\Common\Base\DUTF8.h" />
     <ClInclude Include="..\..\Common\Base\DXP.h" />
     <ClInclude Include="..\..\Common\DConfig.h" />
@@ -156,7 +157,6 @@
     <ClInclude Include="..\..\Common\DConfig_Win.h" />
     <ClInclude Include="..\..\Common\DTypes.h" />
     <ClInclude Include="..\..\Common\File\DBmpFile.h" />
-    <ClInclude Include="..\..\Common\Video\DVideoCapture.h" />
     <ClInclude Include="..\..\Common\Video\DVideoFrame.h" />
     <ClInclude Include="..\..\Common\Video\DYUV.h" />
     <ClInclude Include="..\..\Common\Video\VideoDefines.h" />
@@ -174,10 +174,10 @@
   <ItemGroup>
     <ClCompile Include="..\..\Common\Base\DBuffer.cpp" />
     <ClCompile Include="..\..\Common\Base\DFile.cpp" />
+    <ClCompile Include="..\..\Common\Base\DTimer.cpp" />
     <ClCompile Include="..\..\Common\Base\DUTF8.cpp" />
     <ClCompile Include="..\..\Common\Base\DXP.cpp" />
     <ClCompile Include="..\..\Common\File\DBmpFile.cpp" />
-    <ClCompile Include="..\..\Common\Video\DVideoCapture.cpp" />
     <ClCompile Include="..\..\Common\Video\DVideoFrame.cpp" />
     <ClCompile Include="..\..\Common\Video\DYUV.cpp" />
     <ClCompile Include="..\..\Common\Video\WinDS.cpp" />

@@ -1,17 +1,17 @@
-#include <iostream>
+ï»¿#include <iostream>
 #include <chrono>
 #include <ctime>
 using namespace std::chrono;
 
 int main()
 {
-    // epoch ÊÇÊ²Ã´Ê±ºò
+    // epoch æ˜¯ä»€ä¹ˆæ—¶å€™
     std::chrono::time_point<std::chrono::system_clock> epoch;
     std::time_t epoch_time = std::chrono::system_clock::to_time_t(epoch);
     std::cout << "epoch: " << std::ctime(&epoch_time);
     // epoch: Thu Jan  1 08:00:00 1970
 
-    // µ±Ç°µÄÊ±¼ä´Á
+    // å½“å‰çš„æ—¶é—´æˆ³
     const time_point<system_clock> now = system_clock::now();
     std::time_t now_time = std::chrono::system_clock::to_time_t(now);
     std::cout << "now: " << std::ctime(&now_time);
@@ -20,25 +20,25 @@ int main()
     std::cout << "now ts: " << now_timestamp << std::endl;
     // now ts: 16653064020116445
 
-    // µ±Ç°Ê±¼ä´ÁµÄÆ«ÒÆ
-    std::chrono::milliseconds ms{ 3 }; // 3 ºÁÃë
-    std::chrono::microseconds us = 2 * ms; // 6000 Î¢Ãë
-    std::chrono::duration<double, std::ratio<1, 30>> hz(3.5); // Ê±¼ä¼ä¸ôÖÜÆÚÎª 1/30 Ãë
+    // å½“å‰æ—¶é—´æˆ³çš„åç§»
+    std::chrono::milliseconds ms{ 3 }; // 3 æ¯«ç§’
+    std::chrono::microseconds us = 2 * ms; // 6000 å¾®ç§’
+    std::chrono::duration<double, std::ratio<1, 30>> hz(3.5); // æ—¶é—´é—´éš”å‘¨æœŸä¸º 1/30 ç§’
 
     std::cout << "3 ms duration has " << ms.count() << " ticks\n"
         << "6000 us duration has " << us.count() << " ticks\n"
         << "3.5 hz duration has " << hz.count() << " ticks\n";
 
     //
-    // Linux ÉÏµÄÊ±¼ä´Á
+    // Linux ä¸Šçš„æ—¶é—´æˆ³
     // clock() : ms
     // gettimeofday(time_val*, NULL) : us
     // 
-    // C++ 11 Ìá¹©µÄÊ±¼ä
+    // C++ 11 æä¾›çš„æ—¶é—´
     // system_clock::now() : ns
     // steady_clock::now() : ns
 
-    // gettimeofdayĞÔÄÜ×î¼Ñ£¬µ«ÊÇ3ÖÖ·½Ê½ĞÔÄÜ²î¾à¶¼²»ËãºÜ´ó¡£
-    // gettimeofday·µ»ØÖµÓëstd::chrono::system_clock::now()Ò»ÖÂ£¬¿ÉÒÔÍêÈ«Ìæ´úgettimeofday¡£
-    // ÓÉÓÚwindows²»Ö§³Ögettimeofdayº¯Êı£¬ÍÆ¼ö»ñÈ¡Ê±¼ä´ÁÊ¹ÓÃstd::chrono::system_clock::now()·½Ê½¡£
+    // gettimeofdayæ€§èƒ½æœ€ä½³ï¼Œä½†æ˜¯3ç§æ–¹å¼æ€§èƒ½å·®è·éƒ½ä¸ç®—å¾ˆå¤§ã€‚
+    // gettimeofdayè¿”å›å€¼ä¸std::chrono::system_clock::now()ä¸€è‡´ï¼Œå¯ä»¥å®Œå…¨æ›¿ä»£gettimeofdayã€‚
+    // ç”±äºwindowsä¸æ”¯æŒgettimeofdayå‡½æ•°ï¼Œæ¨èè·å–æ—¶é—´æˆ³ä½¿ç”¨std::chrono::system_clock::now()æ–¹å¼ã€‚
 }
