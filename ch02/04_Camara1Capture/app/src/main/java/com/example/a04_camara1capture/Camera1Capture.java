@@ -38,10 +38,10 @@ public class Camera1Capture {
         camera.setPreviewCallback(new Camera.PreviewCallback() {
             @Override
             public void onPreviewFrame(byte[] data, Camera camera) {
-                JavaTimer.Stop(0);
-                JavaTimer.Print(0);
                 cameraThreadHandler.post(() -> {
                     // size = width * height * 3 / 2;
+                    JavaTimer.Stop(0);
+                    JavaTimer.Print(0);
                     Log.i("camera", "a frame receiverd");
                 });
             }

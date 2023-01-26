@@ -18,6 +18,7 @@
 		2B026642295A8C5E0026F842 /* IOSOCCamera.mm in Sources */ = {isa = PBXBuildFile; fileRef = 2B02663F295A8C5E0026F842 /* IOSOCCamera.mm */; };
 		2B026645295A90010026F842 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2B026644295A90010026F842 /* AVFoundation.framework */; };
 		2B026647295A90080026F842 /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2B026646295A90080026F842 /* CoreMedia.framework */; };
+		2BB02B3B298216CF000133B4 /* OCTimer.m in Sources */ = {isa = PBXBuildFile; fileRef = 2BB02B39298216CF000133B4 /* OCTimer.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -39,6 +40,8 @@
 		2B026640295A8C5E0026F842 /* IOSCGView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IOSCGView.h; sourceTree = "<group>"; };
 		2B026644295A90010026F842 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		2B026646295A90080026F842 /* CoreMedia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMedia.framework; path = System/Library/Frameworks/CoreMedia.framework; sourceTree = SDKROOT; };
+		2BB02B39298216CF000133B4 /* OCTimer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OCTimer.m; sourceTree = "<group>"; };
+		2BB02B3A298216CF000133B4 /* OCTimer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OCTimer.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -74,6 +77,8 @@
 		2B026623295A8B5B0026F842 /* 04_AVCapture_ios */ = {
 			isa = PBXGroup;
 			children = (
+				2BB02B3A298216CF000133B4 /* OCTimer.h */,
+				2BB02B39298216CF000133B4 /* OCTimer.m */,
 				2B026640295A8C5E0026F842 /* IOSCGView.h */,
 				2B02663E295A8C5E0026F842 /* IOSCGView.m */,
 				2B02663D295A8C5E0026F842 /* IOSOCCamera.h */,
@@ -178,6 +183,7 @@
 				2B026637295A8B5D0026F842 /* main.m in Sources */,
 				2B026641295A8C5E0026F842 /* IOSCGView.m in Sources */,
 				2B026629295A8B5B0026F842 /* SceneDelegate.m in Sources */,
+				2BB02B3B298216CF000133B4 /* OCTimer.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

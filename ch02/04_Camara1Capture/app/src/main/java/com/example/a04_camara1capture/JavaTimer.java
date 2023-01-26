@@ -9,17 +9,18 @@ public class JavaTimer {
         time_record[index] = System.nanoTime();
     }
 
-    public static long Stop(int index) {
+    public static void Stop(int index) {
+        if (time_record[index] == 0) return;
         long nowTime = System.nanoTime();
-        long lastTime = time_record[index];
-        long durationInMs = TimeUnit.NANOSECONDS.toMillis((nowTime - lastTime));
-        time_record[index] = durationInMs;
-        return durationInMs;
+        long durationInUs = TimeUnit.NANOSECONDS.toMicros((nowTime - time_record[index]));
+        time_record[index] = durationInUs;
     }
 
     public static void Print(int index) {
+        if (time_record[index] == 0) return;
         String logStr = String.format("slot[%d] = %d us", index, time_record[index]);
         Log.i("JavaTimer", logStr);
+        time_record[index] = 0;
     }
 
     public static long [] time_record = new long[100];

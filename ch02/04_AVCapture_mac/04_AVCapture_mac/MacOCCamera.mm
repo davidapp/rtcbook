@@ -1,6 +1,5 @@
-#import "IOSOCCamera.h"
-#import <UIKit/UIKit.h>
-#import <atomic>
+#import "MacOCCamera.h"
+#include <atomic>
 #import "OCTimer.h"
 
 #define DEFAULT_CAPTURE_WIDTH 1280
@@ -13,7 +12,7 @@
 #define MAC_CAPTURE_START 2
 #define MAC_CAPTURE_FRAME 3
 
-@implementation IOSOCCamera {
+@implementation MacOCCamera {
     //Mac采集的过程，主要靠AVCaptureSession
     //canAddInput AddInput inputs AVCaptureDeviceInput
     //canAddOutput addOutput outputs AVCaptureVideoDataOutput
@@ -44,13 +43,6 @@
     AVCaptureDevice* current_device_;
     AVCaptureConnection* capture_connection_;
     std::atomic<BOOL> capture_started_;
-}
-
-- (AVCaptureVideoOrientation) getVideoOrientation:(UIInterfaceOrientation)ui
-{
-    if (ui != UIInterfaceOrientationUnknown)
-        return (AVCaptureVideoOrientation)ui;
-    return AVCaptureVideoOrientationPortrait;
 }
 
 //返回所有的视频采集设备
@@ -429,7 +421,7 @@
     [capture_session_ beginConfiguration];
     
     capture_connection_ = [current_output connectionWithMediaType:AVMediaTypeVideo];
-
+   
     [capture_session_ commitConfiguration];
     
     [capture_session_ startRunning];
@@ -542,12 +534,6 @@
         return;
     }
     
-    // add rotate
-    NSLog(@"%d\n", (int)[UIApplication sharedApplication].statusBarOrientation);
-    if ([capture_connection_ isVideoOrientationSupported] == YES) {
-        capture_connection_.videoOrientation = [self getVideoOrientation: [UIApplication sharedApplication].statusBarOrientation];
-    }
-    
     //从 CMSampleBufferRef 拿到一个 CVImageBufferRef
     CVImageBufferRef video_frame = CMSampleBufferGetImageBuffer(sample_buffer);
     
@@ -567,10 +553,7 @@
     
     NSLog(@"%zu*%zu, type:%d, pBuf:%p size:%zu", width, height, cvtype, pBuf, datasize);
 
-    UIImage *image = [UIImage imageWithCGImage:quartzImage];
-    //UIImage *image = [UIImage imageWithCGImage:quartzImage scale:1.0 orientation: UIImageOrientationDown];
-    //NSLog(@"%d\n", (int)image.imageOrientation);
-
+    CIImage *image = [CIImage imageWithCGImage:quartzImage];
     dispatch_async(dispatch_get_main_queue(), ^{
         [[NSNotificationCenter defaultCenter] postNotificationName:@"onFrame" object:image userInfo: nil];
     });

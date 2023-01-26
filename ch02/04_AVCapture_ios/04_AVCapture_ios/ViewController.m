@@ -8,6 +8,7 @@
 #import "ViewController.h"
 #import "IOSOCCamera.h"
 #import "IOSCGView.h"
+#import "OCTimer.h"
 
 @interface ViewController ()
 
@@ -38,6 +39,7 @@
 
 -(IBAction)pressStart:(id)sender
 {
+    [OCTimer Start:0];
     [_camera start];
 }
 

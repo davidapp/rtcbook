@@ -1,0 +1,387 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 55;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		2B7C722D2959B5F5005F88FE /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 2B7C722C2959B5F5005F88FE /* AppDelegate.m */; };
+		2B7C72302959B5F5005F88FE /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2B7C722F2959B5F5005F88FE /* ViewController.m */; };
+		2B7C72322959B5F7005F88FE /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2B7C72312959B5F7005F88FE /* Assets.xcassets */; };
+		2B7C72352959B5F7005F88FE /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2B7C72332959B5F7005F88FE /* Main.storyboard */; };
+		2B7C72372959B5F7005F88FE /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 2B7C72362959B5F7005F88FE /* main.m */; };
+		2B7C72402959B6EB005F88FE /* MacOCCamera.mm in Sources */ = {isa = PBXBuildFile; fileRef = 2B7C723F2959B6EB005F88FE /* MacOCCamera.mm */; };
+		2B7C72432959B7B1005F88FE /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2B7C72422959B7B1005F88FE /* AVFoundation.framework */; };
+		2B7C72452959B7C7005F88FE /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2B7C72442959B7C7005F88FE /* CoreMedia.framework */; };
+		2B9CF7102959FB320007232D /* MacCGView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2B9CF70F2959FB320007232D /* MacCGView.m */; };
+		2BB02B3E29821EAF000133B4 /* OCTimer.m in Sources */ = {isa = PBXBuildFile; fileRef = 2BB02B3C29821EAF000133B4 /* OCTimer.m */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		2B7C72282959B5F4005F88FE /* 04_AVCapture_mac.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = 04_AVCapture_mac.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		2B7C722B2959B5F5005F88FE /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
+		2B7C722C2959B5F5005F88FE /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		2B7C722E2959B5F5005F88FE /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
+		2B7C722F2959B5F5005F88FE /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
+		2B7C72312959B5F7005F88FE /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		2B7C72342959B5F7005F88FE /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		2B7C72362959B5F7005F88FE /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		2B7C72382959B5F7005F88FE /* _4_AVCapture_mac.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = _4_AVCapture_mac.entitlements; sourceTree = "<group>"; };
+		2B7C723E2959B6EB005F88FE /* MacOCCamera.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MacOCCamera.h; sourceTree = "<group>"; };
+		2B7C723F2959B6EB005F88FE /* MacOCCamera.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = MacOCCamera.mm; sourceTree = "<group>"; };
+		2B7C72422959B7B1005F88FE /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
+		2B7C72442959B7C7005F88FE /* CoreMedia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMedia.framework; path = System/Library/Frameworks/CoreMedia.framework; sourceTree = SDKROOT; };
+		2B7C72462959D30A005F88FE /* -4-AVCapture-mac-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = "-4-AVCapture-mac-Info.plist"; sourceTree = SOURCE_ROOT; };
+		2B9CF70E2959FB320007232D /* MacCGView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MacCGView.h; sourceTree = "<group>"; };
+		2B9CF70F2959FB320007232D /* MacCGView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MacCGView.m; sourceTree = "<group>"; };
+		2BB02B3C29821EAF000133B4 /* OCTimer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OCTimer.m; sourceTree = "<group>"; };
+		2BB02B3D29821EAF000133B4 /* OCTimer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OCTimer.h; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		2B7C72252959B5F4005F88FE /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2B7C72452959B7C7005F88FE /* CoreMedia.framework in Frameworks */,
+				2B7C72432959B7B1005F88FE /* AVFoundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		2B7C721F2959B5F4005F88FE = {
+			isa = PBXGroup;
+			children = (
+				2B7C722A2959B5F5005F88FE /* 04_AVCapture_mac */,
+				2B7C72292959B5F4005F88FE /* Products */,
+				2B7C72412959B7B1005F88FE /* Frameworks */,
+			);
+			sourceTree = "<group>";
+		};
+		2B7C72292959B5F4005F88FE /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				2B7C72282959B5F4005F88FE /* 04_AVCapture_mac.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		2B7C722A2959B5F5005F88FE /* 04_AVCapture_mac */ = {
+			isa = PBXGroup;
+			children = (
+				2BB02B3D29821EAF000133B4 /* OCTimer.h */,
+				2BB02B3C29821EAF000133B4 /* OCTimer.m */,
+				2B9CF70E2959FB320007232D /* MacCGView.h */,
+				2B9CF70F2959FB320007232D /* MacCGView.m */,
+				2B7C72462959D30A005F88FE /* -4-AVCapture-mac-Info.plist */,
+				2B7C723E2959B6EB005F88FE /* MacOCCamera.h */,
+				2B7C723F2959B6EB005F88FE /* MacOCCamera.mm */,
+				2B7C722B2959B5F5005F88FE /* AppDelegate.h */,
+				2B7C722C2959B5F5005F88FE /* AppDelegate.m */,
+				2B7C722E2959B5F5005F88FE /* ViewController.h */,
+				2B7C722F2959B5F5005F88FE /* ViewController.m */,
+				2B7C72312959B5F7005F88FE /* Assets.xcassets */,
+				2B7C72332959B5F7005F88FE /* Main.storyboard */,
+				2B7C72362959B5F7005F88FE /* main.m */,
+				2B7C72382959B5F7005F88FE /* _4_AVCapture_mac.entitlements */,
+			);
+			path = 04_AVCapture_mac;
+			sourceTree = "<group>";
+		};
+		2B7C72412959B7B1005F88FE /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				2B7C72442959B7C7005F88FE /* CoreMedia.framework */,
+				2B7C72422959B7B1005F88FE /* AVFoundation.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		2B7C72272959B5F4005F88FE /* 04_AVCapture_mac */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 2B7C723B2959B5F7005F88FE /* Build configuration list for PBXNativeTarget "04_AVCapture_mac" */;
+			buildPhases = (
+				2B7C72242959B5F4005F88FE /* Sources */,
+				2B7C72252959B5F4005F88FE /* Frameworks */,
+				2B7C72262959B5F4005F88FE /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = 04_AVCapture_mac;
+			productName = 04_AVCapture_mac;
+			productReference = 2B7C72282959B5F4005F88FE /* 04_AVCapture_mac.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		2B7C72202959B5F4005F88FE /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastUpgradeCheck = 1340;
+				TargetAttributes = {
+					2B7C72272959B5F4005F88FE = {
+						CreatedOnToolsVersion = 13.4.1;
+					};
+				};
+			};
+			buildConfigurationList = 2B7C72232959B5F4005F88FE /* Build configuration list for PBXProject "04_AVCapture_mac" */;
+			compatibilityVersion = "Xcode 13.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 2B7C721F2959B5F4005F88FE;
+			productRefGroup = 2B7C72292959B5F4005F88FE /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				2B7C72272959B5F4005F88FE /* 04_AVCapture_mac */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		2B7C72262959B5F4005F88FE /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2B7C72322959B5F7005F88FE /* Assets.xcassets in Resources */,
+				2B7C72352959B5F7005F88FE /* Main.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		2B7C72242959B5F4005F88FE /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2B7C72302959B5F5005F88FE /* ViewController.m in Sources */,
+				2B7C72372959B5F7005F88FE /* main.m in Sources */,
+				2B7C72402959B6EB005F88FE /* MacOCCamera.mm in Sources */,
+				2BB02B3E29821EAF000133B4 /* OCTimer.m in Sources */,
+				2B7C722D2959B5F5005F88FE /* AppDelegate.m in Sources */,
+				2B9CF7102959FB320007232D /* MacCGView.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		2B7C72332959B5F7005F88FE /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				2B7C72342959B5F7005F88FE /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		2B7C72392959B5F7005F88FE /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_ENTITLEMENTS = "";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 12.3;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		2B7C723A2959B5F7005F88FE /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_ENTITLEMENTS = "";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 12.3;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		2B7C723C2959B5F7005F88FE /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = 04_AVCapture_mac/_4_AVCapture_mac.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = G4B7ZBVBTD;
+				ENABLE_HARDENED_RUNTIME = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "-4-AVCapture-mac-Info.plist";
+				INFOPLIST_KEY_NSCameraUsageDescription = "";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INFOPLIST_KEY_NSMainStoryboardFile = Main;
+				INFOPLIST_KEY_NSPrincipalClass = NSApplication;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.rtcbook.mac.ch2.-4-AVCapture-mac";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+			};
+			name = Debug;
+		};
+		2B7C723D2959B5F7005F88FE /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = 03_AVCapture_mac/_4_AVCapture_mac.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = G4B7ZBVBTD;
+				ENABLE_HARDENED_RUNTIME = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "-4-AVCapture-mac-Info.plist";
+				INFOPLIST_KEY_NSCameraUsageDescription = "";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INFOPLIST_KEY_NSMainStoryboardFile = Main;
+				INFOPLIST_KEY_NSPrincipalClass = NSApplication;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.rtcbook.mac.ch2.-4-AVCapture-mac";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		2B7C72232959B5F4005F88FE /* Build configuration list for PBXProject "04_AVCapture_mac" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2B7C72392959B5F7005F88FE /* Debug */,
+				2B7C723A2959B5F7005F88FE /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		2B7C723B2959B5F7005F88FE /* Build configuration list for PBXNativeTarget "04_AVCapture_mac" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2B7C723C2959B5F7005F88FE /* Debug */,
+				2B7C723D2959B5F7005F88FE /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 2B7C72202959B5F4005F88FE /* Project object */;
+}
