@@ -35,6 +35,7 @@
 -(IBAction)pressAuth:(id)sender
 {
     [IOSOCCamera getAuthorizationStatus: nil];
+    NSLog(@"uio = %d", (int)[UIApplication sharedApplication].statusBarOrientation);
 }
 
 -(IBAction)pressStart:(id)sender
