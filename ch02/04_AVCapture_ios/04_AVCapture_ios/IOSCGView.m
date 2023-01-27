@@ -12,7 +12,7 @@
 {
     [super drawRect:dirtyRect];
     
-    CGContextRef context = UIGraphicsGetCurrentContext();
+    //CGContextRef context = UIGraphicsGetCurrentContext();
     if (_pFrame.CGImage) {
         [_pFrame drawInRect:self.bounds];
         CGImageRelease(_pFrame.CGImage);

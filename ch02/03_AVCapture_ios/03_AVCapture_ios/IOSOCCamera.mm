@@ -209,7 +209,11 @@
     } else {
         addedCaptureInput = NO;
     }
-
+    
+    AVCaptureVideoDataOutput* current_output = [[capture_session_ outputs] firstObject];
+    capture_connection_ = [current_output connectionWithMediaType:AVMediaTypeVideo];
+    //capture_connection_.videoOrientation = AVCaptureVideoOrientationPortrait;
+    
     [capture_session_ commitConfiguration];
 
     [self signal_capture_change];

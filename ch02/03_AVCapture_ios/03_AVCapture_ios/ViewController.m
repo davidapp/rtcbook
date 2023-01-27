@@ -21,7 +21,8 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     _camera = [[IOSOCCamera alloc] initWithHanlder: NULL];
-    _cgview = [[IOSCGView alloc] initWithFrame:CGRectMake(0,150,320,240)];
+    //_cgview = [[IOSCGView alloc] initWithFrame:CGRectMake(0,150,320,240)];
+    _cgview = [[IOSCGView alloc] initWithFrame:CGRectMake(70,150,180,270)];
     [self.view addSubview:_cgview];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onFrame:) name:@"onFrame" object:nil];
 }
