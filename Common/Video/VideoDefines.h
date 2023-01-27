@@ -22,6 +22,13 @@ enum class DPixelFmt {
     MJPG  // 压缩格式
 };
 
+enum class DRotation {    // 图像回正需要顺时针旋转的角度
+    DEGREE_0 = 0,
+    DEGREE_90 = 90,
+    DEGREE_180 = 180,
+    DEGREE_270 = 270
+}
+
 struct tagDVideoFormat {
     DInt32 width;
     DInt32 height;

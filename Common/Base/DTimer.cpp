@@ -9,7 +9,7 @@ static DUInt64	perf_time[PERF_COUNTS] = { 0 };
 DUInt64 DTimer::overhead = 0;
 DUInt64 DTimer::cpuspeed100 = 0;
 
-DTimer::DTimer()
+DVoid DTimer::Init()
 {
 #if defined(BUILD_FOR_WINDOWS)
     LARGE_INTEGER f;
@@ -24,12 +24,13 @@ DTimer::DTimer()
 DVoid DTimer::Start(DInt32 index, DCStr desc)
 {
     perf_desc[index] = desc;
-    perf_time[index] = GetCycleCount();
+    perf_time[index] = DTimer::GetCycleCount();
 }
 
 DUInt64 DTimer::Stop(DInt32 index)
 {
-    perf_time[index] = GetCycleCount() - perf_time[index] - DTimer::overhead;
+    if (perf_time[index] == 0) return 0;
+    perf_time[index] = DTimer::GetCycleCount() - perf_time[index] - DTimer::overhead;
     return perf_time[index];
 }
 
@@ -63,70 +64,82 @@ DUInt64 DTimer::ClockToMSecond(DUInt64 t)
 
 DVoid DTimer::Output(DInt32 index, DTimeUnit unit)
 {
+    if (perf_time[index] == 0) return;
+
     std::string str = GetOutputString(index, unit);
     std::cout << str << std::endl;
+
+#if defined(BUILD_FOR_WINDOWS)
+    OutputDebugStringA(str.c_str());
+#endif
+
+    perf_time[index] = 0;
 }
 
 std::string DTimer::GetOutputString(DInt32 index, DTimeUnit unit)
 {
-    std::string strRet;
+    std::string strRet,cs,cs2,indexs;
+    std::stringstream ss,sstemp;
     DInt64 c = 0;
+    DInt64 c2 = 0;
+    std::string tu = "";
     if (unit == DTimeUnit::IN_CLOCK)
     {
-        if (perf_desc[index])
-        {
-            strRet.Format("%s\tUsing %llu clocks\n", perf_desc[index], perf_time[index]);
-        }
-        else
-        {
-            strRet.Format("Slot %d\tUsing %llu clocks\n", index, perf_time[index]);
-        }
+        c = perf_time[index];
+        tu = "clocks";
     }
     else if (unit == DTimeUnit::IN_NS)
     {
-        if (perf_desc[index])
-        {
-            strRet.Format("%s\tUsing %llu ns\n", perf_desc[index], ClockToNSecond(perf_time[index]));
-        }
-        else
-        {
-            strRet.Format("Slot %d\tUsing %llu ns\n", index, ClockToNSecond(perf_time[index]));
-        }
+        c = ClockToNSecond(perf_time[index]);
+        tu = "ns";
     }
     else if (unit == DTimeUnit::IN_US)
     {
-        if (perf_desc[index])
-        {
-            strRet.Format("%s\tUsing %llu us\n", perf_desc[index], ClockToUSecond(perf_time[index]));
-        }
-        else
-        {
-            strRet.Format("Slot %d\tUsing %llu us\n", index, ClockToUSecond(perf_time[index]));
-        }
+        c = ClockToUSecond(perf_time[index]);
+        tu = "us";
     }
     else if (unit == DTimeUnit::IN_MS)
     {
         c = ClockToUSecond(perf_time[index]);
-        if (perf_desc[index])
-        {
-            strRet.Format("%s\tUsing %lld.%03lld ms\n", perf_desc[index], c / 1000, c % 1000);
-        }
-        else
-        {
-            strRet.Format("Slot %d\tUsing %lld.%03lld ms\n", index, c / 1000, c % 1000);
-        }
+        c2 = c % 1000;
+        c = c / 1000;
     }
     else if (unit == DTimeUnit::IN_SEC)
     {
         c = ClockToUSecond(perf_time[index]);
-        if (perf_desc[index])
-        {
-            strRet.Format("%s\tUsing %lld.%06lld s\n", perf_desc[index], c / 1000000, c % 1000000);
+        c2 = c % 1000000;
+        c = c / 1000000;
+    }
+
+    if (perf_desc[index])
+    {
+        sstemp << c;
+        sstemp >> cs;
+        ss << perf_desc[index] << "\tUsing " << cs;
+        if (c2 != 0) {
+            sstemp << c2;
+            sstemp >> cs2;
+            ss << "." << cs2;
         }
-        else
-        {
-            strRet.Format("Slot %d\tUsing %lld.%06lld s\n", index, c / 1000000, c % 1000000);
+        ss << " " << tu << "\n";
+        strRet = ss.str();
+    }
+    else
+    {
+        sstemp << index;
+        sstemp >> indexs;
+        sstemp.clear();
+        sstemp << c;
+        sstemp >> cs;
+        sstemp.clear();
+        ss << "Slot " << indexs << "\tUsing " << cs;
+        if (c2 != 0) {
+            sstemp << c2;
+            sstemp >> cs2;
+            ss << "." << cs2;
         }
+        ss << " " << tu << "\n";
+        strRet = ss.str();
     }
     return strRet;
 }
