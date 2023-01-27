@@ -61,6 +61,6 @@
 
 + (void)getAuthorizationStatus:(void(^)(void))authorizedBlock;
 
-+(UIImage *)imageFromSampleBufferY420:(CMSampleBufferRef )sampleBuffer;
+-(UIImage *)imageFromSampleBufferY420:(CMSampleBufferRef )sampleBuffer;
 
 @end

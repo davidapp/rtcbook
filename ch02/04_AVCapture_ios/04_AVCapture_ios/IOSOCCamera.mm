@@ -97,8 +97,8 @@
         [self config_capture_frate:DEFAULT_FRAME_RATE];
 
         // 设置默认的输出格式
-        //[self set_output_format:DEFAULT_PIXEL_FORMAT];
-        [self set_output_format:PIXEL_FORMAT_I420];
+        [self set_output_format:DEFAULT_PIXEL_FORMAT];
+        //[self set_output_format:PIXEL_FORMAT_I420];
     }
     return self;
 }
@@ -231,7 +231,7 @@
         capture_connection_.videoMirrored = YES;
     }
 
-    capture_connection_.videoOrientation = AVCaptureVideoOrientationPortraitUpsideDown;
+    //capture_connection_.videoOrientation = AVCaptureVideoOrientationPortraitUpsideDown;
     
     [capture_session_ commitConfiguration];
 
@@ -453,7 +453,7 @@
         capture_connection_.videoMirrored = YES;
     }
 
-    capture_connection_.videoOrientation = AVCaptureVideoOrientationPortraitUpsideDown;
+    //capture_connection_.videoOrientation = AVCaptureVideoOrientationPortraitUpsideDown;
 
     [capture_session_ commitConfiguration];
     
@@ -584,7 +584,8 @@
         NSLog(@"%zu %d pBuf:%p size:%zu", bytesPerRow, cvtype, pBuf, datasize);
         // CVPixelBufferGetBaseAddressOfPlane 0,1,2
         
-        UIImage *image = [IOSOCCamera imageFromSampleBufferY420:sample_buffer];
+        UIImage *image = [self imageFromSampleBufferY420:sample_buffer];
+        
         dispatch_async(dispatch_get_main_queue(), ^{
             [[NSNotificationCenter defaultCenter] postNotificationName:@"onFrame" object:image userInfo: nil];
         });
@@ -610,7 +611,15 @@
     
     NSLog(@"%zu*%zu, line:%zu, type:%d, pBuf:%p size:%zu", width, height, bytesPerRow, cvtype, pBuf, datasize);
 
-    UIImage *image = [UIImage imageWithCGImage:quartzImage];
+    //UIImage *image = [UIImage imageWithCGImage:quartzImage];
+    UIImage *image;
+    bool is_front_camera = current_device_.position == AVCaptureDevicePositionFront;
+    if (is_front_camera) {
+        image = [UIImage imageWithCGImage:quartzImage scale:1.0f orientation:UIImageOrientationLeftMirrored];
+    }
+    else {
+        image = [UIImage imageWithCGImage:quartzImage scale:1.0f orientation:UIImageOrientationRightMirrored];
+    }
     
     dispatch_async(dispatch_get_main_queue(), ^{
         [[NSNotificationCenter defaultCenter] postNotificationName:@"onFrame" object:image userInfo: nil];
@@ -657,7 +666,7 @@
     }
 }
 
-+(UIImage *)imageFromSampleBufferY420:(CMSampleBufferRef )sampleBuffer
+-(UIImage *)imageFromSampleBufferY420:(CMSampleBufferRef )sampleBuffer
 {
     CVImageBufferRef imageBuffer = CMSampleBufferGetImageBuffer(sampleBuffer);
     CVPixelBufferLockBaseAddress(imageBuffer,0);
@@ -700,7 +709,15 @@
     CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
     CGContextRef context = CGBitmapContextCreate(rgbBuffer, width, height, 8, width * bytesPerPixel, colorSpace, kCGBitmapByteOrder32Little | kCGImageAlphaNoneSkipLast);
     CGImageRef quartzImage = CGBitmapContextCreateImage(context);
-    UIImage *image = [UIImage imageWithCGImage:quartzImage];
+    
+    UIImage *image;
+    bool is_front_camera = current_device_.position == AVCaptureDevicePositionFront;
+    if (is_front_camera) {
+        image = [UIImage imageWithCGImage:quartzImage scale:1.0f orientation:UIImageOrientationLeftMirrored];
+    }
+    else {
+        image = [UIImage imageWithCGImage:quartzImage scale:1.0f orientation:UIImageOrientationRightMirrored];
+    }
 
     CGContextRelease(context);
     CGColorSpaceRelease(colorSpace);

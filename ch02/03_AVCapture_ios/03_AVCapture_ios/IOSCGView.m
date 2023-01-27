@@ -2,7 +2,7 @@
 
 @interface IOSCGView()
 
-@property(strong)CIImage* pFrame;
+@property(strong)UIImage* pFrame;
 
 @end
 
@@ -12,14 +12,15 @@
 {
     [super drawRect:dirtyRect];
     
-    CGContextRef context = UIGraphicsGetCurrentContext();
+    //CGContextRef context = UIGraphicsGetCurrentContext();
     if (_pFrame.CGImage) {
-        CGContextDrawImage(context, self.bounds, _pFrame.CGImage);
+        //CGContextDrawImage(context, self.bounds, _pFrame.CGImage);
+        [_pFrame drawInRect:self.bounds];
         CGImageRelease(_pFrame.CGImage);
     }
 }
 
-- (void)drawFrame:(CIImage*)pFrame
+- (void)drawFrame:(UIImage*)pFrame
 {
     _pFrame = pFrame;
     [self setNeedsDisplay];

@@ -421,7 +421,8 @@
     [capture_session_ beginConfiguration];
     
     capture_connection_ = [current_output connectionWithMediaType:AVMediaTypeVideo];
-   
+    //capture_connection_.videoOrientation = AVCaptureVideoOrientationPortrait;
+    
     [capture_session_ commitConfiguration];
     
     [capture_session_ startRunning];
