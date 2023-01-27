@@ -567,9 +567,6 @@
         return;
     }
     
-    //uiOrientation = [UIApplication sharedApplication].statusBarOrientation;
-    //NSLog(@"uio = %d", uiOrientation);
-    
     if (m_userFormat == PIXEL_FORMAT_I420) {
         CVImageBufferRef video_frame = CMSampleBufferGetImageBuffer(sample_buffer);
         int64_t timestamp_ns = CMTimeGetSeconds(CMSampleBufferGetPresentationTimeStamp(sample_buffer)) *
