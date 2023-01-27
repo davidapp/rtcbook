@@ -7,7 +7,7 @@
 #define DEFAULT_CAPTURE_HEIGHT 720
 #define DEFAULT_FRAME_RATE 25
 #define DEFAULT_PIXEL_FORMAT kCVPixelFormatType_32BGRA
-
+#define PIXEL_FORMAT_I420 kCVPixelFormatType_420YpCbCr8BiPlanarVideoRange
 
 #define MAC_CAPTURE_INIT 1
 #define MAC_CAPTURE_START 2
@@ -44,6 +44,9 @@
     AVCaptureDevice* current_device_;
     AVCaptureConnection* capture_connection_;
     std::atomic<BOOL> capture_started_;
+    
+    UIInterfaceOrientation uiOrientation;
+    UIInterfaceOrientation gravityOrientation;
 }
 
 - (AVCaptureVideoOrientation) getVideoOrientation:(UIInterfaceOrientation)ui
@@ -95,8 +98,8 @@
 
         // 设置默认的输出格式
         [self set_output_format:DEFAULT_PIXEL_FORMAT];
+        //[self set_output_format:PIXEL_FORMAT_I420];
     }
-    
     return self;
 }
 
@@ -217,7 +220,23 @@
     } else {
         addedCaptureInput = NO;
     }
-
+    
+    AVCaptureVideoDataOutput* current_output = [[capture_session_ outputs] firstObject];
+    capture_connection_ = [current_output connectionWithMediaType:AVMediaTypeVideo];
+    bool is_front_camera = current_device_.position == AVCaptureDevicePositionFront;
+    if (is_front_camera) {
+        capture_connection_.videoMirrored = NO;
+    }
+    else {
+        capture_connection_.videoMirrored = YES;
+    }
+    if (m_userFormat == DEFAULT_PIXEL_FORMAT) {
+         capture_connection_.videoOrientation = AVCaptureVideoOrientationPortraitUpsideDown;
+    }
+    else {
+        capture_connection_.videoOrientation = AVCaptureVideoOrientationPortrait;
+    }
+    
     [capture_session_ commitConfiguration];
 
     [self signal_capture_change];
@@ -429,7 +448,20 @@
     [capture_session_ beginConfiguration];
     
     capture_connection_ = [current_output connectionWithMediaType:AVMediaTypeVideo];
-
+    
+    bool is_front_camera = current_device_.position == AVCaptureDevicePositionFront;
+    if (is_front_camera) {
+        capture_connection_.videoMirrored = NO;
+    }
+    else {
+        capture_connection_.videoMirrored = YES;
+    }
+    if (m_userFormat == DEFAULT_PIXEL_FORMAT) {
+         capture_connection_.videoOrientation = AVCaptureVideoOrientationPortraitUpsideDown;
+    }
+    else {
+        capture_connection_.videoOrientation = AVCaptureVideoOrientationPortrait;
+    }
     [capture_session_ commitConfiguration];
     
     [capture_session_ startRunning];
@@ -542,35 +574,47 @@
         return;
     }
     
-    // add rotate
-    NSLog(@"%d\n", (int)[UIApplication sharedApplication].statusBarOrientation);
-    if ([capture_connection_ isVideoOrientationSupported] == YES) {
-        capture_connection_.videoOrientation = [self getVideoOrientation: [UIApplication sharedApplication].statusBarOrientation];
+    if (m_userFormat == PIXEL_FORMAT_I420) {
+        CVImageBufferRef video_frame = CMSampleBufferGetImageBuffer(sample_buffer);
+        int64_t timestamp_ns = CMTimeGetSeconds(CMSampleBufferGetPresentationTimeStamp(sample_buffer)) *
+                           1000000000;
+        size_t width = CVPixelBufferGetWidth(video_frame);
+        size_t height = CVPixelBufferGetHeight(video_frame); // 720*1280
+        NSLog(@"%lld - %zu*%zu", timestamp_ns, width, height);
+        // YUV420
+        // int32_t frame_size = width * height * 2;
+        size_t bytesPerRow = CVPixelBufferGetBytesPerRow(video_frame); // 1156
+        OSType cvtype = CVPixelBufferGetPixelFormatType(video_frame);  // 875704438=0x34323076='420v'
+        CVPixelBufferLockBaseAddress(video_frame, kCVPixelBufferLock_ReadOnly);
+        void *pBuf = CVPixelBufferGetBaseAddress(video_frame);
+        size_t datasize = CVPixelBufferGetDataSize(video_frame); // 1479744
+        NSLog(@"%zu %d pBuf:%p size:%zu", bytesPerRow, cvtype, pBuf, datasize);
+        // CVPixelBufferGetBaseAddressOfPlane 0,1,2
+        
+        return;
     }
     
     //从 CMSampleBufferRef 拿到一个 CVImageBufferRef
     CVImageBufferRef video_frame = CMSampleBufferGetImageBuffer(sample_buffer);
     
     size_t width = CVPixelBufferGetWidth(video_frame);
-    size_t height = CVPixelBufferGetHeight(video_frame);
-    size_t bytesPerRow = CVPixelBufferGetBytesPerRow(video_frame);
+    size_t height = CVPixelBufferGetHeight(video_frame); // 720*1280
+    size_t bytesPerRow = CVPixelBufferGetBytesPerRow(video_frame); // 2880
     OSType cvtype = CVPixelBufferGetPixelFormatType(video_frame);
     //1111970369 = 0x42475241 = 'BGRA'
     CVPixelBufferLockBaseAddress(video_frame, kCVPixelBufferLock_ReadOnly);
     void *pBuf = CVPixelBufferGetBaseAddress(video_frame);
-    size_t datasize = CVPixelBufferGetDataSize(video_frame);
+    size_t datasize = CVPixelBufferGetDataSize(video_frame); // 3686464
     CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
     CGContextRef context = CGBitmapContextCreate(pBuf, width, height, 8,
                                                  bytesPerRow, colorSpace, kCGBitmapByteOrder32Little | kCGImageAlphaPremultipliedFirst);
     CGImageRef quartzImage = CGBitmapContextCreateImage(context);
     CVPixelBufferUnlockBaseAddress(video_frame, kCVPixelBufferLock_ReadOnly);
     
-    NSLog(@"%zu*%zu, type:%d, pBuf:%p size:%zu", width, height, cvtype, pBuf, datasize);
+    NSLog(@"%zu*%zu, line:%zu, type:%d, pBuf:%p size:%zu", width, height, bytesPerRow, cvtype, pBuf, datasize);
 
     UIImage *image = [UIImage imageWithCGImage:quartzImage];
-    //UIImage *image = [UIImage imageWithCGImage:quartzImage scale:1.0 orientation: UIImageOrientationDown];
-    //NSLog(@"%d\n", (int)image.imageOrientation);
-
+    
     dispatch_async(dispatch_get_main_queue(), ^{
         [[NSNotificationCenter defaultCenter] postNotificationName:@"onFrame" object:image userInfo: nil];
     });
