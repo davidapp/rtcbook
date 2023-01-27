@@ -1,6 +1,7 @@
 package com.example.a04_camara1capture;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
@@ -9,6 +10,7 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
@@ -69,6 +71,11 @@ public class FirstFragment extends Fragment {
                 else{
                     Log.i("camera1", "用户未授权");
                 }
+
+                WindowManager wm = (WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE);
+                int rotation = wm.getDefaultDisplay().getRotation();
+                String logStr = String.format("rotate=%d", rotation);
+                Log.i("camera1", logStr);
             }
         });
         binding.button2.setOnClickListener(new View.OnClickListener() {
