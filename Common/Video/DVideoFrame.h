@@ -16,6 +16,9 @@ struct DVideoFrameData
     DUInt64 m_cts;
     DUInt64 m_dts;
     DUInt64 m_pts;
+    DRotation m_rotate;
+    DByte* m_pSEIData;
+    DUInt32 m_nSEISize;
 
     DByte* buf()
     {
@@ -64,6 +67,12 @@ public:
     DVoid  SetAt(DUInt32 index, DByte v);
     DByte  GetAt(DUInt32 index);
     DVoid  Zero();
+
+public:
+    DVideoFrame Copy(DBool bWithSEI=false);
+    DVoid Mirror();
+    DVideoFrame ScaleTo(DInt32 w, DInt32 h);
+    DVideoFrame Crop(DInt32 x, DInt32 y, DInt32 w, DInt32 h);
 
 public:
     static DVideoFrame YUY2ToRAW(const DVideoFrame& buf);

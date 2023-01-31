@@ -28,7 +28,7 @@
     <ClInclude Include="..\..\Common\Base\DUTF8.h">
       <Filter>Common\Base</Filter>
     </ClInclude>
-    <ClInclude Include="SettingDlg.h">
+    <ClInclude Include="MainDlg.h">
       <Filter>Window</Filter>
     </ClInclude>
     <ClInclude Include="resource.h">
