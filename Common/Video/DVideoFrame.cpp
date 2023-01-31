@@ -252,7 +252,7 @@ DVideoFrame DVideoFrame::YUY2ToRAW(const DVideoFrame& srcFrame)
         pSRC += 4;
     }
     DVideoFrame retFrame(bufRGB.GetBuf(), bufRGB.GetSize(), srcFrame.GetWidth(), srcFrame.GetHeight(),
-                DPixelFmt::I420);
+                DPixelFmt::RAW);
     return retFrame;
 }
 

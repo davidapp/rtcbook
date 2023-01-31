@@ -35,12 +35,12 @@ DVoid* OnFrame(DVideoFrame frame, DVoid* pFrameData, DVoid* pUserData)
         //file.Write(bufFile);
         //file.Close();
 
-        ::PostMessage(hWnd, WM_ONFRAME, (WPARAM)frame24.GetBuf(), (LPARAM)0);
+        ::PostMessage(hWnd, WM_ONFRAME, (WPARAM)frame24.GetBuf(), (LPARAM)pHeader);
         frame24.Detach();
     }
     else if (frame.GetFormat() == DPixelFmt::RGB24)
     {
-        ::PostMessage(hWnd, WM_ONFRAME, (WPARAM)frame.GetBuf(), (LPARAM)0);
+        ::PostMessage(hWnd, WM_ONFRAME, (WPARAM)frame.GetBuf(), (LPARAM)pHeader);
         frame.Detach();
     }
 
