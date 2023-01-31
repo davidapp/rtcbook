@@ -3,7 +3,7 @@
 #include "DTypes.h"
 #include <dshow.h>
 #include <atomic>
-#include "VideoDefines.h"
+#include "Video/DVideoDefines.h"
 #include "Base/DAtomic.h"
 
 

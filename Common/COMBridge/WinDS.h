@@ -2,7 +2,7 @@
 
 #include "DTypes.h"
 #include "Base/DAtomic.h"
-#include "Video/VideoDefines.h"
+#include "Video/DVideoDefines.h"
 #include <dshow.h>
 #include <string>
 #include <Initguid.h>

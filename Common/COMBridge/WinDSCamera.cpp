@@ -1,9 +1,9 @@
 ﻿#include "WinDSCamera.h"
 #include "Base/DUTF8.h"
 #include "Base/DUtil.h"
-#include "Video/VideoDefines.h"
+#include "Video/DVideoDefines.h"
 #include "File/DBmpFile.h"
-#include "Video/WinDS.h"
+#include "WinDS.h"
 
 
 ICreateDevEnum* _dsDevEnum;

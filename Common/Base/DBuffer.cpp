@@ -9,9 +9,13 @@
 ////////////////////////////////////////////////////////////////////////////////////
 // DBuffer
 
-const DInt32 nNullBuffer[] = { -1, 0, 0, 0 };
-const DBufferData* _nullBufferData = (DBufferData*)&nNullBuffer;
-const DByte* _nullBuffer = (const DByte*)(((DChar*)&nNullBuffer) + sizeof(DBufferData));
+struct DBufferMemory {
+    DBufferData data;
+    DByte* buf;
+};
+const DBufferMemory nNullBuffer = { {-1, 0}, nullptr };
+const DBufferData* _nullBufferData = &nNullBuffer.data;
+const DByte* _nullBuffer = (const DByte*)_nullBufferData + sizeof(DBufferData);
 
 DBuffer::DBuffer()
 {
@@ -558,6 +562,23 @@ DVoid DBuffer::UnlockBuffer()
     }
 }
 
+DVoid DX86_STDCALL DBuffer::Release(DBufferData* pData)
+{
+    if (pData != _nullBufferData)
+    {
+        assert(pData->nRefs != 0);
+        DAtomDec32(&pData->nRefs);
+        if (pData->nRefs <= 0)
+        {
+            free((void*)pData);
+        }
+    }
+}
+
+const DBuffer& DX86_STDCALL DBuffer::GetNullBuffer()
+{
+    return *(DBuffer*)&_nullBuffer;
+}
 
 DBufferData* DBuffer::GetData() const
 {
@@ -625,25 +646,6 @@ DVoid DBuffer::CopyBeforeWrite()
         }
     }
     assert(GetData()->nRefs <= 1);
-}
-
-
-DVoid DX86_STDCALL DBuffer::Release(DBufferData* pData)
-{
-    if (pData != _nullBufferData)
-    {
-        assert(pData->nRefs != 0);
-        DAtomDec32(&pData->nRefs);
-        if (pData->nRefs <= 0)
-        {
-            free((void*)pData);
-        }
-    }
-}
-
-const DBuffer& DX86_STDCALL DBuffer::GetNullBuffer()
-{
-    return *(DBuffer*)&_nullBuffer;
 }
 
 

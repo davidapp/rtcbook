@@ -81,7 +81,7 @@
     <ClInclude Include="..\..\Common\Video\DVideoFrame.h">
       <Filter>Common\Video</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Common\Video\VideoDefines.h">
+    <ClInclude Include="..\..\Common\Video\DVideoDefines.h">
       <Filter>Common\Video</Filter>
     </ClInclude>
   </ItemGroup>

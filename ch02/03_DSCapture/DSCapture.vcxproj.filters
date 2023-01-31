@@ -14,21 +14,6 @@
     <ClCompile Include="..\..\Common\Base\DFile.cpp">
       <Filter>Common\Base</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Common\Video\WinDSCapturePin.cpp">
-      <Filter>Common\Video</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Common\Video\WinDSSinkFilter.cpp">
-      <Filter>Common\Video</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Common\Video\WinDS.cpp">
-      <Filter>Common\Video</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Common\Video\WinDSVideoCapture.cpp">
-      <Filter>Common\Video</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Common\Video\WinDSCamera.cpp">
-      <Filter>Common\Video</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\Common\Video\DVideoFrame.cpp">
       <Filter>Common\Video</Filter>
     </ClCompile>
@@ -41,6 +26,21 @@
     <ClCompile Include="..\..\Common\Base\DTimer.cpp">
       <Filter>Common\Base</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\Common\COMBridge\WinDS.cpp">
+      <Filter>Common\COMBridge</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\COMBridge\WinDSCamera.cpp">
+      <Filter>Common\COMBridge</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\COMBridge\WinDSCapturePin.cpp">
+      <Filter>Common\COMBridge</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\COMBridge\WinDSSinkFilter.cpp">
+      <Filter>Common\COMBridge</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\COMBridge\WinDSVideoCapture.cpp">
+      <Filter>Common\COMBridge</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Common\Base\DBuffer.h">
@@ -49,11 +49,11 @@
     <ClInclude Include="..\..\Common\Base\DUTF8.h">
       <Filter>Common\Base</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Common\Video\VideoDefines.h">
+    <ClInclude Include="..\..\Common\Video\DVideoDefines.h">
       <Filter>Common\Video</Filter>
     </ClInclude>
     <ClInclude Include="MainWindow.h">
-      <Filter>Window</Filter>
+      <Filter>App</Filter>
     </ClInclude>
     <ClInclude Include="resource.h">
       <Filter>Resource</Filter>
@@ -64,17 +64,8 @@
     <ClInclude Include="..\..\Common\Base\DFile.h">
       <Filter>Common\Base</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Common\Video\WinDSCapturePin.h">
-      <Filter>Common\Video</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Common\Video\WinDSSinkFilter.h">
-      <Filter>Common\Video</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\Common\Base\DAtomic.h">
       <Filter>Common\Base</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Common\Video\WinDS.h">
-      <Filter>Common\Video</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Common\DConfig.h">
       <Filter>Common</Filter>
@@ -88,12 +79,6 @@
     <ClInclude Include="..\..\Common\DTypes.h">
       <Filter>Common</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Common\Video\WinDSVideoCapture.h">
-      <Filter>Common\Video</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Common\Video\WinDSCamera.h">
-      <Filter>Common\Video</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\Common\Video\DVideoFrame.h">
       <Filter>Common\Video</Filter>
     </ClInclude>
@@ -106,6 +91,21 @@
     <ClInclude Include="..\..\Common\Base\DTimer.h">
       <Filter>Common\Base</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\Common\COMBridge\WinDS.h">
+      <Filter>Common\COMBridge</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\COMBridge\WinDSCamera.h">
+      <Filter>Common\COMBridge</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\COMBridge\WinDSCapturePin.h">
+      <Filter>Common\COMBridge</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\COMBridge\WinDSSinkFilter.h">
+      <Filter>Common\COMBridge</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\COMBridge\WinDSVideoCapture.h">
+      <Filter>Common\COMBridge</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Common">
@@ -113,9 +113,6 @@
     </Filter>
     <Filter Include="Resource">
       <UniqueIdentifier>{0d7b4d39-9365-4fdd-b26d-70978e8b8891}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Window">
-      <UniqueIdentifier>{02051e04-44d0-4f95-b25e-8996c926a8c7}</UniqueIdentifier>
     </Filter>
     <Filter Include="Common\Base">
       <UniqueIdentifier>{a343c6db-6789-4da1-a317-f708005791c8}</UniqueIdentifier>
@@ -125,6 +122,12 @@
     </Filter>
     <Filter Include="Common\File">
       <UniqueIdentifier>{48d512d3-04d8-4484-a19d-660a40a151b6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="App">
+      <UniqueIdentifier>{02051e04-44d0-4f95-b25e-8996c926a8c7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Common\COMBridge">
+      <UniqueIdentifier>{06422dff-38bb-406f-99c1-fa2f6a5ab0e5}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

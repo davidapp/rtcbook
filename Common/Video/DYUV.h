@@ -1,7 +1,7 @@
 ﻿#pragma once
 
 #include "DTypes.h"
-#include "VideoDefines.h"
+#include "DVideoDefines.h"
 
 class DYUV
 {

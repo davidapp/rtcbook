@@ -1,8 +1,8 @@
 #include "WinDS.h"
 #include "WinDSCapturePin.h"
 #include <dvdmedia.h>
-#include "VideoDefines.h"
-#include "DVideoFrame.h"
+#include "Video/DVideoDefines.h"
+#include "Video/DVideoFrame.h"
 #include "atlbase.h"
 #include "atlapp.h"
 #include "atlmisc.h"
@@ -245,7 +245,7 @@ STDMETHODIMP WinDSCaptureInputPin::Receive(IMediaSample* media_sample)
     strLog.Format(L"%d*%d size:%d\r\n", m_final_fmt.width, m_final_fmt.height, sample_props.lActual);
     OutputDebugString(strLog);
     
-    DVideoFrame *frame = new DVideoFrame((DByte*)sample_props.pbBuffer, sample_props.lActual, m_final_fmt.width, m_final_fmt.height, m_final_fmt.format);
+    DVideoFrame frame = DVideoFrame((DByte*)sample_props.pbBuffer, sample_props.lActual, m_final_fmt.width, m_final_fmt.height, m_final_fmt.format);
     BITMAPINFOHEADER* header = new BITMAPINFOHEADER();
     memcpy_s(header, sizeof(BITMAPINFOHEADER), &(m_final_fmt.bmp_header), sizeof(BITMAPINFOHEADER));
     

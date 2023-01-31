@@ -1,8 +1,8 @@
 ﻿#pragma once
 
 #include "DTypes.h"
-#include "VideoDefines.h"
-#include "Video/WinDSSinkFilter.h"
+#include "Video/DVideoDefines.h"
+#include "COMBridge/WinDSSinkFilter.h"
 #include <dshow.h>
 #include <string>
 

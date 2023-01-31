@@ -8,7 +8,7 @@
 #include "resource.h"
 #include "Base/DXP.h"
 #include "Base/DUTF8.h"
-#include "Video/WinDSCamera.h"
+#include "COMBridge/WinDSCamera.h"
 
 
 class CSettingDlg : public CDialogImpl<CSettingDlg>, public CMessageFilter

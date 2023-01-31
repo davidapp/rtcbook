@@ -1,7 +1,7 @@
 ﻿#pragma once
 
 #include "DTypes.h"
-#include "VideoDefines.h"
+#include "Video/DVideoDefines.h"
 #include <dshow.h>
 #include <dvdmedia.h>
 #include <vector>

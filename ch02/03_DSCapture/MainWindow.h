@@ -7,7 +7,7 @@
 #include "atlmisc.h"
 #include "atlctrls.h"
 #include "atlgdi.h"
-#include "Video/WinDSVideoCapture.h"
+#include "COMBridge/WinDSVideoCapture.h"
 #include "Video/DVideoFrame.h"
 #include "File/DBmpFile.h"
 #include "Base/DFile.h"
@@ -15,19 +15,18 @@
 #include "Base/DTimer.h"
 
 
-DVoid* OnFrame(DVoid* pVFrame, DVoid* pFrameData, DVoid* pUserData)
+DVoid* OnFrame(DVideoFrame frame, DVoid* pFrameData, DVoid* pUserData)
 {
     HWND hWnd = (HWND)pUserData;
-    DVideoFrame* pFrame = (DVideoFrame*)pVFrame;
     BITMAPINFO* pHeader = (BITMAPINFO*)pFrameData;
 
-    if (pFrame->m_fmt == DPixelFmt::YUY2)
+    if (frame.GetFormat() == DPixelFmt::YUY2)
     {
-        DVideoFrame* pFrame24 = DVideoFrame::YUY2ToRAW(pFrame);
-        delete pFrame;
+        DVideoFrame frame24 = DVideoFrame::YUY2ToRAW(frame);
+
         pHeader->bmiHeader.biBitCount = 24;
         pHeader->bmiHeader.biCompression = BI_RGB;
-        pHeader->bmiHeader.biSizeImage = pFrame24->m_data.GetSize();
+        pHeader->bmiHeader.biSizeImage = frame24.GetSize();
 
         //delete pHeader;
         //DBuffer bufFile = DBmpFile::Make24BitBitmap(pFrame24->m_width, pFrame24->m_height, pFrame24->m_data);
@@ -36,11 +35,13 @@ DVoid* OnFrame(DVoid* pVFrame, DVoid* pFrameData, DVoid* pUserData)
         //file.Write(bufFile);
         //file.Close();
 
-        ::PostMessage(hWnd, WM_ONFRAME, (WPARAM)pFrame24, (LPARAM)pHeader);
+        ::PostMessage(hWnd, WM_ONFRAME, (WPARAM)frame24.GetBuf(), (LPARAM)0);
+        frame24.Detach();
     }
-    else if (pFrame->m_fmt == DPixelFmt::RGB24)
+    else if (frame.GetFormat() == DPixelFmt::RGB24)
     {
-        ::PostMessage(hWnd, WM_ONFRAME, (WPARAM)pFrame, (LPARAM)pHeader);
+        ::PostMessage(hWnd, WM_ONFRAME, (WPARAM)frame.GetBuf(), (LPARAM)0);
+        frame.Detach();
     }
 
     return nullptr;
@@ -106,23 +107,25 @@ public:
 
     LRESULT OnMyFrame(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
     {
-        DVideoFrame* pFrame = (DVideoFrame*)wParam;
+        DVideoFrame frame;
+        frame.Attach((DByte*)wParam);
+
         BITMAPINFO* pHeader = (BITMAPINFO*)lParam;
         CClientDC dc(m_hWnd);
 
-        if (pFrame->m_fmt == DPixelFmt::RGB24)
+        if (frame.GetFormat() == DPixelFmt::RGB24)
         {
-            dc.StretchDIBits(0, 0, pFrame->m_width, pFrame->m_height, 0, 0,
-                pFrame->m_width, pFrame->m_height, pFrame->m_data.GetBuf(),
+            dc.StretchDIBits(0, 0, frame.GetWidth(), frame.GetHeight(), 0, 0,
+                frame.GetWidth(), frame.GetHeight(), frame.GetBuf(),
                 pHeader, DIB_RGB_COLORS, SRCCOPY);
         }
-        else if (pFrame->m_fmt == DPixelFmt::RAW) 
+        else if (frame.GetFormat() == DPixelFmt::RAW)
         {
-            dc.StretchDIBits(0, 0, pFrame->m_width, pFrame->m_height, 0, pFrame->m_height,
-                pFrame->m_width, - pFrame->m_height, pFrame->m_data.GetBuf(),
+            dc.StretchDIBits(0, 0, frame.GetWidth(), frame.GetHeight(), 0, frame.GetHeight(),
+                frame.GetWidth(), - frame.GetHeight(), frame.GetBuf(),
                 pHeader, DIB_RGB_COLORS, SRCCOPY);
         }
-        delete pFrame;
+
         delete pHeader;
         return 0;
     }
