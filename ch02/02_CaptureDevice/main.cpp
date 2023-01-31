@@ -10,7 +10,7 @@ int Run(LPTSTR /*lpCmdLine*/ = NULL, int nCmdShow = SW_SHOWDEFAULT)
     CMessageLoop theLoop;
     _Module.AddMessageLoop(&theLoop);
 
-    CSettingDlg dlg;
+    CMainDlg dlg;
     dlg.DoModal();
 
     int nRet = theLoop.Run();

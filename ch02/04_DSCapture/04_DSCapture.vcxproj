@@ -76,9 +76,10 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>..\..\Common;..\..\WTL;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
-      <SubSystem>Console</SubSystem>
+      <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
   </ItemDefinitionGroup>
@@ -90,9 +91,10 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>..\..\Common;..\..\WTL;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
-      <SubSystem>Console</SubSystem>
+      <SubSystem>Windows</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -127,7 +129,43 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\Common\Base\DBuffer.cpp" />
+    <ClCompile Include="..\..\Common\Base\DFile.cpp" />
+    <ClCompile Include="..\..\Common\Base\DTime.cpp" />
+    <ClCompile Include="..\..\Common\Base\DTimer.cpp" />
+    <ClCompile Include="..\..\Common\Base\DUTF8.cpp" />
+    <ClCompile Include="..\..\Common\Base\DXP.cpp" />
+    <ClCompile Include="..\..\Common\COMBridge\WinDS.cpp" />
+    <ClCompile Include="..\..\Common\COMBridge\WinDSCamera.cpp" />
+    <ClCompile Include="..\..\Common\COMBridge\WinDSCapturePin.cpp" />
+    <ClCompile Include="..\..\Common\COMBridge\WinDSSinkFilter.cpp" />
+    <ClCompile Include="..\..\Common\COMBridge\WinDSVideoCapture.cpp" />
+    <ClCompile Include="..\..\Common\File\DBmpFile.cpp" />
+    <ClCompile Include="..\..\Common\Video\DVideoFrame.cpp" />
+    <ClCompile Include="..\..\Common\Video\DYUV.cpp" />
     <ClCompile Include="main.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\Common\Base\DBuffer.h" />
+    <ClInclude Include="..\..\Common\Base\DFile.h" />
+    <ClInclude Include="..\..\Common\Base\DTime.h" />
+    <ClInclude Include="..\..\Common\Base\DTimer.h" />
+    <ClInclude Include="..\..\Common\Base\DUTF8.h" />
+    <ClInclude Include="..\..\Common\Base\DXP.h" />
+    <ClInclude Include="..\..\Common\COMBridge\WinDS.h" />
+    <ClInclude Include="..\..\Common\COMBridge\WinDSCamera.h" />
+    <ClInclude Include="..\..\Common\COMBridge\WinDSCapturePin.h" />
+    <ClInclude Include="..\..\Common\COMBridge\WinDSSinkFilter.h" />
+    <ClInclude Include="..\..\Common\COMBridge\WinDSVideoCapture.h" />
+    <ClInclude Include="..\..\Common\File\DBmpFile.h" />
+    <ClInclude Include="..\..\Common\Video\DVideoDefines.h" />
+    <ClInclude Include="..\..\Common\Video\DVideoFrame.h" />
+    <ClInclude Include="..\..\Common\Video\DYUV.h" />
+    <ClInclude Include="MainDlg.h" />
+    <ClInclude Include="resource.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="04_DSCapture.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

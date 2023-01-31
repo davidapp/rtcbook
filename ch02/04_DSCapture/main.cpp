@@ -1,8 +1,7 @@
 ﻿#include "atl.h"
 #include "atldlgs.h"
 #include "resource.h"
-#include "SettingDlg.h"
-#include "COMBridge/WinDSCamera.h"
+#include "MainDlg.h"
 
 CAppModule _Module;
 
@@ -11,7 +10,7 @@ int Run(LPTSTR /*lpCmdLine*/ = NULL, int nCmdShow = SW_SHOWDEFAULT)
     CMessageLoop theLoop;
     _Module.AddMessageLoop(&theLoop);
 
-    CSettingDlg dlg;
+    CMainDlg dlg;
     dlg.DoModal();
 
     int nRet = theLoop.Run();
@@ -25,11 +24,9 @@ int WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPTSTR lp
     ::InitCommonControls();
 
     _Module.Init(NULL, hInstance);
-    WinDSCamera::Init();
 
     int nRet = Run(lpCmdLine, nCmdShow);
 
-    WinDSCamera::UnInit();
     _Module.Term();
 
     return nRet;

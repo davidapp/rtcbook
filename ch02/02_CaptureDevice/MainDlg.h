@@ -11,12 +11,12 @@
 #include "COMBridge/WinDSCamera.h"
 
 
-class CSettingDlg : public CDialogImpl<CSettingDlg>, public CMessageFilter
+class CMainDlg : public CDialogImpl<CMainDlg>, public CMessageFilter
 {
 public:
     enum { IDD = IDD_DIALOG1 };
 
-    CSettingDlg()
+    CMainDlg()
     {
     }
 

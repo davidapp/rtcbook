@@ -6,17 +6,44 @@
 #include "atlmisc.h"
 #include "atlcrack.h"
 #include "resource.h"
-#include "Base/DXP.h"
-#include "Base/DUTF8.h"
-#include "COMBridge/WinDSCamera.h"
+#include "atlgdi.h"
+#include "COMBridge/WinDSVideoCapture.h"
+#include "Video/DVideoFrame.h"
+#include "Base/DTimer.h"
 
+DVoid* OnFrame(DVideoFrame frame, DVoid* pFrameData, DVoid* pUserData)
+{
+    DTimer::Stop(0);
+    DTimer::Output(0, DTimeUnit::IN_US);
 
-class CSettingDlg : public CDialogImpl<CSettingDlg>, public CMessageFilter
+    HWND hWnd = (HWND)pUserData;
+    BITMAPINFO* pHeader = (BITMAPINFO*)pFrameData;
+
+    if (frame.GetFormat() == DPixelFmt::YUY2)
+    {
+        DVideoFrame frame24 = DVideoFrame::YUY2ToRAW(frame);
+        pHeader->bmiHeader.biBitCount = 24;
+        pHeader->bmiHeader.biCompression = BI_RGB;
+        pHeader->bmiHeader.biSizeImage = frame24.GetSize();
+
+        ::PostMessage(hWnd, WM_ONFRAME, (WPARAM)frame24.GetBuf(), (LPARAM)pHeader);
+        frame24.Detach();
+    }
+    else if (frame.GetFormat() == DPixelFmt::RGB24)
+    {
+        ::PostMessage(hWnd, WM_ONFRAME, (WPARAM)frame.GetBuf(), (LPARAM)pHeader);
+        frame.Detach();
+    }
+
+    return nullptr;
+}
+
+class CMainDlg : public CDialogImpl<CMainDlg>, public CMessageFilter
 {
 public:
     enum { IDD = IDD_DIALOG1 };
 
-    CSettingDlg()
+    CMainDlg()
     {
     }
 
@@ -28,33 +55,23 @@ public:
     BEGIN_MSG_MAP(CSettingDlg)
         MESSAGE_HANDLER(WM_INITDIALOG, OnInitDialog)
         COMMAND_RANGE_HANDLER(IDOK, IDNO, OnCloseCmd)
-        COMMAND_HANDLER(IDC_COMBO1, CBN_SELCHANGE, OnCbnSelchangeCombo1)
-        COMMAND_ID_HANDLER(IDC_SHOWINFO, OnShowInfo)
-        COMMAND_ID_HANDLER(IDC_DUMPCAPS, OnDumpCaps)
-        COMMAND_HANDLER(IDC_CAPLIST, LBN_SELCHANGE, OnLbnSelchangeCaplist)
+        COMMAND_ID_HANDLER(IDC_START, OnCameraStart)
+        COMMAND_ID_HANDLER(IDC_STOP, OnCameraStop)
+        MESSAGE_HANDLER(WM_ONFRAME, OnMyFrame)
     END_MSG_MAP()
 
     LRESULT OnInitDialog(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/)
     {
         CenterWindow(GetParent());
-
-
-
-        m_devlist = GetDlgItem(IDC_COMBO1);
-        m_info = GetDlgItem(IDC_EDIT1);
-        m_capList = GetDlgItem(IDC_CAPLIST);
-
-        std::vector<DCameraInfo> devs = WinDSCamera::GetDevices();
-        for (const DCameraInfo& dev : devs) {
-            std::wstring wstr = DUTF8::UTF8ToUCS2(dev.m_device_name);
-            m_devlist.AddString(wstr.c_str());
+        DTimer::Init();
+        if (!m_vcap.Init(0, (DVoid*)OnFrame, m_hWnd)) {
+            MessageBox(L"没有输出 640*480 的 RGB24 或 YUY2 格式的选项");
         }
 
-        if (devs.size() > 0) {
-            m_devlist.SetCurSel(0);
-            std::wstring infostr = WinDSCamera::GetInfoString(devs[0]);
-            m_info.SetWindowText(infostr.c_str());
-        }
+        m_frame = GetDlgItem(IDC_FRAME);
+        m_log = GetDlgItem(IDC_LOG);
+        m_mirror = GetDlgItem(IDC_MIRROR);
+        m_rotate = GetDlgItem(IDC_ROTATE);
         return TRUE;
     }
 
@@ -66,61 +83,51 @@ public:
         return 0;
     }
 
-    LRESULT OnCbnSelchangeCombo1(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/)
+    LRESULT OnCameraStart(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL& bHandled)
     {
-        std::vector<DCameraInfo> devs = WinDSCamera::GetDevices();
-        DUInt32 index = m_devlist.GetCurSel();
-        if (index < devs.size()) {
-            std::wstring infostr = WinDSCamera::GetInfoString(devs[index]);
-            m_info.SetWindowText(infostr.c_str());
-        }
+        DTimer::Start(0);
+        m_vcap.Start();
         return 0;
     }
 
-    LRESULT OnShowInfo(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/)
+    LRESULT OnCameraStop(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL& bHandled)
     {
-        std::vector<DCameraInfo> devs = WinDSCamera::GetDevices();
-        DUInt32 index = m_devlist.GetCurSel();
-        if (index < devs.size()) {
-            WinDSCamera::ShowSettingDialog(devs[index].m_device_filter, this->m_hWnd, 0, 0);
-        }
+        m_vcap.Stop();
         return 0;
     }
 
-    LRESULT OnDumpCaps(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/)
+    LRESULT OnMyFrame(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
     {
-        std::vector<DCameraInfo> devs = WinDSCamera::GetDevices();
-        DUInt32 index = m_devlist.GetCurSel();
-        if (index < devs.size()) {
-            m_capList.ResetContent();
+        DVideoFrame frame;
+        frame.Attach((DByte*)wParam);
 
-            std::vector<DCameraCaps> caps = WinDSCamera::GetDeviceCaps(devs[index].m_device_filter);
-            for (DUInt32 i = 0; i < caps.size(); i++)
-            {
-                CString str;
-                str.Format(L"%d_%d*%d", i, caps[i].m_width, caps[i].m_height);
-                m_capList.AddString(str);
-            }
+        BITMAPINFO* pHeader = (BITMAPINFO*)lParam;
+        CClientDC dc(m_hWnd);
+        CRect rect;
+        m_frame.GetClientRect(&rect);
+
+        if (frame.GetFormat() == DPixelFmt::RGB24)
+        {
+            dc.StretchDIBits(0, 0, frame.GetWidth(), frame.GetHeight(), 0, 0,
+                frame.GetWidth(), frame.GetHeight(), frame.GetBuf(),
+                pHeader, DIB_RGB_COLORS, SRCCOPY);
         }
+        else if (frame.GetFormat() == DPixelFmt::RAW)
+        {
+            dc.StretchDIBits(rect.left, rect.top, rect.Width(), rect.Height(), 0, frame.GetHeight(),
+                frame.GetWidth(), -frame.GetHeight(), frame.GetBuf(),
+                pHeader, DIB_RGB_COLORS, SRCCOPY);
+        }
+
+        delete pHeader;
         return 0;
     }
 
-    LRESULT OnLbnSelchangeCaplist(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/)
-    {
-        std::vector<DCameraInfo> devs = WinDSCamera::GetDevices();
-        DUInt32 index = m_devlist.GetCurSel();
-        if (index < devs.size()) {
-            std::vector<DCameraCaps> caps = WinDSCamera::GetDeviceCaps(devs[index].m_device_filter);
-            DUInt32 indexcap = m_capList.GetCurSel();
-            if (indexcap < caps.size()) {
-                std::wstring wstr = DXP::s2ws(caps[indexcap].m_amt);
-                m_info.SetWindowText(wstr.c_str());
-            }
-        }
-        return 0;
-    }
-    
-    CComboBox m_devlist;
-    CEdit m_info;
-    CListBox m_capList;
+
+    CEdit m_log;
+    CButton m_mirror;
+    CComboBox m_rotate;
+    CStatic m_frame;
+
+    WinDSVideoCapture m_vcap;
 };

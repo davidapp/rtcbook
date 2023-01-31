@@ -13,8 +13,120 @@
       <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
       <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
     </Filter>
+    <Filter Include="Common\Base">
+      <UniqueIdentifier>{d73b3222-b430-4a54-b34a-b07c2d8d1267}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Common\COMBridge">
+      <UniqueIdentifier>{bb9356fd-b693-4a03-a10b-a3ae95cb4783}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Common\File">
+      <UniqueIdentifier>{ce408d98-ec1b-47a5-9400-5690a4d8e71a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Common\Video">
+      <UniqueIdentifier>{aa32cbe9-5d3c-40fe-96cc-05b921bc9c48}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="..\..\Common\Base\DBuffer.cpp">
+      <Filter>Common\Base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\Base\DFile.cpp">
+      <Filter>Common\Base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\Base\DTime.cpp">
+      <Filter>Common\Base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\Base\DTimer.cpp">
+      <Filter>Common\Base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\Base\DUTF8.cpp">
+      <Filter>Common\Base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\Base\DXP.cpp">
+      <Filter>Common\Base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\COMBridge\WinDS.cpp">
+      <Filter>Common\COMBridge</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\COMBridge\WinDSCamera.cpp">
+      <Filter>Common\COMBridge</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\COMBridge\WinDSCapturePin.cpp">
+      <Filter>Common\COMBridge</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\COMBridge\WinDSSinkFilter.cpp">
+      <Filter>Common\COMBridge</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\COMBridge\WinDSVideoCapture.cpp">
+      <Filter>Common\COMBridge</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\File\DBmpFile.cpp">
+      <Filter>Common\File</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\Video\DVideoFrame.cpp">
+      <Filter>Common\Video</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\Video\DYUV.cpp">
+      <Filter>Common\Video</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="MainDlg.h">
+      <Filter>Window</Filter>
+    </ClInclude>
+    <ClInclude Include="resource.h">
+      <Filter>Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\Base\DBuffer.h">
+      <Filter>Common\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\Base\DFile.h">
+      <Filter>Common\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\Base\DTime.h">
+      <Filter>Common\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\Base\DTimer.h">
+      <Filter>Common\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\Base\DUTF8.h">
+      <Filter>Common\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\Base\DXP.h">
+      <Filter>Common\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\COMBridge\WinDS.h">
+      <Filter>Common\COMBridge</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\COMBridge\WinDSCamera.h">
+      <Filter>Common\COMBridge</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\COMBridge\WinDSCapturePin.h">
+      <Filter>Common\COMBridge</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\COMBridge\WinDSSinkFilter.h">
+      <Filter>Common\COMBridge</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\COMBridge\WinDSVideoCapture.h">
+      <Filter>Common\COMBridge</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\File\DBmpFile.h">
+      <Filter>Common\File</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\Video\DVideoDefines.h">
+      <Filter>Common\Video</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\Video\DVideoFrame.h">
+      <Filter>Common\Video</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\Video\DYUV.h">
+      <Filter>Common\Video</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="04_DSCapture.rc">
+      <Filter>Resource</Filter>
+    </ResourceCompile>
   </ItemGroup>
 </Project>

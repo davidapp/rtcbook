@@ -9,10 +9,6 @@
 #include "atlgdi.h"
 #include "COMBridge/WinDSVideoCapture.h"
 #include "Video/DVideoFrame.h"
-#include "File/DBmpFile.h"
-#include "Base/DFile.h"
-#include "Video/DYUV.h"
-#include "Base/DTimer.h"
 
 
 DVoid* OnFrame(DVideoFrame frame, DVoid* pFrameData, DVoid* pUserData)
@@ -23,17 +19,9 @@ DVoid* OnFrame(DVideoFrame frame, DVoid* pFrameData, DVoid* pUserData)
     if (frame.GetFormat() == DPixelFmt::YUY2)
     {
         DVideoFrame frame24 = DVideoFrame::YUY2ToRAW(frame);
-
         pHeader->bmiHeader.biBitCount = 24;
         pHeader->bmiHeader.biCompression = BI_RGB;
         pHeader->bmiHeader.biSizeImage = frame24.GetSize();
-
-        //delete pHeader;
-        //DBuffer bufFile = DBmpFile::Make24BitBitmap(pFrame24->m_width, pFrame24->m_height, pFrame24->m_data);
-        //DFile file;
-        //file.OpenFileRW("C:\\Users\\david_ms09i0l\\1.bmp", DFILE_OPEN_ALWAYS);
-        //file.Write(bufFile);
-        //file.Close();
 
         ::PostMessage(hWnd, WM_ONFRAME, (WPARAM)frame24.GetBuf(), (LPARAM)pHeader);
         frame24.Detach();
@@ -73,7 +61,6 @@ public:
         if (!m_vcap.Init(0, (DVoid*)OnFrame, m_hWnd)) {
             MessageBox(L"没有输出 640*480 的 RGB24 或 YUY2 格式的选项");
         }
-        DTimer::Init();
         return 0;
     }
 
@@ -94,7 +81,6 @@ public:
 
     LRESULT OnCameraStart(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL& bHandled)
     {
-        DTimer::Start(0);
         m_vcap.Start();
         return 0;
     }

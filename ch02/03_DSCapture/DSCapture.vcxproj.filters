@@ -23,13 +23,7 @@
     <ClCompile Include="..\..\Common\Video\DYUV.cpp">
       <Filter>Common\Video</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Common\Base\DTimer.cpp">
-      <Filter>Common\Base</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\Common\COMBridge\WinDS.cpp">
-      <Filter>Common\COMBridge</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Common\COMBridge\WinDSCamera.cpp">
       <Filter>Common\COMBridge</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Common\COMBridge\WinDSCapturePin.cpp">
@@ -39,6 +33,9 @@
       <Filter>Common\COMBridge</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Common\COMBridge\WinDSVideoCapture.cpp">
+      <Filter>Common\COMBridge</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\COMBridge\WinDSCamera.cpp">
       <Filter>Common\COMBridge</Filter>
     </ClCompile>
   </ItemGroup>
@@ -53,7 +50,7 @@
       <Filter>Common\Video</Filter>
     </ClInclude>
     <ClInclude Include="MainWindow.h">
-      <Filter>App</Filter>
+      <Filter>Window</Filter>
     </ClInclude>
     <ClInclude Include="resource.h">
       <Filter>Resource</Filter>
@@ -88,13 +85,7 @@
     <ClInclude Include="..\..\Common\Video\DYUV.h">
       <Filter>Common\Video</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Common\Base\DTimer.h">
-      <Filter>Common\Base</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\Common\COMBridge\WinDS.h">
-      <Filter>Common\COMBridge</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Common\COMBridge\WinDSCamera.h">
       <Filter>Common\COMBridge</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Common\COMBridge\WinDSCapturePin.h">
@@ -104,6 +95,9 @@
       <Filter>Common\COMBridge</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Common\COMBridge\WinDSVideoCapture.h">
+      <Filter>Common\COMBridge</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\COMBridge\WinDSCamera.h">
       <Filter>Common\COMBridge</Filter>
     </ClInclude>
   </ItemGroup>
@@ -123,11 +117,11 @@
     <Filter Include="Common\File">
       <UniqueIdentifier>{48d512d3-04d8-4484-a19d-660a40a151b6}</UniqueIdentifier>
     </Filter>
-    <Filter Include="App">
-      <UniqueIdentifier>{02051e04-44d0-4f95-b25e-8996c926a8c7}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Common\COMBridge">
       <UniqueIdentifier>{06422dff-38bb-406f-99c1-fa2f6a5ab0e5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Window">
+      <UniqueIdentifier>{02051e04-44d0-4f95-b25e-8996c926a8c7}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

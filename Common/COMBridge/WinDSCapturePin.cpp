@@ -6,7 +6,6 @@
 #include "atlbase.h"
 #include "atlapp.h"
 #include "atlmisc.h"
-#include "Base/DTimer.h"
 
 WinDSCaptureInputPin::WinDSCaptureInputPin(IBaseFilter* filter, DVoid* pCallback, DVoid* pUserData)
 {
@@ -221,9 +220,6 @@ STDMETHODIMP WinDSCaptureInputPin::GetAllocatorRequirements(ALLOCATOR_PROPERTIES
 
 STDMETHODIMP WinDSCaptureInputPin::Receive(IMediaSample* media_sample)
 {
-    DTimer::Stop(0);
-    DTimer::Output(0, DTimeUnit::IN_US);
-
     if (IsStopped()) {
         return S_FALSE;
     }
