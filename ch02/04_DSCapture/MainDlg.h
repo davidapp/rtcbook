@@ -11,6 +11,7 @@
 #include "Video/DVideoFrame.h"
 #include "Base/DTimer.h"
 
+
 DVoid* OnFrame(DVideoFrame frame, DVoid* pFrameData, DVoid* pUserData)
 {
     DTimer::Stop(0);
@@ -57,6 +58,7 @@ public:
         COMMAND_RANGE_HANDLER(IDOK, IDNO, OnCloseCmd)
         COMMAND_ID_HANDLER(IDC_START, OnCameraStart)
         COMMAND_ID_HANDLER(IDC_STOP, OnCameraStop)
+        COMMAND_HANDLER(IDC_COMBO1, CBN_SELCHANGE, OnCbnSelchangeScale)
         MESSAGE_HANDLER(WM_ONFRAME, OnMyFrame)
     END_MSG_MAP()
 
@@ -70,6 +72,12 @@ public:
 
         m_frame = GetDlgItem(IDC_FRAME);
         m_log = GetDlgItem(IDC_LOG);
+        m_scale = GetDlgItem(IDC_SCALE);
+        m_scale.AddString(L"SCALE_CROP");
+        m_scale.AddString(L"SCALE_FILL");
+        m_scale.AddString(L"SCALE_STRETCH");
+        m_scale.SetCurSel(0);
+
         m_mirror = GetDlgItem(IDC_MIRROR);
         m_rotate = GetDlgItem(IDC_ROTATE);
         return TRUE;
@@ -96,6 +104,15 @@ public:
         return 0;
     }
 
+    LRESULT OnCbnSelchangeScale(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/)
+    {
+        int i = m_scale.GetCurSel();
+        if (i == 0) scaleMode = DScaleMode::CROP;
+        else if (i == 1) scaleMode = DScaleMode::FILL;
+        else if (i == 2) scaleMode = DScaleMode::STRETCH;
+        return 0;
+    }
+
     LRESULT OnMyFrame(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
     {
         DVideoFrame frame;
@@ -104,18 +121,53 @@ public:
         BITMAPINFO* pHeader = (BITMAPINFO*)lParam;
         CClientDC dc(m_hWnd);
         CRect rect;
-        m_frame.GetClientRect(&rect);
+        m_frame.GetWindowRect(rect);
+        CPoint pos(rect.left, rect.top);
+        ::ScreenToClient(m_hWnd, &pos);
+        CRect src = CRect(0, 0, frame.GetWidth(), frame.GetHeight());
+        CRect dst = CRect(0, 0, rect.Width(), rect.Height());
+        if (scaleMode == DScaleMode::CROP) {
+            int crop_width = DMin(src.Width(), dst.Width() * src.Height() / dst.Height());
+            int crop_height = DMin(src.Height(), dst.Height() * src.Width() / dst.Width());
+            int offset_x = (src.Width() - crop_width) / 2;
+            offset_x = int(offset_x / 2) * 2;
+            int offset_y = (src.Height() - crop_height) / 2;
+            src.left = offset_x;
+            src.right = src.left + crop_width;
+            src.top = offset_y;
+            src.bottom = offset_y + crop_height;
+            dst.left = pos.x;
+            dst.top = pos.y;
+            dst.right = pos.x + rect.Width();
+            dst.bottom = pos.y + rect.Height();
+        }
+        else if (scaleMode == DScaleMode::FILL) {
+            uint32_t target_width = DMin(dst.Width(), src.Width() * dst.Height() / src.Height());
+            uint32_t target_height = DMin(dst.Height(), dst.Width() * src.Height() / src.Width());
+            CRect winRect(pos.x, pos.y, pos.x + rect.Width(), pos.y + rect.Height());
+            dc.FillRect(&winRect, 0);
+            dst.left = pos.x;
+            dst.top = pos.y;
+            dst.right = pos.x + target_width;
+            dst.bottom = pos.y + target_height;
+        }
+        else if (scaleMode == DScaleMode::STRETCH) {
+            dst.left = pos.x;
+            dst.top = pos.y;
+            dst.right = pos.x + rect.Width();
+            dst.bottom = pos.y + rect.Height();
+        }
 
         if (frame.GetFormat() == DPixelFmt::RGB24)
         {
-            dc.StretchDIBits(0, 0, frame.GetWidth(), frame.GetHeight(), 0, 0,
+            dc.StretchDIBits(dst.left, dst.top, dst.Width(), dst.Height(), 0, 0,
                 frame.GetWidth(), frame.GetHeight(), frame.GetBuf(),
                 pHeader, DIB_RGB_COLORS, SRCCOPY);
         }
         else if (frame.GetFormat() == DPixelFmt::RAW)
         {
-            dc.StretchDIBits(rect.left, rect.top, rect.Width(), rect.Height(), 0, frame.GetHeight(),
-                frame.GetWidth(), -frame.GetHeight(), frame.GetBuf(),
+            dc.StretchDIBits(dst.left, dst.top, dst.Width(), dst.Height(), src.left, src.top + src.Height(),
+                src.Width(), -src.Height(), frame.GetBuf(),
                 pHeader, DIB_RGB_COLORS, SRCCOPY);
         }
 
@@ -125,9 +177,11 @@ public:
 
 
     CEdit m_log;
+    CComboBox m_scale;
     CButton m_mirror;
     CComboBox m_rotate;
     CStatic m_frame;
 
     WinDSVideoCapture m_vcap;
+    DScaleMode scaleMode = DScaleMode::CROP;
 };

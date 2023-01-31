@@ -32,6 +32,12 @@ enum class DRotation {    // 图像回正需要顺时针旋转的角度
     DEGREE_270 = 270
 };
 
+enum class DScaleMode {
+    CROP = 0,
+    FILL = 1,
+    STRETCH = 2
+};
+
 struct tagDVideoFormat {
     DInt32 width;
     DInt32 height;
