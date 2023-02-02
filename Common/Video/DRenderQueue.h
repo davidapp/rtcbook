@@ -19,7 +19,7 @@ public:
 public:
     DVoid Start();
     DVoid Stop();
-    DVoid Setup(DVoid* wnd, DRect& rect);
+    DVoid Setup(HWND wnd, DRect& rect);
     DInt32 GetQueueSize();
     DInt32 PushFrame(DVideoFrame frame);
 
@@ -28,7 +28,7 @@ protected:
     DVoid Notify();
     DVoid ProcessFrame();
 
-
+    DVoid Render(DVideoFrame f);
 
 private:
     std::deque<DVideoFrame> m_queue;
@@ -41,7 +41,7 @@ private:
     std::thread m_thread;
     std::atomic<bool> m_stoped{};
 
-    DVoid* m_context;
+    HWND m_context;
     DRect m_destRect;
 };
 
