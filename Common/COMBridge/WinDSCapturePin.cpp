@@ -244,10 +244,11 @@ STDMETHODIMP WinDSCaptureInputPin::Receive(IMediaSample* media_sample)
     DVideoFrame frame = DVideoFrame((DByte*)sample_props.pbBuffer, sample_props.lActual, m_final_fmt.width, m_final_fmt.height, m_final_fmt.format);
     BITMAPINFOHEADER* header = new BITMAPINFOHEADER();
     memcpy_s(header, sizeof(BITMAPINFOHEADER), &(m_final_fmt.bmp_header), sizeof(BITMAPINFOHEADER));
-    
+    frame.SetUserData(header);
+
     if (m_pCallback) {
         VideoCallback pFunc = (VideoCallback)m_pCallback;
-        pFunc(frame, header, m_pUserData);
+        pFunc(frame, m_pUserData);
     }
 
     media_sample->Release();

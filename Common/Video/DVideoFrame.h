@@ -19,6 +19,7 @@ struct DVideoFrameData
     DRotation m_rotate;
     DByte* m_pSEIData;
     DUInt32 m_nSEISize;
+    DVoid* m_pUserData;
 
     DByte* buf()
     {
@@ -52,6 +53,8 @@ public:
     DVoid SetDTS(DUInt64 ts);
     DUInt64 GetPTS() const;
     DVoid SetPTS(DUInt64 ts);
+    DVoid* GetUserData() const;
+    DVoid SetUserData(DVoid* pData);
 
 public:
     DUInt32 GetRefCount() const;
@@ -96,4 +99,4 @@ protected:
 };
 
 
-typedef DVoid* (*VideoCallback)(DVideoFrame frame, DVoid* pFrameData, DVoid* pUserData);
+typedef DVoid* (*VideoCallback)(DVideoFrame frame, DVoid* pUserData);

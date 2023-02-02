@@ -73,3 +73,25 @@ struct tagDVideoFormat {
 };
 
 typedef struct tagDVideoFormat DVideoFormat;
+
+
+
+class DRect
+{
+public:
+    DRect() { left = 0; top = 0; right = 0; bottom = 0; };
+    DRect(DInt32 l, DInt32 t, DInt32 r, DInt32 b) {
+        left = l;
+        top = t;
+        right = r;
+        bottom = b;
+    }
+
+    DInt32 Width() const { return right - left; };
+    DInt32 Height() const { return bottom - top; };
+public:
+    DInt32 left;
+    DInt32 top;
+    DInt32 right;
+    DInt32 bottom;
+};

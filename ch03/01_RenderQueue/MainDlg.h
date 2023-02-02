@@ -9,14 +9,13 @@
 #include "atlgdi.h"
 #include "COMBridge/WinDSVideoCapture.h"
 #include "Video/DVideoFrame.h"
-#include "Base/DTimer.h"
+#include "Video/DRenderQueue.h"
 
+DRenderQueue g_localQueue;
+DRenderQueue g_remoteQueue;
 
 DVoid* OnFrame(DVideoFrame frame, DVoid* pUserData)
 {
-    DTimer::Stop(0);
-    DTimer::Output(0, DTimeUnit::IN_US);
-
     HWND hWnd = (HWND)pUserData;
     BITMAPINFO* pHeader = (BITMAPINFO*)frame.GetUserData();
 
@@ -26,14 +25,10 @@ DVoid* OnFrame(DVideoFrame frame, DVoid* pUserData)
         pHeader->bmiHeader.biBitCount = 24;
         pHeader->bmiHeader.biCompression = BI_RGB;
         pHeader->bmiHeader.biSizeImage = frame24.GetSize();
-
-        ::PostMessage(hWnd, WM_ONFRAME, (WPARAM)frame24.GetBuf(), (LPARAM)pHeader);
-        frame24.Detach();
+        g_localQueue.PushFrame(frame24);
     }
-    else if (frame.GetFormat() == DPixelFmt::RGB24)
-    {
-        ::PostMessage(hWnd, WM_ONFRAME, (WPARAM)frame.GetBuf(), (LPARAM)pHeader);
-        frame.Detach();
+    else {
+        g_localQueue.PushFrame(frame);
     }
 
     return nullptr;
@@ -58,28 +53,29 @@ public:
         COMMAND_RANGE_HANDLER(IDOK, IDNO, OnCloseCmd)
         COMMAND_ID_HANDLER(IDC_START, OnCameraStart)
         COMMAND_ID_HANDLER(IDC_STOP, OnCameraStop)
-        COMMAND_HANDLER(IDC_COMBO1, CBN_SELCHANGE, OnCbnSelchangeScale)
-        MESSAGE_HANDLER(WM_ONFRAME, OnMyFrame)
     END_MSG_MAP()
 
     LRESULT OnInitDialog(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/)
     {
         CenterWindow(GetParent());
-        DTimer::Init();
+
         if (!m_vcap.Init(0, (DVoid*)OnFrame, m_hWnd)) {
             MessageBox(L"没有输出 640*480 的 RGB24 或 YUY2 格式的选项");
         }
 
-        m_frame = GetDlgItem(IDC_FRAME);
-        m_log = GetDlgItem(IDC_LOG);
-        m_scale = GetDlgItem(IDC_SCALE);
-        m_scale.AddString(L"SCALE_CROP");
-        m_scale.AddString(L"SCALE_FILL");
-        m_scale.AddString(L"SCALE_STRETCH");
-        m_scale.SetCurSel(0);
+        m_localFrame = GetDlgItem(IDC_LOCALVIEW);
+        m_remoteFrame = GetDlgItem(IDC_REMOTEVIEW);
 
-        m_mirror = GetDlgItem(IDC_MIRROR);
-        m_rotate = GetDlgItem(IDC_ROTATE);
+        g_localQueue.Start();
+        g_remoteQueue.Start();
+
+        CRect rect;
+        m_localFrame.GetWindowRect(rect);
+        CPoint pos(rect.left, rect.top);
+        ::ScreenToClient(m_hWnd, &pos);
+
+        DRect rLocal(pos.x, pos.y, rect.Width(), rect.Height());
+
         return TRUE;
     }
 
@@ -88,12 +84,13 @@ public:
         ::EndDialog(m_hWnd, wID);
         m_hWnd = NULL;
         PostQuitMessage(0);
+        g_localQueue.Stop();
+        g_remoteQueue.Stop();
         return 0;
     }
 
     LRESULT OnCameraStart(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL& bHandled)
     {
-        DTimer::Start(0);
         m_vcap.Start();
         return 0;
     }
@@ -104,26 +101,14 @@ public:
         return 0;
     }
 
-    LRESULT OnCbnSelchangeScale(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/)
-    {
-        int i = m_scale.GetCurSel();
-        if (i == 0) scaleMode = DScaleMode::CROP;
-        else if (i == 1) scaleMode = DScaleMode::FILL;
-        else if (i == 2) scaleMode = DScaleMode::STRETCH;
-        return 0;
-    }
-
-    LRESULT OnMyFrame(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
+    /*LRESULT OnMyFrame(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
     {
         DVideoFrame frame;
         frame.Attach((DByte*)wParam);
 
         BITMAPINFO* pHeader = (BITMAPINFO*)lParam;
         CClientDC dc(m_hWnd);
-        CRect rect;
-        m_frame.GetWindowRect(rect);
-        CPoint pos(rect.left, rect.top);
-        ::ScreenToClient(m_hWnd, &pos);
+
         CRect src = CRect(0, 0, frame.GetWidth(), frame.GetHeight());
         CRect dst = CRect(0, 0, rect.Width(), rect.Height());
         if (scaleMode == DScaleMode::CROP) {
@@ -173,15 +158,11 @@ public:
 
         delete pHeader;
         return 0;
-    }
-
-
-    CEdit m_log;
-    CComboBox m_scale;
-    CButton m_mirror;
-    CComboBox m_rotate;
-    CStatic m_frame;
+    }*/
 
     WinDSVideoCapture m_vcap;
     DScaleMode scaleMode = DScaleMode::CROP;
+
+    CStatic m_localFrame;
+    CStatic m_remoteFrame;
 };

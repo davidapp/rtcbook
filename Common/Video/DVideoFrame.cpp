@@ -148,6 +148,16 @@ DVoid DVideoFrame::SetPTS(DUInt64 ts)
     GetData()->m_pts = ts;
 }
 
+DVoid* DVideoFrame::GetUserData() const
+{
+    return GetData()->m_pUserData;
+}
+
+DVoid DVideoFrame::SetUserData(DVoid* pData)
+{
+    GetData()->m_pUserData = pData;
+}
+
 DUInt32 DVideoFrame::GetRefCount() const
 {
     return (DUInt32)(GetData()->nRefs);
@@ -311,6 +321,7 @@ DBool DVideoFrame::AllocFrame(DInt32 w, DInt32 h, DPixelFmt fmt)
         pData->m_cts = 0;
         pData->m_dts = 0;
         pData->m_pts = 0;
+        pData->m_pUserData = nullptr;
         m_pBuf = pData->buf();
     }
 
