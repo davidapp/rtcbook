@@ -10,6 +10,7 @@
 #include "COMBridge/WinDSVideoCapture.h"
 #include "Video/DVideoFrame.h"
 #include "Base/DTimer.h"
+#include "Video/DVideoFrameUtil.h"
 
 
 DVoid* OnFrame(DVideoFrame frame, DVoid* pUserData)
@@ -22,7 +23,7 @@ DVoid* OnFrame(DVideoFrame frame, DVoid* pUserData)
 
     if (frame.GetFormat() == DPixelFmt::YUY2)
     {
-        DVideoFrame frame24 = DVideoFrame::YUY2ToRAW(frame);
+        DVideoFrame frame24 = DVideoFrameUtil::YUY2ToRAW(frame);
         pHeader->bmiHeader.biBitCount = 24;
         pHeader->bmiHeader.biCompression = BI_RGB;
         pHeader->bmiHeader.biSizeImage = frame24.GetSize();

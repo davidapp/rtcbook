@@ -70,6 +70,9 @@
     <ClCompile Include="..\..\Common\Video\DYUV.cpp">
       <Filter>Common\Video</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\Common\Video\DVideoFrameUtil.cpp">
+      <Filter>Common\Video</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="MainDlg.h">
@@ -121,6 +124,9 @@
       <Filter>Common\Video</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Common\Video\DYUV.h">
+      <Filter>Common\Video</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\Video\DVideoFrameUtil.h">
       <Filter>Common\Video</Filter>
     </ClInclude>
   </ItemGroup>
