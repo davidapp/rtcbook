@@ -162,6 +162,7 @@
     <ClInclude Include="..\..\Common\DTypes.h" />
     <ClInclude Include="..\..\Common\File\DBmpFile.h" />
     <ClInclude Include="..\..\Common\Video\DVideoFrame.h" />
+    <ClInclude Include="..\..\Common\Video\DVideoFrameUtil.h" />
     <ClInclude Include="..\..\Common\Video\DYUV.h" />
     <ClInclude Include="..\..\Common\Video\DVideoDefines.h" />
     <ClInclude Include="MainWindow.h" />
@@ -182,6 +183,7 @@
     <ClCompile Include="..\..\Common\COMBridge\WinDSVideoCapture.cpp" />
     <ClCompile Include="..\..\Common\File\DBmpFile.cpp" />
     <ClCompile Include="..\..\Common\Video\DVideoFrame.cpp" />
+    <ClCompile Include="..\..\Common\Video\DVideoFrameUtil.cpp" />
     <ClCompile Include="..\..\Common\Video\DYUV.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>

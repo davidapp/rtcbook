@@ -1,7 +1,8 @@
 ﻿#include "DVideoFrameUtil.h"
 #include "Base/DXP.h"
+#include "Video/DYUV.h"
 
-
+/*
 DVideoFrame DVideoFrameUtil::I420Scale(const DVideoFrame& srcFrame)
 {
     DVideoFrame frameRet;
@@ -30,6 +31,7 @@ DVideoFrame DVideoFrameUtil::ScaleTo(DInt32 w, DInt32 h)
 
     return frameRet;
 }
+*/
 
 DVideoFrame DVideoFrameUtil::YUY2ToRAW(const DVideoFrame& srcFrame)
 {
@@ -39,9 +41,9 @@ DVideoFrame DVideoFrameUtil::YUY2ToRAW(const DVideoFrame& srcFrame)
     DByte* pDst = bufRGB.GetBuf();
     while (pSRC != pEnd)
     {
-        DYUV::YUV2RGB((DUInt8*)pDst, pSRC[0], pSRC[1] - 128, pSRC[3] - 128);
+        DYUV2RGB::YUV2RAW_BT601((DUInt8*)pDst, pSRC[0], pSRC[1], pSRC[3]);
         pDst += 3;
-        DYUV::YUV2RGB((DUInt8*)pDst, pSRC[2], pSRC[1] - 128, pSRC[3] - 128);
+        DYUV2RGB::YUV2RAW_BT601((DUInt8*)pDst, pSRC[2], pSRC[1], pSRC[3]);
         pDst += 3;
         pSRC += 4;
     }
@@ -50,7 +52,7 @@ DVideoFrame DVideoFrameUtil::YUY2ToRAW(const DVideoFrame& srcFrame)
     return retFrame;
 }
 
-DVideoFrame DVideoFrame::YUY2ToI420(const DVideoFrame& frameSrc)
+DVideoFrame DVideoFrameUtil::YUY2ToI420(const DVideoFrame& frameSrc)
 {
     DVideoFrame frameRet(frameSrc.GetWidth(), frameSrc.GetHeight(), DPixelFmt::I420);
 

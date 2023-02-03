@@ -9,16 +9,17 @@
 #include "atlgdi.h"
 #include "COMBridge/WinDSVideoCapture.h"
 #include "Video/DVideoFrame.h"
+#include "Video/DVideoFrameUtil.h"
 
 
-DVoid* OnFrame(DVideoFrame frame, DVoid* pFrameData, DVoid* pUserData)
+DVoid* OnFrame(DVideoFrame frame, DVoid* pUserData)
 {
     HWND hWnd = (HWND)pUserData;
-    BITMAPINFO* pHeader = (BITMAPINFO*)pFrameData;
+    BITMAPINFO* pHeader = (BITMAPINFO*)frame.GetUserData();
 
     if (frame.GetFormat() == DPixelFmt::YUY2)
     {
-        DVideoFrame frame24 = DVideoFrame::YUY2ToRAW(frame);
+        DVideoFrame frame24 = DVideoFrameUtil::YUY2ToRAW(frame);
         pHeader->bmiHeader.biBitCount = 24;
         pHeader->bmiHeader.biCompression = BI_RGB;
         pHeader->bmiHeader.biSizeImage = frame24.GetSize();

@@ -95,12 +95,6 @@ DVoid DYUV2RGB::YUV2RAW_BT709(DUInt8* out, DInt32 y, DInt32 u, DInt32 v)
     *(out+2) = DYUV::Clamp((int32_t)(-(v * -115) + y1 + -15880) >> 6);
 }
 
-DVoid DYUV2RGB::YUV2RAW_QUICK(DUInt8* out, DInt32 Y, DInt32 U, DInt32 V)
-{
-    out[2] = DYUV::Clamp(Y + ((91881 * V + 32768) >> 16));
-    out[1] = DYUV::Clamp(Y + ((-22554 * U - 46802 * V + 32768) >> 16));
-    out[0] = DYUV::Clamp(Y + ((116130 * U + 32768) >> 16));
-}
 
 DInt32 DYUV::Clamp0(DInt32 v)
 {

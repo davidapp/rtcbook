@@ -12,7 +12,7 @@ public:
     static DVideoFrame YUY2ToI420(const DVideoFrame& buf);
 
 public:
-    static DVideoFrame I420Scale(const DVideoFrame& srcFrame);
+    //static DVideoFrame I420Scale(const DVideoFrame& srcFrame);
 
 public:
     static DVideoFrame Rotate(const DVideoFrame& srcFrame, DRotation rotate);

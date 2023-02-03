@@ -38,6 +38,9 @@
     <ClCompile Include="..\..\Common\COMBridge\WinDSCamera.cpp">
       <Filter>Common\COMBridge</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\Common\Video\DVideoFrameUtil.cpp">
+      <Filter>Common\Video</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Common\Base\DBuffer.h">
@@ -99,6 +102,9 @@
     </ClInclude>
     <ClInclude Include="..\..\Common\COMBridge\WinDSCamera.h">
       <Filter>Common\COMBridge</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\Video\DVideoFrameUtil.h">
+      <Filter>Common\Video</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
