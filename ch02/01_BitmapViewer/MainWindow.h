@@ -143,14 +143,14 @@ public:
             DByte* pV = pY + bufYUV.GetSize() * 5 / 6;
             DByte* pRGB = m_info.imageBuf + (m_info.imageHeight - 1) * m_info.imageLineBytes;
             for (DUInt32 i = 0; i < m_info.imageHeight; i++) {
-                DYUV::BGR24ToYRow(pRGB, pY, m_info.imageWidth);
+                DRGB2YUV::RAWToYRow(pRGB, pY, m_info.imageWidth);
                 pY += m_info.imageWidth;
                 pRGB -= m_info.imageLineBytes;
             }
             pRGB = m_info.imageBuf + (m_info.imageHeight - 1) * m_info.imageLineBytes;
             for (DUInt32 i = 0; i < m_info.imageHeight / 2; i++) 
             {
-                DYUV::BGR24ToUVRow(pRGB, m_info.imageLineBytes, pU, pV, m_info.imageWidth);
+                DRGB2YUV::RAWToUVRow(pRGB, m_info.imageLineBytes, pU, pV, m_info.imageWidth);
                 pU += m_info.imageWidth / 2;
                 pV += m_info.imageWidth / 2;
                 pRGB -= m_info.imageLineBytes * 2;
@@ -204,19 +204,19 @@ public:
             CClientDC dc(m_hWnd);
             DUInt32 x = 0, y = height + 10;
             for (DUInt32 i = 0; i < width * height / 4; i++) {
-                DInt32 U = *pU - 128;
-                DInt32 V = *pV - 128;
+                DInt32 U = *pU;
+                DInt32 V = *pV;
                 DInt32 Y1 = *pY;
                 DInt32 Y2 = *(pY + 1);
                 DInt32 Y3 = *(pY + width);
                 DInt32 Y4 = *(pY + width + 1);
-                DYUV::YUV2RGB(pRGB, Y1, U, V);
+                DYUV2RGB::YUV2RAW_BT601(pRGB, Y1, U, V);
                 dc.SetPixel(x, y, DRGB(pRGB[2], pRGB[1], pRGB[0]));
-                DYUV::YUV2RGB(pRGB, Y2, U, V);
+                DYUV2RGB::YUV2RAW_BT601(pRGB, Y2, U, V);
                 dc.SetPixel(x+1, y, DRGB(pRGB[2], pRGB[1], pRGB[0]));
-                DYUV::YUV2RGB(pRGB, Y3, U, V);
+                DYUV2RGB::YUV2RAW_BT601(pRGB, Y3, U, V);
                 dc.SetPixel(x, y+1, DRGB(pRGB[2], pRGB[1], pRGB[0]));
-                DYUV::YUV2RGB(pRGB, Y4, U, V);
+                DYUV2RGB::YUV2RAW_BT601(pRGB, Y4, U, V);
                 dc.SetPixel(x+1, y+1, DRGB(pRGB[2], pRGB[1], pRGB[0]));
                 pY+=2;
                 pU++;

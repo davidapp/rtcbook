@@ -1216,6 +1216,12 @@ void ScalePlane(const uint8_t* src, int src_stride, int src_width, int src_heigh
         dst_stride, src, dst);
 }
 
+DVideoFrame DScale::I420Scale(const DVideoFrame& frame)
+{
+    DVideoFrame f;
+    return f;
+}
+
 int DScale::I420Scale(const uint8_t* src_y,
     int src_stride_y,
     const uint8_t* src_u,

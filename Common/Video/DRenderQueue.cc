@@ -5,9 +5,11 @@ DRenderQueue::DRenderQueue()
 {
     m_stoped.store(false);
     m_frame_in_queue.store(false);
+    m_context = nullptr;
 }
 
-DRenderQueue::~DRenderQueue() {
+DRenderQueue::~DRenderQueue() 
+{
 
 }
 
@@ -99,6 +101,12 @@ DVoid DRenderQueue::Render(DVideoFrame f)
             pHeader, DIB_RGB_COLORS, SRCCOPY);
     }
     else if (f.GetFormat() == DPixelFmt::RAW)
+    {
+        dc.StretchDIBits(m_destRect.left, m_destRect.top, m_destRect.Width(), m_destRect.Height(), src.left, src.top + src.Height(),
+            src.Width(), -src.Height(), f.GetBuf(),
+            pHeader, DIB_RGB_COLORS, SRCCOPY);
+    }
+    else if (f.GetFormat() == DPixelFmt::I420)
     {
         dc.StretchDIBits(m_destRect.left, m_destRect.top, m_destRect.Width(), m_destRect.Height(), src.left, src.top + src.Height(),
             src.Width(), -src.Height(), f.GetBuf(),

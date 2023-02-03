@@ -2,6 +2,7 @@
 
 #include "DTypes.h"
 #include "DVideoDefines.h"
+#include "DVideoFrame.h"
 
 typedef enum FilterMode {
     kFilterNone = 0,      // Point sample; Fastest.
@@ -13,6 +14,9 @@ typedef enum FilterMode {
 
 class DScale
 {
+public:
+    static DVideoFrame I420Scale(const DVideoFrame& srcFrame);
+
 public:
     static DInt32 I420Scale(const DByte* src_y, DInt32 src_stride_y,
         const DByte* src_u, DInt32 src_stride_u,

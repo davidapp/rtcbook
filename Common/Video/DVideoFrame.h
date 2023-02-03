@@ -10,9 +10,9 @@ struct DVideoFrameData
     DInt32 nAllocLength;
     DInt32 m_width;
     DInt32 m_height;
+    DInt32 m_lineSize;
     DPixelFmt m_fmt;
     DMemType m_type;
-    DInt32 m_stride;
     DUInt64 m_cts;
     DUInt64 m_dts;
     DUInt64 m_pts;
@@ -72,18 +72,12 @@ public:
     DVoid  Zero();
 
 public:
-    DVideoFrame Copy(DBool bWithSEI=false);
-    DVoid Mirror();
-    DVideoFrame ScaleTo(DInt32 w, DInt32 h);
-    DVideoFrame Crop(DInt32 x, DInt32 y, DInt32 w, DInt32 h);
-
-public:
-    static DVideoFrame YUY2ToRAW(const DVideoFrame& buf);
-    static DInt32 DefaultStride(DInt32 width, DPixelFmt fmt);
+    DVideoFrame Copy();
 
 public:
     static DVoid DX86_STDCALL Release(DVideoFrameData* pData);
     static const DVideoFrame& DX86_STDCALL GetNullVideoFrame();
+    static DInt32 DefaultLineSize(DInt32 width, DPixelFmt fmt);
 
 protected:
     DByte* m_pBuf;

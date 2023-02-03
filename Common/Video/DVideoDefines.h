@@ -8,9 +8,11 @@
 enum class DPixelFmt {
     Unknown,
     RGB24,// [(B,G,R),(B,G,R)...]
-    RAW,   // [(B,G,R),(B,G,R)...] 第一行是最后一行
+    RAW,  // [(B,G,R),(B,G,R)...] 第一行是最后一行
     ARGB, // [(A,R,G,B),...]
+    ABGR, // [(A,B,G,R),...]
     BGRA, // [(B,G,R,A),...]
+    RGBA, // [(R,G,B,A),...]
     RGB565, // 16 bit
     I420, // [Y,U,V] or called IYUV
     YV12, // [Y,V,U] 

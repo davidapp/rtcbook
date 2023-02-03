@@ -21,12 +21,16 @@ DVoid* OnFrame(DVideoFrame frame, DVoid* pUserData)
 
     if (frame.GetFormat() == DPixelFmt::YUY2)
     {
-        DVideoFrame frame24 = DVideoFrame::YUY2ToRAW(frame);
-        pHeader->bmiHeader.biBitCount = 24;
-        pHeader->bmiHeader.biCompression = BI_RGB;
-        pHeader->bmiHeader.biSizeImage = frame24.GetSize();
-        frame24.SetUserData(pHeader);
-        g_localQueue.PushFrame(frame24);
+        DVideoFrame i420frame = DVideoFrame::YUY2ToI420(frame);
+        DVideoFrame i420frame_s = i420frame.ScaleTo(100,100);
+        
+        //DVideoFrame frame24 = DVideoFrame::YUY2ToRAW(frame);
+        //pHeader->bmiHeader.biBitCount = 24;
+        //pHeader->bmiHeader.biCompression = BI_RGB;
+        //pHeader->bmiHeader.biSizeImage = frame24.GetSize();
+        //frame24.SetUserData(pHeader);
+        //g_localQueue.PushFrame(frame24);
+        g_localQueue.PushFrame(i420frame_s);
     }
     else {
         g_localQueue.PushFrame(frame);

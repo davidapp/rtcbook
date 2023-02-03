@@ -2,6 +2,8 @@
 #include <assert.h>
 #include "Base/DXP.h"
 #include "Video/DYUV.h"
+#include "Video/DScale.h"
+
 
 ////////////////////////////////////////////////////////////////////////////////////
 // DVideoFrame
@@ -10,7 +12,7 @@ struct DVideoFrameMemory{
     DVideoFrameData data;
     DVoid* buf;
 };
-const DVideoFrameMemory nNullVideoFrame = { {-1, 0, 0, 0, DPixelFmt::Unknown, DMemType::RAW,0,0,0,0}, nullptr };
+const DVideoFrameMemory nNullVideoFrame = { {-1, 0, 0, 0, 0, DPixelFmt::Unknown, DMemType::RAW,0,0,0,DRotation::DEGREE_0}, nullptr };
 const DVideoFrameData* _nullVideoFrameData = & nNullVideoFrame.data;
 const DByte* _nullVideoFrame = (const DByte*)_nullVideoFrameData + sizeof(DVideoFrameData);
 
@@ -30,7 +32,7 @@ DVideoFrame::DVideoFrame(DInt32 w, DInt32 h, DPixelFmt fmt)
 DVideoFrame::DVideoFrame(DByte* data, DUInt32 data_size, DInt32 w, DInt32 h, DPixelFmt fmt, DMemType mtype)
 {
     Init();
-    AllocFrame(data_size, w, h, DVideoFrame::DefaultStride(w,fmt), fmt, mtype);
+    AllocFrame(data_size, w, h, DVideoFrame::DefaultLineSize(w,fmt), fmt, mtype);
     DXP::memcpy(m_pBuf, data, data_size);
 }
 
@@ -115,7 +117,7 @@ DMemType DVideoFrame::GetMemType() const
 
 DInt32 DVideoFrame::GetLineSize() const
 {
-    return GetData()->m_stride;
+    return GetData()->m_lineSize;
 }
 
 DUInt64 DVideoFrame::GetCTS() const
@@ -227,43 +229,11 @@ DVoid DVideoFrame::Zero()
     memset(m_pBuf, 0, GetSize());
 }
 
-
-DInt32 DVideoFrame::DefaultStride(DInt32 width, DPixelFmt fmt) 
+// NOT INCLUDE SEI DATA
+DVideoFrame DVideoFrame::Copy()
 {
-    switch (fmt)
-    {
-    case DPixelFmt::I420:
-        return width;
-    case DPixelFmt::RGB565:
-    case DPixelFmt::YUY2:
-        return width * 2;
-    case DPixelFmt::RGB24:
-        return width * 3;
-    case DPixelFmt::BGRA:
-    case DPixelFmt::ARGB:
-        return width * 4;
-    default:
-        return 0;
-    }
-}
-
-DVideoFrame DVideoFrame::YUY2ToRAW(const DVideoFrame& srcFrame)
-{
-    DBuffer bufRGB(srcFrame.GetWidth() * srcFrame.GetHeight() * 3);
-    DByte* pSRC = srcFrame.GetBuf();
-    DByte* pEnd = pSRC + srcFrame.GetSize();
-    DByte* pDst = bufRGB.GetBuf();
-    while (pSRC != pEnd)
-    {
-        DYUV::YUV2RGB((DUInt8*)pDst, pSRC[0], pSRC[1] - 128, pSRC[3] - 128);
-        pDst += 3;
-        DYUV::YUV2RGB((DUInt8*)pDst, pSRC[2], pSRC[1] - 128, pSRC[3] - 128);
-        pDst += 3;
-        pSRC += 4;
-    }
-    DVideoFrame retFrame(bufRGB.GetBuf(), bufRGB.GetSize(), srcFrame.GetWidth(), srcFrame.GetHeight(),
-                DPixelFmt::RAW);
-    return retFrame;
+    DVideoFrame frameRet;
+    return frameRet;
 }
 
 DVoid DX86_STDCALL DVideoFrame::Release(DVideoFrameData* pData)
@@ -282,6 +252,33 @@ DVoid DX86_STDCALL DVideoFrame::Release(DVideoFrameData* pData)
 const DVideoFrame& DX86_STDCALL DVideoFrame::GetNullVideoFrame()
 {
     return *(DVideoFrame*)&_nullVideoFrame;
+}
+
+DInt32 DVideoFrame::DefaultLineSize(DInt32 width, DPixelFmt fmt)
+{
+    DInt32 line = width * 3;
+    switch (fmt)
+    {
+    case DPixelFmt::I420:
+        return width;
+    case DPixelFmt::RGB565:
+    case DPixelFmt::YUY2:
+        return width * 2;
+    case DPixelFmt::RGB24:
+        return line;
+    case DPixelFmt::ARGB:
+    case DPixelFmt::ABGR:
+    case DPixelFmt::BGRA:
+    case DPixelFmt::RGBA:
+        return width * 4;
+    case DPixelFmt::RAW:
+        if (line % 4 != 0) {
+            line += (4 - line % 4);
+        }
+        return line;
+    default:
+        return 0;
+    }
 }
 
 DVideoFrameData* DVideoFrame::GetData() const
@@ -305,7 +302,7 @@ DBool DVideoFrame::AllocFrame(DInt32 w, DInt32 h, DPixelFmt fmt)
     }
     else
     {
-        DInt32 lineSize = DefaultStride(w, fmt);
+        DInt32 lineSize = DVideoFrame::DefaultLineSize(w, fmt);
         DInt32 videoSize = lineSize * h;
         DVideoFrameData* pData = (DVideoFrameData*)malloc(sizeof(DVideoFrameData) + videoSize);
         if (pData == nullptr)
@@ -317,7 +314,7 @@ DBool DVideoFrame::AllocFrame(DInt32 w, DInt32 h, DPixelFmt fmt)
         pData->m_height = h;
         pData->m_fmt = fmt;
         pData->m_type = DMemType::RAW;
-        pData->m_stride = lineSize;
+        pData->m_lineSize = lineSize;
         pData->m_cts = 0;
         pData->m_dts = 0;
         pData->m_pts = 0;
@@ -354,7 +351,7 @@ DBool DVideoFrame::AllocFrame(DUInt32 data_size, DInt32 w, DInt32 h, DInt32 line
         pData->m_height = h;
         pData->m_fmt = fmt;
         pData->m_type = mtype;
-        pData->m_stride = lineSize;
+        pData->m_lineSize = lineSize;
         pData->m_cts = 0;
         pData->m_dts = 0;
         pData->m_pts = 0;
