@@ -119,9 +119,12 @@ static __inline void YuvPixel(uint8_t y,
 //  R = (Y - 16) * 1.164              - V * -1.596
 //  G = (Y - 16) * 1.164 - U *  0.391 - V *  0.813
 //  B = (Y - 16) * 1.164 - U * -2.018
-DVoid DYUV2RGB::YUV2RAW_BT601(DUInt8* out, DInt32 Y, DInt32 U, DInt32 V)
+DVoid DYUV2RGB::YUV2RAW_BT601(DUInt8* out, DInt32 y, DInt32 u, DInt32 v)
 {
-    YuvPixel(Y, U, V, out, out + 1, out + 2, &kYuvI601Constants);
+    DUInt32 y1 = (DUInt32)(y * 0x0101 * 18997) >> 16;
+    *out = DYUV::Clamp((DInt32)(-(u * -128) + y1 + -17544) >> 6);
+    *(out+1) = DYUV::Clamp((DInt32)(-(u * 25 + v * 52) + y1 + 8696) >> 6);
+    *(out+2) = DYUV::Clamp((DInt32)(-(v * -102) + y1 + -14216) >> 6);
 }
 
 #undef BB
@@ -170,9 +173,12 @@ const struct YuvConstants kYuvJPEGConstants = {
 // *  R = Y                - V * -1.40200
 // *  G = Y - U *  0.34414 - V *  0.71414
 // *  B = Y - U * -1.77200
-DVoid DYUV2RGB::YUV2RAW_JPEG(DUInt8* out, DInt32 Y, DInt32 U, DInt32 V)
+DVoid DYUV2RGB::YUV2RAW_JPEG(DUInt8* out, DInt32 y, DInt32 u, DInt32 v)
 {
-    YuvPixel(Y, U, V, out, out + 1, out + 2, &kYuvJPEGConstants);
+    uint32_t y1 = (uint32_t)(y * 0x0101 * 16320) >> 16;
+    *out = DYUV::Clamp((int32_t)(-(u * -113) + y1 + -14432) >> 6);
+    *(out + 1) = DYUV::Clamp((int32_t)(-(u * 22 + v * 46) + y1 + 8736) >> 6);
+    *(out + 2) = DYUV::Clamp((int32_t)(-(v * -90) + y1 + -11488) >> 6);
 }
 
 #undef BB
@@ -207,11 +213,6 @@ DVoid DYUV2RGB::YUV2RAW_JPEG(DUInt8* out, DInt32 Y, DInt32 U, DInt32 V)
 #define BG (UG * 128 + VG * 128 + YGB)
 #define BR (VR * 128 + YGB)
 
-// BT.709 YUV to RGB reference
-//  R = (Y - 16) * 1.164              - V * -1.793
-//  G = (Y - 16) * 1.164 - U *  0.213 - V *  0.533
-//  B = (Y - 16) * 1.164 - U * -2.112
-// See also http://www.equasys.de/colorconversion.html
 
 const struct YuvConstants kYuvH709Constants = {
     {UB, 0, UB, 0, UB, 0, UB, 0, UB, 0, UB, 0, UB, 0, UB, 0,
@@ -225,12 +226,15 @@ const struct YuvConstants kYuvH709Constants = {
     {BR, BR, BR, BR, BR, BR, BR, BR, BR, BR, BR, BR, BR, BR, BR, BR},
     {YG, YG, YG, YG, YG, YG, YG, YG, YG, YG, YG, YG, YG, YG, YG, YG} };
 
-DVoid DYUV2RGB::YUV2RAW_BT709(DUInt8* out, DInt32 Y, DInt32 U, DInt32 V)
+DVoid DYUV2RGB::YUV2RAW_BT709(DUInt8* out, DInt32 y, DInt32 u, DInt32 v)
 {
-    YuvPixel(Y, U, V, out, out + 1, out + 2, &kYuvH709Constants);
+    uint32_t y1 = (uint32_t)(y * 0x0101 * 18997) >> 16;
+    *out = DYUV::Clamp((int32_t)(-(u * -128) + y1 + -17544) >> 6);
+    *(out+1) = DYUV::Clamp((int32_t)(-(u * 14 + v * 34) + y1 + 4984) >> 6);
+    *(out+2) = DYUV::Clamp((int32_t)(-(v * -115) + y1 + -15880) >> 6);
 }
 
-DVoid DYUV2RGB::YUV2RAW(DUInt8* out, DInt32 Y, DInt32 U, DInt32 V)
+DVoid DYUV2RGB::YUV2RAW_QUICK(DUInt8* out, DInt32 Y, DInt32 U, DInt32 V)
 {
     out[2] = DYUV::Clamp(Y + ((91881 * V + 32768) >> 16));
     out[1] = DYUV::Clamp(Y + ((-22554 * U - 46802 * V + 32768) >> 16));

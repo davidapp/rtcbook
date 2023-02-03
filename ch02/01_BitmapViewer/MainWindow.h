@@ -210,13 +210,13 @@ public:
                 DInt32 Y2 = *(pY + 1);
                 DInt32 Y3 = *(pY + width);
                 DInt32 Y4 = *(pY + width + 1);
-                DYUV2RGB::YUV2RAW_BT601(pRGB, Y1, U, V);
+                DYUV2RGB::YUV2RAW_BT709(pRGB, Y1, U, V);
                 dc.SetPixel(x, y, DRGB(pRGB[2], pRGB[1], pRGB[0]));
-                DYUV2RGB::YUV2RAW_BT601(pRGB, Y2, U, V);
+                DYUV2RGB::YUV2RAW_BT709(pRGB, Y2, U, V);
                 dc.SetPixel(x+1, y, DRGB(pRGB[2], pRGB[1], pRGB[0]));
-                DYUV2RGB::YUV2RAW_BT601(pRGB, Y3, U, V);
+                DYUV2RGB::YUV2RAW_BT709(pRGB, Y3, U, V);
                 dc.SetPixel(x, y+1, DRGB(pRGB[2], pRGB[1], pRGB[0]));
-                DYUV2RGB::YUV2RAW_BT601(pRGB, Y4, U, V);
+                DYUV2RGB::YUV2RAW_BT709(pRGB, Y4, U, V);
                 dc.SetPixel(x+1, y+1, DRGB(pRGB[2], pRGB[1], pRGB[0]));
                 pY+=2;
                 pU++;
