@@ -33,15 +33,68 @@ DVideoFrame DVideoFormat::YUY2ToI420(const DVideoFrame& frameSrc)
     DByte* dst_y = frameRet.GetBuf();
     DInt32 dst_stride_y = frameRet.GetLineSize();
     DByte* dst_u = frameRet.GetBuf() + frameRet.GetHeight() * frameRet.GetLineSize();
-    DInt32 dst_stride_u = frameRet.GetLineSize();
+    DInt32 dst_stride_u = frameRet.GetLineSize() / 2;
     DByte* dst_v = dst_u + frameRet.GetHeight() * frameRet.GetLineSize() / 4;
-    DInt32 dst_stride_v = frameRet.GetLineSize();
+    DInt32 dst_stride_v = frameRet.GetLineSize() / 2;
 
     DVideoFormat::YUY2ToI420(src_yuy2, src_stride_yuy2, dst_y, dst_stride_y,
         dst_u, dst_stride_u, dst_v, dst_stride_v, frameSrc.GetWidth(), frameSrc.GetHeight());
 
     return frameRet;
 }
+
+DVideoFrame DVideoFormat::I420ToRAW(const DVideoFrame& srcFrame)
+{
+    DBuffer bufRGB(srcFrame.GetWidth() * srcFrame.GetHeight() * 3);
+    DByte* pDst = bufRGB.GetBuf();
+
+    DByte* pY = srcFrame.GetBuf();
+    DByte* pU = pY + srcFrame.GetSize() * 2 / 3;
+    DByte* pV = pY + srcFrame.GetSize() * 5 / 6;
+    DColor RGB = 0;
+    DUInt8* pRGB = (DUInt8*)&RGB;
+    DInt32 w = srcFrame.GetWidth();
+    DInt32 h = srcFrame.GetHeight();
+
+    DInt32 x = 0, y = 0;
+    for (DInt32 i = 0; i < w * h / 4; i++) {
+        DInt32 U = *pU;
+        DInt32 V = *pV;
+        DInt32 Y1 = *pY;
+        DInt32 Y2 = *(pY + 1);
+        DInt32 Y3 = *(pY + w);
+        DInt32 Y4 = *(pY + w + 1);
+        DYUV2RGB::YUV2RAW_BT601(pRGB, Y1, U, V);
+        pDst[(y * w + x) * 3] = pRGB[0];
+        pDst[(y * w + x) * 3 + 1] = pRGB[1];
+        pDst[(y * w + x) * 3 + 2] = pRGB[2];
+        DYUV2RGB::YUV2RAW_BT601(pRGB, Y2, U, V);
+        pDst[(y * w + x + 1) * 3] = pRGB[0];
+        pDst[(y * w + x + 1) * 3 + 1] = pRGB[1];
+        pDst[(y * w + x + 1) * 3 + 2] = pRGB[2];
+        DYUV2RGB::YUV2RAW_BT601(pRGB, Y3, U, V);
+        pDst[((y + 1) * w + x) * 3] = pRGB[0];
+        pDst[((y + 1) * w + x) * 3 + 1] = pRGB[1];
+        pDst[((y + 1) * w + x) * 3 + 2] = pRGB[2];
+        DYUV2RGB::YUV2RAW_BT601(pRGB, Y4, U, V);
+        pDst[((y + 1) * w + x + 1) * 3] = pRGB[0];
+        pDst[((y + 1) * w + x + 1) * 3 + 1] = pRGB[1];
+        pDst[((y + 1) * w + x + 1) * 3 + 2] = pRGB[2];
+        pY += 2;
+        pU++;
+        pV++;
+        x += 2;
+        if (x >= srcFrame.GetWidth()) {
+            x = 0;
+            y += 2;
+            pY += srcFrame.GetWidth();
+        }
+    }
+
+    DVideoFrame retFrame(bufRGB.GetBuf(), bufRGB.GetSize(), w, h, DPixelFmt::RAW);
+    return retFrame;
+}
+
 
 // Copy row of YUY2 Y's (422) into Y (420/422).
 DVoid YUY2ToYRow(const DByte* src_yuy2, DByte* dst_y, DInt32 width)
@@ -59,11 +112,10 @@ DVoid YUY2ToYRow(const DByte* src_yuy2, DByte* dst_y, DInt32 width)
 
 DVoid YUY2ToUVRow(const DByte* src_yuy2, DInt32 src_stride_yuy2, DByte* dst_u, DByte* dst_v, DInt32 width)
 {
-    // Output a row of UV values, filtering 2 rows of YUY2.
     for (DInt32 x = 0; x < width; x += 2)
     {
-        dst_u[0] = (src_yuy2[1] + src_yuy2[src_stride_yuy2 + 1] + 1) >> 1;
-        dst_v[0] = (src_yuy2[3] + src_yuy2[src_stride_yuy2 + 3] + 1) >> 1;
+        dst_u[0] = (src_yuy2[1] + src_yuy2[src_stride_yuy2 + 1] + 1) >> 1; // 本行的 U + 下行的 U 平均
+        dst_v[0] = (src_yuy2[3] + src_yuy2[src_stride_yuy2 + 3] + 1) >> 1; // 本行的 V + 下行的 V 平均
         src_yuy2 += 4;
         dst_u += 1;
         dst_v += 1;

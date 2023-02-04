@@ -79,6 +79,7 @@ public:
         }
 
         m_frame = GetDlgItem(IDC_FRAME);
+
         m_log = GetDlgItem(IDC_LOG);
         m_scale = GetDlgItem(IDC_SCALE);
         m_scale.AddString(L"SCALE_CROP");
@@ -88,6 +89,12 @@ public:
 
         m_mirror = GetDlgItem(IDC_MIRROR);
         m_rotate = GetDlgItem(IDC_ROTATE);
+        m_rotate.AddString(L"ROTATION_0");
+        m_rotate.AddString(L"ROTATION_90");
+        m_rotate.AddString(L"ROTATION_180");
+        m_rotate.AddString(L"ROTATION_270");
+        m_rotate.SetCurSel(0);
+
         return TRUE;
     }
 
@@ -192,4 +199,5 @@ public:
 
     WinDSVideoCapture m_vcap;
     DScaleMode scaleMode = DScaleMode::CROP;
+    DRotation rotate = DRotation::DEGREE_0;
 };

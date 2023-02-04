@@ -9,23 +9,34 @@ DVideoFrame DVideoI420::Scale(const DVideoFrame& srcFrame, DInt32 w, DInt32 h, F
     //DByte* pU = pY + frame.GetSize() * 2 / 3;
     //DByte* pV = pY + frame.GetSize() * 5 / 6;
 
+    DInt32 src_w = srcFrame.GetWidth();
+    DInt32 src_h = srcFrame.GetHeight();
+    DInt32 lineSize = srcFrame.GetLineSize();
+
     DVideoFrame frameRet(w, h, DPixelFmt::I420);
     DByte* src_y = srcFrame.GetBuf();
-    DInt32 src_stride_y = srcFrame.GetLineSize();
-    DByte* src_u = src_y + srcFrame.GetHeight() * srcFrame.GetLineSize();
-    DInt32 src_stride_u = src_stride_y;
-    DByte* src_v = src_u + srcFrame.GetHeight() * srcFrame.GetLineSize() / 2;
-    DInt32 src_stride_v = src_stride_y;
+    DInt32 src_stride_y = lineSize;
+    DByte* src_u = src_y + src_h * lineSize;
+    DInt32 src_stride_u = src_stride_y / 2;
+    DByte* src_v = src_u + src_h * lineSize / 4;
+    DInt32 src_stride_v = src_stride_y / 2;
 
+    DInt32 dst_lineSize = frameRet.GetLineSize();
     DByte* dst_y = frameRet.GetBuf();
-    DInt32 dst_stride_y = frameRet.GetLineSize();
-    DByte* dst_u = frameRet.GetBuf();
-    DInt32 dst_stride_u = frameRet.GetLineSize() / 2;
-    DByte* dst_v = frameRet.GetBuf();
-    DInt32 dst_stride_v = frameRet.GetLineSize() / 2;
+    DInt32 dst_stride_y = dst_lineSize;
+    DByte* dst_u = dst_y + h * dst_lineSize;
+    DInt32 dst_stride_u = dst_lineSize / 2;
+    DByte* dst_v = dst_u + h * dst_lineSize / 4;
+    DInt32 dst_stride_v = dst_lineSize / 2;
 
-    DVideoI420::I420Scale(src_y, src_stride_y, src_u, src_stride_u, src_v, src_stride_v, srcFrame.GetWidth(), srcFrame.GetHeight(),
-        dst_y, dst_stride_y, dst_u, dst_stride_u, dst_v, dst_stride_v, w, h, filter);
+    DVideoI420::I420Scale(src_y, src_stride_y, 
+        src_u, src_stride_u, 
+        src_v, src_stride_v, 
+        srcFrame.GetWidth(), srcFrame.GetHeight(),
+        dst_y, dst_stride_y, 
+        dst_u, dst_stride_u, 
+        dst_v, dst_stride_v, 
+        w, h, filter);
 
     return frameRet;
 }
