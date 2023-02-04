@@ -141,9 +141,10 @@
     <ClCompile Include="..\..\Common\COMBridge\WinDSSinkFilter.cpp" />
     <ClCompile Include="..\..\Common\COMBridge\WinDSVideoCapture.cpp" />
     <ClCompile Include="..\..\Common\File\DBmpFile.cpp" />
+    <ClCompile Include="..\..\Common\Video\DVideoColor.cpp" />
+    <ClCompile Include="..\..\Common\Video\DVideoFormat.cpp" />
+    <ClCompile Include="..\..\Common\Video\DVideoI420.cpp" />
     <ClCompile Include="..\..\Common\Video\DVideoFrame.cpp" />
-    <ClCompile Include="..\..\Common\Video\DVideoFrameUtil.cpp" />
-    <ClCompile Include="..\..\Common\Video\DYUV.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -159,10 +160,11 @@
     <ClInclude Include="..\..\Common\COMBridge\WinDSSinkFilter.h" />
     <ClInclude Include="..\..\Common\COMBridge\WinDSVideoCapture.h" />
     <ClInclude Include="..\..\Common\File\DBmpFile.h" />
+    <ClInclude Include="..\..\Common\Video\DVideoColor.h" />
+    <ClInclude Include="..\..\Common\Video\DVideoFormat.h" />
+    <ClInclude Include="..\..\Common\Video\DVideoI420.h" />
     <ClInclude Include="..\..\Common\Video\DVideoDefines.h" />
     <ClInclude Include="..\..\Common\Video\DVideoFrame.h" />
-    <ClInclude Include="..\..\Common\Video\DVideoFrameUtil.h" />
-    <ClInclude Include="..\..\Common\Video\DYUV.h" />
     <ClInclude Include="MainDlg.h" />
     <ClInclude Include="resource.h" />
   </ItemGroup>

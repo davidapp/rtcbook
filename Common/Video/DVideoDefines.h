@@ -40,42 +40,41 @@ enum class DScaleMode {
     STRETCH = 2
 };
 
-struct tagDVideoFormat {
+
+struct tagDImageFormat {
     DInt32 width;
     DInt32 height;
-    DInt32 max_fps;
+    //DInt32 max_fps;
     DPixelFmt format;
-    DBool interlaced;
-    DUInt32 dshow_fmt_idx;
-    DBool support_fps_control;
-    DBool videoinfo2;
+    //DBool interlaced;
+    //DUInt32 dshow_fmt_idx;
+    //DBool support_fps_control;
+   // DBool videoinfo2;
     DBITMAPINFOHEADER bmp_header;
 
-    tagDVideoFormat() : bmp_header{0} {
+    tagDImageFormat() : bmp_header{0} {
         width = 0;
         height = 0;
-        max_fps = 0;
+        //max_fps = 0;
         format = DPixelFmt::Unknown;
-        interlaced = false;
-        dshow_fmt_idx = 0;
-        support_fps_control = false;
-        videoinfo2 = false;
+        //interlaced = false;
+        //dshow_fmt_idx = 0;
+        //support_fps_control = false;
+        //videoinfo2 = false;
     }
 
-    bool operator==(const tagDVideoFormat& other) const {
-        if (width == other.width && height == other.height && max_fps == other.max_fps
-            && format == other.format && interlaced == other.interlaced)
+    bool operator==(const tagDImageFormat& other) const {
+        if (width == other.width && height == other.height && format == other.format)
             return true;
         return false;
     }
 
-    bool operator!=(const tagDVideoFormat& other) const {
+    bool operator!=(const tagDImageFormat& other) const {
         return !operator==(other);
     }
 };
 
-typedef struct tagDVideoFormat DVideoFormat;
-
+typedef struct tagDImageFormat DImageFormat;
 
 
 class DRect

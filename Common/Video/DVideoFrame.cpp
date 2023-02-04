@@ -1,8 +1,5 @@
 ﻿#include "DVideoFrame.h"
-#include <assert.h>
 #include "Base/DXP.h"
-#include "Video/DYUV.h"
-#include "Video/DScale.h"
 
 
 ////////////////////////////////////////////////////////////////////////////////////
@@ -56,11 +53,8 @@ DVoid DVideoFrame::Init()
 
 DVideoFrame::DVideoFrame(const DVideoFrame& frame) 
 {
-    assert(frame.GetData()->nRefs != 0);
-
     if (frame.GetData()->nRefs > 0)
     {
-        assert(frame.GetData() != _nullVideoFrameData);
         m_pBuf = frame.m_pBuf;
         DAtomInc32(&GetData()->nRefs);
     }
@@ -87,7 +81,6 @@ DVideoFrame& DVideoFrame::operator =(const DVideoFrame& bufSrc)
         else
         {
             Release();
-            assert(bufSrc.GetData() != _nullVideoFrameData);
             m_pBuf = bufSrc.m_pBuf;
             DAtomInc32(&GetData()->nRefs);
         }
@@ -184,7 +177,6 @@ DVoid DVideoFrame::Release()
 {
     if (GetData() != _nullVideoFrameData)
     {
-        assert(GetData()->nRefs != 0);
         DAtomDec32(&GetData()->nRefs);
         if (GetData()->nRefs <= 0)
         {
@@ -196,7 +188,6 @@ DVoid DVideoFrame::Release()
 
 DVoid DVideoFrame::Attach(DByte* pBuf)
 {
-    assert(m_pBuf == _nullVideoFrame);
     m_pBuf = pBuf;
 }
 
@@ -213,13 +204,11 @@ DBool DVideoFrame::IsNull() const
 DVoid DVideoFrame::SetAt(DUInt32 index, DByte v)
 {
     CopyBeforeWrite();
-    assert(index < GetSize());
     m_pBuf[index] = v;
 }
 
 DByte DVideoFrame::GetAt(DUInt32 index)
 {
-    assert(index < GetSize());
     return m_pBuf[index];
 }
 
@@ -240,7 +229,6 @@ DVoid DX86_STDCALL DVideoFrame::Release(DVideoFrameData* pData)
 {
     if (pData != _nullVideoFrameData)
     {
-        assert(pData->nRefs != 0);
         DAtomDec32(&pData->nRefs);
         if (pData->nRefs <= 0)
         {
@@ -283,14 +271,11 @@ DInt32 DVideoFrame::DefaultLineSize(DInt32 width, DPixelFmt fmt)
 
 DVideoFrameData* DVideoFrame::GetData() const
 {
-    assert(m_pBuf != nullptr);
     return ((DVideoFrameData*)m_pBuf) - 1;
 }
 
 DBool DVideoFrame::AllocFrame(DInt32 w, DInt32 h, DPixelFmt fmt)
 {
-    assert(w >= 0 && h >= 0);
-
     if (GetData()->nRefs >= 1)
     {
         Release();
@@ -304,6 +289,9 @@ DBool DVideoFrame::AllocFrame(DInt32 w, DInt32 h, DPixelFmt fmt)
     {
         DInt32 lineSize = DVideoFrame::DefaultLineSize(w, fmt);
         DInt32 videoSize = lineSize * h;
+        if (fmt == DPixelFmt::I420) {
+            videoSize = lineSize * h * 3 / 2;
+        }
         DVideoFrameData* pData = (DVideoFrameData*)malloc(sizeof(DVideoFrameData) + videoSize);
         if (pData == nullptr)
             return false;
@@ -327,8 +315,6 @@ DBool DVideoFrame::AllocFrame(DInt32 w, DInt32 h, DPixelFmt fmt)
 
 DBool DVideoFrame::AllocFrame(DUInt32 data_size, DInt32 w, DInt32 h, DInt32 lineSize, DPixelFmt fmt, DMemType mtype)
 {
-    assert(w >= 0 && h >= 0);
-
     if (GetData()->nRefs >= 1)
     {
         Release();
@@ -394,7 +380,6 @@ DBool DVideoFrame::AllocBeforeWrite(const DVideoFrame& bufSrc)
         Release();
         bRet = AllocFrame(bufSrc);
     }
-    assert(GetData()->nRefs <= 1);
     return bRet;
 }
 
@@ -409,5 +394,4 @@ DVoid DVideoFrame::CopyBeforeWrite()
             DXP::memcpy(m_pBuf, pData->buf(), pData->nAllocLength);
         }
     }
-    assert(GetData()->nRefs <= 1);
 }

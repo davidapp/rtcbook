@@ -58,7 +58,7 @@ private:
     IPin* m_connected_pin = nullptr;
 
     AM_MEDIA_TYPE m_media_type = {};
-    DVideoFormat m_final_fmt;
+    DImageFormat m_final_fmt;
 
     DVoid* m_pCallback;
     DVoid* m_pUserData;

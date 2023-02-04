@@ -46,7 +46,7 @@ HRESULT WinDS::CopyMediaType(AM_MEDIA_TYPE* target, const AM_MEDIA_TYPE* source)
     return S_OK;
 }
 
-DBool WinDS::MediaType2DShowCapability(const AM_MEDIA_TYPE* media_type, struct tagDVideoFormat* capability)
+DBool WinDS::MediaType2DShowCapability(const AM_MEDIA_TYPE* media_type, struct tagDImageFormat* capability)
 { 
     if (!media_type || media_type->majortype != MEDIATYPE_Video || !media_type->pbFormat) {
         return false;

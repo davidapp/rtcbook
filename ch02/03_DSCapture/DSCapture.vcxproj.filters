@@ -20,7 +20,7 @@
     <ClCompile Include="..\..\Common\Base\DXP.cpp">
       <Filter>Common\Base</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Common\Video\DYUV.cpp">
+    <ClCompile Include="..\..\Common\Video\DVideoColor.cpp">
       <Filter>Common\Video</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Common\COMBridge\WinDS.cpp">
@@ -38,7 +38,7 @@
     <ClCompile Include="..\..\Common\COMBridge\WinDSCamera.cpp">
       <Filter>Common\COMBridge</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Common\Video\DVideoFrameUtil.cpp">
+    <ClCompile Include="..\..\Common\Video\DVideoFormat.cpp">
       <Filter>Common\Video</Filter>
     </ClCompile>
   </ItemGroup>
@@ -85,7 +85,7 @@
     <ClInclude Include="..\..\Common\Base\DXP.h">
       <Filter>Common\Base</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Common\Video\DYUV.h">
+    <ClInclude Include="..\..\Common\Video\DVideoColor.h">
       <Filter>Common\Video</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Common\COMBridge\WinDS.h">
@@ -103,7 +103,7 @@
     <ClInclude Include="..\..\Common\COMBridge\WinDSCamera.h">
       <Filter>Common\COMBridge</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Common\Video\DVideoFrameUtil.h">
+    <ClInclude Include="..\..\Common\Video\DVideoFormat.h">
       <Filter>Common\Video</Filter>
     </ClInclude>
   </ItemGroup>

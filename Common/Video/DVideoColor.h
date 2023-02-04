@@ -14,6 +14,7 @@ public:
     static DVoid RAWToYRow(const DUInt8* src_argb0, DUInt8* dst_y, DInt32 width);
     static DVoid RAWToUVRow(const DUInt8* src_rgb0, DInt32 src_stride_rgb, DUInt8* dst_u, DUInt8* dst_v, DInt32 width);
     // TODO RGB24 ARGB BGRA ABGR RGBA
+    // 
     // TODO RGBToYJ
 };
 
@@ -26,17 +27,6 @@ public:
 
 
 class DYUV {
-public:
-    static DInt32 YUY2ToI420(const DByte* src_yuy2, DInt32 src_stride_yuy2,
-        DByte* dst_y, DInt32 dst_stride_y, DByte* dst_u, DInt32 dst_stride_u, DByte* dst_v, DInt32 dst_stride_v,
-        DInt32 width, DInt32 height);
-
-    static DInt32 I420ToARGB(const DByte* src_y, DInt32 src_stride_y,
-        const DByte* src_u, DInt32 src_stride_u,
-        const DByte* src_v, DInt32 src_stride_v,
-        DByte* dst_argb, DInt32 dst_stride_argb,
-        DInt32 width, DInt32 height);
-
 public:
     static DInt32  Clamp0(DInt32 v);
     static DInt32  Clamp255(DInt32 v);

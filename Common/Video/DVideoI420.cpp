@@ -1,7 +1,34 @@
-﻿#include "DScale.h"
+﻿#include "DVideoI420.h"
 #include "Base/DXP.h"
 
 #define SUBSAMPLE(v, a, s) (v < 0) ? (-((-v + a) >> s)) : ((v + a) >> s)
+
+DVideoFrame DVideoI420::Scale(const DVideoFrame& srcFrame, DInt32 w, DInt32 h, FilterMode filter)
+{
+    //DByte* pY = frame.GetBuf();
+    //DByte* pU = pY + frame.GetSize() * 2 / 3;
+    //DByte* pV = pY + frame.GetSize() * 5 / 6;
+
+    DVideoFrame frameRet(w, h, DPixelFmt::I420);
+    DByte* src_y = srcFrame.GetBuf();
+    DInt32 src_stride_y = srcFrame.GetLineSize();
+    DByte* src_u = src_y + srcFrame.GetHeight() * srcFrame.GetLineSize();
+    DInt32 src_stride_u = src_stride_y;
+    DByte* src_v = src_u + srcFrame.GetHeight() * srcFrame.GetLineSize() / 2;
+    DInt32 src_stride_v = src_stride_y;
+
+    DByte* dst_y = frameRet.GetBuf();
+    DInt32 dst_stride_y = frameRet.GetLineSize();
+    DByte* dst_u = frameRet.GetBuf();
+    DInt32 dst_stride_u = frameRet.GetLineSize() / 2;
+    DByte* dst_v = frameRet.GetBuf();
+    DInt32 dst_stride_v = frameRet.GetLineSize() / 2;
+
+    DVideoI420::I420Scale(src_y, src_stride_y, src_u, src_stride_u, src_v, src_stride_v, srcFrame.GetWidth(), srcFrame.GetHeight(),
+        dst_y, dst_stride_y, dst_u, dst_stride_u, dst_v, dst_stride_v, w, h, filter);
+
+    return frameRet;
+}
 
 enum FilterMode ScaleFilterReduce(int src_width, int src_height,
     int dst_width, int dst_height, enum FilterMode filtering) 
@@ -1216,13 +1243,7 @@ void ScalePlane(const uint8_t* src, int src_stride, int src_width, int src_heigh
         dst_stride, src, dst);
 }
 
-DVideoFrame DScale::I420Scale(const DVideoFrame& frame)
-{
-    DVideoFrame f;
-    return f;
-}
-
-int DScale::I420Scale(const uint8_t* src_y,
+int DVideoI420::I420Scale(const uint8_t* src_y,
     int src_stride_y,
     const uint8_t* src_u,
     int src_stride_u,

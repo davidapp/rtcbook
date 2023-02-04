@@ -12,10 +12,12 @@ typedef enum FilterMode {
 } FilterModeEnum;
 
 
-class DScale
+class DVideoI420
 {
 public:
-    static DVideoFrame I420Scale(const DVideoFrame& srcFrame);
+    static DVideoFrame Scale(const DVideoFrame& srcFrame, DInt32 w, DInt32 h, FilterMode filter);
+    static DVideoFrame Rotate(const DVideoFrame& srcFrame, DRotation rotate);
+    static DVideoFrame Mirror(const DVideoFrame& srcFrame);
 
 public:
     static DInt32 I420Scale(const DByte* src_y, DInt32 src_stride_y,

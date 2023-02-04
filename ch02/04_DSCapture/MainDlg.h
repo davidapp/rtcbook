@@ -10,7 +10,9 @@
 #include "COMBridge/WinDSVideoCapture.h"
 #include "Video/DVideoFrame.h"
 #include "Base/DTimer.h"
-#include "Video/DVideoFrameUtil.h"
+#include "Video/DVideoFormat.h"
+#include "Video/DVideoColor.h"
+#include "Video/DVideoI420.h"
 
 
 DVoid* OnFrame(DVideoFrame frame, DVoid* pUserData)
@@ -23,13 +25,15 @@ DVoid* OnFrame(DVideoFrame frame, DVoid* pUserData)
 
     if (frame.GetFormat() == DPixelFmt::YUY2)
     {
-        DVideoFrame frame24 = DVideoFrameUtil::YUY2ToRAW(frame);
-        pHeader->bmiHeader.biBitCount = 24;
-        pHeader->bmiHeader.biCompression = BI_RGB;
-        pHeader->bmiHeader.biSizeImage = frame24.GetSize();
+        DVideoFrame framei420 = DVideoFormat::YUY2ToI420(frame);
+        DVideoFrame frame_small = DVideoI420::Scale(frame, 100, 100, kFilterBox);
+        //DVideoFrame frame24 = DVideoFrameUtil::YUY2ToRAW(frame);
+        //pHeader->bmiHeader.biBitCount = 24;
+        //pHeader->bmiHeader.biCompression = BI_RGB;
+        //pHeader->bmiHeader.biSizeImage = framei420.GetSize();
 
-        ::PostMessage(hWnd, WM_ONFRAME, (WPARAM)frame24.GetBuf(), (LPARAM)pHeader);
-        frame24.Detach();
+        ::PostMessage(hWnd, WM_ONFRAME, (WPARAM)frame_small.GetBuf(), (LPARAM)pHeader);
+        frame_small.Detach();
     }
     else if (frame.GetFormat() == DPixelFmt::RGB24)
     {
@@ -170,6 +174,40 @@ public:
             dc.StretchDIBits(dst.left, dst.top, dst.Width(), dst.Height(), src.left, src.top + src.Height(),
                 src.Width(), -src.Height(), frame.GetBuf(),
                 pHeader, DIB_RGB_COLORS, SRCCOPY);
+        }
+        else if (frame.GetFormat() == DPixelFmt::I420) {
+            DByte* pY = frame.GetBuf();
+            DByte* pU = pY + frame.GetSize() * 2 / 3;
+            DByte* pV = pY + frame.GetSize() * 5 / 6;
+            DColor RGB = 0;
+            DUInt8* pRGB = (DUInt8*)&RGB;
+            CClientDC dc(m_hWnd);
+            DUInt32 x = 0, y = frame.GetHeight() + 10;
+            for (DUInt32 i = 0; i < frame.GetWidth() * frame.GetWidth() / 4; i++) {
+                DInt32 U = *pU;
+                DInt32 V = *pV;
+                DInt32 Y1 = *pY;
+                DInt32 Y2 = *(pY + 1);
+                DInt32 Y3 = *(pY + frame.GetWidth());
+                DInt32 Y4 = *(pY + frame.GetWidth() + 1);
+                DYUV2RGB::YUV2RAW_BT709(pRGB, Y1, U, V);
+                dc.SetPixel(x, y, DRGB(pRGB[2], pRGB[1], pRGB[0]));
+                DYUV2RGB::YUV2RAW_BT709(pRGB, Y2, U, V);
+                dc.SetPixel(x + 1, y, DRGB(pRGB[2], pRGB[1], pRGB[0]));
+                DYUV2RGB::YUV2RAW_BT709(pRGB, Y3, U, V);
+                dc.SetPixel(x, y + 1, DRGB(pRGB[2], pRGB[1], pRGB[0]));
+                DYUV2RGB::YUV2RAW_BT709(pRGB, Y4, U, V);
+                dc.SetPixel(x + 1, y + 1, DRGB(pRGB[2], pRGB[1], pRGB[0]));
+                pY += 2;
+                pU++;
+                pV++;
+                x += 2;
+                if (x >= frame.GetWidth()) {
+                    x = 0;
+                    y += 2;
+                    pY += frame.GetWidth();
+                }
+            }
         }
 
         delete pHeader;
