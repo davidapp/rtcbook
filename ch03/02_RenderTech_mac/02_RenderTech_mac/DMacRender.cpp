@@ -1,9 +1,7 @@
 
 #include "DMacRender.h"
 
-bool DMacRender::DrawYuv(const uint8_t* src_y, int src_stride_y, const uint8_t* src_u, int src_stride_u,
-                       const uint8_t* src_v, int src_stride_v, int frame_width, int frame_height, int rotation,
-                       realx::RXColorSpace color_space = realx::RXColorSpace::kUnknown)
+bool DMacRender::DrawYuv(const DByte* src_y, DInt32 src_stride_y, const DByte* src_u, DInt32 src_stride_u, const DByte* src_v, DInt32 src_stride_v, int frame_width, DInt32 frame_height, DRotation rotation, DColorSpace color_space)
 {
 
     return true;

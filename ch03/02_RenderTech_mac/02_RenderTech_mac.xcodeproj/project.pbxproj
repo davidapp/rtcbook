@@ -15,6 +15,7 @@
 		2B1EA5882990BDED00F16101 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2B1EA5862990BDED00F16101 /* LaunchScreen.storyboard */; };
 		2B1EA58B2990BDED00F16101 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 2B1EA58A2990BDED00F16101 /* main.m */; };
 		2B1EA5932990BE4500F16101 /* DMacRender.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2B1EA5912990BE4500F16101 /* DMacRender.cpp */; };
+		2B1EA59B2990C47200F16101 /* DVideoColor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2B1EA5982990C47200F16101 /* DVideoColor.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -32,6 +33,9 @@
 		2B1EA58A2990BDED00F16101 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		2B1EA5912990BE4500F16101 /* DMacRender.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = DMacRender.cpp; sourceTree = "<group>"; };
 		2B1EA5922990BE4500F16101 /* DMacRender.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DMacRender.h; sourceTree = "<group>"; };
+		2B1EA5982990C47200F16101 /* DVideoColor.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = DVideoColor.cpp; path = ../../../Common/Video/DVideoColor.cpp; sourceTree = "<group>"; };
+		2B1EA5992990C47200F16101 /* DVideoColor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DVideoColor.h; path = ../../../Common/Video/DVideoColor.h; sourceTree = "<group>"; };
+		2B1EA59A2990C47200F16101 /* DVideoDefines.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DVideoDefines.h; path = ../../../Common/Video/DVideoDefines.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -102,6 +106,9 @@
 		2B1EA5962990C23F00F16101 /* Video */ = {
 			isa = PBXGroup;
 			children = (
+				2B1EA5982990C47200F16101 /* DVideoColor.cpp */,
+				2B1EA5992990C47200F16101 /* DVideoColor.h */,
+				2B1EA59A2990C47200F16101 /* DVideoDefines.h */,
 			);
 			name = Video;
 			sourceTree = "<group>";
@@ -183,6 +190,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2B1EA59B2990C47200F16101 /* DVideoColor.cpp in Sources */,
 				2B1EA5932990BE4500F16101 /* DMacRender.cpp in Sources */,
 				2B1EA5802990BDEB00F16101 /* ViewController.m in Sources */,
 				2B1EA57A2990BDEB00F16101 /* AppDelegate.m in Sources */,
@@ -332,6 +340,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = G4B7ZBVBTD;
 				GENERATE_INFOPLIST_FILE = YES;
+				HEADER_SEARCH_PATHS = ../../Common;
 				INFOPLIST_FILE = 02_RenderTech_mac/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
@@ -359,6 +368,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = G4B7ZBVBTD;
 				GENERATE_INFOPLIST_FILE = YES;
+				HEADER_SEARCH_PATHS = ../../Common;
 				INFOPLIST_FILE = 02_RenderTech_mac/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;

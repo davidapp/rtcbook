@@ -40,6 +40,12 @@ enum class DScaleMode {
     STRETCH = 2
 };
 
+enum class DColorSpace{
+    BT601LimitedRange = 0,
+    BT601FullRange,
+    BT709LimitedRange,
+    BT709FullRange
+};
 
 struct tagDImageFormat {
     DInt32 width;
