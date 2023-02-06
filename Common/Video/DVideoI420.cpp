@@ -181,12 +181,16 @@ DVoid CopyPlane(const DByte* src_y, DInt32 src_stride_y,
     }
 }
 
-DInt32 FixedDiv(DInt32 num, DInt32 div) {
+DInt32 FixedDiv(DInt32 num, DInt32 div) 
+{
     return (DInt32)(((int64_t)(num) << 16) / div);
 }
 
-DInt32 FixedDiv1(DInt32 num, DInt32 div) {
-    return (DInt32)((((DInt64)(num) << 16) - 0x00010001) / (div - 1));
+DInt32 FixedDiv1(DInt32 num, DInt32 div) 
+{
+    DInt32 v = div - 1;
+    if (v == 0) return 0;
+    return (DInt32)((((DInt64)(num) << 16) - 0x00010001) / v);
 }
 
 DInt32 Abs(DInt32 v) 
@@ -964,7 +968,7 @@ DVoid ScaleFilterCols_C(DUInt8* dst_ptr,
     }
 }
 
-DVoid ScaleFilterCols64_C(DUInt8* dst_ptr,
+DVoid ScaleFilterCols64(DUInt8* dst_ptr,
     const DUInt8* src_ptr,
     DInt32 dst_width,
     DInt32 x32,
@@ -992,8 +996,7 @@ DVoid ScaleFilterCols64_C(DUInt8* dst_ptr,
     }
 }
 
-// Scales a single row of pixels up by 2x using point sampling.
-DVoid ScaleColsUp2_C(DUInt8* dst_ptr,
+DVoid ScaleColsUp2(DUInt8* dst_ptr,
     const DUInt8* src_ptr,
     DInt32 dst_width,
     DInt32 x,
@@ -1011,7 +1014,6 @@ DVoid ScaleColsUp2_C(DUInt8* dst_ptr,
     }
 }
 
-// Scales a single row of pixels using point sampling.
 DVoid ScaleCols_C(DUInt8* dst_ptr,
     const DUInt8* src_ptr,
     DInt32 dst_width,
@@ -1030,7 +1032,6 @@ DVoid ScaleCols_C(DUInt8* dst_ptr,
     }
 }
 
-// Scale up down with bilinear interpolation.
 DVoid ScalePlaneBilinearUp(DInt32 src_width,
     DInt32 src_height,
     DInt32 dst_width,
@@ -1058,10 +1059,10 @@ DVoid ScalePlaneBilinearUp(DInt32 src_width,
     src_width = Abs(src_width);
 
     if (filtering && src_width >= 32768) {
-        ScaleFilterCols = ScaleFilterCols64_C;
+        ScaleFilterCols = ScaleFilterCols64;
     }
     if (!filtering && src_width * 2 == dst_width && x < 0x8000) {
-        ScaleFilterCols = ScaleColsUp2_C;
+        ScaleFilterCols = ScaleColsUp2;
     }
 
     if (y > max_y) {
@@ -1139,7 +1140,7 @@ DVoid ScalePlaneBilinearDown(DInt32 src_width,
     DInt32 j;
     DVoid (*ScaleFilterCols)(DUInt8 * dst_ptr, const DUInt8 * src_ptr,
         DInt32 dst_width, DInt32 x, DInt32 dx) =
-        (src_width >= 32768) ? ScaleFilterCols64_C : ScaleFilterCols_C;
+        (src_width >= 32768) ? ScaleFilterCols64 : ScaleFilterCols_C;
     DVoid (*InterpolateRow)(DUInt8 * dst_ptr, const DUInt8 * src_ptr,
         DPtrDiff src_stride, DInt32 dst_width,
         DInt32 source_y_fraction) = InterpolateRow_C;
@@ -1171,13 +1172,7 @@ DVoid ScalePlaneBilinearDown(DInt32 src_width,
     free_aligned_buffer_64(row);
 }
 
-
-// Scale Plane to/from any dimensions, without interpolation.
-// Fixed point math is used for performance: The upper 16 bits
-// of x and dx is the integer part of the source position and
-// the lower 16 bits are the fixed decimal part.
-
-static DVoid ScalePlaneSimple(DInt32 src_width,
+DVoid ScalePlaneSimple(DInt32 src_width,
     DInt32 src_height,
     DInt32 dst_width,
     DInt32 dst_height,
@@ -1198,7 +1193,7 @@ static DVoid ScalePlaneSimple(DInt32 src_width,
     src_width = Abs(src_width);
 
     if (src_width * 2 == dst_width && x < 0x8000) {
-        ScaleCols = ScaleColsUp2_C;
+        ScaleCols = ScaleColsUp2;
     }
 
     for (i = 0; i < dst_height; ++i) {
@@ -1373,34 +1368,27 @@ DVoid TransposeWx8(const DUInt8* src,
     }
 }
 
-DVoid TransposeWxH(const DUInt8* src,
-    DInt32 src_stride,
-    DUInt8* dst,
-    DInt32 dst_stride,
-    DInt32 width,
-    DInt32 height) {
-    DInt32 i;
-    for (i = 0; i < width; ++i) {
-        DInt32 j;
-        for (j = 0; j < height; ++j) {
+DVoid TransposeWxH(const DUInt8* src, DInt32 src_stride,
+    DUInt8* dst, DInt32 dst_stride, DInt32 width, DInt32 height) 
+{
+    for (DInt32 i = 0; i < width; ++i) 
+    {
+        for (DInt32 j = 0; j < height; ++j) 
+        {
             dst[i * dst_stride + j] = src[j * src_stride + i];
         }
     }
 }
 
-DVoid TransposePlane(const DUInt8* src,
-    DInt32 src_stride,
-    DUInt8* dst,
-    DInt32 dst_stride,
-    DInt32 width,
-    DInt32 height) {
+DVoid TransposePlane(const DUInt8* src, DInt32 src_stride,
+    DUInt8* dst, DInt32 dst_stride,
+    DInt32 width, DInt32 height) 
+{
     DInt32 i = height;
-
-    // Work across the source in 8x8 tiles
     while (i >= 8) {
         TransposeWx8(src, src_stride, dst, dst_stride, width);
-        src += 8 * src_stride;  // Go down 8 rows.
-        dst += 8;               // Move over 8 columns.
+        src += 8 * src_stride;
+        dst += 8;
         i -= 8;
     }
 
@@ -1409,29 +1397,19 @@ DVoid TransposePlane(const DUInt8* src,
     }
 }
 
-DVoid RotatePlane90(const DUInt8* src,
-    DInt32 src_stride,
-    DUInt8* dst,
-    DInt32 dst_stride,
-    DInt32 width,
-    DInt32 height) {
-    // Rotate by 90 is a transpose with the source read
-    // from bottom to top. So set the source pointer to the end
-    // of the buffer and flip the sign of the source stride.
+DVoid RotatePlane90(const DUInt8* src, DInt32 src_stride,
+    DUInt8* dst, DInt32 dst_stride,
+    DInt32 width, DInt32 height) 
+{
     src += src_stride * (height - 1);
     src_stride = -src_stride;
     TransposePlane(src, src_stride, dst, dst_stride, width, height);
 }
 
-DVoid RotatePlane270(const DUInt8* src,
-    DInt32 src_stride,
-    DUInt8* dst,
-    DInt32 dst_stride,
-    DInt32 width,
-    DInt32 height) {
-    // Rotate by 270 is a transpose with the destination written
-    // from bottom to top. So set the destination pointer to the end
-    // of the buffer and flip the sign of the destination stride.
+DVoid RotatePlane270(const DUInt8* src, DInt32 src_stride,
+    DUInt8* dst, DInt32 dst_stride,
+    DInt32 width, DInt32 height) 
+{
     dst += dst_stride * (width - 1);
     dst_stride = -dst_stride;
     TransposePlane(src, src_stride, dst, dst_stride, width, height);
@@ -1450,30 +1428,26 @@ DVoid MirrorRow(const DUInt8* src, DUInt8* dst, DInt32 width)
     }
 }
 
-DVoid CopyRow(const DUInt8* src, DUInt8* dst, DInt32 count) {
-    memcpy(dst, src, count);
+DVoid CopyRow(const DUInt8* src, DUInt8* dst, DInt32 count) 
+{
+    DXP::memcpy(dst, src, count);
 }
 
-DVoid RotatePlane180(const DUInt8* src,
-    DInt32 src_stride,
-    DUInt8* dst,
-    DInt32 dst_stride,
-    DInt32 width,
-    DInt32 height) {
-    // Swap first and last row and mirror the content. Uses a temporary row.
+DVoid RotatePlane180(const DUInt8* src, DInt32 src_stride,
+    DUInt8* dst, DInt32 dst_stride, DInt32 width, DInt32 height) 
+{
     align_buffer_64(row, width);
     const DUInt8* src_bot = src + src_stride * (height - 1);
     DUInt8* dst_bot = dst + dst_stride * (height - 1);
     DInt32 half_height = (height + 1) >> 1;
-    DInt32 y;
 
-    // Odd height will harmlessly mirror the middle row twice.
-    for (y = 0; y < half_height; ++y) {
-        MirrorRow(src, row, width);  // Mirror first row into a buffer
+    for (DInt32 y = 0; y < half_height; ++y)
+    {
+        MirrorRow(src, row, width);
         src += src_stride;
-        MirrorRow(src_bot, dst, width);  // Mirror last row into first row
+        MirrorRow(src_bot, dst, width);
         dst += dst_stride;
-        CopyRow(row, dst_bot, width);  // Copy first mirrored row into last
+        CopyRow(row, dst_bot, width);
         src_bot -= src_stride;
         dst_bot -= dst_stride;
     }
