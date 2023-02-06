@@ -11,6 +11,7 @@ public:
     static DVideoFrame YUY2ToRAW(const DVideoFrame& buf);
     static DVideoFrame YUY2ToI420(const DVideoFrame& buf);
     static DVideoFrame I420ToRAW(const DVideoFrame& buf);
+    static DVideoFrame I420ToARGB(const DVideoFrame& buf);
 
 private:
     static DInt32 YUY2ToI420(const DByte* src_yuy2, DInt32 src_stride_yuy2,

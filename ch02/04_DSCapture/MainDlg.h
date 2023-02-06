@@ -29,7 +29,8 @@ DVoid* OnFrame(DVideoFrame frame, DVoid* pUserData)
     {
         DVideoFrame framei420 = DVideoFormat::YUY2ToI420(frame);
         DVideoFrame frame_small = DVideoI420::Scale(framei420, DEST_WIDTH, DEST_HEIGHT, kFilterBox);
-        DVideoFrame frame_small_raw = DVideoFormat::I420ToRAW(frame_small);
+        DVideoFrame frame_small2 = DVideoI420::Mirror(frame_small);
+        DVideoFrame frame_small_raw = DVideoFormat::I420ToRAW(frame_small2);
         pHeader->bmiHeader.biWidth = DEST_WIDTH;
         pHeader->bmiHeader.biHeight = DEST_HEIGHT;
         pHeader->bmiHeader.biSizeImage = DEST_WIDTH * DEST_HEIGHT * 3;

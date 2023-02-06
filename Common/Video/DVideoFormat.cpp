@@ -95,6 +95,12 @@ DVideoFrame DVideoFormat::I420ToRAW(const DVideoFrame& srcFrame)
     return retFrame;
 }
 
+DVideoFrame DVideoFormat::I420ToARGB(const DVideoFrame& frameSrc)
+{
+    DVideoFrame frameRet(frameSrc.GetWidth(), frameSrc.GetHeight(), DPixelFmt::ARGB);
+    return frameRet;
+}
+
 
 // Copy row of YUY2 Y's (422) into Y (420/422).
 DVoid YUY2ToYRow(const DByte* src_yuy2, DByte* dst_y, DInt32 width)
@@ -126,7 +132,6 @@ DInt32 DVideoFormat::YUY2ToI420(const DByte* src_yuy2, DInt32 src_stride_yuy2,
     DByte* dst_y, DInt32 dst_stride_y, DByte* dst_u, DInt32 dst_stride_u, DByte* dst_v, DInt32 dst_stride_v,
     DInt32 width, DInt32 height)
 {
-    // Negative height means invert the image.
     if (height < 0) {
         height = -height;
         src_yuy2 = src_yuy2 + (height - 1) * src_stride_yuy2;
@@ -167,7 +172,7 @@ DVoid I420ToARGBRow(const DByte* src_y, const DByte* src_u, const DByte* src_v, 
     }
 }
 
-DInt32 I420ToARGB(const DByte* src_y, DInt32 src_stride_y,
+DInt32 DVideoFormat::I420ToARGB(const DByte* src_y, DInt32 src_stride_y,
     const DByte* src_u, DInt32 src_stride_u,
     const DByte* src_v, DInt32 src_stride_v,
     DByte* dst_argb, DInt32 dst_stride_argb,
@@ -176,7 +181,7 @@ DInt32 I420ToARGB(const DByte* src_y, DInt32 src_stride_y,
     if (!src_y || !src_u || !src_v || !dst_argb || width <= 0 || height == 0) {
         return -1;
     }
-    // Negative height means invert the image.
+
     if (height < 0)
     {
         height = -height;

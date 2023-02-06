@@ -3,7 +3,7 @@
 #define AVGB(a, b) (((a) + (b) + 1) >> 1)
 
 
-DInt32 DRGB2YUV::RGBToY(uint8_t r, uint8_t g, uint8_t b)
+DInt32 DRGB2YUV::RGBToY(DUInt8 r, DUInt8 g, DUInt8 b)
 {
     return (66 * r + 129 * g + 25 * b + 0x1080) >> 8;
 }
@@ -55,6 +55,23 @@ DVoid DRGB2YUV::RAWToUVRow(const DUInt8* src_rgb0, DInt32 src_stride_rgb, DUInt8
     }
 }
 
+// Jpeg uses a variation on BT.601-1 full range
+// y =  0.29900 * r + 0.58700 * g + 0.11400 * b
+// u = -0.16874 * r - 0.33126 * g + 0.50000 * b  + center
+// v =  0.50000 * r - 0.41869 * g - 0.08131 * b  + center
+
+DInt32 DRGB2YUV::DRGB2YUV::RGBToYJ(DUInt8 r, DUInt8 g, DUInt8 b) {
+    return (38 * r + 75 * g + 15 * b + 64) >> 7;
+}
+
+DInt32 DRGB2YUV::DRGB2YUV::RGBToUJ(DUInt8 r, DUInt8 g, DUInt8 b) {
+    return (127 * b - 84 * g - 43 * r + 0x8080) >> 8;
+}
+
+DInt32 DRGB2YUV::RGBToVJ(DUInt8 r, DUInt8 g, DUInt8 b) {
+    return (127 * r - 107 * g - 20 * b + 0x8080) >> 8;
+}
+
 //  BT.601 YUV to RGB reference
 //  R = (Y - 16) * 1.164              - V * -1.596
 //  G = (Y - 16) * 1.164 - U *  0.391 - V *  0.813
@@ -69,9 +86,9 @@ DVoid DYUV2RGB::YUV2RAW_BT601(DUInt8* out, DInt32 y, DInt32 u, DInt32 v)
 }
 
 // JPEG YUV to RGB reference
-// *  R = Y                - V * -1.40200
-// *  G = Y - U *  0.34414 - V *  0.71414
-// *  B = Y - U * -1.77200
+// R = Y                - V * -1.40200
+// G = Y - U *  0.34414 - V *  0.71414
+// B = Y - U * -1.77200
 
 DVoid DYUV2RGB::YUV2RAW_JPEG(DUInt8* out, DInt32 y, DInt32 u, DInt32 v)
 {

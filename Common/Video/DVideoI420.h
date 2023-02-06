@@ -18,6 +18,7 @@ public:
     static DVideoFrame Scale(const DVideoFrame& srcFrame, DInt32 w, DInt32 h, FilterMode filter);
     static DVideoFrame Rotate(const DVideoFrame& srcFrame, DRotation rotate);
     static DVideoFrame Mirror(const DVideoFrame& srcFrame);
+    static DVideoFrame Crop(const DVideoFrame& srcFrame, const DRect& cropRect);
 
 public:
     static DInt32 I420Scale(const DByte* src_y, DInt32 src_stride_y,
@@ -28,4 +29,20 @@ public:
         DByte* dst_u, DInt32 dst_stride_u, 
         DByte* dst_v, DInt32 dst_stride_v,
         DInt32 dst_width, DInt32 dst_height, enum FilterMode filtering);
+
+    static DInt32 I420Rotate(const DUInt8* src_y, DInt32 src_stride_y,
+        const DUInt8* src_u, DInt32 src_stride_u,
+        const DUInt8* src_v, DInt32 src_stride_v,
+        DUInt8* dst_y, DInt32 dst_stride_y,
+        DUInt8* dst_u, DInt32 dst_stride_u,
+        DUInt8* dst_v, DInt32 dst_stride_v,
+        DInt32 width, DInt32 height, DRotation mode);
+
+    static DInt32 I420Mirror(const DUInt8* src_y, DInt32 src_stride_y,
+        const DUInt8* src_u, DInt32 src_stride_u,
+        const DUInt8* src_v, DInt32 src_stride_v,
+        DUInt8* dst_y, DInt32 dst_stride_y,
+        DUInt8* dst_u, DInt32 dst_stride_u,
+        DUInt8* dst_v, DInt32 dst_stride_v,
+        DInt32 width, DInt32 height);
 };

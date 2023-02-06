@@ -9,10 +9,10 @@ enum class DPixelFmt {
     Unknown,
     RGB24,// [(B,G,R),(B,G,R)...]
     RAW,  // [(B,G,R),(B,G,R)...] 第一行是最后一行
-    ARGB, // [(A,R,G,B),...]
-    ABGR, // [(A,B,G,R),...]
-    BGRA, // [(B,G,R,A),...]
-    RGBA, // [(R,G,B,A),...]
+    ARGB, // [(B,G,R,A),...]
+    ABGR, // [(R,G,B,A),...]
+    BGRA, // [(A,R,G,B),...]
+    RGBA, // [(A,B,G,R),...]
     RGB565, // 16 bit
     I420, // [Y,U,V] or called IYUV
     YV12, // [Y,V,U] 
@@ -44,23 +44,13 @@ enum class DScaleMode {
 struct tagDImageFormat {
     DInt32 width;
     DInt32 height;
-    //DInt32 max_fps;
     DPixelFmt format;
-    //DBool interlaced;
-    //DUInt32 dshow_fmt_idx;
-    //DBool support_fps_control;
-   // DBool videoinfo2;
     DBITMAPINFOHEADER bmp_header;
 
     tagDImageFormat() : bmp_header{0} {
         width = 0;
         height = 0;
-        //max_fps = 0;
         format = DPixelFmt::Unknown;
-        //interlaced = false;
-        //dshow_fmt_idx = 0;
-        //support_fps_control = false;
-        //videoinfo2 = false;
     }
 
     bool operator==(const tagDImageFormat& other) const {
