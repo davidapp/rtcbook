@@ -2,7 +2,7 @@
 #include "atldlgs.h"
 #include "resource.h"
 #include "MainWindow.h"
-#include "Video/WinDS.h"
+#include "COMBridge/WinDS.h"
 
 CAppModule _Module;
 

@@ -7,40 +7,30 @@
 #include "atlmisc.h"
 #include "atlctrls.h"
 #include "atlgdi.h"
-#include "Video/WinDSVideoCapture.h"
+#include "COMBridge/WinDSVideoCapture.h"
 #include "Video/DVideoFrame.h"
-#include "File/DBmpFile.h"
-#include "Base/DFile.h"
-#include "Video/DYUV.h"
-#include "Base/DTimer.h"
+#include "Video/DVideoFormat.h"
 
 
-DVoid* OnFrame(DVoid* pVFrame, DVoid* pFrameData, DVoid* pUserData)
+DVoid* OnFrame(DVideoFrame frame, DVoid* pUserData)
 {
     HWND hWnd = (HWND)pUserData;
-    DVideoFrame* pFrame = (DVideoFrame*)pVFrame;
-    BITMAPINFO* pHeader = (BITMAPINFO*)pFrameData;
+    BITMAPINFO* pHeader = (BITMAPINFO*)frame.GetUserData();
 
-    if (pFrame->m_fmt == DPixelFmt::YUY2)
+    if (frame.GetFormat() == DPixelFmt::YUY2)
     {
-        DVideoFrame* pFrame24 = DVideoFrame::YUY2ToRAW(pFrame);
-        delete pFrame;
+        DVideoFrame frame24 = DVideoFormat::YUY2ToRAW(frame);
         pHeader->bmiHeader.biBitCount = 24;
         pHeader->bmiHeader.biCompression = BI_RGB;
-        pHeader->bmiHeader.biSizeImage = pFrame24->m_data.GetSize();
+        pHeader->bmiHeader.biSizeImage = frame24.GetSize();
 
-        //delete pHeader;
-        //DBuffer bufFile = DBmpFile::Make24BitBitmap(pFrame24->m_width, pFrame24->m_height, pFrame24->m_data);
-        //DFile file;
-        //file.OpenFileRW("C:\\Users\\david_ms09i0l\\1.bmp", DFILE_OPEN_ALWAYS);
-        //file.Write(bufFile);
-        //file.Close();
-
-        ::PostMessage(hWnd, WM_ONFRAME, (WPARAM)pFrame24, (LPARAM)pHeader);
+        ::PostMessage(hWnd, WM_ONFRAME, (WPARAM)frame24.GetBuf(), (LPARAM)pHeader);
+        frame24.Detach();
     }
-    else if (pFrame->m_fmt == DPixelFmt::RGB24)
+    else if (frame.GetFormat() == DPixelFmt::RGB24)
     {
-        ::PostMessage(hWnd, WM_ONFRAME, (WPARAM)pFrame, (LPARAM)pHeader);
+        ::PostMessage(hWnd, WM_ONFRAME, (WPARAM)frame.GetBuf(), (LPARAM)pHeader);
+        frame.Detach();
     }
 
     return nullptr;
@@ -72,7 +62,6 @@ public:
         if (!m_vcap.Init(0, (DVoid*)OnFrame, m_hWnd)) {
             MessageBox(L"没有输出 640*480 的 RGB24 或 YUY2 格式的选项");
         }
-        DTimer::Init();
         return 0;
     }
 
@@ -93,7 +82,6 @@ public:
 
     LRESULT OnCameraStart(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL& bHandled)
     {
-        DTimer::Start(0);
         m_vcap.Start();
         return 0;
     }
@@ -106,23 +94,25 @@ public:
 
     LRESULT OnMyFrame(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
     {
-        DVideoFrame* pFrame = (DVideoFrame*)wParam;
+        DVideoFrame frame;
+        frame.Attach((DByte*)wParam);
+
         BITMAPINFO* pHeader = (BITMAPINFO*)lParam;
         CClientDC dc(m_hWnd);
 
-        if (pFrame->m_fmt == DPixelFmt::RGB24)
+        if (frame.GetFormat() == DPixelFmt::RGB24)
         {
-            dc.StretchDIBits(0, 0, pFrame->m_width, pFrame->m_height, 0, 0,
-                pFrame->m_width, pFrame->m_height, pFrame->m_data.GetBuf(),
+            dc.StretchDIBits(0, 0, frame.GetWidth(), frame.GetHeight(), 0, 0,
+                frame.GetWidth(), frame.GetHeight(), frame.GetBuf(),
                 pHeader, DIB_RGB_COLORS, SRCCOPY);
         }
-        else if (pFrame->m_fmt == DPixelFmt::RAW) 
+        else if (frame.GetFormat() == DPixelFmt::RAW)
         {
-            dc.StretchDIBits(0, 0, pFrame->m_width, pFrame->m_height, 0, pFrame->m_height,
-                pFrame->m_width, - pFrame->m_height, pFrame->m_data.GetBuf(),
+            dc.StretchDIBits(0, 0, frame.GetWidth(), frame.GetHeight(), 0, frame.GetHeight(),
+                frame.GetWidth(), - frame.GetHeight(), frame.GetBuf(),
                 pHeader, DIB_RGB_COLORS, SRCCOPY);
         }
-        delete pFrame;
+
         delete pHeader;
         return 0;
     }

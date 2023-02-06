@@ -31,7 +31,6 @@ typedef int DInt32;
 typedef unsigned int DUInt32;
 typedef long long DInt64;
 typedef unsigned long long DUInt64;
-typedef DUInt64 DPtrDiff;
 
 typedef float DFloat;
 typedef double DDouble;
@@ -44,10 +43,12 @@ typedef void* DVoidPtr;
 typedef DUInt64 DSizeT;
 typedef DUInt64 DHandle;
 typedef DUInt64 DULong;
+typedef DInt64  DPtrDiff;
 #else 
 typedef DUInt32 DSizeT;
 typedef DUInt32 DHandle;
 typedef DUInt32 DULong;
+typedef DInt32  DPtrDiff;
 #endif
 
 

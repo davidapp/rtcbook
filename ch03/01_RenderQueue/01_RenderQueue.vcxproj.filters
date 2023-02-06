@@ -1,0 +1,147 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Common">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Window">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Common\Base">
+      <UniqueIdentifier>{04b523b5-c0b4-4db8-85cb-71f3f8313ce5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Common\Video">
+      <UniqueIdentifier>{c0b8144f-6ee8-4567-803c-2307ecf5de2e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Common\File">
+      <UniqueIdentifier>{6f5ea20f-463e-44e5-b643-362a81de9b97}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Common\COMBridge">
+      <UniqueIdentifier>{7535b3d0-d9f2-41eb-9bc2-c10ffb7f2fcf}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="MainDlg.h">
+      <Filter>Window</Filter>
+    </ClInclude>
+    <ClInclude Include="resource.h">
+      <Filter>Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\Base\DAtomic.h">
+      <Filter>Common\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\Base\DBuffer.h">
+      <Filter>Common\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\Base\DFile.h">
+      <Filter>Common\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\Base\DTime.h">
+      <Filter>Common\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\Base\DUTF8.h">
+      <Filter>Common\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\Base\DXP.h">
+      <Filter>Common\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\Video\DVideoDefines.h">
+      <Filter>Common\Video</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\Video\DVideoFrame.h">
+      <Filter>Common\Video</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\Video\DYUV.h">
+      <Filter>Common\Video</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\File\DBmpFile.h">
+      <Filter>Common\File</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\COMBridge\WinDS.h">
+      <Filter>Common\COMBridge</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\COMBridge\WinDSCamera.h">
+      <Filter>Common\COMBridge</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\COMBridge\WinDSCapturePin.h">
+      <Filter>Common\COMBridge</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\COMBridge\WinDSSinkFilter.h">
+      <Filter>Common\COMBridge</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\COMBridge\WinDSVideoCapture.h">
+      <Filter>Common\COMBridge</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\Video\DRenderQueue.h">
+      <Filter>Common\Video</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\Video\DScale.h">
+      <Filter>Common\Video</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\Video\DVideoFrameUtil.h">
+      <Filter>Common\Video</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="..\..\Common\Base\DBuffer.cpp">
+      <Filter>Common\Base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\Base\DFile.cpp">
+      <Filter>Common\Base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\Base\DTime.cpp">
+      <Filter>Common\Base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\Base\DUTF8.cpp">
+      <Filter>Common\Base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\Base\DXP.cpp">
+      <Filter>Common\Base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\Video\DVideoFrame.cpp">
+      <Filter>Common\Video</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\Video\DYUV.cpp">
+      <Filter>Common\Video</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\File\DBmpFile.cpp">
+      <Filter>Common\File</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\COMBridge\WinDS.cpp">
+      <Filter>Common\COMBridge</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\COMBridge\WinDSCamera.cpp">
+      <Filter>Common\COMBridge</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\COMBridge\WinDSCapturePin.cpp">
+      <Filter>Common\COMBridge</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\COMBridge\WinDSSinkFilter.cpp">
+      <Filter>Common\COMBridge</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\COMBridge\WinDSVideoCapture.cpp">
+      <Filter>Common\COMBridge</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\Video\DRenderQueue.cc">
+      <Filter>Common\Video</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\Video\DScale.cpp">
+      <Filter>Common\Video</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\Video\DVideoFrameUtil.cpp">
+      <Filter>Common\Video</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="01_RenderQueue.rc">
+      <Filter>Resource</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+</Project>

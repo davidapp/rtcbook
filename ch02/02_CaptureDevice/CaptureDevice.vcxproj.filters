@@ -5,12 +5,6 @@
     <ClCompile Include="..\..\Common\Base\DUTF8.cpp">
       <Filter>Common\Base</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Common\Video\WinDSCamera.cpp">
-      <Filter>Common\Video</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Common\Video\WinDS.cpp">
-      <Filter>Common\Video</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\Common\Base\DXP.cpp">
       <Filter>Common\Base</Filter>
     </ClCompile>
@@ -20,28 +14,25 @@
     <ClCompile Include="..\..\Common\Base\DFile.cpp">
       <Filter>Common\Base</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\Common\COMBridge\WinDS.cpp">
+      <Filter>Common\COMBridge</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\COMBridge\WinDSCamera.cpp">
+      <Filter>Common\COMBridge</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\Common\File\DBmpFile.cpp">
-      <Filter>File</Filter>
+      <Filter>Common\File</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Common\Base\DUTF8.h">
       <Filter>Common\Base</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Common\Video\VideoDefines.h">
-      <Filter>Common\Video</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Common\Video\WinDSCamera.h">
-      <Filter>Common\Video</Filter>
-    </ClInclude>
-    <ClInclude Include="SettingDlg.h">
+    <ClInclude Include="MainDlg.h">
       <Filter>Window</Filter>
     </ClInclude>
     <ClInclude Include="resource.h">
       <Filter>Resource</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Common\Video\WinDS.h">
-      <Filter>Common\Video</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Common\Base\DXP.h">
       <Filter>Common\Base</Filter>
@@ -52,8 +43,15 @@
     <ClInclude Include="..\..\Common\Base\DFile.h">
       <Filter>Common\Base</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\Common\Video\DVideoDefines.h" />
+    <ClInclude Include="..\..\Common\COMBridge\WinDS.h">
+      <Filter>Common\COMBridge</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\COMBridge\WinDSCamera.h">
+      <Filter>Common\COMBridge</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\Common\File\DBmpFile.h">
-      <Filter>File</Filter>
+      <Filter>Common\File</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -69,11 +67,11 @@
     <Filter Include="Common\Base">
       <UniqueIdentifier>{589eed99-69fe-4a59-be3e-480ff3aa17e8}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Common\Video">
-      <UniqueIdentifier>{43d457d5-4fa6-4ef1-8448-81775a7facf7}</UniqueIdentifier>
+    <Filter Include="Common\COMBridge">
+      <UniqueIdentifier>{bc5308c4-c6fa-41e8-bddf-fa81c59ffbb8}</UniqueIdentifier>
     </Filter>
-    <Filter Include="File">
-      <UniqueIdentifier>{ff945b75-39f9-49fb-b004-11d5cb1c4ab5}</UniqueIdentifier>
+    <Filter Include="Common\File">
+      <UniqueIdentifier>{883048ec-c030-4faa-bd98-010509eb8303}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
