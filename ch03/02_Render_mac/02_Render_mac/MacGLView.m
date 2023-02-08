@@ -55,4 +55,29 @@
     [self setNeedsDisplay:YES];
 }
 
+- (void)drawNV12
+{
+    int height = CVPixelBufferGetHeight(nv12_buffer);
+    int width = CVPixelBufferGetWidth(nv12_buffer);
+    IOSurfaceRef surface = CVPixelBufferGetIOSurface(nv12_buffer);
+    CGLContextObj cgl_context = [(__bridge NSOpenGLContext*)gl_context CGLContextObj];
+    // gen texture
+    if (texture1_ == 0) {
+        glGenTextures(1, &texture1_);
+    }
+    glBindTexture(GL_TEXTURE_2D, texture1_);
+    CGLTexImageIOSurface2D(cgl_context, GL_TEXTURE_2D, GL_R8, width, height,
+             GL_RED, GL_UNSIGNED_BYTE, surface, 0);
+    
+    if (texture2_ == 0) {
+        glGenTextures(1, &texture2_);
+    }
+    glBindTexture(GL_TEXTURE_RECTANGLE, texture2_);
+         CGLTexImageIOSurface2D(cgl_context, GL_TEXTURE_2D, GL_LUMINANCE8_ALPHA8, width / 2,
+             height / 2, GL_LUMINANCE_ALPHA, GL_UNSIGNED_BYTE, surface, 1);
+    glBindTexture(GL_TEXTURE_2D, 0);
+    destNV12Tex[0] = texture1_;
+    destNV12Tex[1] = texture2_;
+}
+
 @end

@@ -1,10 +1,11 @@
 #import "MacOCCamera.h"
-#include <atomic>
+#import <CoreVideo/CoreVideo.h>
+#import <atomic>
 
 #define DEFAULT_CAPTURE_WIDTH 1280
 #define DEFAULT_CAPTURE_HEIGHT 720
 #define DEFAULT_FRAME_RATE 25
-#define DEFAULT_PIXEL_FORMAT kCVPixelFormatType_32BGRA
+#define DEFAULT_PIXEL_FORMAT kCVPixelFormatType_420YpCbCr8BiPlanarVideoRange
 
 
 #define MAC_CAPTURE_INIT 1
@@ -530,28 +531,23 @@
         return;
     }
     
-    //从 CMSampleBufferRef 拿到一个 CVImageBufferRef
-    CVImageBufferRef video_frame = CMSampleBufferGetImageBuffer(sample_buffer);
+    CVPixelBufferRef video_frame = CMSampleBufferGetImageBuffer(sample_buffer);
     
     size_t width = CVPixelBufferGetWidth(video_frame);
     size_t height = CVPixelBufferGetHeight(video_frame);
     size_t bytesPerRow = CVPixelBufferGetBytesPerRow(video_frame);
     OSType cvtype = CVPixelBufferGetPixelFormatType(video_frame);
-    //1111970369 = 0x42475241 = 'BGRA'
+    // '420v'
     CVPixelBufferLockBaseAddress(video_frame, kCVPixelBufferLock_ReadOnly);
     void *pBuf = CVPixelBufferGetBaseAddress(video_frame);
     size_t datasize = CVPixelBufferGetDataSize(video_frame);
-    CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
-    CGContextRef context = CGBitmapContextCreate(pBuf, width, height, 8,
-                                                 bytesPerRow, colorSpace, kCGBitmapByteOrder32Little | kCGImageAlphaPremultipliedFirst);
-    CGImageRef quartzImage = CGBitmapContextCreateImage(context);
+    
     CVPixelBufferUnlockBaseAddress(video_frame, kCVPixelBufferLock_ReadOnly);
     
     NSLog(@"%zu*%zu, type:%d, pBuf:%p size:%zu", width, height, cvtype, pBuf, datasize);
 
-    CIImage *image = [CIImage imageWithCGImage:quartzImage];
     dispatch_async(dispatch_get_main_queue(), ^{
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"onFrame" object:image userInfo: nil];
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"onFrame" object:video_frame userInfo: nil];
     });
 }
 
