@@ -1,4 +1,4 @@
-﻿#include "DVideoI420.h"
+#include "DVideoI420.h"
 #include "Base/DXP.h"
 
 #define SUBSAMPLE(v, a, s) (v < 0) ? (-((-v + a) >> s)) : ((v + a) >> s)
@@ -1313,7 +1313,7 @@ DInt32 DVideoI420::I420Scale(const DByte* src_y, DInt32 src_stride_y,
 }
 
 
-DInt32 I420Copy(const DUInt8* src_y,
+DInt32 DVideoI420::I420Copy(const DUInt8* src_y,
     DInt32 src_stride_y,
     const DUInt8* src_u,
     DInt32 src_stride_u,

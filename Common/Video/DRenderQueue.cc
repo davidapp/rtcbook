@@ -25,7 +25,7 @@ DVoid DRenderQueue::Stop()
     m_thread.join();
 }
 
-DVoid DRenderQueue::Setup(HWND wnd, DRect& rect)
+DVoid DRenderQueue::Setup(DVoid* wnd, DRect& rect)
 {
     m_context = wnd;
     m_destRect = rect;
@@ -70,6 +70,7 @@ DVoid DRenderQueue::ProcessFrame()
     m_frame_in_queue.store(false);
 }
 
+#if defined(BUILD_FOR_WINDOWS)
 #include <Windows.h>
 #include "atlbase.h"
 #include "atlapp.h"
@@ -115,6 +116,12 @@ DVoid DRenderQueue::Render(DVideoFrame f)
 
     delete pHeader;
 }
+#else
+DVoid DRenderQueue::Render(DVideoFrame f)
+{
+    
+}
+#endif
 
 DVoid DRenderQueue::Notify()
 {
