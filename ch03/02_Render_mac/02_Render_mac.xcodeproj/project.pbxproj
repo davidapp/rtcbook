@@ -20,6 +20,15 @@
 		2B2E11A0299353EF00705056 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2B2E119F299353EF00705056 /* AVFoundation.framework */; };
 		2B2E11A22993540300705056 /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2B2E11A12993540300705056 /* CoreMedia.framework */; };
 		2B2E11A52993628700705056 /* MacGLView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2B2E11A42993628700705056 /* MacGLView.m */; };
+		2B2E11B1299393CD00705056 /* DFile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2B2E11AB299393CD00705056 /* DFile.cpp */; };
+		2B2E11B2299393CD00705056 /* DBuffer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2B2E11AE299393CD00705056 /* DBuffer.cpp */; };
+		2B2E11B3299393CD00705056 /* DXP.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2B2E11B0299393CD00705056 /* DXP.cpp */; };
+		2B2E11B6299393E800705056 /* DBmpFile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2B2E11B4299393E800705056 /* DBmpFile.cpp */; };
+		2B2E11C22993941100705056 /* DVideoColor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2B2E11B82993941000705056 /* DVideoColor.cpp */; };
+		2B2E11C32993941100705056 /* DVideoFormat.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2B2E11B92993941000705056 /* DVideoFormat.cpp */; };
+		2B2E11C42993941100705056 /* DVideoFrame.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2B2E11BD2993941100705056 /* DVideoFrame.cpp */; };
+		2B2E11C52993941100705056 /* DVideoI420.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2B2E11BF2993941100705056 /* DVideoI420.cpp */; };
+		2B2E11C62993941100705056 /* DRenderQueue.cc in Sources */ = {isa = PBXBuildFile; fileRef = 2B2E11C12993941100705056 /* DRenderQueue.cc */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -43,6 +52,29 @@
 		2B2E11A12993540300705056 /* CoreMedia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMedia.framework; path = System/Library/Frameworks/CoreMedia.framework; sourceTree = SDKROOT; };
 		2B2E11A32993628700705056 /* MacGLView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MacGLView.h; sourceTree = "<group>"; };
 		2B2E11A42993628700705056 /* MacGLView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MacGLView.m; sourceTree = "<group>"; };
+		2B2E11AA299393CD00705056 /* DFile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DFile.h; path = ../../../Common/Base/DFile.h; sourceTree = "<group>"; };
+		2B2E11AB299393CD00705056 /* DFile.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = DFile.cpp; path = ../../../Common/Base/DFile.cpp; sourceTree = "<group>"; };
+		2B2E11AC299393CD00705056 /* DAtomic.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DAtomic.h; path = ../../../Common/Base/DAtomic.h; sourceTree = "<group>"; };
+		2B2E11AD299393CD00705056 /* DXP.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DXP.h; path = ../../../Common/Base/DXP.h; sourceTree = "<group>"; };
+		2B2E11AE299393CD00705056 /* DBuffer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = DBuffer.cpp; path = ../../../Common/Base/DBuffer.cpp; sourceTree = "<group>"; };
+		2B2E11AF299393CD00705056 /* DBuffer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DBuffer.h; path = ../../../Common/Base/DBuffer.h; sourceTree = "<group>"; };
+		2B2E11B0299393CD00705056 /* DXP.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = DXP.cpp; path = ../../../Common/Base/DXP.cpp; sourceTree = "<group>"; };
+		2B2E11B4299393E800705056 /* DBmpFile.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = DBmpFile.cpp; path = ../../../Common/File/DBmpFile.cpp; sourceTree = "<group>"; };
+		2B2E11B5299393E800705056 /* DBmpFile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DBmpFile.h; path = ../../../Common/File/DBmpFile.h; sourceTree = "<group>"; };
+		2B2E11B72993941000705056 /* DVideoColor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DVideoColor.h; path = ../../../Common/Video/DVideoColor.h; sourceTree = "<group>"; };
+		2B2E11B82993941000705056 /* DVideoColor.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = DVideoColor.cpp; path = ../../../Common/Video/DVideoColor.cpp; sourceTree = "<group>"; };
+		2B2E11B92993941000705056 /* DVideoFormat.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = DVideoFormat.cpp; path = ../../../Common/Video/DVideoFormat.cpp; sourceTree = "<group>"; };
+		2B2E11BA2993941100705056 /* DVideoDefines.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DVideoDefines.h; path = ../../../Common/Video/DVideoDefines.h; sourceTree = "<group>"; };
+		2B2E11BB2993941100705056 /* DRenderQueue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DRenderQueue.h; path = ../../../Common/Video/DRenderQueue.h; sourceTree = "<group>"; };
+		2B2E11BC2993941100705056 /* DVideoFormat.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DVideoFormat.h; path = ../../../Common/Video/DVideoFormat.h; sourceTree = "<group>"; };
+		2B2E11BD2993941100705056 /* DVideoFrame.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = DVideoFrame.cpp; path = ../../../Common/Video/DVideoFrame.cpp; sourceTree = "<group>"; };
+		2B2E11BE2993941100705056 /* DVideoFrame.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DVideoFrame.h; path = ../../../Common/Video/DVideoFrame.h; sourceTree = "<group>"; };
+		2B2E11BF2993941100705056 /* DVideoI420.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = DVideoI420.cpp; path = ../../../Common/Video/DVideoI420.cpp; sourceTree = "<group>"; };
+		2B2E11C02993941100705056 /* DVideoI420.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DVideoI420.h; path = ../../../Common/Video/DVideoI420.h; sourceTree = "<group>"; };
+		2B2E11C12993941100705056 /* DRenderQueue.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = DRenderQueue.cc; path = ../../../Common/Video/DRenderQueue.cc; sourceTree = "<group>"; };
+		2B2E11C7299394B400705056 /* DConfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DConfig.h; path = ../../../Common/DConfig.h; sourceTree = "<group>"; };
+		2B2E11C8299394B400705056 /* DTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DTypes.h; path = ../../../Common/DTypes.h; sourceTree = "<group>"; };
+		2B2E11C9299394B400705056 /* DConfig_Mac.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DConfig_Mac.h; path = ../../../Common/DConfig_Mac.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -81,6 +113,7 @@
 		2B2E117B29933D2F00705056 /* 02_Render_mac */ = {
 			isa = PBXGroup;
 			children = (
+				2B2E11A6299393A000705056 /* Common */,
 				2B2E11A32993628700705056 /* MacGLView.h */,
 				2B2E11A42993628700705056 /* MacGLView.m */,
 				2B2E119C2993537300705056 /* MacOCCamera.h */,
@@ -109,6 +142,60 @@
 				2B2E119029933D9F00705056 /* OpenGL.framework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		2B2E11A6299393A000705056 /* Common */ = {
+			isa = PBXGroup;
+			children = (
+				2B2E11C9299394B400705056 /* DConfig_Mac.h */,
+				2B2E11C7299394B400705056 /* DConfig.h */,
+				2B2E11C8299394B400705056 /* DTypes.h */,
+				2B2E11A9299393B100705056 /* Video */,
+				2B2E11A8299393AD00705056 /* File */,
+				2B2E11A7299393A800705056 /* Base */,
+			);
+			name = Common;
+			sourceTree = "<group>";
+		};
+		2B2E11A7299393A800705056 /* Base */ = {
+			isa = PBXGroup;
+			children = (
+				2B2E11AC299393CD00705056 /* DAtomic.h */,
+				2B2E11AE299393CD00705056 /* DBuffer.cpp */,
+				2B2E11AF299393CD00705056 /* DBuffer.h */,
+				2B2E11AB299393CD00705056 /* DFile.cpp */,
+				2B2E11AA299393CD00705056 /* DFile.h */,
+				2B2E11B0299393CD00705056 /* DXP.cpp */,
+				2B2E11AD299393CD00705056 /* DXP.h */,
+			);
+			name = Base;
+			sourceTree = "<group>";
+		};
+		2B2E11A8299393AD00705056 /* File */ = {
+			isa = PBXGroup;
+			children = (
+				2B2E11B4299393E800705056 /* DBmpFile.cpp */,
+				2B2E11B5299393E800705056 /* DBmpFile.h */,
+			);
+			name = File;
+			sourceTree = "<group>";
+		};
+		2B2E11A9299393B100705056 /* Video */ = {
+			isa = PBXGroup;
+			children = (
+				2B2E11C12993941100705056 /* DRenderQueue.cc */,
+				2B2E11BB2993941100705056 /* DRenderQueue.h */,
+				2B2E11B82993941000705056 /* DVideoColor.cpp */,
+				2B2E11B72993941000705056 /* DVideoColor.h */,
+				2B2E11BA2993941100705056 /* DVideoDefines.h */,
+				2B2E11B92993941000705056 /* DVideoFormat.cpp */,
+				2B2E11BC2993941100705056 /* DVideoFormat.h */,
+				2B2E11BD2993941100705056 /* DVideoFrame.cpp */,
+				2B2E11BE2993941100705056 /* DVideoFrame.h */,
+				2B2E11BF2993941100705056 /* DVideoI420.cpp */,
+				2B2E11C02993941100705056 /* DVideoI420.h */,
+			);
+			name = Video;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -181,11 +268,20 @@
 			buildActionMask = 2147483647;
 			files = (
 				2B2E119429933DC100705056 /* DMacRender.mm in Sources */,
+				2B2E11C32993941100705056 /* DVideoFormat.cpp in Sources */,
+				2B2E11C22993941100705056 /* DVideoColor.cpp in Sources */,
+				2B2E11C62993941100705056 /* DRenderQueue.cc in Sources */,
 				2B2E118129933D2F00705056 /* ViewController.m in Sources */,
+				2B2E11B2299393CD00705056 /* DBuffer.cpp in Sources */,
 				2B2E118829933D3100705056 /* main.m in Sources */,
+				2B2E11B1299393CD00705056 /* DFile.cpp in Sources */,
 				2B2E119E2993537300705056 /* MacOCCamera.mm in Sources */,
+				2B2E11B3299393CD00705056 /* DXP.cpp in Sources */,
 				2B2E117E29933D2F00705056 /* AppDelegate.m in Sources */,
+				2B2E11B6299393E800705056 /* DBmpFile.cpp in Sources */,
 				2B2E11A52993628700705056 /* MacGLView.m in Sources */,
+				2B2E11C42993941100705056 /* DVideoFrame.cpp in Sources */,
+				2B2E11C52993941100705056 /* DVideoI420.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

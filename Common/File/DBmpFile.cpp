@@ -1,4 +1,4 @@
-﻿#include "DBmpFile.h"
+#include "DBmpFile.h"
 #include "Base/DFile.h"
 #include "Base/DXP.h"
 
@@ -124,9 +124,10 @@ DBuffer DBmpFile::Make32BitBitmap(DUInt32 w, DUInt32 h, DBuffer data)
 std::string DBmpFile::biCompToStr(DUInt32 biCompression)
 {
     // https://docs.microsoft.com/en-us/windows/win32/directshow/fourcc-codes
-    if (biCompression == BI_RGB) return "BI_RGB";
-    else if (biCompression == BI_BITFIELDS) return "BI_RGB";
-
+    //if (biCompression == BI_RGB) return "BI_RGB";
+    //else if (biCompression == BI_BITFIELDS) return "BI_RGB";
+    //TODO
+    
     char buf[10] = {};
     char* p = (char*)&biCompression;
 #if defined(BUILD_FOR_WINDOWS)

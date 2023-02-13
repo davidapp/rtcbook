@@ -57,7 +57,7 @@
 
 - (void)drawNV12
 {
-    int height = CVPixelBufferGetHeight(nv12_buffer);
+    /*int height = CVPixelBufferGetHeight(nv12_buffer);
     int width = CVPixelBufferGetWidth(nv12_buffer);
     IOSurfaceRef surface = CVPixelBufferGetIOSurface(nv12_buffer);
     CGLContextObj cgl_context = [(__bridge NSOpenGLContext*)gl_context CGLContextObj];
@@ -77,7 +77,7 @@
              height / 2, GL_LUMINANCE_ALPHA, GL_UNSIGNED_BYTE, surface, 1);
     glBindTexture(GL_TEXTURE_2D, 0);
     destNV12Tex[0] = texture1_;
-    destNV12Tex[1] = texture2_;
+    destNV12Tex[1] = texture2_;*/
 }
 
 @end

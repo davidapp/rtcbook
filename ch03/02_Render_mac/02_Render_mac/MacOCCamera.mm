@@ -1,12 +1,14 @@
 #import "MacOCCamera.h"
 #import <CoreVideo/CoreVideo.h>
 #import <atomic>
+#include "Video/DVideoFrame.h"
+#include "Video/DVideoI420.h"
 
 #define DEFAULT_CAPTURE_WIDTH 1280
 #define DEFAULT_CAPTURE_HEIGHT 720
 #define DEFAULT_FRAME_RATE 25
-#define DEFAULT_PIXEL_FORMAT kCVPixelFormatType_420YpCbCr8BiPlanarVideoRange
-
+//#define DEFAULT_PIXEL_FORMAT kCVPixelFormatType_420YpCbCr8BiPlanarVideoRange
+#define DEFAULT_PIXEL_FORMAT kCVPixelFormatType_420YpCbCr8Planar
 
 #define MAC_CAPTURE_INIT 1
 #define MAC_CAPTURE_START 2
@@ -537,17 +539,37 @@
     size_t height = CVPixelBufferGetHeight(video_frame);
     size_t bytesPerRow = CVPixelBufferGetBytesPerRow(video_frame);
     OSType cvtype = CVPixelBufferGetPixelFormatType(video_frame);
-    // '420v'
+    // '420v' or 'y420'
     CVPixelBufferLockBaseAddress(video_frame, kCVPixelBufferLock_ReadOnly);
     void *pBuf = CVPixelBufferGetBaseAddress(video_frame);
     size_t datasize = CVPixelBufferGetDataSize(video_frame);
     
+    DVideoFrame frame(width, height, DPixelFmt::I420);
+    if (cvtype == kCVPixelFormatType_420YpCbCr8PlanarFullRange || cvtype == kCVPixelFormatType_420YpCbCr8Planar)
+    {
+        const uint8_t* src_y = static_cast<uint8_t*>(CVPixelBufferGetBaseAddressOfPlane(video_frame, 0));
+        const int src_ystride = CVPixelBufferGetBytesPerRowOfPlane(video_frame, 0);
+        const uint8_t* src_u = static_cast<uint8_t*>(CVPixelBufferGetBaseAddressOfPlane(video_frame, 1));
+        const int src_ustride = CVPixelBufferGetBytesPerRowOfPlane(video_frame, 1);
+        const uint8_t* src_v = static_cast<uint8_t*>(CVPixelBufferGetBaseAddressOfPlane(video_frame, 2));
+        const int src_vstride = CVPixelBufferGetBytesPerRowOfPlane(video_frame, 2);
+
+        DInt32 dst_lineSize = frame.GetLineSize();
+        DByte* dst_y = frame.GetBuf();
+        DInt32 dst_stride_y = dst_lineSize;
+        DByte* dst_u = dst_y + height * dst_lineSize;
+        DInt32 dst_stride_u = dst_lineSize / 2;
+        DByte* dst_v = dst_u + height * dst_lineSize / 4;
+        DInt32 dst_stride_v = dst_lineSize / 2;
+
+        DVideoI420::I420Copy(src_y, src_ystride, src_u, src_ustride, src_v, src_vstride, dst_y, dst_stride_y, dst_u, dst_stride_u, dst_v, dst_stride_v, width, height);
+    }
     CVPixelBufferUnlockBaseAddress(video_frame, kCVPixelBufferLock_ReadOnly);
     
     NSLog(@"%zu*%zu, type:%d, pBuf:%p size:%zu", width, height, cvtype, pBuf, datasize);
 
     dispatch_async(dispatch_get_main_queue(), ^{
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"onFrame" object:video_frame userInfo: nil];
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"onFrame" object:(NSInteger)(void *)frame.GetBuf() userInfo: nil];
     });
 }
 
