@@ -8,12 +8,20 @@
 #include <condition_variable>
 #include <mutex>
 #include <queue>
+#include <vector>
 #include <thread>
 #include <functional>
 
-#define D_LOCAL_VIEW 0
-#define D_REMOTE_VIEW 1
-#define D_VIEW_COUNT 2
+enum DViewID {
+    D_LOCAL_VIEW = 0,
+    D_REMOTE_VIEW = 1,
+    D_VIEW_COUNT
+};
+
+typedef struct tagDRenderConfig {
+    DVoid* context;
+    DRect destRect;
+}DRenderConfig;
 
 class DRenderQueue {
 public:
@@ -32,7 +40,7 @@ protected:
     DVoid Notify();
     DVoid ProcessFrame();
 
-    DVoid Render(DVideoFrame f);
+    DVoid Render(DUInt32 viewID, DVideoFrame f);
 
 private:
     std::deque<DVideoFrame> m_queue[D_VIEW_COUNT];
@@ -45,8 +53,6 @@ private:
     std::thread m_thread;
     std::atomic<bool> m_stoped{};
     
-    typedef std::pair<DVoid*, DRect> DConfig;
-    //DVoid* m_context;
-    //DRect m_destRect;
+    std::vector<DRenderConfig> m_configs;
 };
 

@@ -25,11 +25,9 @@ DVoid* OnFrame(DVideoFrame frame, DVoid* pUserData)
     if (frame.GetFormat() == DPixelFmt::YUY2)
     {
         DVideoFrame i420frame = DVideoFormat::YUY2ToI420(frame);
-        DVideoFrame i420frame_e = DVideoI420::Scale(i420frame, 128, 72, kFilterBox);
+        DVideoFrame i420frame_e = DVideoI420::Scale(i420frame, 200, 200, kFilterBox);
         g_renderQueue.PushFrame(D_LOCAL_VIEW, DVideoI420::Mirror(i420frame_e));
-        
-        DVideoFrame i420frame_s = DVideoI420::Scale(i420frame, 100, 100, kFilterBox);
-        g_renderQueue.PushFrame(D_REMOTE_VIEW, i420frame_s);
+        g_renderQueue.PushFrame(D_REMOTE_VIEW, i420frame_e);
     }
     else {
 

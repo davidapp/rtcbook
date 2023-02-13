@@ -5,7 +5,7 @@ DRenderQueue::DRenderQueue()
 {
     m_stoped.store(false);
     m_frame_in_queue.store(false);
-    m_context = nullptr;
+    m_configs.resize(D_VIEW_COUNT);
 }
 
 DRenderQueue::~DRenderQueue() 
@@ -27,8 +27,8 @@ DVoid DRenderQueue::Stop()
 
 DVoid DRenderQueue::Setup(DUInt32 viewID, DVoid* wnd, DRect& rect)
 {
-    m_context = wnd;
-    m_destRect = rect;
+    m_configs[viewID].context = wnd;
+    m_configs[viewID].destRect = rect;
 }
 
 DInt32 DRenderQueue::GetQueueSize() 
@@ -62,19 +62,20 @@ DVoid DRenderQueue::ProcessFrame()
 {
     while (GetQueueSize() > 0) 
     {
+        DUInt32 nIndex = 0;
         DVideoFrame cur_frame;
         {
             std::lock_guard<std::mutex> lock(m_queue_mutex);
-            for (DUInt32 i = 0; i < D_VIEW_COUNT; i++) {
-                if (m_queue[i].size() > 0) {
-                    cur_frame = m_queue[i].front();
-                    m_queue[i].pop_front();
+            for (; nIndex < D_VIEW_COUNT; nIndex++) {
+                if (m_queue[nIndex].size() > 0) {
+                    cur_frame = m_queue[nIndex].front();
+                    m_queue[nIndex].pop_front();
                     break;
                 }
             }
         }
         
-        Render(cur_frame);
+        Render(nIndex, cur_frame);
     }
     m_frame_in_queue.store(false);
 }
@@ -88,8 +89,10 @@ DVoid DRenderQueue::ProcessFrame()
 #include "DTypes.h"
 #include "Video/DVideoFormat.h"
 
-DVoid DRenderQueue::Render(DVideoFrame f)
+DVoid DRenderQueue::Render(DUInt32 viewID, DVideoFrame f)
 {
+    DVoid* m_context = m_configs[viewID].context;
+    DRect m_destRect = m_configs[viewID].destRect;
     CClientDC dc((HWND)m_context);
     DRect src = DRect(0, 0, f.GetWidth(), f.GetHeight());
     if (f.GetFormat() == DPixelFmt::I420)
