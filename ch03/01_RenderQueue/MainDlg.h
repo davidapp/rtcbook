@@ -13,8 +13,8 @@
 #include "Video/DVideoFormat.h"
 #include "Video/DVideoI420.h"
 
-DRenderQueue g_localQueue;
-DRenderQueue g_remoteQueue;
+DRenderQueue g_renderQueue;
+
 
 DVoid* OnFrame(DVideoFrame frame, DVoid* pUserData)
 {
@@ -26,10 +26,10 @@ DVoid* OnFrame(DVideoFrame frame, DVoid* pUserData)
     {
         DVideoFrame i420frame = DVideoFormat::YUY2ToI420(frame);
         DVideoFrame i420frame_e = DVideoI420::Scale(i420frame, 128, 72, kFilterBox);
-        g_localQueue.PushFrame(DVideoI420::Mirror(i420frame_e));
+        g_renderQueue.PushFrame(D_LOCAL_VIEW, DVideoI420::Mirror(i420frame_e));
         
         DVideoFrame i420frame_s = DVideoI420::Scale(i420frame, 100, 100, kFilterBox);
-        //g_remoteQueue.PushFrame(i420frame_s);
+        g_renderQueue.PushFrame(D_REMOTE_VIEW, i420frame_s);
     }
     else {
 
@@ -70,22 +70,21 @@ public:
         m_localFrame = GetDlgItem(IDC_LOCALVIEW);
         m_remoteFrame = GetDlgItem(IDC_REMOTEVIEW);
 
-        g_localQueue.Start();
-        g_remoteQueue.Start();
-
         CRect rect;
         m_localFrame.GetWindowRect(rect);
         CPoint pos(rect.left, rect.top);
         ::ScreenToClient(m_hWnd, &pos);
         DRect rLocal(pos.x, pos.y, pos.x + rect.Width(), pos.y + rect.Height());
-        g_localQueue.Setup(m_hWnd, rLocal);
+        g_renderQueue.Setup(D_LOCAL_VIEW, m_hWnd, rLocal);
 
         m_remoteFrame.GetWindowRect(rect);
         pos.x = rect.left;
         pos.y = rect.top;
         ::ScreenToClient(m_hWnd, &pos);
         DRect rRemote(pos.x, pos.y, pos.x + rect.Width(), pos.y + rect.Height());
-        g_remoteQueue.Setup(m_hWnd, rRemote);
+        g_renderQueue.Setup(D_REMOTE_VIEW, m_hWnd, rRemote);
+
+        g_renderQueue.Start();
 
         return TRUE;
     }
@@ -95,8 +94,7 @@ public:
         ::EndDialog(m_hWnd, wID);
         m_hWnd = NULL;
         PostQuitMessage(0);
-        g_localQueue.Stop();
-        g_remoteQueue.Stop();
+        g_renderQueue.Stop();
         return 0;
     }
 

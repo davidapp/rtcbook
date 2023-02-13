@@ -25,7 +25,7 @@ DVoid DRenderQueue::Stop()
     m_thread.join();
 }
 
-DVoid DRenderQueue::Setup(DVoid* wnd, DRect& rect)
+DVoid DRenderQueue::Setup(DUInt32 viewID, DVoid* wnd, DRect& rect)
 {
     m_context = wnd;
     m_destRect = rect;
@@ -34,7 +34,11 @@ DVoid DRenderQueue::Setup(DVoid* wnd, DRect& rect)
 DInt32 DRenderQueue::GetQueueSize() 
 {
     std::lock_guard<std::mutex> lock(m_queue_mutex);
-    return m_queue.size();
+    DUInt32 sum = 0;
+    for (DUInt32 i = 0; i < D_VIEW_COUNT; i++) {
+        sum += m_queue[i].size();
+    }
+    return sum;
 }
 
 DVoid DRenderQueue::MessageLoopThread() 
@@ -61,8 +65,13 @@ DVoid DRenderQueue::ProcessFrame()
         DVideoFrame cur_frame;
         {
             std::lock_guard<std::mutex> lock(m_queue_mutex);
-            cur_frame = m_queue.front();
-            m_queue.pop_front();
+            for (DUInt32 i = 0; i < D_VIEW_COUNT; i++) {
+                if (m_queue[i].size() > 0) {
+                    cur_frame = m_queue[i].front();
+                    m_queue[i].pop_front();
+                    break;
+                }
+            }
         }
         
         Render(cur_frame);
@@ -129,11 +138,11 @@ DVoid DRenderQueue::Notify()
     m_cv.notify_one();
 }
 
-DInt32 DRenderQueue::PushFrame(DVideoFrame frame)
+DInt32 DRenderQueue::PushFrame(DUInt32 viewID, DVideoFrame frame)
 {
     {
         std::lock_guard<std::mutex> lock(m_queue_mutex);
-        m_queue.push_back(frame);
+        m_queue[viewID].push_back(frame);
     }
 
     Notify();
