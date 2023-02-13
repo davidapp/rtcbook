@@ -77,14 +77,14 @@ public:
         m_localFrame.GetWindowRect(rect);
         CPoint pos(rect.left, rect.top);
         ::ScreenToClient(m_hWnd, &pos);
-        DRect rLocal(pos.x, pos.y, rect.Width(), rect.Height());
+        DRect rLocal(pos.x, pos.y, pos.x + rect.Width(), pos.y + rect.Height());
         g_localQueue.Setup(m_hWnd, rLocal);
 
         m_remoteFrame.GetWindowRect(rect);
         pos.x = rect.left;
         pos.y = rect.top;
         ::ScreenToClient(m_hWnd, &pos);
-        DRect rRemote(pos.x, pos.y, rect.Width(), rect.Height());
+        DRect rRemote(pos.x, pos.y, pos.x + rect.Width(), pos.y + rect.Height());
         g_remoteQueue.Setup(m_hWnd, rRemote);
 
         return TRUE;

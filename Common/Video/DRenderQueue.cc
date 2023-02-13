@@ -87,9 +87,27 @@ DVoid DRenderQueue::Render(DVideoFrame f)
     {
         DVideoFrame frameRaw = DVideoFormat::I420ToRAW(f);
         DBITMAPINFOHEADER* pHrd = frameRaw.NewBMPInfoHeader();
-        dc.StretchDIBits(m_destRect.left, m_destRect.top, m_destRect.left + m_destRect.Width(), m_destRect.top + m_destRect.Height(),
-            src.left, src.top + src.Height(), src.Width(), -src.Height(), frameRaw.GetBuf(),
+
+        // Double Buffer
+        CDC dc_mem;
+        dc_mem.CreateCompatibleDC(dc.m_hDC);
+        dc_mem.SetStretchBltMode(HALFTONE);
+        HBITMAP bmp_mem = ::CreateCompatibleBitmap(dc.m_hDC, m_destRect.Width(), m_destRect.Height());
+        HGDIOBJ bmp_old = ::SelectObject(dc_mem.m_hDC, bmp_mem);
+
+        dc_mem.StretchDIBits(0, 0, m_destRect.Width(), m_destRect.Height(),
+            src.left, src.Height(), src.Width(), -src.Height(), frameRaw.GetBuf(),
             (const BITMAPINFO*)pHrd, DIB_RGB_COLORS, SRCCOPY);
+
+        dc.BitBlt(m_destRect.left, m_destRect.top, m_destRect.Width(), m_destRect.Height(), dc_mem, 0, 0, SRCCOPY);
+
+        ::SelectObject(dc_mem, bmp_old);
+        ::DeleteObject(bmp_mem);
+        ::DeleteDC(dc_mem);
+
+        //dc.StretchDIBits(m_destRect.left, m_destRect.top, m_destRect.left + m_destRect.Width(), m_destRect.top + m_destRect.Height(),
+        //    src.left, src.top + src.Height(), src.Width(), -src.Height(), frameRaw.GetBuf(),
+        //    (const BITMAPINFO*)pHrd, DIB_RGB_COLORS, SRCCOPY);
         delete pHrd;
     }
 }
