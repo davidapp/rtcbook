@@ -29,7 +29,7 @@ DVoid* OnFrame(DVideoFrame frame, DVoid* pUserData)
         g_localQueue.PushFrame(DVideoI420::Mirror(i420frame_e));
         
         DVideoFrame i420frame_s = DVideoI420::Scale(i420frame, 100, 100, kFilterBox);
-        g_remoteQueue.PushFrame(i420frame_s);
+        //g_remoteQueue.PushFrame(i420frame_s);
     }
     else {
 
