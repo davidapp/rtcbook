@@ -44,8 +44,14 @@ DVoid* OnFrame(DVideoFrame frame, DVoid* pUserData)
             frame_small_raw = DVideoFormat::I420ToRAW(frame_rotate);
         }
 
-        pHeader->bmiHeader.biWidth = DEST_WIDTH;
-        pHeader->bmiHeader.biHeight = DEST_HEIGHT;
+        if (g_rotate == DRotation::DEGREE_90 || g_rotate == DRotation::DEGREE_270) {
+            pHeader->bmiHeader.biWidth = DEST_HEIGHT;
+            pHeader->bmiHeader.biHeight = DEST_WIDTH;
+        }
+        else {
+            pHeader->bmiHeader.biWidth = DEST_WIDTH;
+            pHeader->bmiHeader.biHeight = DEST_HEIGHT;
+        }
         pHeader->bmiHeader.biSizeImage = DEST_WIDTH * DEST_HEIGHT * 3;
         pHeader->bmiHeader.biBitCount = 24;
         pHeader->bmiHeader.biCompression = BI_RGB;

@@ -68,13 +68,14 @@ DVideoFrame DVideoI420::Rotate(const DVideoFrame& srcFrame, DRotation rotate)
     DByte* dst_v = dst_u + h * dst_lineSize / 4;
     DInt32 dst_stride_v = dst_lineSize / 2;
 
-    DVideoI420::I420Rotate(src_y, src_stride_y,
+    DVideoI420::I420Rotate(
+        src_y, src_stride_y,
         src_u, src_stride_u,
         src_v, src_stride_v,
         dst_y, dst_stride_y,
         dst_u, dst_stride_u,
         dst_v, dst_stride_v,
-        w, h, rotate);
+        src_w, src_h, rotate);
     return frameRet;
 }
 
