@@ -11,6 +11,10 @@
 #include <thread>
 #include <functional>
 
+#define D_LOCAL_VIEW 0
+#define D_REMOTE_VIEW 1
+#define D_VIEW_COUNT 2
+
 class DRenderQueue {
 public:
     explicit DRenderQueue();
@@ -19,9 +23,9 @@ public:
 public:
     DVoid Start();
     DVoid Stop();
-    DVoid Setup(DVoid* wnd, DRect& rect);
+    DVoid Setup(DUInt32 viewID, DVoid* wnd, DRect& rect);
     DInt32 GetQueueSize();
-    DInt32 PushFrame(DVideoFrame frame);
+    DInt32 PushFrame(DUInt32 viewID, DVideoFrame frame);
 
 protected:
     DVoid MessageLoopThread();
@@ -31,7 +35,7 @@ protected:
     DVoid Render(DVideoFrame f);
 
 private:
-    std::deque<DVideoFrame> m_queue;
+    std::deque<DVideoFrame> m_queue[D_VIEW_COUNT];
     std::mutex m_queue_mutex;
     
     std::condition_variable m_cv;
@@ -40,8 +44,9 @@ private:
     
     std::thread m_thread;
     std::atomic<bool> m_stoped{};
-
-    DVoid* m_context;
-    DRect m_destRect;
+    
+    typedef std::pair<DVoid*, DRect> DConfig;
+    //DVoid* m_context;
+    //DRect m_destRect;
 };
 

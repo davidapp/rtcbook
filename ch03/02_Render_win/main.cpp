@@ -1,7 +1,7 @@
-#include "atl.h"
+﻿#include "atl.h"
 #include "atldlgs.h"
 #include "resource.h"
-#include "maindlg.h"
+#include "MainDlg.h"
 
 CAppModule _Module;
 
@@ -10,15 +10,8 @@ int Run(LPTSTR /*lpCmdLine*/ = NULL, int nCmdShow = SW_SHOWDEFAULT)
     CMessageLoop theLoop;
     _Module.AddMessageLoop(&theLoop);
 
-    CMainDlg dlgMain;
-
-    if (dlgMain.Create(NULL) == NULL)
-    {
-        ATLTRACE(_T("Main dialog creation failed!\n"));
-        return 0;
-    }
-
-    dlgMain.ShowWindow(nCmdShow);
+    CMainDlg dlg;
+    dlg.DoModal();
 
     int nRet = theLoop.Run();
 

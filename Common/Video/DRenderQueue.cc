@@ -25,7 +25,7 @@ DVoid DRenderQueue::Stop()
     m_thread.join();
 }
 
-DVoid DRenderQueue::Setup(DVoid* wnd, DRect& rect)
+DVoid DRenderQueue::Setup(DUInt32 viewID, DVoid* wnd, DRect& rect)
 {
     m_context = wnd;
     m_destRect = rect;
@@ -34,7 +34,11 @@ DVoid DRenderQueue::Setup(DVoid* wnd, DRect& rect)
 DInt32 DRenderQueue::GetQueueSize() 
 {
     std::lock_guard<std::mutex> lock(m_queue_mutex);
-    return m_queue.size();
+    DUInt32 sum = 0;
+    for (DUInt32 i = 0; i < D_VIEW_COUNT; i++) {
+        sum += m_queue[i].size();
+    }
+    return sum;
 }
 
 DVoid DRenderQueue::MessageLoopThread() 
@@ -61,8 +65,13 @@ DVoid DRenderQueue::ProcessFrame()
         DVideoFrame cur_frame;
         {
             std::lock_guard<std::mutex> lock(m_queue_mutex);
-            cur_frame = m_queue.front();
-            m_queue.pop_front();
+            for (DUInt32 i = 0; i < D_VIEW_COUNT; i++) {
+                if (m_queue[i].size() > 0) {
+                    cur_frame = m_queue[i].front();
+                    m_queue[i].pop_front();
+                    break;
+                }
+            }
         }
         
         Render(cur_frame);
@@ -77,44 +86,44 @@ DVoid DRenderQueue::ProcessFrame()
 #include "atlgdi.h"
 #include "DConfig.h"
 #include "DTypes.h"
+#include "Video/DVideoFormat.h"
 
 DVoid DRenderQueue::Render(DVideoFrame f)
 {
-    BITMAPINFO* pHeader = (BITMAPINFO*)f.GetUserData();
-
-    CClientDC dc(m_context);
-
+    CClientDC dc((HWND)m_context);
     DRect src = DRect(0, 0, f.GetWidth(), f.GetHeight());
-    int crop_width = DMin(src.Width(), m_destRect.Width() * src.Height() / m_destRect.Height());
-    int crop_height = DMin(src.Height(), m_destRect.Height() * src.Width() / m_destRect.Width());
-    int offset_x = (src.Width() - crop_width) / 2;
-    offset_x = int(offset_x / 2) * 2;
-    int offset_y = (src.Height() - crop_height) / 2;
-    src.left = offset_x;
-    src.right = src.left + crop_width;
-    src.top = offset_y;
-    src.bottom = offset_y + crop_height;
+    if (f.GetFormat() == DPixelFmt::I420)
+    {
+        DVideoFrame frameRaw = DVideoFormat::I420ToRAW(f);
+        DBITMAPINFOHEADER* pHrd = frameRaw.NewBMPInfoHeader();
 
-    if (f.GetFormat() == DPixelFmt::RGB24)
-    {
-        dc.StretchDIBits(m_destRect.left, m_destRect.top, m_destRect.Width(), m_destRect.Height(), 0, 0,
-            f.GetWidth(), f.GetHeight(), f.GetBuf(),
-            pHeader, DIB_RGB_COLORS, SRCCOPY);
-    }
-    else if (f.GetFormat() == DPixelFmt::RAW)
-    {
-        dc.StretchDIBits(m_destRect.left, m_destRect.top, m_destRect.Width(), m_destRect.Height(), src.left, src.top + src.Height(),
-            src.Width(), -src.Height(), f.GetBuf(),
-            pHeader, DIB_RGB_COLORS, SRCCOPY);
-    }
-    else if (f.GetFormat() == DPixelFmt::I420)
-    {
-        dc.StretchDIBits(m_destRect.left, m_destRect.top, m_destRect.Width(), m_destRect.Height(), src.left, src.top + src.Height(),
-            src.Width(), -src.Height(), f.GetBuf(),
-            pHeader, DIB_RGB_COLORS, SRCCOPY);
-    }
+        // Double Buffer
+        CDC dc_mem;
+        dc_mem.CreateCompatibleDC(dc.m_hDC);
+        //dc_mem.SetStretchBltMode(HALFTONE);
 
-    delete pHeader;
+        HBITMAP bmp_mem = ::CreateCompatibleBitmap(dc.m_hDC, m_destRect.Width(), m_destRect.Height());
+        HGDIOBJ bmp_old = ::SelectObject(dc_mem.m_hDC, bmp_mem);
+        HBRUSH brush = ::CreateSolidBrush(RGB(100, 100, 100));
+        RECT logical_rect = { 0, 0, m_destRect.Width(), m_destRect.Height() };
+        ::FillRect(dc_mem, &logical_rect, brush);
+        ::DeleteObject(brush);
+
+        dc_mem.StretchDIBits(0, 0, m_destRect.Width(), m_destRect.Height(),
+            0, src.Height(), src.Width(), -src.Height(), frameRaw.GetBuf(),
+            (const BITMAPINFO*)pHrd, DIB_RGB_COLORS, SRCCOPY);
+
+        dc.BitBlt(m_destRect.left, m_destRect.top, m_destRect.Width(), m_destRect.Height(), dc_mem, 0, 0, SRCCOPY);
+
+        ::SelectObject(dc_mem, bmp_old);
+        ::DeleteObject(bmp_mem);
+        ::DeleteDC(dc_mem);
+
+        /*dc.StretchDIBits(m_destRect.left, m_destRect.top, m_destRect.Width(), m_destRect.Height(),
+            src.left, src.top + src.Height(), src.Width(), -src.Height(), frameRaw.GetBuf(),
+            (const BITMAPINFO*)pHrd, DIB_RGB_COLORS, SRCCOPY);*/
+        delete pHrd;
+    }
 }
 #else
 DVoid DRenderQueue::Render(DVideoFrame f)
@@ -129,11 +138,11 @@ DVoid DRenderQueue::Notify()
     m_cv.notify_one();
 }
 
-DInt32 DRenderQueue::PushFrame(DVideoFrame frame)
+DInt32 DRenderQueue::PushFrame(DUInt32 viewID, DVideoFrame frame)
 {
     {
         std::lock_guard<std::mutex> lock(m_queue_mutex);
-        m_queue.push_back(frame);
+        m_queue[viewID].push_back(frame);
     }
 
     Notify();

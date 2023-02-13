@@ -17,6 +17,9 @@
 #define DEST_WIDTH 300
 #define DEST_HEIGHT 200
 
+DBool g_mirror = false;
+DRotation g_rotate = DRotation::DEGREE_0;
+
 DVoid* OnFrame(DVideoFrame frame, DVoid* pUserData)
 {
     DTimer::Stop(0);
@@ -29,10 +32,26 @@ DVoid* OnFrame(DVideoFrame frame, DVoid* pUserData)
     {
         DVideoFrame framei420 = DVideoFormat::YUY2ToI420(frame);
         DVideoFrame frame_small = DVideoI420::Scale(framei420, DEST_WIDTH, DEST_HEIGHT, kFilterBox);
-        DVideoFrame frame_small2 = DVideoI420::Mirror(frame_small);
-        DVideoFrame frame_small_raw = DVideoFormat::I420ToRAW(frame_small2);
-        pHeader->bmiHeader.biWidth = DEST_WIDTH;
-        pHeader->bmiHeader.biHeight = DEST_HEIGHT;
+        DVideoFrame frame_small_mirror;
+        DVideoFrame frame_small_raw;
+        if (g_mirror) {
+            frame_small_mirror = DVideoI420::Mirror(frame_small);
+            DVideoFrame frame_rotate = DVideoI420::Rotate(frame_small_mirror, g_rotate);
+            frame_small_raw = DVideoFormat::I420ToRAW(frame_rotate);
+        }
+        else {
+            DVideoFrame frame_rotate = DVideoI420::Rotate(frame_small, g_rotate);
+            frame_small_raw = DVideoFormat::I420ToRAW(frame_rotate);
+        }
+
+        if (g_rotate == DRotation::DEGREE_90 || g_rotate == DRotation::DEGREE_270) {
+            pHeader->bmiHeader.biWidth = DEST_HEIGHT;
+            pHeader->bmiHeader.biHeight = DEST_WIDTH;
+        }
+        else {
+            pHeader->bmiHeader.biWidth = DEST_WIDTH;
+            pHeader->bmiHeader.biHeight = DEST_HEIGHT;
+        }
         pHeader->bmiHeader.biSizeImage = DEST_WIDTH * DEST_HEIGHT * 3;
         pHeader->bmiHeader.biBitCount = 24;
         pHeader->bmiHeader.biCompression = BI_RGB;
@@ -68,7 +87,9 @@ public:
         COMMAND_ID_HANDLER(IDC_START, OnCameraStart)
         COMMAND_ID_HANDLER(IDC_STOP, OnCameraStop)
         COMMAND_HANDLER(IDC_COMBO1, CBN_SELCHANGE, OnCbnSelchangeScale)
+        COMMAND_HANDLER(IDC_ROTATE, CBN_SELCHANGE, OnCbnSelchangeRotate)
         MESSAGE_HANDLER(WM_ONFRAME, OnMyFrame)
+        COMMAND_ID_HANDLER(IDC_MIRROR, OnMirror)
     END_MSG_MAP()
 
     LRESULT OnInitDialog(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/)
@@ -120,12 +141,28 @@ public:
         return 0;
     }
 
+    LRESULT OnMirror(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL& bHandled)
+    {
+        g_mirror = !g_mirror;
+        return 0;
+    }
+
     LRESULT OnCbnSelchangeScale(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/)
     {
         int i = m_scale.GetCurSel();
         if (i == 0) scaleMode = DScaleMode::CROP;
         else if (i == 1) scaleMode = DScaleMode::FILL;
         else if (i == 2) scaleMode = DScaleMode::STRETCH;
+        return 0;
+    }
+
+    LRESULT OnCbnSelchangeRotate(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/)
+    {
+        int i = m_rotate.GetCurSel();
+        if (i == 0) g_rotate = DRotation::DEGREE_0;
+        else if (i == 1) g_rotate = DRotation::DEGREE_90;
+        else if (i == 2) g_rotate = DRotation::DEGREE_180;
+        else g_rotate = DRotation::DEGREE_270;
         return 0;
     }
 
@@ -200,5 +237,4 @@ public:
 
     WinDSVideoCapture m_vcap;
     DScaleMode scaleMode = DScaleMode::CROP;
-    DRotation rotate = DRotation::DEGREE_0;
 };

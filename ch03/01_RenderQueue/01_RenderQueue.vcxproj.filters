@@ -57,9 +57,6 @@
     <ClInclude Include="..\..\Common\Video\DVideoFrame.h">
       <Filter>Common\Video</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Common\Video\DYUV.h">
-      <Filter>Common\Video</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\Common\File\DBmpFile.h">
       <Filter>Common\File</Filter>
     </ClInclude>
@@ -81,10 +78,13 @@
     <ClInclude Include="..\..\Common\Video\DRenderQueue.h">
       <Filter>Common\Video</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Common\Video\DScale.h">
+    <ClInclude Include="..\..\Common\Video\DVideoI420.h">
       <Filter>Common\Video</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Common\Video\DVideoFrameUtil.h">
+    <ClInclude Include="..\..\Common\Video\DVideoColor.h">
+      <Filter>Common\Video</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\Video\DVideoFormat.h">
       <Filter>Common\Video</Filter>
     </ClInclude>
   </ItemGroup>
@@ -108,9 +108,6 @@
     <ClCompile Include="..\..\Common\Video\DVideoFrame.cpp">
       <Filter>Common\Video</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Common\Video\DYUV.cpp">
-      <Filter>Common\Video</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\Common\File\DBmpFile.cpp">
       <Filter>Common\File</Filter>
     </ClCompile>
@@ -132,10 +129,13 @@
     <ClCompile Include="..\..\Common\Video\DRenderQueue.cc">
       <Filter>Common\Video</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Common\Video\DScale.cpp">
+    <ClCompile Include="..\..\Common\Video\DVideoI420.cpp">
       <Filter>Common\Video</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Common\Video\DVideoFrameUtil.cpp">
+    <ClCompile Include="..\..\Common\Video\DVideoColor.cpp">
+      <Filter>Common\Video</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\Video\DVideoFormat.cpp">
       <Filter>Common\Video</Filter>
     </ClCompile>
   </ItemGroup>

@@ -34,10 +34,10 @@
     <ClCompile Include="..\..\Common\Base\DXP.cpp">
       <Filter>Common\Base</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Common\Video\DYUV.cpp">
+    <ClCompile Include="..\..\Common\Video\DVideoFrame.cpp">
       <Filter>Common\Video</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Common\Video\DVideoFrame.cpp">
+    <ClCompile Include="..\..\Common\Video\DVideoColor.cpp">
       <Filter>Common\Video</Filter>
     </ClCompile>
   </ItemGroup>
@@ -75,13 +75,11 @@
     <ClInclude Include="..\..\Common\Base\DXP.h">
       <Filter>Common\Base</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Common\Video\DYUV.h">
-      <Filter>Common\Video</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\Common\Video\DVideoFrame.h">
       <Filter>Common\Video</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Common\Video\DVideoDefines.h">
+    <ClInclude Include="..\..\Common\Video\VideoDefines.h" />
+    <ClInclude Include="..\..\Common\Video\DVideoColor.h">
       <Filter>Common\Video</Filter>
     </ClInclude>
   </ItemGroup>

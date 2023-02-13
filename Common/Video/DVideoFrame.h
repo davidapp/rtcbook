@@ -78,6 +78,7 @@ public:
     DBuffer ToDumpBuffer();
     DBool LoadDumpBuffer(const DBuffer& buf);
     std::string GetDumpText();
+    DBITMAPINFOHEADER* NewBMPInfoHeader();
 
 public:
     static DVoid DX86_STDCALL Release(DVideoFrameData* pData);
