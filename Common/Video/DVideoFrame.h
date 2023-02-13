@@ -73,6 +73,7 @@ public:
 
 public:
     DVideoFrame Copy();
+    DBITMAPINFOHEADER* NewBMPInfoHeader();
 
 public:
     static DVoid DX86_STDCALL Release(DVideoFrameData* pData);

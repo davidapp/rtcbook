@@ -20,20 +20,19 @@ DVoid* OnFrame(DVideoFrame frame, DVoid* pUserData)
 {
     HWND hWnd = (HWND)pUserData;
     BITMAPINFO* pHeader = (BITMAPINFO*)frame.GetUserData();
+    delete pHeader;
 
     if (frame.GetFormat() == DPixelFmt::YUY2)
     {
         DVideoFrame i420frame = DVideoFormat::YUY2ToI420(frame);
-        g_localQueue.PushFrame(i420frame);
+        DVideoFrame i420frame_e = DVideoI420::Scale(i420frame, 128, 72, kFilterBox);
+        g_localQueue.PushFrame(DVideoI420::Mirror(i420frame_e));
         
         DVideoFrame i420frame_s = DVideoI420::Scale(i420frame, 100, 100, kFilterBox);
-        pHeader->bmiHeader.biWidth = 100;
-        pHeader->bmiHeader.biHeight = 100;
-        i420frame_s.SetUserData(pHeader);
         g_remoteQueue.PushFrame(i420frame_s);
     }
     else {
-        g_localQueue.PushFrame(frame);
+
     }
 
     return nullptr;

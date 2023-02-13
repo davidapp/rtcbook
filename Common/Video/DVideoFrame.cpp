@@ -225,6 +225,23 @@ DVideoFrame DVideoFrame::Copy()
     return frameRet;
 }
 
+DBITMAPINFOHEADER* DVideoFrame::NewBMPInfoHeader()
+{
+    DBITMAPINFOHEADER* pHeader = new DBITMAPINFOHEADER();
+    pHeader->biBitCount = 24;
+    pHeader->biClrImportant = 0;
+    pHeader->biClrUsed = 0;
+    pHeader->biCompression = BI_RGB;
+    pHeader->biHeight = GetData()->m_height;
+    pHeader->biWidth = GetData()->m_width;
+    pHeader->biPlanes = 3;
+    pHeader->biSize = 40;
+    pHeader->biSizeImage = GetData()->m_lineSize * GetData()->m_height;
+    pHeader->biXPelsPerMeter = 0;
+    pHeader->biYPelsPerMeter = 0;
+    return pHeader;
+}
+
 DVoid DX86_STDCALL DVideoFrame::Release(DVideoFrameData* pData)
 {
     if (pData != _nullVideoFrameData)
