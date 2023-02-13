@@ -10,6 +10,8 @@
 #include "COMBridge/WinDSVideoCapture.h"
 #include "Video/DVideoFrame.h"
 #include "Video/DRenderQueue.h"
+#include "Video/DVideoFormat.h"
+#include "Video/DVideoI420.h"
 
 DRenderQueue g_localQueue;
 DRenderQueue g_remoteQueue;
@@ -21,16 +23,14 @@ DVoid* OnFrame(DVideoFrame frame, DVoid* pUserData)
 
     if (frame.GetFormat() == DPixelFmt::YUY2)
     {
-        DVideoFrame i420frame = DVideoFrame::YUY2ToI420(frame);
-        DVideoFrame i420frame_s = i420frame.ScaleTo(100,100);
+        DVideoFrame i420frame = DVideoFormat::YUY2ToI420(frame);
+        g_localQueue.PushFrame(i420frame);
         
-        //DVideoFrame frame24 = DVideoFrame::YUY2ToRAW(frame);
-        //pHeader->bmiHeader.biBitCount = 24;
-        //pHeader->bmiHeader.biCompression = BI_RGB;
-        //pHeader->bmiHeader.biSizeImage = frame24.GetSize();
-        //frame24.SetUserData(pHeader);
-        //g_localQueue.PushFrame(frame24);
-        g_localQueue.PushFrame(i420frame_s);
+        DVideoFrame i420frame_s = DVideoI420::Scale(i420frame, 100, 100, kFilterBox);
+        pHeader->bmiHeader.biWidth = 100;
+        pHeader->bmiHeader.biHeight = 100;
+        i420frame_s.SetUserData(pHeader);
+        g_remoteQueue.PushFrame(i420frame_s);
     }
     else {
         g_localQueue.PushFrame(frame);
@@ -78,9 +78,15 @@ public:
         m_localFrame.GetWindowRect(rect);
         CPoint pos(rect.left, rect.top);
         ::ScreenToClient(m_hWnd, &pos);
-
         DRect rLocal(pos.x, pos.y, rect.Width(), rect.Height());
         g_localQueue.Setup(m_hWnd, rLocal);
+
+        m_remoteFrame.GetWindowRect(rect);
+        pos.x = rect.left;
+        pos.y = rect.top;
+        ::ScreenToClient(m_hWnd, &pos);
+        DRect rRemote(pos.x, pos.y, rect.Width(), rect.Height());
+        g_remoteQueue.Setup(m_hWnd, rRemote);
 
         return TRUE;
     }

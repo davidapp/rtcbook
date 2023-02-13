@@ -1,4 +1,4 @@
-#include "DBmpFile.h"
+﻿#include "DBmpFile.h"
 #include "Base/DFile.h"
 #include "Base/DXP.h"
 

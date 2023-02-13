@@ -10,7 +10,7 @@
 #include "File/DBmpFile.h"
 #include "Base/DFile.h"
 #include "Base/DXP.h"
-#include "Video/DYUV.h"
+#include "Video/DVideoColor.h"
 
 class CMainWindow : public CWindowImpl<CMainWindow>
 {
