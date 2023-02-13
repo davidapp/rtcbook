@@ -2,7 +2,8 @@
 
 #include "DTypes.h"
 #include "DVideoDefines.h"
-
+#include "Base/DBuffer.h"
+#include <string>
 
 struct DVideoFrameData
 {
@@ -72,7 +73,11 @@ public:
     DVoid  Zero();
 
 public:
+    // TODO
     DVideoFrame Copy();
+    DBuffer ToDumpBuffer();
+    DBool LoadDumpBuffer(const DBuffer& buf);
+    std::string GetDumpText();
 
 public:
     static DVoid DX86_STDCALL Release(DVideoFrameData* pData);
