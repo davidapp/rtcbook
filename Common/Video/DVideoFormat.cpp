@@ -27,7 +27,6 @@ DVideoFrame DVideoFormat::YUY2ToRAW(const DVideoFrame& srcFrame)
             lineCount = 0;
         }
     }
-
     return retFrame;
 }
 
@@ -55,64 +54,73 @@ DVideoFrame DVideoFormat::YUY2ToI420(const DVideoFrame& frameSrc)
 
 DVideoFrame DVideoFormat::RAWToI420(const DVideoFrame& frameSrc)
 {
-    DVideoFrame frameRet(frameSrc.GetWidth(), frameSrc.GetHeight(), DPixelFmt::I420);
+    DInt32 src_width = frameSrc.GetWidth();
+    DInt32 src_height = frameSrc.GetHeight();
+    DVideoFrame frameRet(src_width, src_height, DPixelFmt::I420);
+
+
     return frameRet;
 }
 
-DVideoFrame DVideoFormat::I420ToRAW(const DVideoFrame& srcFrame)
+DVideoFrame DVideoFormat::I420ToRAW(const DVideoFrame& frameSrc)
 {
-    DBuffer bufRGB(srcFrame.GetWidth() * srcFrame.GetHeight() * 3);
-    DByte* pDst = bufRGB.GetBuf();
+    DInt32 src_width = frameSrc.GetWidth();
+    DInt32 src_height = frameSrc.GetHeight();
+    DVideoFrame retFrame(src_width, src_height, DPixelFmt::RAW);
 
-    DByte* pY = srcFrame.GetBuf();
-    DByte* pU = pY + srcFrame.GetSize() * 2 / 3;
-    DByte* pV = pY + srcFrame.GetSize() * 5 / 6;
+    DByte* pY = frameSrc.GetBuf();
+    DByte* pU = pY + src_width * src_height;
+    DInt32 dst_u_line = (src_width % 2) == 0 ? src_width / 2 : src_width / 2 + 1;
+    DInt32 dst_u_height = (src_height % 2) == 0 ? src_height / 2 : src_height / 2 + 1;
+    DByte* pV = pY + dst_u_line * dst_u_height;
+    DByte* pDst = retFrame.GetBuf();
+    DInt32 dst_linesize = retFrame.GetLineSize();
     DColor RGB = 0;
     DUInt8* pRGB = (DUInt8*)&RGB;
-    DInt32 w = srcFrame.GetWidth();
-    DInt32 h = srcFrame.GetHeight();
 
     DInt32 x = 0, y = 0;
-    for (DInt32 i = 0; i < w * h / 4; i++) {
+    for (DInt32 i = 0; i < src_width * src_height / 4; i++) {
         DInt32 U = *pU;
         DInt32 V = *pV;
         DInt32 Y1 = *pY;
         DInt32 Y2 = *(pY + 1);
-        DInt32 Y3 = *(pY + w);
-        DInt32 Y4 = *(pY + w + 1);
+        DInt32 Y3 = *(pY + src_width);
+        DInt32 Y4 = *(pY + src_width + 1);
         DYUV2RGB::YUV2RAW_BT601(pRGB, Y1, U, V);
-        pDst[(y * w + x) * 3] = pRGB[0];
-        pDst[(y * w + x) * 3 + 1] = pRGB[1];
-        pDst[(y * w + x) * 3 + 2] = pRGB[2];
+        pDst[(y * src_width + x) * 3] = pRGB[0];
+        pDst[(y * src_width + x) * 3 + 1] = pRGB[1];
+        pDst[(y * src_width + x) * 3 + 2] = pRGB[2];
         DYUV2RGB::YUV2RAW_BT601(pRGB, Y2, U, V);
-        pDst[(y * w + x + 1) * 3] = pRGB[0];
-        pDst[(y * w + x + 1) * 3 + 1] = pRGB[1];
-        pDst[(y * w + x + 1) * 3 + 2] = pRGB[2];
+        pDst[(y * src_width + x + 1) * 3] = pRGB[0];
+        pDst[(y * src_width + x + 1) * 3 + 1] = pRGB[1];
+        pDst[(y * src_width + x + 1) * 3 + 2] = pRGB[2];
         DYUV2RGB::YUV2RAW_BT601(pRGB, Y3, U, V);
-        pDst[((y + 1) * w + x) * 3] = pRGB[0];
-        pDst[((y + 1) * w + x) * 3 + 1] = pRGB[1];
-        pDst[((y + 1) * w + x) * 3 + 2] = pRGB[2];
+        pDst[((y + 1) * src_width + x) * 3] = pRGB[0];
+        pDst[((y + 1) * src_width + x) * 3 + 1] = pRGB[1];
+        pDst[((y + 1) * src_width + x) * 3 + 2] = pRGB[2];
         DYUV2RGB::YUV2RAW_BT601(pRGB, Y4, U, V);
-        pDst[((y + 1) * w + x + 1) * 3] = pRGB[0];
-        pDst[((y + 1) * w + x + 1) * 3 + 1] = pRGB[1];
-        pDst[((y + 1) * w + x + 1) * 3 + 2] = pRGB[2];
+        pDst[((y + 1) * src_width + x + 1) * 3] = pRGB[0];
+        pDst[((y + 1) * src_width + x + 1) * 3 + 1] = pRGB[1];
+        pDst[((y + 1) * src_width + x + 1) * 3 + 2] = pRGB[2];
         pY += 2;
         pU++;
         pV++;
         x += 2;
-        if (x >= srcFrame.GetWidth()) {
+        if (x >= src_width) {
             x = 0;
             y += 2;
-            pY += srcFrame.GetWidth();
+            pY += src_width;
         }
     }
 
-    DVideoFrame retFrame(bufRGB.GetBuf(), bufRGB.GetSize(), w, h, DPixelFmt::RAW);
+
     return retFrame;
 }
 
 DVideoFrame DVideoFormat::I420ToARGB(const DVideoFrame& frameSrc)
 {
+    DInt32 src_width = frameSrc.GetWidth();
+    DInt32 src_height = frameSrc.GetHeight();
     DVideoFrame frameRet(frameSrc.GetWidth(), frameSrc.GetHeight(), DPixelFmt::ARGB);
     return frameRet;
 }

@@ -218,6 +218,21 @@ DVoid DVideoFrame::Zero()
     memset(m_pBuf, 0, GetSize());
 }
 
+DInt32 DVideoFrame::GetI420UV_Width()
+{
+    if (GetData()->m_fmt != DPixelFmt::I420) return 0;
+    DInt32 w = GetData()->m_width;
+    return (w % 2 == 0) ? w / 2 : w / 2 + 1;
+}
+
+DInt32 DVideoFrame::GetI420UV_Height()
+{
+    if (GetData()->m_fmt != DPixelFmt::I420) return 0;
+    DInt32 h = GetData()->m_height;
+    return (h % 2 == 0) ? h / 2 : h / 2 + 1;
+}
+
+
 // NOT INCLUDE SEI DATA
 DVideoFrame DVideoFrame::Copy()
 {
@@ -307,7 +322,10 @@ DBool DVideoFrame::AllocFrame(DInt32 w, DInt32 h, DPixelFmt fmt)
         DInt32 lineSize = DVideoFrame::DefaultLineSize(w, fmt);
         DInt32 videoSize = lineSize * h;
         if (fmt == DPixelFmt::I420) {
-            videoSize = lineSize * h * 3 / 2;
+            DInt32 ySize = w * h;
+            DInt32 uLine = (w % 2 == 0) ? w / 2 : w / 2 + 1;
+            DInt32 uHeight = (h % 2 == 0) ? h / 2 : h / 2 + 1;
+            videoSize = ySize + uLine * uHeight * 2;
         }
         DVideoFrameData* pData = (DVideoFrameData*)malloc(sizeof(DVideoFrameData) + videoSize);
         if (pData == nullptr)

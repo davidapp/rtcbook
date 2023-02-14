@@ -73,6 +73,10 @@ public:
     DVoid  Zero();
 
 public:
+    DInt32 GetI420UV_Width();
+    DInt32 GetI420UV_Height();
+
+public:
     // TODO
     DVideoFrame Copy();
     DBuffer ToDumpBuffer();
