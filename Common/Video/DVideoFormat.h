@@ -10,6 +10,7 @@ class DVideoFormat
 public:
     static DVideoFrame YUY2ToRAW(const DVideoFrame& buf);
     static DVideoFrame YUY2ToI420(const DVideoFrame& buf);
+    static DVideoFrame RAWToI420(const DVideoFrame& buf);
     static DVideoFrame I420ToRAW(const DVideoFrame& buf);
     static DVideoFrame I420ToARGB(const DVideoFrame& buf);
 

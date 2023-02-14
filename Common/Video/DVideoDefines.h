@@ -8,7 +8,7 @@
 enum class DPixelFmt {
     Unknown,
     RGB24,// [(B,G,R),(B,G,R)...]
-    RAW,  // [(B,G,R),(B,G,R)...] 第一行是最后一行
+    RAW,  // [(B,G,R),(B,G,R)...] 第一行是最后一行，每行4字节对齐
     ARGB, // [(B,G,R,A),...]
     ABGR, // [(R,G,B,A),...]
     BGRA, // [(A,R,G,B),...]

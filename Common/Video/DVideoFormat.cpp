@@ -5,10 +5,15 @@
 
 DVideoFrame DVideoFormat::YUY2ToRAW(const DVideoFrame& srcFrame)
 {
-    DBuffer bufRGB(srcFrame.GetWidth() * srcFrame.GetHeight() * 3);
+    DInt32 src_width = srcFrame.GetWidth();
+    DInt32 src_height = srcFrame.GetHeight();
+    DVideoFrame retFrame(src_width, src_height, DPixelFmt::RAW);
+    DInt32 dst_linesize = retFrame.GetLineSize();
+
     DByte* pSRC = srcFrame.GetBuf();
     DByte* pEnd = pSRC + srcFrame.GetSize();
-    DByte* pDst = bufRGB.GetBuf();
+    DByte* pDst = retFrame.GetBuf();
+    DInt32 lineCount = 0;
     while (pSRC != pEnd)
     {
         DYUV2RGB::YUV2RAW_BT601((DUInt8*)pDst, pSRC[0], pSRC[1], pSRC[3]);
@@ -16,30 +21,41 @@ DVideoFrame DVideoFormat::YUY2ToRAW(const DVideoFrame& srcFrame)
         DYUV2RGB::YUV2RAW_BT601((DUInt8*)pDst, pSRC[2], pSRC[1], pSRC[3]);
         pDst += 3;
         pSRC += 4;
+        lineCount += 3;
+        if ((dst_linesize - lineCount) < 3) { // for padding
+            pDst += (dst_linesize - lineCount);
+            lineCount = 0;
+        }
     }
-    DVideoFrame retFrame(bufRGB.GetBuf(), bufRGB.GetSize(), srcFrame.GetWidth(), srcFrame.GetHeight(),
-        DPixelFmt::RAW);
+
     return retFrame;
 }
 
-
-
 DVideoFrame DVideoFormat::YUY2ToI420(const DVideoFrame& frameSrc)
 {
-    DVideoFrame frameRet(frameSrc.GetWidth(), frameSrc.GetHeight(), DPixelFmt::I420);
+    DInt32 src_width = frameSrc.GetWidth();
+    DInt32 src_height = frameSrc.GetHeight();
+    DVideoFrame frameRet(src_width, src_height, DPixelFmt::I420);
 
     DByte* src_yuy2 = frameSrc.GetBuf();
     DInt32 src_stride_yuy2 = frameSrc.GetLineSize();
     DByte* dst_y = frameRet.GetBuf();
-    DInt32 dst_stride_y = frameRet.GetLineSize();
-    DByte* dst_u = frameRet.GetBuf() + frameRet.GetHeight() * frameRet.GetLineSize();
-    DInt32 dst_stride_u = frameRet.GetLineSize() / 2;
-    DByte* dst_v = dst_u + frameRet.GetHeight() * frameRet.GetLineSize() / 4;
-    DInt32 dst_stride_v = frameRet.GetLineSize() / 2;
+    DInt32 dst_stride_y = src_width;
+    DByte* dst_u = frameRet.GetBuf() + src_height * src_width;
+    DInt32 dst_stride_u = (src_width % 2 == 0) ? src_width / 2 : src_width / 2 + 1;
+    DInt32 dst_height_u = (src_height % 2 == 0) ? src_height / 2 : src_height / 2 + 1;
+    DByte* dst_v = dst_u + dst_stride_u * dst_height_u;
+    DInt32 dst_stride_v = dst_stride_u;
 
     DVideoFormat::YUY2ToI420(src_yuy2, src_stride_yuy2, dst_y, dst_stride_y,
-        dst_u, dst_stride_u, dst_v, dst_stride_v, frameSrc.GetWidth(), frameSrc.GetHeight());
+        dst_u, dst_stride_u, dst_v, dst_stride_v, src_width, src_height);
 
+    return frameRet;
+}
+
+DVideoFrame DVideoFormat::RAWToI420(const DVideoFrame& frameSrc)
+{
+    DVideoFrame frameRet(frameSrc.GetWidth(), frameSrc.GetHeight(), DPixelFmt::I420);
     return frameRet;
 }
 
@@ -102,16 +118,18 @@ DVideoFrame DVideoFormat::I420ToARGB(const DVideoFrame& frameSrc)
 }
 
 
-// Copy row of YUY2 Y's (422) into Y (420/422).
 DVoid YUY2ToYRow(const DByte* src_yuy2, DByte* dst_y, DInt32 width)
 {
-    // Output a row of Y values.
-    for (DInt32 x = 0; x < width - 1; x += 2) {
+    // [Y0,U0,Y1,V0]
+    for (DInt32 x = 0; x < width - 1; x += 2) 
+    {
         dst_y[x] = src_yuy2[0];
         dst_y[x + 1] = src_yuy2[2];
         src_yuy2 += 4;
     }
-    if (width & 1) {
+    // [Y4,U4,0,V4]
+    if (width & 1)
+    {
         dst_y[width - 1] = src_yuy2[0];
     }
 }

@@ -10,11 +10,11 @@ public:
     static DInt32 RGBToU(DUInt8 r, DUInt8 g, DUInt8 b);
     static DInt32 RGBToV(DUInt8 r, DUInt8 g, DUInt8 b);
 
-    // BGR24
+    // BGR24+PADDING
     static DVoid RAWToYRow(const DUInt8* src_argb0, DUInt8* dst_y, DInt32 width);
     static DVoid RAWToUVRow(const DUInt8* src_rgb0, DInt32 src_stride_rgb, DUInt8* dst_u, DUInt8* dst_v, DInt32 width);
     // TODO RGB24 ARGB BGRA ABGR RGBA
-    // 
+
     static DInt32 RGBToYJ(DUInt8 r, DUInt8 g, DUInt8 b);
     static DInt32 RGBToUJ(DUInt8 r, DUInt8 g, DUInt8 b);
     static DInt32 RGBToVJ(DUInt8 r, DUInt8 g, DUInt8 b);
