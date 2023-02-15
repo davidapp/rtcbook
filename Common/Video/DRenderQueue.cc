@@ -94,11 +94,11 @@ DVoid DRenderQueue::Render(DUInt32 viewID, DVideoFrame f)
     DVoid* m_context = m_configs[viewID].context;
     DRect m_destRect = m_configs[viewID].destRect;
     CClientDC dc((HWND)m_context);
-    DRect src = DRect(0, 0, f.GetWidth(), f.GetHeight());
     if (f.GetFormat() == DPixelFmt::I420)
     {
-        DVideoFrame i420frame_e = DVideoI420::Scale(f, 100, 100, kFilterBox);
+        DVideoFrame i420frame_e = DVideoI420::Scale(f, m_destRect.Width(), m_destRect.Height(), kFilterBox);
         DVideoFrame frameRaw = DVideoFormat::I420ToRAW(i420frame_e);
+        DRect src = DRect(0, 0, i420frame_e.GetWidth(), i420frame_e.GetHeight());
         DBITMAPINFOHEADER* pHrd = frameRaw.NewBMPInfoHeader();
 
         // Double Buffer

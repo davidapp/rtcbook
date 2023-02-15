@@ -31,7 +31,7 @@ DVideoFrame DVideoI420::Scale(const DVideoFrame& srcFrame, DInt32 w, DInt32 h, F
     DVideoI420::I420Scale(src_y, src_stride_y, 
         src_u, src_stride_u, 
         src_v, src_stride_v, 
-        srcFrame.GetWidth(), srcFrame.GetHeight(),
+        src_w, src_h,
         dst_y, dst_stride_y, 
         dst_u, dst_stride_u, 
         dst_v, dst_stride_v, 

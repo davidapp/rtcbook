@@ -80,8 +80,8 @@ DVideoFrame DVideoFormat::I420ToRAW(const DVideoFrame& frameSrc)
 
     DInt32 U, V, Y1, Y2, Y3, Y4;
     DInt32 x, y;
-    for (y = 0; y < src_height; y += 2) {
-        for (x = 0; x < src_width; x += 2) {
+    for (y = 0; y < src_height - 1; y += 2) {
+        for (x = 0; x < src_width - 1; x += 2) {
             U = *pU;
             V = *pV;
             Y1 = *pY;
