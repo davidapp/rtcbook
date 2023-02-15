@@ -130,7 +130,7 @@ DVoid DRenderQueue::Render(DUInt32 viewID, DVideoFrame f)
     }
 }
 #else
-DVoid DRenderQueue::Render(DVideoFrame f)
+DVoid DRenderQueue::Render(DUInt32 viewID, DVideoFrame f)
 {
     
 }

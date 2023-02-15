@@ -201,10 +201,8 @@ DInt32 Abs(DInt32 v)
     return v >= 0 ? v : -v;
 }
 
-DVoid HalfRow(const DUInt8* src_uv,
-    DPtrDiff src_uv_stride,
-    DUInt8* dst_uv,
-    DInt32 width) 
+static DVoid HalfRow(const DUInt8* src_uv, DPtrDiff src_uv_stride,
+    DUInt8* dst_uv, DInt32 width)
 {
     DInt32 x;
     for (x = 0; x < width; ++x) {
@@ -774,7 +772,7 @@ static __inline uint32_t SumPixels(DInt32 iboxwidth, const uint16_t* src_ptr) {
     return sum;
 }
 
-static DVoid ScaleAddCols2_C(DInt32 dst_width,
+static DVoid ScaleAddCols2(DInt32 dst_width,
     DInt32 boxheight,
     DInt32 x,
     DInt32 dx,
@@ -796,7 +794,7 @@ static DVoid ScaleAddCols2_C(DInt32 dst_width,
     }
 }
 
-static DVoid ScaleAddCols1_C(DInt32 dst_width,
+static DVoid ScaleAddCols1(DInt32 dst_width,
     DInt32 boxheight,
     DInt32 x,
     DInt32 dx,
@@ -812,11 +810,11 @@ static DVoid ScaleAddCols1_C(DInt32 dst_width,
     }
 }
 
-static DVoid ScaleAddCols0_C(DInt32 dst_width,
+static DVoid ScaleAddCols0(DInt32 dst_width,
     DInt32 boxheight,
     DInt32 x,
     DInt32 dx,
-    const uint16_t* src_ptr,
+    const DUInt16* src_ptr,
     DUInt8* dst_ptr) {
     DInt32 scaleval = 65536 / boxheight;
     DInt32 i;
@@ -827,7 +825,7 @@ static DVoid ScaleAddCols0_C(DInt32 dst_width,
     }
 }
 
-DVoid ScaleAddRow_C(const DUInt8* src_ptr, uint16_t* dst_ptr, DInt32 src_width) {
+DVoid ScaleAddRow(const DUInt8* src_ptr, DUInt16* dst_ptr, DInt32 src_width) {
     DInt32 x;
     assert(src_width > 0);
     for (x = 0; x < src_width - 1; x += 2) {
@@ -841,42 +839,27 @@ DVoid ScaleAddRow_C(const DUInt8* src_ptr, uint16_t* dst_ptr, DInt32 src_width) 
     }
 }
 
-// Scale plane down to any dimensions, with interpolation.
-// (boxfilter).
-//
-// Same method as SimpleScale, which is fixed point, outputting
-// one pixel of destination using fixed point (16.16) to step
-// through source, sampling a box of pixel with simple
-// averaging.
-static DVoid ScalePlaneBox(DInt32 src_width,
-    DInt32 src_height,
-    DInt32 dst_width,
-    DInt32 dst_height,
-    DInt32 src_stride,
-    DInt32 dst_stride,
-    const DUInt8* src_ptr,
-    DUInt8* dst_ptr) {
-    DInt32 j, k;
-    // Initial source x/y coordinate and step values as 16.16 fixed point.
+static DVoid ScalePlaneBox(DInt32 src_width, DInt32 src_height,
+    DInt32 dst_width, DInt32 dst_height, DInt32 src_stride, DInt32 dst_stride,
+    const DUInt8* src_ptr, DUInt8* dst_ptr) 
+{
     DInt32 x = 0;
     DInt32 y = 0;
     DInt32 dx = 0;
     DInt32 dy = 0;
     const DInt32 max_y = (src_height << 16);
-    ScaleSlope(src_width, src_height, dst_width, dst_height, kFilterBox, &x, &y,
-        &dx, &dy);
+    ScaleSlope(src_width, src_height, dst_width, dst_height, kFilterBox, &x, &y, &dx, &dy);
     src_width = Abs(src_width);
     {
         // Allocate a row buffer of uint16_t.
         align_buffer_64(row16, src_width * 2);
         DVoid (*ScaleAddCols)(DInt32 dst_width, DInt32 boxheight, DInt32 x, DInt32 dx,
             const uint16_t * src_ptr, DUInt8 * dst_ptr) =
-            (dx & 0xffff) ? ScaleAddCols2_C
-            : ((dx != 0x10000) ? ScaleAddCols1_C : ScaleAddCols0_C);
-        DVoid (*ScaleAddRow)(const DUInt8 * src_ptr, uint16_t * dst_ptr,
-            DInt32 src_width) = ScaleAddRow_C;
+            (dx & 0xffff) ? ScaleAddCols2
+            : ((dx != 0x10000) ? ScaleAddCols1 : ScaleAddCols0);
 
-        for (j = 0; j < dst_height; ++j) {
+        for (DInt32 j = 0; j < dst_height; ++j)
+        {
             DInt32 boxheight;
             DInt32 iy = y >> 16;
             const DUInt8* src = src_ptr + iy * src_stride;
@@ -886,7 +869,8 @@ static DVoid ScalePlaneBox(DInt32 src_width,
             }
             boxheight = MIN1((y >> 16) - iy);
             memset(row16, 0, src_width * 2);
-            for (k = 0; k < boxheight; ++k) {
+            for (DInt32 k = 0; k < boxheight; ++k) 
+            {
                 ScaleAddRow(src, (uint16_t*)(row16), src_width);
                 src += src_stride;
             }
@@ -894,50 +878,6 @@ static DVoid ScalePlaneBox(DInt32 src_width,
             dst_ptr += dst_stride;
         }
         free_aligned_buffer_64(row16);
-    }
-}
-
-// Blend 2 rows into 1.
-static DVoid HalfRow_C(const DUInt8* src_uv,
-    DPtrDiff src_uv_stride,
-    DUInt8* dst_uv,
-    DInt32 width) {
-    DInt32 x;
-    for (x = 0; x < width; ++x) {
-        dst_uv[x] = (src_uv[x] + src_uv[src_uv_stride + x] + 1) >> 1;
-    }
-}
-
-// C version 2x2 -> 2x1.
-DVoid InterpolateRow_C(DUInt8* dst_ptr,
-    const DUInt8* src_ptr,
-    DPtrDiff src_stride,
-    DInt32 width,
-    DInt32 source_y_fraction) {
-    DInt32 y1_fraction = source_y_fraction;
-    DInt32 y0_fraction = 256 - y1_fraction;
-    const DUInt8* src_ptr1 = src_ptr + src_stride;
-    DInt32 x;
-    if (y1_fraction == 0) {
-        memcpy(dst_ptr, src_ptr, width);
-        return;
-    }
-    if (y1_fraction == 128) {
-        HalfRow_C(src_ptr, src_stride, dst_ptr, width);
-        return;
-    }
-    for (x = 0; x < width - 1; x += 2) {
-        dst_ptr[0] =
-            (src_ptr[0] * y0_fraction + src_ptr1[0] * y1_fraction + 128) >> 8;
-        dst_ptr[1] =
-            (src_ptr[1] * y0_fraction + src_ptr1[1] * y1_fraction + 128) >> 8;
-        src_ptr += 2;
-        src_ptr1 += 2;
-        dst_ptr += 2;
-    }
-    if (width & 1) {
-        dst_ptr[0] =
-            (src_ptr[0] * y0_fraction + src_ptr1[0] * y1_fraction + 128) >> 8;
     }
 }
 
@@ -1051,12 +991,11 @@ DVoid ScalePlaneBilinearUp(DInt32 src_width,
     DInt32 dx = 0;
     DInt32 dy = 0;
     const DInt32 max_y = (src_height - 1) << 16;
-    DVoid (*InterpolateRow)(DUInt8 * dst_ptr, const DUInt8 * src_ptr,
-        DPtrDiff src_stride, DInt32 dst_width,
-        DInt32 source_y_fraction) = InterpolateRow_C;
+
     DVoid (*ScaleFilterCols)(DUInt8 * dst_ptr, const DUInt8 * src_ptr,
         DInt32 dst_width, DInt32 x, DInt32 dx) =
         filtering ? ScaleFilterCols_C : ScaleCols_C;
+
     ScaleSlope(src_width, src_height, dst_width, dst_height, filtering, &x, &y,
         &dx, &dy);
     src_width = Abs(src_width);
@@ -1120,7 +1059,7 @@ DVoid ScalePlaneBilinearUp(DInt32 src_width,
     }
 }
 
-// Scale plane down with bilinear interpolation.
+
 DVoid ScalePlaneBilinearDown(DInt32 src_width,
     DInt32 src_height,
     DInt32 dst_width,
@@ -1129,14 +1068,13 @@ DVoid ScalePlaneBilinearDown(DInt32 src_width,
     DInt32 dst_stride,
     const DUInt8* src_ptr,
     DUInt8* dst_ptr,
-    enum FilterMode filtering) {
-    // Initial source x/y coordinate and step values as 16.16 fixed point.
+    enum FilterMode filtering) 
+{
     DInt32 x = 0;
     DInt32 y = 0;
     DInt32 dx = 0;
     DInt32 dy = 0;
-    // TODO(fbarchard): Consider not allocating row buffer for kFilterLinear.
-    // Allocate a row buffer.
+
     align_buffer_64(row, src_width);
 
     const DInt32 max_y = (src_height - 1) << 16;
@@ -1144,9 +1082,7 @@ DVoid ScalePlaneBilinearDown(DInt32 src_width,
     DVoid (*ScaleFilterCols)(DUInt8 * dst_ptr, const DUInt8 * src_ptr,
         DInt32 dst_width, DInt32 x, DInt32 dx) =
         (src_width >= 32768) ? ScaleFilterCols64 : ScaleFilterCols_C;
-    DVoid (*InterpolateRow)(DUInt8 * dst_ptr, const DUInt8 * src_ptr,
-        DPtrDiff src_stride, DInt32 dst_width,
-        DInt32 source_y_fraction) = InterpolateRow_C;
+
     ScaleSlope(src_width, src_height, dst_width, dst_height, filtering, &x, &y,
         &dx, &dy);
     src_width = Abs(src_width);
@@ -1209,77 +1145,71 @@ DVoid ScalePlaneSimple(DInt32 src_width,
 DVoid ScalePlane(const DUInt8* src, DInt32 src_stride, DInt32 src_width, DInt32 src_height, 
     DUInt8* dst, DInt32 dst_stride, DInt32 dst_width, DInt32 dst_height, enum FilterMode filtering) 
 {
-    // Simplify filtering when possible.
     filtering = ScaleFilterReduce(src_width, src_height, dst_width, dst_height,
         filtering);
 
-    // Negative height means invert the image.
     if (src_height < 0) {
         src_height = -src_height;
         src = src + (src_height - 1) * src_stride;
         src_stride = -src_stride;
     }
 
-    // Use specialized scales to improve performance for common resolutions.
-    // For example, all the 1/2 scalings will use ScalePlaneDown2()
-    if (dst_width == src_width && dst_height == src_height) {
-        // Straight copy.
+    if (dst_width == src_width && dst_height == src_height) 
+    {
         CopyPlane(src, src_stride, dst, dst_stride, dst_width, dst_height);
         return;
     }
-    if (dst_width == src_width && filtering != kFilterBox) {
+    if (dst_width == src_width && filtering != kFilterBox) 
+    {
         DInt32 dy = FixedDiv(src_height, dst_height);
-        // Arbitrary scale vertically, but unscaled horizontally.
         ScalePlaneVertical(src_height, dst_width, dst_height, src_stride,
             dst_stride, src, dst, 0, 0, dy, 1, filtering);
         return;
     }
-    if (dst_width <= Abs(src_width) && dst_height <= src_height) {
-        // Scale down.
-        if (4 * dst_width == 3 * src_width && 4 * dst_height == 3 * src_height) {
-            // optimized, 3/4
+    if (dst_width <= Abs(src_width) && dst_height <= src_height) 
+    {
+        if (4 * dst_width == 3 * src_width && 4 * dst_height == 3 * src_height) 
+        {
             ScalePlaneDown34(src_width, src_height, dst_width, dst_height, src_stride,
                 dst_stride, src, dst, filtering);
             return;
         }
-        if (2 * dst_width == src_width && 2 * dst_height == src_height) {
-            // optimized, 1/2
+        if (2 * dst_width == src_width && 2 * dst_height == src_height) 
+        {
             ScalePlaneDown2(src_width, src_height, dst_width, dst_height, src_stride,
                 dst_stride, src, dst, filtering);
             return;
         }
-        // 3/8 rounded up for odd sized chroma height.
-        if (8 * dst_width == 3 * src_width && 8 * dst_height == 3 * src_height) {
-            // optimized, 3/8
+        if (8 * dst_width == 3 * src_width && 8 * dst_height == 3 * src_height) 
+        {
             ScalePlaneDown38(src_width, src_height, dst_width, dst_height, src_stride,
                 dst_stride, src, dst, filtering);
             return;
         }
         if (4 * dst_width == src_width && 4 * dst_height == src_height &&
-            (filtering == kFilterBox || filtering == kFilterNone)) {
-            // optimized, 1/4
+            (filtering == kFilterBox || filtering == kFilterNone)) 
+        {
             ScalePlaneDown4(src_width, src_height, dst_width, dst_height, src_stride,
                 dst_stride, src, dst, filtering);
             return;
         }
     }
-    if (filtering == kFilterBox && dst_height * 2 < src_height) {
-        ScalePlaneBox(src_width, src_height, dst_width, dst_height, src_stride,
-            dst_stride, src, dst);
+    if (filtering == kFilterBox && dst_height * 2 < src_height) 
+    {
+        ScalePlaneBox(src_width, src_height, dst_width, dst_height, src_stride, dst_stride, src, dst);
         return;
     }
-    if (filtering && dst_height > src_height) {
-        ScalePlaneBilinearUp(src_width, src_height, dst_width, dst_height,
-            src_stride, dst_stride, src, dst, filtering);
+    if (filtering && dst_height > src_height) 
+    {
+        ScalePlaneBilinearUp(src_width, src_height, dst_width, dst_height, src_stride, dst_stride, src, dst, filtering);
         return;
     }
-    if (filtering) {
-        ScalePlaneBilinearDown(src_width, src_height, dst_width, dst_height,
-            src_stride, dst_stride, src, dst, filtering);
+    if (filtering) 
+    {
+        ScalePlaneBilinearDown(src_width, src_height, dst_width, dst_height, src_stride, dst_stride, src, dst, filtering);
         return;
     }
-    ScalePlaneSimple(src_width, src_height, dst_width, dst_height, src_stride,
-        dst_stride, src, dst);
+    ScalePlaneSimple(src_width, src_height, dst_width, dst_height, src_stride, dst_stride, src, dst);
 }
 
 DInt32 DVideoI420::I420Scale(const DByte* src_y, DInt32 src_stride_y,

@@ -21,6 +21,10 @@ enum DViewID {
 typedef struct tagDRenderConfig {
     DVoid* context;
     DRect destRect;
+    DBool mirrored;
+    DUInt32 fps;
+    DUInt64 lastPTS;
+    DScaleMode renderMode;
 }DRenderConfig;
 
 class DRenderQueue {
