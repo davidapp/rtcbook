@@ -236,8 +236,25 @@ DInt32 DVideoFrame::GetI420UV_Height()
 // NOT INCLUDE SEI DATA
 DVideoFrame DVideoFrame::Copy()
 {
-    DVideoFrame frameRet;
+    DVideoFrame frameRet(GetBuf(), GetSize(), GetData()->m_width, GetData()->m_height, GetData()->m_fmt);
     return frameRet;
+}
+
+std::string DVideoFrame::GetDumpText()
+{
+    std::string strRet;
+    return strRet;
+}
+
+DBuffer DVideoFrame::GetDumpBuffer()
+{
+    DBuffer bufRet;
+    return bufRet;
+}
+
+DBool DVideoFrame::LoadFromBuffer(const DBuffer& buf)
+{
+    return true;
 }
 
 DBITMAPINFOHEADER* DVideoFrame::NewBMPInfoHeader()
