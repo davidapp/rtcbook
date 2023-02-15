@@ -85,9 +85,9 @@ DVoid DRenderQueue::ProcessFrame()
 #include "atlbase.h"
 #include "atlapp.h"
 #include "atlgdi.h"
-#include "DConfig.h"
 #include "DTypes.h"
 #include "Video/DVideoFormat.h"
+#include "Video/DVideoI420.h"
 
 DVoid DRenderQueue::Render(DUInt32 viewID, DVideoFrame f)
 {
@@ -97,7 +97,8 @@ DVoid DRenderQueue::Render(DUInt32 viewID, DVideoFrame f)
     DRect src = DRect(0, 0, f.GetWidth(), f.GetHeight());
     if (f.GetFormat() == DPixelFmt::I420)
     {
-        DVideoFrame frameRaw = DVideoFormat::I420ToRAW(f);
+        DVideoFrame i420frame_e = DVideoI420::Scale(f, 100, 100, kFilterBox);
+        DVideoFrame frameRaw = DVideoFormat::I420ToRAW(i420frame_e);
         DBITMAPINFOHEADER* pHrd = frameRaw.NewBMPInfoHeader();
 
         // Double Buffer
