@@ -16,9 +16,9 @@ DVideoFrame DVideoFormat::YUY2ToRAW(const DVideoFrame& srcFrame)
     DInt32 lineCount = 0;
     while (pSRC != pEnd)
     {
-        DYUV2RGB::YUV2RAW_BT601((DUInt8*)pDst, pSRC[0], pSRC[1], pSRC[3]);
+        DYUV2RGB::BT601((DUInt8*)pDst, pSRC[0], pSRC[1], pSRC[3]);
         pDst += 3;
-        DYUV2RGB::YUV2RAW_BT601((DUInt8*)pDst, pSRC[2], pSRC[1], pSRC[3]);
+        DYUV2RGB::BT601((DUInt8*)pDst, pSRC[2], pSRC[1], pSRC[3]);
         pDst += 3;
         pSRC += 4;
         lineCount += 3;
@@ -88,19 +88,19 @@ DVideoFrame DVideoFormat::I420ToRAW(const DVideoFrame& frameSrc)
             Y2 = *(pY + 1);
             Y3 = *(pY + src_width);
             Y4 = *(pY + src_width + 1);
-            DYUV2RGB::YUV2RAW_BT601(pRGB, Y1, U, V);
+            DYUV2RGB::BT601(pRGB, Y1, U, V);
             pDst[(y * dst_linesize) + x * 3] = pRGB[0];
             pDst[(y * dst_linesize) + x * 3 + 1] = pRGB[1];
             pDst[(y * dst_linesize) + x * 3 + 2] = pRGB[2];
-            DYUV2RGB::YUV2RAW_BT601(pRGB, Y2, U, V);
+            DYUV2RGB::BT601(pRGB, Y2, U, V);
             pDst[(y * dst_linesize) + (x + 1) * 3] = pRGB[0];
             pDst[(y * dst_linesize) + (x + 1) * 3 + 1] = pRGB[1];
             pDst[(y * dst_linesize) + (x + 1) * 3 + 2] = pRGB[2];
-            DYUV2RGB::YUV2RAW_BT601(pRGB, Y3, U, V);
+            DYUV2RGB::BT601(pRGB, Y3, U, V);
             pDst[((y + 1) * dst_linesize) + x * 3] = pRGB[0];
             pDst[((y + 1) * dst_linesize) + x * 3 + 1] = pRGB[1];
             pDst[((y + 1) * dst_linesize) + x * 3 + 2] = pRGB[2];
-            DYUV2RGB::YUV2RAW_BT601(pRGB, Y4, U, V);
+            DYUV2RGB::BT601(pRGB, Y4, U, V);
             pDst[((y + 1) * dst_linesize) + (x + 1) * 3] = pRGB[0];
             pDst[((y + 1) * dst_linesize) + (x + 1) * 3 + 1] = pRGB[1];
             pDst[((y + 1) * dst_linesize) + (x + 1) * 3 + 2] = pRGB[2];
@@ -113,11 +113,11 @@ DVideoFrame DVideoFormat::I420ToRAW(const DVideoFrame& frameSrc)
             V = *pV;
             Y1 = *pY;
             Y3 = *(pY + src_width);
-            DYUV2RGB::YUV2RAW_BT601(pRGB, Y1, U, V);
+            DYUV2RGB::BT601(pRGB, Y1, U, V);
             pDst[(y * dst_linesize) + x * 3] = pRGB[0];
             pDst[(y * dst_linesize) + x * 3 + 1] = pRGB[1];
             pDst[(y * dst_linesize) + x * 3 + 2] = pRGB[2];
-            DYUV2RGB::YUV2RAW_BT601(pRGB, Y3, U, V);
+            DYUV2RGB::BT601(pRGB, Y3, U, V);
             pDst[((y + 1) * dst_linesize) + x * 3] = pRGB[0];
             pDst[((y + 1) * dst_linesize) + x * 3 + 1] = pRGB[1];
             pDst[((y + 1) * dst_linesize) + x * 3 + 2] = pRGB[2];
@@ -133,11 +133,11 @@ DVideoFrame DVideoFormat::I420ToRAW(const DVideoFrame& frameSrc)
             V = *pV;
             Y1 = *pY;
             Y2 = *(pY + 1);
-            DYUV2RGB::YUV2RAW_BT601(pRGB, Y1, U, V);
+            DYUV2RGB::BT601(pRGB, Y1, U, V);
             pDst[(y * dst_linesize) + x * 3] = pRGB[0];
             pDst[(y * dst_linesize) + x * 3 + 1] = pRGB[1];
             pDst[(y * dst_linesize) + x * 3 + 2] = pRGB[2];
-            DYUV2RGB::YUV2RAW_BT601(pRGB, Y2, U, V);
+            DYUV2RGB::BT601(pRGB, Y2, U, V);
             pDst[(y * dst_linesize) + (x + 1) * 3] = pRGB[0];
             pDst[(y * dst_linesize) + (x + 1) * 3 + 1] = pRGB[1];
             pDst[(y * dst_linesize) + (x + 1) * 3 + 2] = pRGB[2];
@@ -149,7 +149,7 @@ DVideoFrame DVideoFormat::I420ToRAW(const DVideoFrame& frameSrc)
             U = *pU;
             V = *pV;
             Y1 = *pY;
-            DYUV2RGB::YUV2RAW_BT601(pRGB, Y1, U, V);
+            DYUV2RGB::BT601(pRGB, Y1, U, V);
             pDst[(y * dst_linesize) + x * 3] = pRGB[0];
             pDst[(y * dst_linesize) + x * 3 + 1] = pRGB[1];
             pDst[(y * dst_linesize) + x * 3 + 2] = pRGB[2];
@@ -230,9 +230,9 @@ DInt32 DVideoFormat::YUY2ToI420(const DByte* src_yuy2, DInt32 src_stride_yuy2,
 DVoid I420ToARGBRow(const DByte* src_y, const DByte* src_u, const DByte* src_v, DByte* rgb_buf, DInt32 width)
 {
     for (DInt32 x = 0; x < width - 1; x += 2) {
-        DYUV2RGB::YUV2RAW_BT601(rgb_buf, src_y[0], src_u[0], src_v[0]);
+        DYUV2RGB::BT601(rgb_buf, src_y[0], src_u[0], src_v[0]);
         rgb_buf[3] = 255;
-        DYUV2RGB::YUV2RAW_BT601(rgb_buf + 4, src_y[1], src_u[0], src_v[0]);
+        DYUV2RGB::BT601(rgb_buf + 4, src_y[1], src_u[0], src_v[0]);
         rgb_buf[7] = 255;
         src_y += 2;
         src_u += 1;
@@ -240,7 +240,7 @@ DVoid I420ToARGBRow(const DByte* src_y, const DByte* src_u, const DByte* src_v, 
         rgb_buf += 8;
     }
     if (width & 1) {
-        DYUV2RGB::YUV2RAW_BT601(rgb_buf, src_y[0], src_u[0], src_v[0]);
+        DYUV2RGB::BT601(rgb_buf, src_y[0], src_u[0], src_v[0]);
         rgb_buf[3] = 255;
     }
 }

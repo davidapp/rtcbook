@@ -22,9 +22,9 @@ public:
 
 class DYUV2RGB {
 public:
-    static DVoid YUV2RAW_BT601(DUInt8* out, DInt32 Y, DInt32 U, DInt32 V);
-    static DVoid YUV2RAW_JPEG(DUInt8* out, DInt32 Y, DInt32 U, DInt32 V);
-    static DVoid YUV2RAW_BT709(DUInt8* out, DInt32 Y, DInt32 U, DInt32 V);
+    static DVoid BT601(DUInt8* out, DInt32 Y, DInt32 U, DInt32 V);
+    static DVoid JPEG(DUInt8* out, DInt32 Y, DInt32 U, DInt32 V);
+    static DVoid BT709(DUInt8* out, DInt32 Y, DInt32 U, DInt32 V);
 };
 
 

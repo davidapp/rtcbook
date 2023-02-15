@@ -77,7 +77,7 @@ DInt32 DRGB2YUV::RGBToVJ(DUInt8 r, DUInt8 g, DUInt8 b) {
 //  G = (Y - 16) * 1.164 - U *  0.391 - V *  0.813
 //  B = (Y - 16) * 1.164 - U * -2.018
 
-DVoid DYUV2RGB::YUV2RAW_BT601(DUInt8* out, DInt32 y, DInt32 u, DInt32 v)
+DVoid DYUV2RGB::BT601(DUInt8* out, DInt32 y, DInt32 u, DInt32 v)
 {
     DUInt32 y1 = (DUInt32)(y * 0x0101 * 18997) >> 16;
     *out = DYUV::Clamp((DInt32)(-(u * -128) + y1 + -17544) >> 6);
@@ -90,7 +90,7 @@ DVoid DYUV2RGB::YUV2RAW_BT601(DUInt8* out, DInt32 y, DInt32 u, DInt32 v)
 // G = Y - U *  0.34414 - V *  0.71414
 // B = Y - U * -1.77200
 
-DVoid DYUV2RGB::YUV2RAW_JPEG(DUInt8* out, DInt32 y, DInt32 u, DInt32 v)
+DVoid DYUV2RGB::JPEG(DUInt8* out, DInt32 y, DInt32 u, DInt32 v)
 {
     uint32_t y1 = (uint32_t)(y * 0x0101 * 16320) >> 16;
     *out = DYUV::Clamp((int32_t)(-(u * -113) + y1 + -14432) >> 6);
@@ -102,9 +102,8 @@ DVoid DYUV2RGB::YUV2RAW_JPEG(DUInt8* out, DInt32 y, DInt32 u, DInt32 v)
 // R = (Y - 16) * 1.164              - V * -1.793
 // G = (Y - 16) * 1.164 - U *  0.213 - V *  0.533
 // B = (Y - 16) * 1.164 - U * -2.112
-// See http://www.equasys.de/colorconversion.html
 
-DVoid DYUV2RGB::YUV2RAW_BT709(DUInt8* out, DInt32 y, DInt32 u, DInt32 v)
+DVoid DYUV2RGB::BT709(DUInt8* out, DInt32 y, DInt32 u, DInt32 v)
 {
     uint32_t y1 = (uint32_t)(y * 0x0101 * 18997) >> 16;
     *out = DYUV::Clamp((int32_t)(-(u * -128) + y1 + -17544) >> 6);
