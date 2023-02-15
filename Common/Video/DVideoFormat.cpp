@@ -89,21 +89,21 @@ DVideoFrame DVideoFormat::I420ToRAW(const DVideoFrame& frameSrc)
             Y3 = *(pY + src_width);
             Y4 = *(pY + src_width + 1);
             DYUV2RGB::YUV2RAW_BT601(pRGB, Y1, U, V);
-            pDst[(y * src_width + x) * 3] = pRGB[0];
-            pDst[(y * src_width + x) * 3 + 1] = pRGB[1];
-            pDst[(y * src_width + x) * 3 + 2] = pRGB[2];
+            pDst[(y * dst_linesize) + x * 3] = pRGB[0];
+            pDst[(y * dst_linesize) + x * 3 + 1] = pRGB[1];
+            pDst[(y * dst_linesize) + x * 3 + 2] = pRGB[2];
             DYUV2RGB::YUV2RAW_BT601(pRGB, Y2, U, V);
-            pDst[(y * src_width + x + 1) * 3] = pRGB[0];
-            pDst[(y * src_width + x + 1) * 3 + 1] = pRGB[1];
-            pDst[(y * src_width + x + 1) * 3 + 2] = pRGB[2];
+            pDst[(y * dst_linesize) + (x + 1) * 3] = pRGB[0];
+            pDst[(y * dst_linesize) + (x + 1) * 3 + 1] = pRGB[1];
+            pDst[(y * dst_linesize) + (x + 1) * 3 + 2] = pRGB[2];
             DYUV2RGB::YUV2RAW_BT601(pRGB, Y3, U, V);
-            pDst[((y + 1) * src_width + x) * 3] = pRGB[0];
-            pDst[((y + 1) * src_width + x) * 3 + 1] = pRGB[1];
-            pDst[((y + 1) * src_width + x) * 3 + 2] = pRGB[2];
+            pDst[((y + 1) * dst_linesize) + x * 3] = pRGB[0];
+            pDst[((y + 1) * dst_linesize) + x * 3 + 1] = pRGB[1];
+            pDst[((y + 1) * dst_linesize) + x * 3 + 2] = pRGB[2];
             DYUV2RGB::YUV2RAW_BT601(pRGB, Y4, U, V);
-            pDst[((y + 1) * src_width + x + 1) * 3] = pRGB[0];
-            pDst[((y + 1) * src_width + x + 1) * 3 + 1] = pRGB[1];
-            pDst[((y + 1) * src_width + x + 1) * 3 + 2] = pRGB[2];
+            pDst[((y + 1) * dst_linesize) + (x + 1) * 3] = pRGB[0];
+            pDst[((y + 1) * dst_linesize) + (x + 1) * 3 + 1] = pRGB[1];
+            pDst[((y + 1) * dst_linesize) + (x + 1) * 3 + 2] = pRGB[2];
             pY += 2;
             pU++;
             pV++;
@@ -114,13 +114,13 @@ DVideoFrame DVideoFormat::I420ToRAW(const DVideoFrame& frameSrc)
             Y1 = *pY;
             Y3 = *(pY + src_width);
             DYUV2RGB::YUV2RAW_BT601(pRGB, Y1, U, V);
-            pDst[(y * src_width + x) * 3] = pRGB[0];
-            pDst[(y * src_width + x) * 3 + 1] = pRGB[1];
-            pDst[(y * src_width + x) * 3 + 2] = pRGB[2];
+            pDst[(y * dst_linesize) + x * 3] = pRGB[0];
+            pDst[(y * dst_linesize) + x * 3 + 1] = pRGB[1];
+            pDst[(y * dst_linesize) + x * 3 + 2] = pRGB[2];
             DYUV2RGB::YUV2RAW_BT601(pRGB, Y3, U, V);
-            pDst[((y + 1) * src_width + x) * 3] = pRGB[0];
-            pDst[((y + 1) * src_width + x) * 3 + 1] = pRGB[1];
-            pDst[((y + 1) * src_width + x) * 3 + 2] = pRGB[2];
+            pDst[((y + 1) * dst_linesize) + x * 3] = pRGB[0];
+            pDst[((y + 1) * dst_linesize) + x * 3 + 1] = pRGB[1];
+            pDst[((y + 1) * dst_linesize) + x * 3 + 2] = pRGB[2];
             pY++;
             pU++;
             pV++;
@@ -134,13 +134,13 @@ DVideoFrame DVideoFormat::I420ToRAW(const DVideoFrame& frameSrc)
             Y1 = *pY;
             Y2 = *(pY + 1);
             DYUV2RGB::YUV2RAW_BT601(pRGB, Y1, U, V);
-            pDst[(y * src_width + x) * 3] = pRGB[0];
-            pDst[(y * src_width + x) * 3 + 1] = pRGB[1];
-            pDst[(y * src_width + x) * 3 + 2] = pRGB[2];
+            pDst[(y * dst_linesize) + x * 3] = pRGB[0];
+            pDst[(y * dst_linesize) + x * 3 + 1] = pRGB[1];
+            pDst[(y * dst_linesize) + x * 3 + 2] = pRGB[2];
             DYUV2RGB::YUV2RAW_BT601(pRGB, Y2, U, V);
-            pDst[(y * src_width + x + 1) * 3] = pRGB[0];
-            pDst[(y * src_width + x + 1) * 3 + 1] = pRGB[1];
-            pDst[(y * src_width + x + 1) * 3 + 2] = pRGB[2];
+            pDst[(y * dst_linesize) + (x + 1) * 3] = pRGB[0];
+            pDst[(y * dst_linesize) + (x + 1) * 3 + 1] = pRGB[1];
+            pDst[(y * dst_linesize) + (x + 1) * 3 + 2] = pRGB[2];
             pY += 2;
             pU++;
             pV++;
@@ -150,9 +150,9 @@ DVideoFrame DVideoFormat::I420ToRAW(const DVideoFrame& frameSrc)
             V = *pV;
             Y1 = *pY;
             DYUV2RGB::YUV2RAW_BT601(pRGB, Y1, U, V);
-            pDst[(y * src_width + x) * 3] = pRGB[0];
-            pDst[(y * src_width + x) * 3 + 1] = pRGB[1];
-            pDst[(y * src_width + x) * 3 + 2] = pRGB[2];
+            pDst[(y * dst_linesize) + x * 3] = pRGB[0];
+            pDst[(y * dst_linesize) + x * 3 + 1] = pRGB[1];
+            pDst[(y * dst_linesize) + x * 3 + 2] = pRGB[2];
             pY++;
             pU++;
             pV++;
@@ -166,6 +166,9 @@ DVideoFrame DVideoFormat::I420ToARGB(const DVideoFrame& frameSrc)
     DInt32 src_width = frameSrc.GetWidth();
     DInt32 src_height = frameSrc.GetHeight();
     DVideoFrame frameRet(frameSrc.GetWidth(), frameSrc.GetHeight(), DPixelFmt::ARGB);
+
+
+
     return frameRet;
 }
 
