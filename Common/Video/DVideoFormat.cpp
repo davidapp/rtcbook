@@ -78,42 +78,86 @@ DVideoFrame DVideoFormat::I420ToRAW(const DVideoFrame& frameSrc)
     DColor RGB = 0;
     DUInt8* pRGB = (DUInt8*)&RGB;
 
-    DInt32 x = 0, y = 0;
-    for (DInt32 i = 0; i < src_width * src_height / 4; i++) {
-        DInt32 U = *pU;
-        DInt32 V = *pV;
-        DInt32 Y1 = *pY;
-        DInt32 Y2 = *(pY + 1);
-        DInt32 Y3 = *(pY + src_width);
-        DInt32 Y4 = *(pY + src_width + 1);
-        DYUV2RGB::YUV2RAW_BT601(pRGB, Y1, U, V);
-        pDst[(y * src_width + x) * 3] = pRGB[0];
-        pDst[(y * src_width + x) * 3 + 1] = pRGB[1];
-        pDst[(y * src_width + x) * 3 + 2] = pRGB[2];
-        DYUV2RGB::YUV2RAW_BT601(pRGB, Y2, U, V);
-        pDst[(y * src_width + x + 1) * 3] = pRGB[0];
-        pDst[(y * src_width + x + 1) * 3 + 1] = pRGB[1];
-        pDst[(y * src_width + x + 1) * 3 + 2] = pRGB[2];
-        DYUV2RGB::YUV2RAW_BT601(pRGB, Y3, U, V);
-        pDst[((y + 1) * src_width + x) * 3] = pRGB[0];
-        pDst[((y + 1) * src_width + x) * 3 + 1] = pRGB[1];
-        pDst[((y + 1) * src_width + x) * 3 + 2] = pRGB[2];
-        DYUV2RGB::YUV2RAW_BT601(pRGB, Y4, U, V);
-        pDst[((y + 1) * src_width + x + 1) * 3] = pRGB[0];
-        pDst[((y + 1) * src_width + x + 1) * 3 + 1] = pRGB[1];
-        pDst[((y + 1) * src_width + x + 1) * 3 + 2] = pRGB[2];
-        pY += 2;
-        pU++;
-        pV++;
-        x += 2;
-        if (x >= src_width) {
-            x = 0;
-            y += 2;
-            pY += src_width;
+    DInt32 U, V, Y1, Y2, Y3, Y4;
+    DInt32 x, y;
+    for (y = 0; y < src_height; y += 2) {
+        for (x = 0; x < src_width; x += 2) {
+            U = *pU;
+            V = *pV;
+            Y1 = *pY;
+            Y2 = *(pY + 1);
+            Y3 = *(pY + src_width);
+            Y4 = *(pY + src_width + 1);
+            DYUV2RGB::YUV2RAW_BT601(pRGB, Y1, U, V);
+            pDst[(y * src_width + x) * 3] = pRGB[0];
+            pDst[(y * src_width + x) * 3 + 1] = pRGB[1];
+            pDst[(y * src_width + x) * 3 + 2] = pRGB[2];
+            DYUV2RGB::YUV2RAW_BT601(pRGB, Y2, U, V);
+            pDst[(y * src_width + x + 1) * 3] = pRGB[0];
+            pDst[(y * src_width + x + 1) * 3 + 1] = pRGB[1];
+            pDst[(y * src_width + x + 1) * 3 + 2] = pRGB[2];
+            DYUV2RGB::YUV2RAW_BT601(pRGB, Y3, U, V);
+            pDst[((y + 1) * src_width + x) * 3] = pRGB[0];
+            pDst[((y + 1) * src_width + x) * 3 + 1] = pRGB[1];
+            pDst[((y + 1) * src_width + x) * 3 + 2] = pRGB[2];
+            DYUV2RGB::YUV2RAW_BT601(pRGB, Y4, U, V);
+            pDst[((y + 1) * src_width + x + 1) * 3] = pRGB[0];
+            pDst[((y + 1) * src_width + x + 1) * 3 + 1] = pRGB[1];
+            pDst[((y + 1) * src_width + x + 1) * 3 + 2] = pRGB[2];
+            pY += 2;
+            pU++;
+            pV++;
+        }
+        if (src_width % 2 != 0) {
+            U = *pU;
+            V = *pV;
+            Y1 = *pY;
+            Y3 = *(pY + src_width);
+            DYUV2RGB::YUV2RAW_BT601(pRGB, Y1, U, V);
+            pDst[(y * src_width + x) * 3] = pRGB[0];
+            pDst[(y * src_width + x) * 3 + 1] = pRGB[1];
+            pDst[(y * src_width + x) * 3 + 2] = pRGB[2];
+            DYUV2RGB::YUV2RAW_BT601(pRGB, Y3, U, V);
+            pDst[((y + 1) * src_width + x) * 3] = pRGB[0];
+            pDst[((y + 1) * src_width + x) * 3 + 1] = pRGB[1];
+            pDst[((y + 1) * src_width + x) * 3 + 2] = pRGB[2];
+            pY++;
+            pU++;
+            pV++;
+        }
+        pY += src_width;
+    }
+    if (src_height % 2 != 0) {
+        for (x = 0; x < src_width - 1; x += 2) {
+            U = *pU;
+            V = *pV;
+            Y1 = *pY;
+            Y2 = *(pY + 1);
+            DYUV2RGB::YUV2RAW_BT601(pRGB, Y1, U, V);
+            pDst[(y * src_width + x) * 3] = pRGB[0];
+            pDst[(y * src_width + x) * 3 + 1] = pRGB[1];
+            pDst[(y * src_width + x) * 3 + 2] = pRGB[2];
+            DYUV2RGB::YUV2RAW_BT601(pRGB, Y2, U, V);
+            pDst[(y * src_width + x + 1) * 3] = pRGB[0];
+            pDst[(y * src_width + x + 1) * 3 + 1] = pRGB[1];
+            pDst[(y * src_width + x + 1) * 3 + 2] = pRGB[2];
+            pY += 2;
+            pU++;
+            pV++;
+        }
+        if (src_width % 2 != 0) {
+            U = *pU;
+            V = *pV;
+            Y1 = *pY;
+            DYUV2RGB::YUV2RAW_BT601(pRGB, Y1, U, V);
+            pDst[(y * src_width + x) * 3] = pRGB[0];
+            pDst[(y * src_width + x) * 3 + 1] = pRGB[1];
+            pDst[(y * src_width + x) * 3 + 2] = pRGB[2];
+            pY++;
+            pU++;
+            pV++;
         }
     }
-
-
     return retFrame;
 }
 
