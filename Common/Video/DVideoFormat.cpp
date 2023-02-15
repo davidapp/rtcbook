@@ -72,7 +72,7 @@ DVideoFrame DVideoFormat::I420ToRAW(const DVideoFrame& frameSrc)
     DByte* pU = pY + src_width * src_height;
     DInt32 dst_u_line = (src_width % 2) == 0 ? src_width / 2 : src_width / 2 + 1;
     DInt32 dst_u_height = (src_height % 2) == 0 ? src_height / 2 : src_height / 2 + 1;
-    DByte* pV = pY + dst_u_line * dst_u_height;
+    DByte* pV = pU + dst_u_line * dst_u_height;
     DByte* pDst = retFrame.GetBuf();
     DInt32 dst_linesize = retFrame.GetLineSize();
     DColor RGB = 0;
