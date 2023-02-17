@@ -369,7 +369,10 @@ DBuffer DVideoFrame::GetDumpBuffer()
     gb.AddUInt8('4');
     gb.AddUInt8('2');
     gb.AddUInt8('0');
-
+    gb.AddUInt32(GetData()->m_width);
+    gb.AddUInt32(GetData()->m_height);
+    gb.AddUInt32(GetData()->nAllocLength);
+    gb.AddFixBuffer(DBuffer(GetBuf(), GetSize()));
     DBuffer bufRet = gb.Finish();
     return bufRet;
 }
