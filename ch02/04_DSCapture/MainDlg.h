@@ -13,6 +13,8 @@
 #include "Video/DVideoFormat.h"
 #include "Video/DVideoColor.h"
 #include "Video/DVideoI420.h"
+#include "Base/DTime.h"
+#include "Base/DFile.h"
 
 #define DEST_WIDTH 300
 #define DEST_HEIGHT 200
@@ -39,6 +41,7 @@ DVoid* OnFrame(DVideoFrame frame, DVoid* pUserData)
     DTimer::Stop(0);
     DTimer::Output(0, DTimeUnit::IN_US);
     HWND hWnd = (HWND)pUserData;
+    frame.SetCTS(DTime::GetTimeStamp());
 
     if (g_dump) {
         std::string strFrame = frame.GetDumpText();
@@ -53,6 +56,12 @@ DVoid* OnFrame(DVideoFrame frame, DVoid* pUserData)
     if (frame.GetFormat() == DPixelFmt::YUY2)
     {
         DVideoFrame framei420 = DVideoFormat::YUY2ToI420(frame);
+        if (g_save) {
+            DBuffer bufFrame = framei420.GetDumpBuffer();
+            DFile::Buffer2FilePath(bufFrame, "C:\\Users\\Admin\\Downloads\\I420Frame.vf");
+            g_save = false;
+        }
+
         DVideoFrame frame_small = DVideoI420::Scale(framei420, DEST_WIDTH, DEST_HEIGHT, kFilterBox);
         DVideoFrame frame_small_mirror;
         DVideoFrame frame_small_raw;

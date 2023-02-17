@@ -344,3 +344,10 @@ DBuffer DFile::FilePath2Buffer(DCStr strPath)
     DBuffer readBuf = file.Read((DInt32)file.GetSize());
     return readBuf;
 }
+
+DBool DFile::Buffer2FilePath(const DBuffer& buf, DCStr strPath)
+{
+    DFile file;
+    file.OpenFileWrite(strPath, DFILE_CREATE_ALWAYS);
+    return file.Write(buf);
+}

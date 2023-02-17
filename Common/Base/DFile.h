@@ -51,6 +51,7 @@ public:
 
 public:
     static DBuffer FilePath2Buffer(DCStr strPath);
+    static DBool Buffer2FilePath(const DBuffer& buf, DCStr strPath);
 
     D_DISALLOW_COPY_AND_ASSIGN(DFile)
 

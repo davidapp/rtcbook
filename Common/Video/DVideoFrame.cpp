@@ -364,7 +364,13 @@ std::string DVideoFrame::GetDumpText()
 
 DBuffer DVideoFrame::GetDumpBuffer()
 {
-    DBuffer bufRet;
+    DGrowBuffer gb;
+    gb.AddUInt8('I');
+    gb.AddUInt8('4');
+    gb.AddUInt8('2');
+    gb.AddUInt8('0');
+
+    DBuffer bufRet = gb.Finish();
     return bufRet;
 }
 
