@@ -402,11 +402,11 @@ DBITMAPINFOHEADER* DVideoFrame::NewBMPInfoHeader()
     pHeader->biCompression = BI_RGB;
     pHeader->biHeight = GetData()->m_height;
     pHeader->biWidth = GetData()->m_width;
-    pHeader->biPlanes = 3;
+    pHeader->biPlanes = 1;
     pHeader->biSize = 40;
     pHeader->biSizeImage = GetData()->m_lineSize * GetData()->m_height;
-    pHeader->biXPelsPerMeter = 0;
-    pHeader->biYPelsPerMeter = 0;
+    pHeader->biXPelsPerMeter = 72;
+    pHeader->biYPelsPerMeter = 72;
     return pHeader;
 }
 

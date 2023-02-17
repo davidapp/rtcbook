@@ -63,7 +63,14 @@ public:
         DVideoFrame frameRaw = DVideoFormat::I420ToRAW(i420frame_e);
         DRect src = DRect(0, 0, i420frame_e.GetWidth(), i420frame_e.GetHeight());
         DBITMAPINFOHEADER* pHrd = frameRaw.NewBMPInfoHeader();
-
+        HBRUSH brush1 = ::CreateSolidBrush(RGB(0, 0, 255));
+        RECT logical_rect1 = { 0, 0, m_destRect.Width(), m_destRect.Height() };
+        dc.FillRect(&logical_rect1, brush1);
+        ::DeleteObject(brush1);
+        dc.StretchDIBits(0, 0, m_destRect.Width(), m_destRect.Height(),
+            0, src.Height(), src.Width(), -src.Height(), frameRaw.GetBuf(),
+            (const BITMAPINFO*)pHrd, DIB_RGB_COLORS, SRCCOPY);
+        return 0;
         // Double Buffer
         CDC dc_mem;
         dc_mem.CreateCompatibleDC(dc.m_hDC);
@@ -71,7 +78,7 @@ public:
 
         HBITMAP bmp_mem = ::CreateCompatibleBitmap(dc.m_hDC, m_destRect.Width(), m_destRect.Height());
         HGDIOBJ bmp_old = ::SelectObject(dc_mem.m_hDC, bmp_mem);
-        HBRUSH brush = ::CreateSolidBrush(RGB(255, 0, 0));
+        HBRUSH brush = ::CreateSolidBrush(RGB(0, 0, 255));
         RECT logical_rect = { 0, 0, m_destRect.Width(), m_destRect.Height() };
         ::FillRect(dc_mem, &logical_rect, brush);
         ::DeleteObject(brush);
