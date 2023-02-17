@@ -372,13 +372,24 @@ DBuffer DVideoFrame::GetDumpBuffer()
     gb.AddUInt32(GetData()->m_width);
     gb.AddUInt32(GetData()->m_height);
     gb.AddUInt32(GetData()->nAllocLength);
-    gb.AddFixBuffer(DBuffer(GetBuf(), GetSize()));
+    DBuffer bufFrame(GetBuf(), GetSize());
+    gb.AddFixBuffer(bufFrame);
     DBuffer bufRet = gb.Finish();
     return bufRet;
 }
 
 DBool DVideoFrame::LoadFromBuffer(const DBuffer& buf)
 {
+    DReadBuffer rb(buf);
+    rb.ReadUInt32();
+    DInt32 width = rb.ReadUInt32();
+    DInt32 height = rb.ReadUInt32();
+    DInt32 size = rb.ReadUInt32();
+    DBuffer buff = rb.ReadFixBuffer(size);
+    Init();
+    if (AllocFrame(size, width, height, width, DPixelFmt::I420, DMemType::RAW)) {
+        DXP::memcpy(m_pBuf, buff.GetBuf(), size);
+    }
     return true;
 }
 

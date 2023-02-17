@@ -78,9 +78,9 @@ public:
 
 public:
     DVideoFrame Copy();
-    std::string GetDumpText();    // TODO
-    DBuffer GetDumpBuffer();    // TODO
-    DBool LoadFromBuffer(const DBuffer& buf);    // TODO
+    std::string GetDumpText();
+    DBuffer GetDumpBuffer();
+    DBool LoadFromBuffer(const DBuffer& buf);
     DBITMAPINFOHEADER* NewBMPInfoHeader();
 
 public:
