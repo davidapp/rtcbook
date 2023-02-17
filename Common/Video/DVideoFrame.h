@@ -73,15 +73,14 @@ public:
     DVoid  Zero();
 
 public:
-    static DInt32 GetI420UV_Width();
+    DInt32 GetI420UV_Width();
     DInt32 GetI420UV_Height();
 
 public:
-    // TODO
     DVideoFrame Copy();
-    std::string GetDumpText();
-    DBuffer GetDumpBuffer();
-    DBool LoadFromBuffer(const DBuffer& buf);
+    std::string GetDumpText();    // TODO
+    DBuffer GetDumpBuffer();    // TODO
+    DBool LoadFromBuffer(const DBuffer& buf);    // TODO
     DBITMAPINFOHEADER* NewBMPInfoHeader();
 
 public:

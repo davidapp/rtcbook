@@ -16,16 +16,38 @@
 
 #define DEST_WIDTH 300
 #define DEST_HEIGHT 200
+#define WM_LOG WM_USER+1000
 
 DBool g_mirror = false;
 DRotation g_rotate = DRotation::DEGREE_0;
+DBool g_dump = false;
+DBool g_save = false;
+
+DWChar* NewStr(CString& str) {
+    DWChar* poststr = new DWChar[str.GetLength() + 1];
+    memcpy_s(poststr, str.GetLength() * 2, str.GetString(), str.GetLength() * 2);
+    poststr[str.GetLength()] = 0;
+    return poststr;
+}
+
+DVoid DelStr(DWChar* str) {
+    delete[] str;
+}
 
 DVoid* OnFrame(DVideoFrame frame, DVoid* pUserData)
 {
     DTimer::Stop(0);
     DTimer::Output(0, DTimeUnit::IN_US);
-
     HWND hWnd = (HWND)pUserData;
+
+    if (g_dump) {
+        std::string strFrame = frame.GetDumpText();
+        CString str;
+        str.Format(L"%S", strFrame.c_str());
+        ::PostMessage(hWnd, WM_LOG, (WPARAM)NewStr(str), 0);
+        g_dump = false;
+    }
+
     BITMAPINFO* pHeader = (BITMAPINFO*)frame.GetUserData();
 
     if (frame.GetFormat() == DPixelFmt::YUY2)
@@ -84,12 +106,15 @@ public:
     BEGIN_MSG_MAP(CSettingDlg)
         MESSAGE_HANDLER(WM_INITDIALOG, OnInitDialog)
         COMMAND_RANGE_HANDLER(IDOK, IDNO, OnCloseCmd)
+        MESSAGE_HANDLER(WM_LOG, OnLog)
         COMMAND_ID_HANDLER(IDC_START, OnCameraStart)
         COMMAND_ID_HANDLER(IDC_STOP, OnCameraStop)
         COMMAND_HANDLER(IDC_COMBO1, CBN_SELCHANGE, OnCbnSelchangeScale)
         COMMAND_HANDLER(IDC_ROTATE, CBN_SELCHANGE, OnCbnSelchangeRotate)
         MESSAGE_HANDLER(WM_ONFRAME, OnMyFrame)
         COMMAND_ID_HANDLER(IDC_MIRROR, OnMirror)
+        COMMAND_ID_HANDLER(IDC_DUMP, OnDump)
+        COMMAND_ID_HANDLER(IDC_SAVE, OnSave)
     END_MSG_MAP()
 
     LRESULT OnInitDialog(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/)
@@ -145,6 +170,37 @@ public:
     {
         g_mirror = !g_mirror;
         return 0;
+    }
+
+    LRESULT OnDump(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL& bHandled)
+    {
+        if (!g_dump) g_dump = true;
+        return 0;
+    }
+
+    LRESULT OnSave(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL& bHandled)
+    {
+        if (!g_save) g_save = true;
+        return 0;
+    }
+
+    LRESULT OnLog(UINT /*uMsg*/, WPARAM wParam, LPARAM lParam, BOOL& /*bHandled*/)
+    {
+        CString strLog = (LPCWSTR)wParam;
+        AppendLog((DWChar*)strLog.GetString());
+        DelStr((DWChar*)wParam);
+        return 0;
+    }
+
+    DVoid AppendLog(DWChar* str)
+    {
+        CString strOld;
+        m_log.GetWindowText(strOld);
+        CString strLog(str);
+        strLog += "\r\n";
+        strOld += strLog;
+        m_log.SetWindowText(strOld);
+        m_log.LineScroll(m_log.GetLineCount());
     }
 
     LRESULT OnCbnSelchangeScale(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/)

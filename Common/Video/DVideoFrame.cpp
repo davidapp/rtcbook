@@ -1,6 +1,6 @@
 ﻿#include "DVideoFrame.h"
 #include "Base/DXP.h"
-
+#include <sstream>
 
 ////////////////////////////////////////////////////////////////////////////////////
 // DVideoFrame
@@ -233,16 +233,132 @@ DInt32 DVideoFrame::GetI420UV_Height()
 }
 
 
-// NOT INCLUDE SEI DATA
 DVideoFrame DVideoFrame::Copy()
 {
-    DVideoFrame frameRet(GetBuf(), GetSize(), GetData()->m_width, GetData()->m_height, GetData()->m_fmt);
+    DVideoFrame frameRet(GetBuf(), GetSize(), GetData()->m_width, GetData()->m_height, GetData()->m_fmt, GetData()->m_type);
     return frameRet;
 }
 
 std::string DVideoFrame::GetDumpText()
 {
-    std::string strRet;
+    std::string strRet,strTemp;
+    std::stringstream ss,sstemp;
+
+    strRet += "nRefs: ";
+    sstemp << GetData()->nRefs;
+    sstemp >> strTemp;
+    sstemp.clear();
+    strRet += strTemp;
+    strRet += D_LINES;
+
+    strRet += "nAllocLength: ";
+    sstemp << GetData()->nAllocLength;
+    sstemp >> strTemp;
+    sstemp.clear();
+    strRet += strTemp;
+    strRet += D_LINES;
+
+    strRet += "m_width: ";
+    sstemp << GetData()->m_width;
+    sstemp >> strTemp;
+    sstemp.clear();
+    strRet += strTemp;
+    strRet += D_LINES;
+
+    strRet += "m_height: ";
+    sstemp << GetData()->m_height;
+    sstemp >> strTemp;
+    sstemp.clear();
+    strRet += strTemp;
+    strRet += D_LINES;
+
+    strRet += "m_lineSize: ";
+    sstemp << GetData()->m_lineSize;
+    sstemp >> strTemp;
+    sstemp.clear();
+    strRet += strTemp;
+    strRet += D_LINES;
+
+    strRet += "m_fmt: ";
+    sstemp << (int)GetData()->m_fmt;
+    sstemp >> strTemp;
+    sstemp.clear();
+    strRet += strTemp;
+    if (GetData()->m_fmt == DPixelFmt::Unknown) strRet += "(Unknown)";
+    else if (GetData()->m_fmt == DPixelFmt::RGB24) strRet += "(RGB24)";
+    else if (GetData()->m_fmt == DPixelFmt::RAW) strRet += "(RAW)";
+    else if (GetData()->m_fmt == DPixelFmt::ARGB) strRet += "(ARGB)";
+    else if (GetData()->m_fmt == DPixelFmt::ABGR) strRet += "(ABGR)";
+    else if (GetData()->m_fmt == DPixelFmt::BGRA) strRet += "(BGRA)";
+    else if (GetData()->m_fmt == DPixelFmt::RGBA) strRet += "(RGBA)";
+    else if (GetData()->m_fmt == DPixelFmt::RGB565) strRet += "(RGB565)";
+    else if (GetData()->m_fmt == DPixelFmt::I420) strRet += "(I420)";
+    else if (GetData()->m_fmt == DPixelFmt::YV12) strRet += "(YV12)";
+    else if (GetData()->m_fmt == DPixelFmt::NV12) strRet += "(NV12)";
+    else if (GetData()->m_fmt == DPixelFmt::NV21) strRet += "(NV21)";
+    else if (GetData()->m_fmt == DPixelFmt::YUY2) strRet += "(YUY2)";
+    else if (GetData()->m_fmt == DPixelFmt::MJPG) strRet += "(MJPG)";
+    strRet += D_LINES;
+
+    strRet += "m_type: ";
+    sstemp << (int)GetData()->m_type;
+    sstemp >> strTemp;
+    sstemp.clear();
+    strRet += strTemp;
+    if (GetData()->m_type == DMemType::RAW) strRet += "(RAW)";
+    else if (GetData()->m_type == DMemType::CVPixelBuffer) strRet += "(CVPixelBuffer)";
+    strRet += D_LINES;
+
+    strRet += "m_cts: ";
+    sstemp << GetData()->m_cts;
+    sstemp >> strTemp;
+    sstemp.clear();
+    strRet += strTemp;
+    strRet += D_LINES;
+
+    strRet += "m_dts: ";
+    sstemp << GetData()->m_dts;
+    sstemp >> strTemp;
+    sstemp.clear();
+    strRet += strTemp;
+    strRet += D_LINES;
+
+    strRet += "m_pts: ";
+    sstemp << GetData()->m_pts;
+    sstemp >> strTemp;
+    sstemp.clear();
+    strRet += strTemp;
+    strRet += D_LINES;
+
+    strRet += "m_rotate: ";
+    sstemp << (int)GetData()->m_rotate;
+    sstemp >> strTemp;
+    strRet += strTemp;
+    strRet += D_LINES;
+
+    strRet += "m_pSEIData: 0x";
+    sstemp << std::hex << (DInt64)(GetData()->m_pSEIData);
+    sstemp >> strTemp;
+    sstemp.clear();
+    strRet += strTemp;
+    strRet += D_LINES;
+
+    strRet += "m_nSEISize: ";
+    sstemp << GetData()->m_nSEISize;
+    sstemp >> strTemp;
+    sstemp.clear();
+    strRet += strTemp;
+    strRet += D_LINES;
+
+    strRet += "m_pUserData: 0x";
+    sstemp << std::hex << (DInt64)(GetData()->m_pUserData);
+    sstemp >> strTemp;
+    sstemp.clear();
+    strRet += strTemp;
+    strRet += D_LINES;
+
+
+
     return strRet;
 }
 
@@ -358,6 +474,9 @@ DBool DVideoFrame::AllocFrame(DInt32 w, DInt32 h, DPixelFmt fmt)
         pData->m_cts = 0;
         pData->m_dts = 0;
         pData->m_pts = 0;
+        pData->m_rotate = DRotation::DEGREE_0;
+        pData->m_pSEIData = nullptr;
+        pData->m_nSEISize = 0;
         pData->m_pUserData = nullptr;
         m_pBuf = pData->buf();
     }
@@ -393,6 +512,10 @@ DBool DVideoFrame::AllocFrame(DUInt32 data_size, DInt32 w, DInt32 h, DInt32 line
         pData->m_cts = 0;
         pData->m_dts = 0;
         pData->m_pts = 0;
+        pData->m_rotate = DRotation::DEGREE_0;
+        pData->m_pSEIData = nullptr;
+        pData->m_nSEISize = 0;
+        pData->m_pUserData = nullptr;
         m_pBuf = pData->buf();
     }
 
