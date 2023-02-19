@@ -8,6 +8,7 @@
 #include "resource.h"
 #include "atlgdi.h"
 #include "Base/DFile.h"
+#include "Base/DPath.h"
 #include "Video/DVideoFrame.h"
 #include "Video/DVideoI420.h"
 #include "Video/DVideoFormat.h"
@@ -81,7 +82,10 @@ public:
     LRESULT OnInitDialog(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/)
     {
         CenterWindow(GetParent());
-        DBuffer bufFrame = DFile::FilePath2Buffer("C:\\Users\\Admin\\Downloads\\I420Frame.vf");
+        std::string appdir = DPath::GetExeDir();
+        appdir = appdir.substr(0, appdir.size() - 2);
+        std::string datafile = DPath::GetParent(appdir) + "Data\\I420Frame\\I420Frame.vf";
+        DBuffer bufFrame = DFile::FilePath2Buffer(datafile.c_str());
         m_frame.LoadFromBuffer(bufFrame);
 
         m_destRect.top = 0;
@@ -89,7 +93,7 @@ public:
         m_destRect.bottom = 300;
         m_destRect.right = 300;
 
-        InitDirectDraw(m_hWnd);
+        //InitDirectDraw(m_hWnd);
         return TRUE;
     }
 
@@ -110,7 +114,7 @@ public:
         DBITMAPINFOHEADER* pHrd = frameRaw.NewBMPInfoHeader();
 
         HBRUSH brush1 = ::CreateSolidBrush(RGB(0, 0, 255));
-        RECT logical_rect1 = { 0, 0, m_destRect.Width(), m_destRect.Height()-1 };
+        RECT logical_rect1 = { 0, 0, m_destRect.Width(), m_destRect.Height() - 1};
         dc.FillRect(&logical_rect1, brush1);
         ::DeleteObject(brush1);
         
@@ -144,7 +148,7 @@ public:
             0, src.Height(), src.Width(), -src.Height(), frameRaw.GetBuf(),
             (const BITMAPINFO*)pHrd, DIB_RGB_COLORS, SRCCOPY);
 
-        dc.BitBlt(m_destRect.left, m_destRect.top, m_destRect.Width(), m_destRect.Height(), dc_mem, 0, 0, SRCCOPY);
+        dc.BitBlt(m_destRect.left, m_destRect.top, m_destRect.Width(), m_destRect.Height() - 1, dc_mem, 0, 0, SRCCOPY);
 
         ::SelectObject(dc_mem, bmp_old);
         ::DeleteObject(bmp_mem);
@@ -174,7 +178,7 @@ public:
 
     DBool CreateSurface(LPDIRECTDRAW7 hDD, int nWidth, int nHeight, COLORREF dwColorKey)
     {
-        DDSURFACEDESC2    ddsd;
+        DDSURFACEDESC2 ddsd;
         ZeroMemory(&ddsd, sizeof(ddsd));
         ddsd.dwSize = sizeof(ddsd);
         ddsd.dwFlags = DDSD_CAPS | DDSD_WIDTH | DDSD_HEIGHT;

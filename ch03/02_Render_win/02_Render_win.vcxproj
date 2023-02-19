@@ -131,6 +131,7 @@
   <ItemGroup>
     <ClCompile Include="..\..\Common\Base\DBuffer.cpp" />
     <ClCompile Include="..\..\Common\Base\DFile.cpp" />
+    <ClCompile Include="..\..\Common\Base\DPath.cpp" />
     <ClCompile Include="..\..\Common\Base\DTimer.cpp" />
     <ClCompile Include="..\..\Common\Base\DXP.cpp" />
     <ClCompile Include="..\..\Common\File\DBmpFile.cpp" />
@@ -144,6 +145,7 @@
     <ClInclude Include="..\..\Common\Base\DAtomic.h" />
     <ClInclude Include="..\..\Common\Base\DBuffer.h" />
     <ClInclude Include="..\..\Common\Base\DFile.h" />
+    <ClInclude Include="..\..\Common\Base\DPath.h" />
     <ClInclude Include="..\..\Common\Base\DTimer.h" />
     <ClInclude Include="..\..\Common\Base\DXP.h" />
     <ClInclude Include="..\..\Common\File\DBmpFile.h" />

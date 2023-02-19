@@ -58,7 +58,7 @@ DVoid* OnFrame(DVideoFrame frame, DVoid* pUserData)
         DVideoFrame framei420 = DVideoFormat::YUY2ToI420(frame);
         if (g_save) {
             DBuffer bufFrame = framei420.GetDumpBuffer();
-            DFile::Buffer2FilePath(bufFrame, "C:\\Users\\Admin\\Downloads\\I420Frame.vf");
+            DFile::Buffer2FilePath(bufFrame, "C:\\Code\\latex_code\\Data\\I420Frame\\I420Frame.vf");
             g_save = false;
         }
 

@@ -52,6 +52,9 @@
     <ClCompile Include="..\..\Common\Video\DVideoColor.cpp">
       <Filter>Common\Video</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\Common\Base\DPath.cpp">
+      <Filter>Common\Base</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="MainDlg.h">
@@ -89,6 +92,9 @@
     </ClInclude>
     <ClInclude Include="..\..\Common\Video\DVideoColor.h">
       <Filter>Common\Video</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\Base\DPath.h">
+      <Filter>Common\Base</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
