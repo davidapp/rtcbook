@@ -25,14 +25,13 @@ LPDIRECTDRAWSURFACE7 g_pDDSBack = NULL;   // DirectDraw backbuffer surface
 int InitDirectDraw(HWND hwnd)
 {
     DirectDrawCreateEx(NULL, (VOID**)&g_pDD, IID_IDirectDraw7, NULL);
-    g_pDD->SetCooperativeLevel(hwnd, DDSCL_EXCLUSIVE | DDSCL_FULLSCREEN);
-    g_pDD->SetDisplayMode(640, 480, 16, 0, 0);
+    g_pDD->SetCooperativeLevel(hwnd, DDSCL_NORMAL);
+    g_pDD->SetDisplayMode(300, 300, 32, 0, 0);
 
     DDSURFACEDESC2 ddsd;
     ZeroMemory(&ddsd, sizeof(ddsd));
     ddsd.dwSize = sizeof(ddsd);
-    ddsd.dwFlags = DDSD_CAPS | DDSD_BACKBUFFERCOUNT;
-    ddsd.ddsCaps.dwCaps = DDSCAPS_PRIMARYSURFACE | DDSCAPS_FLIP | DDSCAPS_COMPLEX;
+    ddsd.ddsCaps.dwCaps = DDSCAPS_PRIMARYSURFACE;
     ddsd.dwBackBufferCount = 1;
     g_pDD->CreateSurface(&ddsd, &g_pDDSFront, NULL);
 
@@ -93,7 +92,10 @@ public:
         m_destRect.bottom = 300;
         m_destRect.right = 300;
 
-        //InitDirectDraw(m_hWnd);
+        m_showwindow = GetDlgItem(IDC_SHOW);
+        m_showwindow.MoveWindow((LPCRECT) & m_destRect);
+
+        InitDirectDraw(m_hWnd);
         return TRUE;
     }
 
@@ -218,6 +220,7 @@ public:
     }
 
     DVideoFrame m_frame;
+    CStatic m_showwindow;
     DRect m_destRect;
 
     // DDraw
