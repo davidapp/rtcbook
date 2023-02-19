@@ -25,11 +25,8 @@ DVoid* OnFrame(DVideoFrame frame, DVoid* pUserData)
     if (frame.GetFormat() == DPixelFmt::YUY2)
     {
         DVideoFrame i420frame = DVideoFormat::YUY2ToI420(frame);
-        g_renderQueue.PushFrame(D_LOCAL_VIEW, DVideoI420::Mirror(i420frame));
+        g_renderQueue.PushFrame(D_LOCAL_VIEW, i420frame);
         g_renderQueue.PushFrame(D_REMOTE_VIEW, i420frame);
-    }
-    else {
-
     }
 
     return nullptr;
@@ -73,6 +70,7 @@ public:
         ::ScreenToClient(m_hWnd, &pos);
         DRect rLocal(pos.x, pos.y, pos.x + rect.Width(), pos.y + rect.Height());
         g_renderQueue.Setup(D_LOCAL_VIEW, m_hWnd, rLocal);
+        g_renderQueue.SetMirror(D_LOCAL_VIEW, true);
 
         m_remoteFrame.GetWindowRect(rect);
         pos.x = rect.left;

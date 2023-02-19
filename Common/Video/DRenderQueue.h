@@ -36,6 +36,11 @@ public:
     DVoid Start();
     DVoid Stop();
     DVoid Setup(DUInt32 viewID, DVoid* wnd, DRect& rect);
+    DVoid SetMirror(DUInt32 viewID, DBool bMirror);
+    DVoid SetFPS(DUInt32 viewID, DUInt32 fps);
+    DVoid SetRenderMode(DUInt32 viewID, DScaleMode mode);
+
+public:
     DInt32 GetQueueSize();
     DInt32 PushFrame(DUInt32 viewID, DVideoFrame frame);
 

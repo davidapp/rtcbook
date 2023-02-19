@@ -31,6 +31,21 @@ DVoid DRenderQueue::Setup(DUInt32 viewID, DVoid* wnd, DRect& rect)
     m_configs[viewID].destRect = rect;
 }
 
+DVoid DRenderQueue::SetMirror(DUInt32 viewID, DBool bMirror)
+{
+    m_configs[viewID].mirrored = bMirror;
+}
+
+DVoid DRenderQueue::SetFPS(DUInt32 viewID, DUInt32 fps)
+{
+    m_configs[viewID].fps = fps;
+}
+
+DVoid DRenderQueue::SetRenderMode(DUInt32 viewID, DScaleMode mode)
+{
+    m_configs[viewID].renderMode = mode;
+}
+
 DInt32 DRenderQueue::GetQueueSize() 
 {
     std::lock_guard<std::mutex> lock(m_queue_mutex);
@@ -93,11 +108,16 @@ DVoid DRenderQueue::Render(DUInt32 viewID, DVideoFrame f)
 {
     DVoid* m_context = m_configs[viewID].context;
     DRect m_destRect = m_configs[viewID].destRect;
+    DBool bMirror = m_configs[viewID].mirrored;
     CClientDC dc((HWND)m_context);
     if (f.GetFormat() == DPixelFmt::I420)
     {
         DVideoFrame i420frame_e = DVideoI420::Scale(f, m_destRect.Width(), m_destRect.Height(), kFilterBox);
-        DVideoFrame frameRaw = DVideoFormat::I420ToRAW(i420frame_e);
+        DVideoFrame i420frame_em;
+        if (bMirror) {
+            i420frame_em = DVideoI420::Mirror(i420frame_e);
+        }
+        DVideoFrame frameRaw = DVideoFormat::I420ToRAW(bMirror ? i420frame_em : i420frame_e);
         DRect src = DRect(0, 0, i420frame_e.GetWidth(), i420frame_e.GetHeight());
         DBITMAPINFOHEADER* pHrd = frameRaw.NewBMPInfoHeader();
 

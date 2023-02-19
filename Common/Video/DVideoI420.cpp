@@ -58,17 +58,19 @@ DVideoFrame DVideoI420::Rotate(const DVideoFrame& srcFrame, DRotation rotate)
     DByte* src_y = srcFrame.GetBuf();
     DInt32 src_stride_y = lineSize;
     DByte* src_u = src_y + src_h * lineSize;
-    DInt32 src_stride_u = src_stride_y / 2;
-    DByte* src_v = src_u + src_h * lineSize / 4;
-    DInt32 src_stride_v = src_stride_y / 2;
+    DInt32 src_stride_u = (src_w % 2 == 0) ? src_w / 2 : src_w / 2 + 1;
+    DInt32 src_height_u = (src_h % 2 == 0) ? src_h / 2 : src_h / 2 + 1;
+    DByte* src_v = src_u + src_stride_u * src_height_u;
+    DInt32 src_stride_v = src_stride_u;
 
     DInt32 dst_lineSize = frameRet.GetLineSize();
     DByte* dst_y = frameRet.GetBuf();
     DInt32 dst_stride_y = dst_lineSize;
     DByte* dst_u = dst_y + h * dst_lineSize;
-    DInt32 dst_stride_u = dst_lineSize / 2;
-    DByte* dst_v = dst_u + h * dst_lineSize / 4;
-    DInt32 dst_stride_v = dst_lineSize / 2;
+    DInt32 dst_stride_u = (w % 2 == 0) ? w / 2 : w / 2 + 1;
+    DInt32 dst_height_u = (h % 2 == 0) ? h / 2 : h / 2 + 1;
+    DByte* dst_v = dst_u + dst_stride_u * dst_height_u;
+    DInt32 dst_stride_v = dst_stride_u;
 
     DVideoI420::I420Rotate(
         src_y, src_stride_y,
@@ -85,26 +87,24 @@ DVideoFrame DVideoI420::Mirror(const DVideoFrame& srcFrame)
 {
     DInt32 w = srcFrame.GetWidth();
     DInt32 h = srcFrame.GetHeight();
-    DVideoFrame frameRet(w, h, DPixelFmt::I420);
-
-    DInt32 src_w = srcFrame.GetWidth();
-    DInt32 src_h = srcFrame.GetHeight();
     DInt32 lineSize = srcFrame.GetLineSize();
+    DVideoFrame frameRet(w, h, DPixelFmt::I420);
 
     DByte* src_y = srcFrame.GetBuf();
     DInt32 src_stride_y = lineSize;
-    DByte* src_u = src_y + src_h * lineSize;
-    DInt32 src_stride_u = src_stride_y / 2;
-    DByte* src_v = src_u + src_h * lineSize / 4;
-    DInt32 src_stride_v = src_stride_y / 2;
+    DByte* src_u = src_y + h * lineSize;
+    DInt32 src_stride_u = (w % 2 == 0) ? w / 2 : w / 2 + 1;
+    DInt32 src_height_u = (h % 2 == 0) ? h / 2 : h / 2 + 1;
+    DByte* src_v = src_u + src_stride_u * src_height_u;
+    DInt32 src_stride_v = src_stride_u;
 
     DInt32 dst_lineSize = frameRet.GetLineSize();
     DByte* dst_y = frameRet.GetBuf();
     DInt32 dst_stride_y = dst_lineSize;
-    DByte* dst_u = dst_y + h * dst_lineSize;
-    DInt32 dst_stride_u = dst_lineSize / 2;
-    DByte* dst_v = dst_u + h * dst_lineSize / 4;
-    DInt32 dst_stride_v = dst_lineSize / 2;
+    DByte* dst_u = dst_y + h * lineSize;
+    DInt32 dst_stride_u = src_stride_u;
+    DByte* dst_v = dst_u + src_stride_u * src_height_u;
+    DInt32 dst_stride_v = src_stride_v;
 
     DVideoI420::I420Mirror(src_y, src_stride_y,
         src_u, src_stride_u,
