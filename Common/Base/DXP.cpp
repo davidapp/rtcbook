@@ -158,7 +158,7 @@ std::string DXP::UInt8ToStr(DUInt8 c)
 #if defined(BUILD_FOR_WINDOWS)
     sprintf_s(buf, 10, "%u", c);
 #else
-    sprintf(buf, "%u", c);
+    snprintf(buf, 10, "%u", c);
 #endif
     std::string str = buf;
     return str;
@@ -173,7 +173,7 @@ std::string DXP::UInt16ToStr(DUInt16 c, DBool bLE)
 #if defined(BUILD_FOR_WINDOWS)
     sprintf_s(buf, 10, "%u", c);
 #else
-    sprintf(buf, "%u", c);
+    snprintf(buf, 10, "%u", c);
 #endif
     std::string str = buf;
     return str;
@@ -188,7 +188,7 @@ std::string DXP::UInt32ToStr(DUInt32 c, DBool bLE)
 #if defined(BUILD_FOR_WINDOWS)
     sprintf_s(buf, 20, "%u", c);
 #else
-    sprintf(buf, "%u", c);
+    snprintf(buf, 20, "%u", c);
 #endif
     std::string str = buf;
     return str;
@@ -203,7 +203,7 @@ std::string DXP::UInt64ToStr(DUInt64 c, DBool bLE)
 #if defined(BUILD_FOR_WINDOWS)
     sprintf_s(buf, 40, "%llu", c);
 #else
-    sprintf(buf, "%llu", c);
+    snprintf(buf, 40, "%llu", c);
 #endif
     std::string str = buf;
     return str;
@@ -215,7 +215,7 @@ std::string DXP::UInt8ToStr16(DUInt8 c)
 #if defined(BUILD_FOR_WINDOWS)
     sprintf_s(buf, 10, "0x%02x", c);
 #else
-    sprintf(buf, "0x%02x", c);
+    snprintf(buf, 10, "0x%02x", c);
 #endif
     std::string str = buf;
     return str;
@@ -230,7 +230,7 @@ std::string DXP::UInt16ToStr16(DUInt16 c, DBool bLE)
 #if defined(BUILD_FOR_WINDOWS)
     sprintf_s(buf, 10, "0x%02x %02x", c >> 8, c & 0x00FF);
 #else
-    sprintf(buf, "0x%02x %02x", c >> 8, c & 0x00FF);
+    snprintf(buf, 10, "0x%02x %02x", c >> 8, c & 0x00FF);
 #endif
     std::string str = buf;
     return str;
@@ -245,7 +245,7 @@ std::string DXP::UInt32ToStr16(DUInt32 c, DBool bLE)
 #if defined(BUILD_FOR_WINDOWS)
     sprintf_s(buf, 20, "0x%02x %02x %02x %02x", c >> 24, (c >> 16) & 0x000000FF, (c >> 8) & 0x000000FF, c & 0x000000FF);
 #else
-    sprintf(buf, "0x%02x %02x %02x %02x", c >> 24, (c >> 16) & 0x000000FF, (c >> 8) & 0x000000FF, c & 0x000000FF);
+    snprintf(buf, 20, "0x%02x %02x %02x %02x", c >> 24, (c >> 16) & 0x000000FF, (c >> 8) & 0x000000FF, c & 0x000000FF);
 #endif
     std::string str = buf;
     return str;
@@ -257,7 +257,7 @@ std::string DXP::Int8ToStr(DInt8 c)
 #if defined(BUILD_FOR_WINDOWS)
     sprintf_s(buf, 10, "%d", c);
 #else
-    sprintf(buf, "%d", c);
+    snprintf(buf, 10, "%d", c);
 #endif
     std::string str = buf;
     return str;
@@ -272,7 +272,7 @@ std::string DXP::Int16ToStr(DInt16 c, DBool bLE)
 #if defined(BUILD_FOR_WINDOWS)
     sprintf_s(buf, 10, "%d", c);
 #else
-    sprintf(buf, "%d", c);
+    snprintf(buf, 10, "%d", c);
 #endif
     std::string str = buf;
     return str;
@@ -287,7 +287,7 @@ std::string DXP::Int32ToStr(DInt32 c, DBool bLE)
 #if defined(BUILD_FOR_WINDOWS)
     sprintf_s(buf, 20, "%d", c);
 #else
-    sprintf(buf, "%d", c);
+    snprintf(buf, 20, "%d", c);
 #endif
     std::string str = buf;
     return str;
@@ -302,7 +302,7 @@ std::string DXP::Int64ToStr(DInt64 c, DBool bLE)
 #if defined(BUILD_FOR_WINDOWS)
     sprintf_s(buf, 40, "%lld", c);
 #else
-    sprintf(buf, "%lld", c);
+    snprintf(buf, 40, "%lld", c);
 #endif
     std::string str = buf;
     return str;
@@ -314,7 +314,7 @@ std::string DXP::AddrToStr(void* p)
 #if defined(BUILD_FOR_WINDOWS)
     sprintf_s(buf, 20, "0x%p", p);
 #else
-    sprintf(buf, "0x%p", p);
+    snprintf(buf, 20, "0x%p", p);
 #endif
     std::string str = buf;
     return str;

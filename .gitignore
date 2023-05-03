@@ -40,3 +40,4 @@ Release
 *.yuv
 *.xcuserdatad
 .idea
+.DS_Store
