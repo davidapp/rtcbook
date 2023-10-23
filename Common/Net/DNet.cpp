@@ -131,7 +131,7 @@ std::string DNet::UInt32ToIPStr(DUInt32 uip)
 #if defined(BUILD_FOR_WINDOWS)
     sprintf_s(buf, 30, "%d.%d.%d.%d", pByte[0], pByte[1], pByte[2], pByte[3]);
 #else
-    sprintf(buf, "%d.%d.%d.%d", pByte[0], pByte[1], pByte[2], pByte[3]);
+    snprintf(buf, 30, "%d.%d.%d.%d", pByte[0], pByte[1], pByte[2], pByte[3]);
 #endif
     str = buf;
     return str;

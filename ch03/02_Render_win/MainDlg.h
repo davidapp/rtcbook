@@ -13,15 +13,19 @@
 #include "Video/DVideoI420.h"
 #include "Video/DVideoFormat.h"
 
+// For OpenGL
+#include <GL/GL.h>
+
+// For DirectDraw
 #include <ddraw.h>
 #pragma comment(lib, "ddraw.lib")
 #pragma comment(lib, "dxguid.lib")
+
 
 LPDIRECTDRAW7        g_pDD = NULL;        // DirectDraw object
 LPDIRECTDRAWSURFACE7 g_pDDSFront = NULL;  // DirectDraw fronbuffer surface
 LPDIRECTDRAWSURFACE7 g_pDDSBack = NULL;   // DirectDraw backbuffer surface
 
-// https://www.codeproject.com/Articles/2370/Introduction-to-DirectDraw-and-Surface-Blitting
 int InitDirectDraw(HWND hwnd)
 {
     DirectDrawCreateEx(NULL, (VOID**)&g_pDD, IID_IDirectDraw7, NULL);
@@ -75,6 +79,7 @@ public:
         COMMAND_ID_HANDLER(IDC_GDI, OnGDI)
         COMMAND_ID_HANDLER(IDC_DBUFFER, OnDoubleBuffer)
         COMMAND_ID_HANDLER(IDC_OPENGL, OnOpenGL)
+        COMMAND_ID_HANDLER(IDC_OPENGL2, OnOpenGL2)
         COMMAND_ID_HANDLER(IDC_DIRECTDRAW, OnDirectDraw)
     END_MSG_MAP()
 
@@ -162,6 +167,63 @@ public:
 
     LRESULT OnOpenGL(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL& bHandled)
     {
+        HDC hDC;
+        HGLRC hRC;
+        EnableOpenGL(m_showwindow.m_hWnd, &hDC, &hRC);
+
+        glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+        glClear(GL_COLOR_BUFFER_BIT);
+
+        glPushMatrix();
+        glRotatef(0.0f, 0.0f, 0.0f, 1.0f);
+        glBegin(GL_TRIANGLES);
+        glColor3f(1.0f, 0.0f, 0.0f); glVertex2f(0.0f, 1.0f);
+        glColor3f(0.0f, 1.0f, 0.0f); glVertex2f(0.87f, -0.5f);
+        glColor3f(0.0f, 0.0f, 1.0f); glVertex2f(-0.87f, -0.5f);
+        glEnd();
+        glPopMatrix();
+
+        SwapBuffers(hDC);
+        DisableOpenGL(m_showwindow.m_hWnd, hDC, hRC);
+        return 0;
+    }
+
+    LRESULT OnOpenGL2(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL& bHandled)
+    {
+        DVideoFrame i420frame_e = DVideoI420::Scale(m_frame, m_destRect.Width(), m_destRect.Height(), kFilterBox);
+
+        HDC hDC;
+        HGLRC hRC;
+        EnableOpenGL(m_showwindow.m_hWnd, &hDC, &hRC);
+
+        glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+        glClear(GL_COLOR_BUFFER_BIT);
+
+        GLuint texture1_ = 0;
+        GLuint texture2_ = 0;
+        GLuint texture3_ = 0;
+        glGenTextures(1, &texture1_);
+
+        glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+        //glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D, texture1_);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_LUMINANCE, i420frame_e.GetWidth(),
+            i420frame_e.GetHeight(), 0, GL_LUMINANCE, GL_UNSIGNED_BYTE, i420frame_e.GetBuf());
+        
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+        //glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+        //glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+
+        //glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D, texture1_);
+
+        glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+        glViewport(0, 0, 200, 200);
+        glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+
+        SwapBuffers(hDC);
+        DisableOpenGL(m_showwindow.m_hWnd, hDC, hRC);
         return 0;
     }
 
@@ -176,6 +238,34 @@ public:
 
 
         return 0;
+    }
+
+    DVoid EnableOpenGL(HWND hWnd, HDC* hDC, HGLRC* hRC)
+    {
+        *hDC = ::GetDC(hWnd);
+
+        PIXELFORMATDESCRIPTOR pfd;
+        ZeroMemory(&pfd, sizeof(pfd));
+        pfd.nSize = sizeof(pfd);
+        pfd.nVersion = 1;
+        pfd.dwFlags = PFD_DRAW_TO_WINDOW |
+            PFD_SUPPORT_OPENGL | PFD_DOUBLEBUFFER;
+        pfd.iPixelType = PFD_TYPE_RGBA;
+        pfd.cColorBits = 24;
+        pfd.cDepthBits = 16;
+        pfd.iLayerType = PFD_MAIN_PLANE;
+        int iFormat = ChoosePixelFormat(*hDC, &pfd);
+        SetPixelFormat(*hDC, iFormat, &pfd);
+
+        *hRC = wglCreateContext(*hDC);
+        wglMakeCurrent(*hDC, *hRC);
+    }
+
+    DVoid DisableOpenGL(HWND hWnd, HDC hDC, HGLRC hRC)
+    {
+        wglMakeCurrent(NULL, NULL);
+        wglDeleteContext(hRC);
+        ::ReleaseDC(hWnd, hDC);
     }
 
     DBool CreateSurface(LPDIRECTDRAW7 hDD, int nWidth, int nHeight, COLORREF dwColorKey)
